@@ -159,3 +159,7 @@ Cả hai dùng **chung một pipeline**, chỉ khác câu trả lời onboarding
 - Tên biến/hàm trong TS: `camelCase`.
 - Mọi lệnh gọi AI đều đi qua **Vercel AI SDK + Zod schema** để ép output có cấu trúc — không gọi Groq API trực tiếp bằng `fetch` tay, không parse JSON từ text tự do.
 - Không thêm thư viện/service ngoài danh sách ở mục 2 trừ khi thực sự cần và vẫn giữ được chi phí $0 cho demo.
+
+## 15. Quy trình build
+
+Thứ tự thi công 10 bước xem docs/BUILD_PROCESS.md — đọc khi cần biết build gì trước, đặc biệt ở bước data modeling và API contract.
