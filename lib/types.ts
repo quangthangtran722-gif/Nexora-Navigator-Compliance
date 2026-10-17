@@ -91,7 +91,7 @@ export type Customer = {
   id: string;
   ten_cong_ty: string;
   nganh: string;
-  quy_mo: string;
+  quy_mo: number; // số lượng nhân viên
   domains: Domain[];
   created_at: string;
 };
@@ -99,7 +99,8 @@ export type Customer = {
 export type Department = {
   id: string;
   customer_id: string;
-  ten_phong_ban: string;
+  ten_phong_ban: string; // tên hiển thị, người dùng tự đặt
+  ma_phong_ban: string; // mã chuẩn để route diagnostic — xem lib/department-codes.ts
   email_head: string;
   created_at: string;
 };
