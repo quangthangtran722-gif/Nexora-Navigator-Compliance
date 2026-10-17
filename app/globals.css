@@ -54,6 +54,8 @@
   --color-status-sap-ap-dung-bg: var(--status-sap-ap-dung-bg);
   --color-status-khong-ap-dung: var(--status-khong-ap-dung);
   --color-status-khong-ap-dung-bg: var(--status-khong-ap-dung-bg);
+  --color-status-chua-du-tt: var(--status-chua-du-tt);
+  --color-status-chua-du-tt-bg: var(--status-chua-du-tt-bg);
   --color-duyet-cho: var(--duyet-cho);
   --color-duyet-cho-bg: var(--duyet-cho-bg);
   --color-duyet-da: var(--duyet-da);
@@ -94,6 +96,8 @@
   --status-sap-ap-dung-bg: oklch(0.96 0.06 90);
   --status-khong-ap-dung: oklch(0.5 0.01 260);   /* xám — không cần quan tâm */
   --status-khong-ap-dung-bg: oklch(0.95 0.005 260);
+  --status-chua-du-tt: oklch(0.48 0.13 300);     /* tím — cần hỏi bổ sung */
+  --status-chua-du-tt-bg: oklch(0.95 0.03 300);
 
   /* 3 trạng thái duyệt (entity, relationship, diagnostic) */
   --duyet-cho: oklch(0.48 0.14 250);
