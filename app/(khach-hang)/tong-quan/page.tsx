@@ -38,7 +38,7 @@ export default function Page() {
             {customer.ten_cong_ty}
           </CardTitle>
           <CardDescription>
-            {customer.nganh} · {customer.quy_mo}
+            {customer.nganh} · {customer.quy_mo.toLocaleString("vi-VN")} nhân viên
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-2 text-sm">

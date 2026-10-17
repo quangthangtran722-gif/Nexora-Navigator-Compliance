@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DEPARTMENT_CODE_VALUES } from "@/lib/department-codes";
 import type { Customer, Department, Domain } from "@/lib/types";
 
 /*
@@ -14,7 +15,12 @@ const DOMAINS = ["thue", "ke_toan"] as const satisfies readonly Domain[];
 export const onboardingStep1 = z.object({
   ten_cong_ty: z.string().trim().min(2, "Nhập tên công ty"),
   nganh: z.string().trim().min(2, "Nhập ngành kinh doanh"),
-  quy_mo: z.string().min(1, "Chọn quy mô"),
+  // Số lượng nhân viên. Form giữ chuỗi từ ô nhập số → coerce sang number ("" → 0 → báo lỗi)
+  quy_mo: z.coerce
+    .number("Nhập số nhân viên")
+    .int("Nhập số nguyên")
+    .positive("Nhập số nhân viên lớn hơn 0")
+    .max(1_000_000, "Số nhân viên không hợp lệ"),
 });
 
 // Bước 2 — lĩnh vực pháp lý cần theo dõi
@@ -24,7 +30,8 @@ export const onboardingStep2 = z.object({
 
 // Bước 3 — phòng ban + email trưởng phòng (= Department bỏ id/customer_id/created_at)
 export const departmentInput = z.object({
-  ten_phong_ban: z.string().trim().min(2, "Nhập tên phòng ban"),
+  ten_phong_ban: z.string().trim().min(2, "Nhập tên phòng ban"), // tên hiển thị tự do
+  ma_phong_ban: z.enum(DEPARTMENT_CODE_VALUES, "Chọn mã phòng ban chuẩn"), // bắt buộc, tách khỏi tên
   email_head: z.email("Email không hợp lệ"),
 });
 
@@ -44,7 +51,7 @@ export type OnboardingPayload = z.infer<typeof onboardingSchema>;
 
 // Kiểm tra lúc compile: payload phải khớp các field tương ứng của Customer / Department
 type _CustomerFields = Pick<Customer, "ten_cong_ty" | "nganh" | "quy_mo" | "domains">;
-type _DeptFields = Pick<Department, "ten_phong_ban" | "email_head">;
+type _DeptFields = Pick<Department, "ten_phong_ban" | "ma_phong_ban" | "email_head">;
 const _shapeCheck = (p: OnboardingPayload): _CustomerFields & { departments: _DeptFields[] } => p;
 void _shapeCheck;
 
@@ -57,7 +64,8 @@ export const extractRequestSchema = z.object({
   ten_van_ban: z.string().trim().min(5, "Nhập tên văn bản"),
   so_hieu: z.string().trim().min(3, "Nhập số hiệu, vd 70/2025/NĐ-CP"),
   loai_van_ban: z.enum(LOAI_VAN_BAN, "Chọn loại văn bản"),
-  domain: z.enum(DOMAINS, "Chọn lĩnh vực"),
+  // Khớp van_ban.domains TEXT[] — 1 văn bản có thể thuộc nhiều lĩnh vực
+  domains: z.array(z.enum(DOMAINS)).min(1, "Chọn ít nhất 1 lĩnh vực"),
   ngay_co_hieu_luc: z.string().nullable(), // "YYYY-MM-DD" hoặc null nếu chưa rõ
   noi_dung: z.string().trim().min(50, "Dán ít nhất 1 điều luật đầy đủ (tối thiểu 50 ký tự)"),
 });

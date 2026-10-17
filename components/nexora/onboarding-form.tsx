@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormField, PayloadPreview } from "@/components/nexora/form-field";
+import { DEPARTMENT_CODES } from "@/lib/department-codes";
 import { domainLabel } from "@/lib/labels";
 import {
   onboardingSchema,
@@ -26,13 +27,6 @@ import { cn } from "@/lib/utils";
 const STEPS = ["Thông tin công ty", "Lĩnh vực theo dõi", "Phòng ban"] as const;
 const STEP_SCHEMAS = [onboardingStep1, onboardingStep2, onboardingStep3] as const;
 
-const QUY_MO = [
-  { value: "Dưới 10 nhân viên", label: "Dưới 10 nhân viên" },
-  { value: "10–49 nhân viên", label: "10–49 nhân viên" },
-  { value: "50–199 nhân viên", label: "50–199 nhân viên" },
-  { value: "Từ 200 nhân viên", label: "Từ 200 nhân viên" },
-];
-
 const DOMAIN_HINT: Record<Domain, string> = {
   thue: "Hoá đơn, thuế GTGT, thuế TNDN, kê khai và nộp thuế",
   ke_toan: "Chứng từ, sổ sách, báo cáo tài chính, lưu trữ",
@@ -41,23 +35,30 @@ const DOMAIN_HINT: Record<Domain, string> = {
 // Gợi ý nhanh — chỉ điền sẵn tên, người dùng vẫn sửa được
 const DEPT_PRESETS = ["Kế toán", "Kinh doanh", "Kho vận", "Ban Giám đốc"];
 
-const EMPTY: OnboardingPayload = {
+// State form giữ giá trị thô từ ô nhập (quy_mo là chuỗi, mã phòng ban có thể rỗng);
+// Zod chuyển/kiểm tra thành OnboardingPayload lúc bấm tiếp.
+type DeptState = { ten_phong_ban: string; ma_phong_ban: string; email_head: string };
+type FormState = Omit<OnboardingPayload, "quy_mo" | "departments"> & { quy_mo: string; departments: DeptState[] };
+
+const EMPTY_DEPT: DeptState = { ten_phong_ban: "", ma_phong_ban: "", email_head: "" };
+
+const EMPTY: FormState = {
   ten_cong_ty: "",
   nganh: "",
   quy_mo: "",
   domains: [],
-  departments: [{ ten_phong_ban: "", email_head: "" }],
+  departments: [EMPTY_DEPT],
 };
 
 export function OnboardingForm() {
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<OnboardingPayload>(EMPTY);
+  const [data, setData] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState<OnboardingPayload | null>(null);
 
-  const update = (patch: Partial<OnboardingPayload>) => setData((d) => ({ ...d, ...patch }));
+  const update = (patch: Partial<FormState>) => setData((d) => ({ ...d, ...patch }));
 
-  const setDept = (i: number, patch: Partial<OnboardingPayload["departments"][number]>) =>
+  const setDept = (i: number, patch: Partial<DeptState>) =>
     update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
 
   // Chỉ validate phần của bước hiện tại trước khi sang bước sau
@@ -145,19 +146,19 @@ export function OnboardingForm() {
                 aria-invalid={!!errors.nganh}
               />
             </FormField>
-            <FormField label="Quy mô" error={errors.quy_mo}>
-              <Select items={QUY_MO} value={data.quy_mo || null} onValueChange={(v) => update({ quy_mo: v ?? "" })}>
-                <SelectTrigger className="w-full sm:w-72" aria-invalid={!!errors.quy_mo}>
-                  <SelectValue placeholder="Chọn quy mô nhân sự" />
-                </SelectTrigger>
-                <SelectContent>
-                  {QUY_MO.map((q) => (
-                    <SelectItem key={q.value} value={q.value}>
-                      {q.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <FormField id="quy_mo" label="Số lượng nhân viên" error={errors.quy_mo}>
+              <Input
+                id="quy_mo"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                step={1}
+                value={data.quy_mo}
+                onChange={(e) => update({ quy_mo: e.target.value })}
+                placeholder="30"
+                className="w-full sm:w-40"
+                aria-invalid={!!errors.quy_mo}
+              />
             </FormField>
           </>
         )}
@@ -199,7 +200,10 @@ export function OnboardingForm() {
             </p>
 
             {data.departments.map((dept, i) => (
-              <div key={i} className="grid gap-3 rounded-lg border p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+              <div
+                key={i}
+                className="grid gap-3 rounded-lg border p-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-start"
+              >
                 <FormField id={`dept-${i}-ten`} label="Tên phòng ban" error={errors[`departments.${i}.ten_phong_ban`]}>
                   <Input
                     id={`dept-${i}-ten`}
@@ -207,6 +211,25 @@ export function OnboardingForm() {
                     onChange={(e) => setDept(i, { ten_phong_ban: e.target.value })}
                     placeholder="Kế toán"
                   />
+                </FormField>
+                {/* Mã chuẩn tách khỏi tên tự do — dùng để route diagnostic. Danh sách mã chờ backend. */}
+                <FormField label="Mã phòng ban chuẩn" error={errors[`departments.${i}.ma_phong_ban`]}>
+                  <Select
+                    items={DEPARTMENT_CODES}
+                    value={dept.ma_phong_ban || null}
+                    onValueChange={(v) => setDept(i, { ma_phong_ban: (v as string | null) ?? "" })}
+                  >
+                    <SelectTrigger className="w-full" aria-invalid={!!errors[`departments.${i}.ma_phong_ban`]}>
+                      <SelectValue placeholder="Chọn mã" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DEPARTMENT_CODES.map((c) => (
+                        <SelectItem key={c.value} value={c.value}>
+                          {c.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormField>
                 <FormField id={`dept-${i}-email`} label="Email trưởng phòng" error={errors[`departments.${i}.email_head`]}>
                   <Input
@@ -220,7 +243,7 @@ export function OnboardingForm() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="sm:mt-6"
+                  className="lg:mt-6"
                   aria-label={`Xoá phòng ban ${i + 1}`}
                   disabled={data.departments.length === 1}
                   onClick={() => update({ departments: data.departments.filter((_, j) => j !== i) })}
@@ -236,7 +259,7 @@ export function OnboardingForm() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => update({ departments: [...data.departments, { ten_phong_ban: "", email_head: "" }] })}
+                onClick={() => update({ departments: [...data.departments, EMPTY_DEPT] })}
               >
                 <Plus /> Thêm phòng ban
               </Button>
@@ -247,10 +270,11 @@ export function OnboardingForm() {
                   variant="secondary"
                   size="xs"
                   onClick={() => {
-                    // Điền vào dòng trống đầu tiên nếu có, không thì thêm dòng mới
+                    // Chỉ điền tên hiển thị; mã chuẩn người dùng vẫn phải tự chọn.
+                    // Điền vào dòng trống đầu tiên nếu có, không thì thêm dòng mới.
                     const empty = data.departments.findIndex((d) => !d.ten_phong_ban && !d.email_head);
                     if (empty >= 0) setDept(empty, { ten_phong_ban: p });
-                    else update({ departments: [...data.departments, { ten_phong_ban: p, email_head: "" }] });
+                    else update({ departments: [...data.departments, { ...EMPTY_DEPT, ten_phong_ban: p }] });
                   }}
                 >
                   {p}

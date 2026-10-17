@@ -8,7 +8,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,16 +27,15 @@ const LOAI_LABEL: Record<(typeof LOAI_VAN_BAN)[number], string> = {
 const LOAI_ITEMS = LOAI_VAN_BAN.map((v) => ({ value: v, label: LOAI_LABEL[v] }));
 
 // State form cho phép giá trị rỗng; Zod quyết định hợp lệ lúc gửi
-type FormState = Omit<ExtractRequest, "loai_van_ban" | "domain"> & {
+type FormState = Omit<ExtractRequest, "loai_van_ban"> & {
   loai_van_ban: ExtractRequest["loai_van_ban"] | "";
-  domain: Domain | "";
 };
 
 const EMPTY: FormState = {
   ten_van_ban: "",
   so_hieu: "",
   loai_van_ban: "",
-  domain: "",
+  domains: [],
   ngay_co_hieu_luc: null,
   noi_dung: "",
 };
@@ -157,19 +156,22 @@ export function LawInputForm() {
             </FormField>
           </div>
 
-          <FormField label="Lĩnh vực" error={errors.domain}>
-            <RadioGroup
-              value={data.domain || null}
-              onValueChange={(v) => update({ domain: v as Domain })}
-              className="flex gap-6"
-              disabled={sending}
-            >
+          {/* Chọn nhiều — khớp van_ban.domains TEXT[] */}
+          <FormField label="Lĩnh vực" hint="Chọn tất cả lĩnh vực văn bản này điều chỉnh" error={errors.domains}>
+            <div className="flex gap-6">
               {(Object.keys(domainLabel) as Domain[]).map((d) => (
                 <Label key={d} className="flex items-center gap-2 font-normal">
-                  <RadioGroupItem value={d} /> {domainLabel[d]}
+                  <Checkbox
+                    checked={data.domains.includes(d)}
+                    disabled={sending}
+                    onCheckedChange={(on) =>
+                      update({ domains: on ? [...data.domains, d] : data.domains.filter((x) => x !== d) })
+                    }
+                  />
+                  {domainLabel[d]}
                 </Label>
               ))}
-            </RadioGroup>
+            </div>
           </FormField>
 
           <FormField
