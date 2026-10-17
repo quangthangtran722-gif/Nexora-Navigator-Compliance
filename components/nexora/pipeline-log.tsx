@@ -72,14 +72,17 @@ export function PipelineLog({ runs, entities, customers }: Props) {
       </div>
 
       <Tabs value={buoc} onValueChange={(v) => setBuoc(v as BuocPipeline | typeof ALL)}>
-        <TabsList className="flex-wrap">
-          <TabsTrigger value={ALL}>Tất cả</TabsTrigger>
-          {BUOC.map((b) => (
-            <TabsTrigger key={b} value={b}>
-              {buocLabel[b]}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        {/* Màn hẹp: 1 hàng, cuộn ngang thay vì xuống dòng */}
+        <div className="-mx-1 overflow-x-auto px-1 pb-1">
+          <TabsList className="w-max">
+            <TabsTrigger value={ALL}>Tất cả</TabsTrigger>
+            {BUOC.map((b) => (
+              <TabsTrigger key={b} value={b}>
+                {buocLabel[b]}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
       </Tabs>
 
       <div className="rounded-xl border bg-card">
@@ -106,7 +109,7 @@ export function PipelineLog({ runs, entities, customers }: Props) {
                       setSelectedId(r.id);
                     }}
                   >
-                    {formatDateTime(r.created_at)}
+                    {formatDateTime(r.created_at, true)}
                   </button>
                 </TableCell>
                 <TableCell>{buocLabel[r.buoc]}</TableCell>
@@ -138,7 +141,7 @@ export function PipelineLog({ runs, entities, customers }: Props) {
               <SheetHeader>
                 <SheetTitle>{buocLabel[selected.buoc]}</SheetTitle>
                 <SheetDescription>
-                  <code>{selected.id}</code> · {formatDateTime(selected.created_at)} · {formatMs(selected.thoi_gian_ms)}
+                  <code>{selected.id}</code> · {formatDateTime(selected.created_at, true)} · {formatMs(selected.thoi_gian_ms)}
                 </SheetDescription>
               </SheetHeader>
               <div className="space-y-4 px-4 pb-6 text-sm">

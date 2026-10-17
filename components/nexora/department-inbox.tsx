@@ -9,7 +9,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
-import { AnhHuongBadge, ApDungBadge } from "@/components/nexora/status-badges";
+import { AnhHuongBadge, ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { formatDateTime } from "@/lib/labels";
 import type { Department, Diagnostic, Entity, Notification } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -50,14 +50,17 @@ export function DepartmentInbox({ departments, notifications, diagnostics, entit
 
   return (
     <Tabs defaultValue={DAU_MOI}>
-      <TabsList className="h-auto flex-wrap">
-        {tabs.map(({ id, label, Icon }) => (
-          <TabsTrigger key={id} value={id}>
-            <Icon aria-hidden /> {label}
-            {unread(id) > 0 && <Badge className="ml-0.5">{unread(id)}</Badge>}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      {/* Màn hẹp: 1 hàng, cuộn ngang thay vì xuống dòng */}
+      <div className="-mx-1 overflow-x-auto px-1 pb-1">
+        <TabsList className="w-max">
+          {tabs.map(({ id, label, Icon }) => (
+            <TabsTrigger key={id} value={id}>
+              <Icon aria-hidden /> {label}
+              {unread(id) > 0 && <Badge className="ml-0.5">{unread(id)}</Badge>}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
 
       {/* Giai đoạn 1 — người đầu mối */}
       <TabsContent value={DAU_MOI} className="mt-4 space-y-2">
@@ -79,13 +82,20 @@ export function DepartmentInbox({ departments, notifications, diagnostics, entit
               </p>
               <p className="text-xs text-muted-foreground tabular-nums">{formatDateTime(n.created_at)}</p>
             </div>
-            <Link
-              href={`/duyet-diagnostic#${diagnostics.find((d) => d.id === n.diagnostic_id)?.department_id ?? ""}`}
-              onClick={() => markRead(n.id)}
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              Mở để duyệt <ArrowRight />
-            </Link>
+            {(() => {
+              const d = diagnostics.find((x) => x.id === n.diagnostic_id);
+              // Diagnostic đã được xử lý → chỉ hiện trạng thái, không mời duyệt lại
+              if (d && d.trang_thai_duyet !== "cho_duyet") return <DuyetBadge status={d.trang_thai_duyet} />;
+              return (
+                <Link
+                  href={`/duyet-diagnostic#${d?.department_id ?? ""}`}
+                  onClick={() => markRead(n.id)}
+                  className={buttonVariants({ variant: "outline", size: "sm" })}
+                >
+                  Mở để duyệt <ArrowRight />
+                </Link>
+              );
+            })()}
           </div>
         ))}
         {forTab(DAU_MOI).length === 0 && <EmptyInbox />}

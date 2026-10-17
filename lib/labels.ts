@@ -44,14 +44,23 @@ export const buocLabel: Record<BuocPipeline, string> = {
   generate_diagnostic: "Viết diagnostic",
 };
 
-// Hiển thị ngày giờ theo giờ Việt Nam, cố định timezone để server/client render giống nhau
-export function formatDateTime(iso: string) {
-  return new Intl.DateTimeFormat("vi-VN", {
-    timeZone: "Asia/Ho_Chi_Minh",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(iso));
+// Ngày giờ theo giờ Việt Nam, dạng "dd/MM/yyyy HH:mm" (hoặc kèm giây cho nhật ký).
+// Cố định timezone + tự ghép chuỗi để server và client render giống hệt nhau.
+export function formatDateTime(iso: string, withSeconds = false) {
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Ho_Chi_Minh",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(new Date(iso))
+      .map((part) => [part.type, part.value]),
+  );
+  const time = withSeconds ? `${p.hour}:${p.minute}:${p.second}` : `${p.hour}:${p.minute}`;
+  return `${p.day}/${p.month}/${p.year} ${time}`;
 }
