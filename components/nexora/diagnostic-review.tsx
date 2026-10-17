@@ -1,11 +1,11 @@
 "use client";
 
-import { CheckSquare, Mail, RotateCcw, Send } from "lucide-react";
+import { Mail, RotateCcw, Send } from "lucide-react";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { AnhHuongBadge, ApDungBadge, DuyetBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
+import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
+import { AnhHuongBadge, ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { useLocalDecisions } from "@/components/nexora/use-local-decisions";
 import { cn } from "@/lib/utils";
 import type { Department, Diagnostic, Entity, TrangThaiApDung } from "@/lib/types";
@@ -70,7 +70,6 @@ export function DiagnosticReview({ departments, diagnostics, entities }: Props) 
 
             {items.map((d) => {
               const entity = entities.find((e) => e.id === d.entity_id);
-              const checklist = d.noi_dung_diagnostic.split("\n").filter(Boolean);
               const muted = d.trang_thai_ap_dung === "khong_ap_dung";
 
               return (
@@ -88,40 +87,7 @@ export function DiagnosticReview({ departments, diagnostics, entities }: Props) 
                   </CardHeader>
 
                   <CardContent className="space-y-3">
-                    <ul className="space-y-1.5 text-sm">
-                      {checklist.map((line) => (
-                        <li key={line} className="flex gap-2">
-                          <CheckSquare className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
-                          <span>{line}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* Thời hạn / chế tài / mức thuế đi kèm — mở rộng, không phải đầu mục riêng */}
-                    {d.context_entities && d.context_entities.length > 0 && (
-                      <Accordion>
-                        <AccordionItem value="ctx">
-                          <AccordionTrigger className="text-sm">
-                            Căn cứ đi kèm ({d.context_entities.length})
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            <ul className="space-y-3">
-                              {d.context_entities.map((c) => (
-                                <li key={c.id} className="space-y-1">
-                                  <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
-                                    <LoaiEntityBadge loai={c.loai_entity} />
-                                    {c.ten_entity}
-                                  </div>
-                                  <blockquote className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">
-                                    {c.noi_dung_goc}
-                                  </blockquote>
-                                </li>
-                              ))}
-                            </ul>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Accordion>
-                    )}
+                    <DiagnosticBody diagnostic={d} />
                   </CardContent>
 
                   <CardFooter className="gap-2">

@@ -85,6 +85,40 @@ export type Diagnostic = {
   context_entities?: ContextEntity[]; // thời hạn / chế tài / mức thuế đi kèm
 };
 
+/* ---------- pipeline_runs — giữ schema cũ, card_id tách thành chunk_id + entity_id (backend 17/10) ---------- */
+
+// Tên bước = tên hàm pipeline
+export type BuocPipeline = "extract_entities" | "filter_domain" | "generate_diagnostic";
+
+export type PipelineRun = {
+  id: string;
+  buoc: BuocPipeline;
+  customer_id: string | null; // filter_domain / generate_diagnostic: chạy cho công ty nào
+  chunk_id: string | null; // extract_entities
+  entity_id: string | null; // generate_diagnostic
+  input: unknown; // jsonb
+  output: unknown; // jsonb
+  model: string | null; // null = rule engine, không gọi AI (filter_domain)
+  thanh_cong: boolean;
+  loi: string | null;
+  thoi_gian_ms: number;
+  created_at: string;
+};
+
+/* ---------- notifications — giữ 2 giai đoạn, task_id → diagnostic_id, phong_ban → department_id (backend 17/10) ---------- */
+
+export type Notification = {
+  id: string;
+  customer_id: string;
+  diagnostic_id: string | null;
+  giai_doan: "cho_duyet" | "da_giao"; // cho_duyet: báo người đầu mối · da_giao: báo phòng ban
+  department_id: string | null; // null = gửi người đầu mối tuân thủ
+  tieu_de: string;
+  noi_dung: string | null;
+  da_doc: boolean;
+  created_at: string;
+};
+
 /* ---------- Chưa có trong bản nháp — tạm theo TEAM_BRIEF ---------- */
 
 export type Customer = {
