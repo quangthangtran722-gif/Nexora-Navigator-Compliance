@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarDays, Link2Off, RotateCcw } from "lucide-react";
+import { CalendarDays, RotateCcw } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,8 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AnhHuongBadge, DuyetBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { useLocalDecisions } from "@/components/nexora/use-local-decisions";
-import { deptLabel, domainLabel, formatDate, relationshipLabel } from "@/lib/labels";
+import { EdgeLine } from "@/components/nexora/edge-line";
+import { deptLabel, domainLabel, formatDate } from "@/lib/labels";
 import type { Entity, EntityRelationship, TrangThaiDuyet } from "@/lib/types";
 
 type Props = {
@@ -139,41 +140,6 @@ export function DraftReview({ pendingEntities, pendingRelationships, allEntities
         ))}
       </TabsContent>
     </Tabs>
-  );
-}
-
-/* Một cạnh: [nguồn] —nhãn→ [đích]. Đích null → hiện target_ref_text + nhãn "Chờ nối". */
-function EdgeLine({
-  rel,
-  entityName,
-  currentId,
-}: {
-  rel: EntityRelationship;
-  entityName: (id: string) => string;
-  currentId?: string;
-}) {
-  const node = (id: string) => (
-    <span className={id === currentId ? "font-semibold" : "font-medium"}>{entityName(id)}</span>
-  );
-
-  return (
-    <span className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm">
-      {node(rel.source_entity_id)}
-      <span className="inline-flex items-center gap-1 text-muted-foreground">
-        {relationshipLabel[rel.loai_relationship]}
-        <ArrowRight className="size-3.5" aria-hidden />
-      </span>
-      {rel.target_entity_id ? (
-        node(rel.target_entity_id)
-      ) : (
-        <>
-          <span className="italic text-muted-foreground">{rel.target_ref_text}</span>
-          <Badge variant="outline" className="border-dashed text-status-sap-ap-dung">
-            <Link2Off aria-hidden /> Chờ nối
-          </Badge>
-        </>
-      )}
-    </span>
   );
 }
 

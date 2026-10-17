@@ -1,4 +1,4 @@
-import type { Domain, LoaiRelationship } from "@/lib/types";
+import type { BuocPipeline, Domain, LoaiRelationship } from "@/lib/types";
 
 // Nhãn tiếng Việt cho các mã enum hiển thị dạng chữ (không phải badge trạng thái)
 
@@ -36,4 +36,22 @@ export function formatDate(iso: string | null) {
   if (!iso) return "Chưa xác định";
   const [y, m, d] = iso.slice(0, 10).split("-");
   return `${d}/${m}/${y}`;
+}
+
+export const buocLabel: Record<BuocPipeline, string> = {
+  extract_entities: "Trích xuất entity",
+  filter_domain: "Lọc theo lĩnh vực",
+  generate_diagnostic: "Viết diagnostic",
+};
+
+// Hiển thị ngày giờ theo giờ Việt Nam, cố định timezone để server/client render giống nhau
+export function formatDateTime(iso: string) {
+  return new Intl.DateTimeFormat("vi-VN", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
 }

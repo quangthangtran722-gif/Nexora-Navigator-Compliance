@@ -60,7 +60,7 @@ export const mockDiagnostics: Diagnostic[] = [
       "Kiểm tra mỗi hoá đơn đó đã có chứng từ thanh toán qua ngân hàng chưa",
       "Đánh dấu khoản thuế GTGT đầu vào có rủi ro không được khấu trừ",
     ].join("\n"),
-    trang_thai_duyet: "cho_duyet",
+    trang_thai_duyet: "da_duyet",
     context_entities: ctx("e-06", "e-07"),
   },
   {
