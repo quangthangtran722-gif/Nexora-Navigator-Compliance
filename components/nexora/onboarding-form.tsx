@@ -17,10 +17,10 @@ import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { PHONG_BAN, PHONG_BAN_LABEL } from "@/lib/department-codes";
 import { domainLabel, KNOWN_DOMAINS, QUY_MO_LABEL, toSlug } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
-import { useErrorHandler } from "@/lib/data/errors";
+import { combine, useErrorHandler } from "@/lib/data/errors";
 import { saveOnboarding } from "@/lib/data/mutations";
 import { filterThenGenerate, PipelineError, toAppError, type FilterKetQua } from "@/lib/data/pipeline";
-import { getThuocTinhHoSo } from "@/lib/data/queries";
+import { getCustomer, getDepartments, getThuocTinhHoSo } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
 import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4, toFieldErrors, type OnboardingPayload } from "@/lib/schemas";
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
@@ -63,6 +63,22 @@ export function OnboardingForm() {
   // Câu hỏi hồ sơ đọc từ bảng thuoc_tinh_ho_so (backend seed) — KHÔNG hard-code
   const dictQuery = useQuery(getThuocTinhHoSo, []);
   const dict = dictQuery.data ?? [];
+
+  // Khách hàng đã onboard (vd hồ sơ seed) → điền sẵn câu trả lời cũ để sửa, không bắt khai lại từ đầu
+  const profile = useQuery(() => combine({ customer: getCustomer(customerId!), departments: getDepartments(customerId!) }), [customerId]);
+  const [prefilled, setPrefilled] = useState(false);
+  if (!prefilled && profile.data) {
+    setPrefilled(true); // set state trong render (1 lần) — không cần effect
+    const { customer: c, departments: ds } = profile.data;
+    setData({
+      ten_cong_ty: c.ten_cong_ty,
+      nganh: c.nganh ?? "",
+      quy_mo: c.quy_mo ?? "chua_chon",
+      domains: c.domains,
+      thuoc_tinh: c.thuoc_tinh,
+      departments: ds.length ? ds.map((d) => ({ ten_phong_ban: d.ten_phong_ban, slug_phong_ban: d.slug_phong_ban, email_head: d.email_head ?? "" })) : [EMPTY_DEPT],
+    });
+  }
 
   const update = (patch: Partial<FormState>) => setData((d) => ({ ...d, ...patch }));
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });

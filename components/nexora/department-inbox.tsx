@@ -79,6 +79,7 @@ export function DepartmentInbox() {
         <p className="text-sm text-muted-foreground">Câu hỏi bổ sung và checklist mới cần người đầu mối xử lý trước khi giao phòng ban.</p>
         {forTab(DAU_MOI).map((n) => {
           const d = diagnostics.find((x) => x.id === n.diagnostic_id);
+          const entity = entities.find((e) => e.id === d?.entity_id);
           const hoiBoSung = n.giai_doan === "hoi_bo_sung";
           // noi_dung của hoi_bo_sung = danh sách mã thuộc tính thiếu → hiện câu hỏi
           const cauHoi = hoiBoSung && n.noi_dung ? n.noi_dung.split(",").map((ma) => dict.find((t) => t.ma === ma.trim())?.cau_hoi ?? ma.trim()) : [];
@@ -91,6 +92,7 @@ export function DepartmentInbox() {
                   {hoiBoSung && <MessageCircleQuestion className="size-4 shrink-0 text-status-chua-du-tt" aria-hidden />}
                   {n.tieu_de}
                 </p>
+                {entity && <p className="text-sm text-foreground">{entity.ten_entity}</p>}
                 {cauHoi.length > 0 && <p className="text-xs text-muted-foreground">Câu hỏi: {cauHoi.join(" · ")}</p>}
                 <p className="text-xs text-muted-foreground tabular-nums">{formatDateTime(n.created_at)}</p>
               </div>
