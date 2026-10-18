@@ -117,7 +117,7 @@ export type GiaiDoanThongBao = "cho_duyet" | "hoi_bo_sung" | "da_giao";
 export type Customer = {
   id: string;
   ten_cong_ty: string;
-  nganh: string | null;          // slug tự do, vd "thuong_mai_dien_tu"
+  nganh: string | null;          // slug tự do, vd "thuong_mai_dien_tu" — tên hiển thị tra bảng `nganh` (§3.10)
   quy_mo: QuyMo | null;
   domains: string[];             // lĩnh vực đăng ký theo dõi; [] = chưa chọn
   thuoc_tinh: ThuocTinhKhachHang; // câu trả lời onboarding + hỏi bổ sung
@@ -227,6 +227,8 @@ export type EntityRelationship = {
 ```
 
 Luôn có ít nhất 1 trong `target_entity_id` / `target_ref_text`. Hướng cạnh: **source → target** (vd `thoi_han —ap_dung_cho→ hanh_vi`, `dieu_kien —dieu_kien→ hanh_vi`, `che_tai —che_tai_cua→ hanh_vi`). Curator nối pending link = cập nhật `target_entity_id` (được phép cả sau khi entity nguồn đã duyệt).
+
+Loại 2 đầu cạnh được chuẩn hóa khi trích xuất (`lib/pipeline/grounding.ts`): `ap_dung_cho` hanh_vi|muc_thue|thoi_han|mien_giam → chu_the|doi_tuong|hanh_vi; `dieu_kien` dieu_kien|nguong → hanh_vi|muc_thue|mien_giam; `che_tai_cua` che_tai → hanh_vi. AI sinh ngược chiều → code tự đảo lại (cảnh báo `dao_chieu_canh` trong `pipeline_runs.output`); sai loại cả 2 chiều → bị loại (`sai_loai_dau_canh`). Curator tạo cạnh tay cũng phải theo đúng chiều này vì rule engine đọc điều kiện theo chiều cạnh.
 
 View đọc tiện cho UI graph — `entity_graph` (mỗi row = 1 cạnh đã join tên 2 đầu):
 
@@ -403,6 +405,18 @@ export type VanBanReplacementChain = {
 ```
 
 > Lưu ý PostgREST: cột `count(*)` trong view trả về **bigint** → supabase-js có thể nhận `number` hoặc `string` tùy client config. Hiện tại số lượng nhỏ nên là `number`.
+
+### 3.10 Nganh — bảng `nganh` (tra cứu tên ngành)
+
+```ts
+export type Nganh = {
+  ma: string;            // PK, slug = customers.nganh, vd "van_tai_logistics"
+  ten_hien_thi: string;  // nhãn tiếng Việt, vd "Vận tải & Logistics"
+  created_at: string;
+};
+```
+
+Đọc: `supabase.from("nganh").select("ma, ten_hien_thi")` (mọi user đăng nhập; curator thêm/sửa). `customers.nganh` **không có FK** sang bảng này (onboarding cho nhập tự do) → mã không có trong bảng thì hiện nguyên mã làm fallback. Form onboarding có thể dùng bảng này làm danh sách gợi ý.
 
 ---
 

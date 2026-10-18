@@ -3,7 +3,13 @@
 // trích dẫn không tìm thấy nguyên văn trong đúng điều của chunk → entity bị loại, không vào DB.
 // Kết quả (kể cả danh sách bị loại) ghi vào pipeline_runs để curator/mentor xem được.
 
-import type { ExtractOutput, ExtractedEntity, ExtractedRelationship, LoaiEntity } from "./extractEntities.schema";
+import type {
+  ExtractOutput,
+  ExtractedEntity,
+  ExtractedRelationship,
+  LoaiEntity,
+  LoaiRelationship,
+} from "./extractEntities.schema";
 
 export type Article = { soDieu: number; noiDung: string };
 
@@ -26,6 +32,16 @@ const MIN_QUOTE_LENGTH = 12;
 const MAX_ENTITY_PER_ARTICLE = 10;
 const MAX_PRIMARY_DEPARTMENTS = 2;
 const LOAI_CO_PHONG_BAN: readonly LoaiEntity[] = ["hanh_vi", "thoi_han", "che_tai", "mien_giam"];
+
+// Loại entity hợp lệ ở 2 đầu cạnh — khớp mục 4 của prompt (extractEntities.prompt.ts).
+// filterDomain đọc điều kiện THEO CHIỀU CẠNH (dieu_kien: cond → hanh_vi; ap_dung_cho: hanh_vi → chu_the),
+// nên cạnh model sinh ngược phải được đảo lại ở đây, không để vào DB. bao_ham/tham_chieu/thay_the nối
+// mọi loại → không suy được chiều, giữ nguyên.
+const DAU_CANH: Partial<Record<LoaiRelationship, { source: readonly LoaiEntity[]; target: readonly LoaiEntity[] }>> = {
+  ap_dung_cho: { source: ["hanh_vi", "muc_thue", "thoi_han", "mien_giam"], target: ["chu_the", "doi_tuong", "hanh_vi"] },
+  dieu_kien: { source: ["dieu_kien", "nguong"], target: ["hanh_vi", "muc_thue", "mien_giam"] },
+  che_tai_cua: { source: ["che_tai"], target: ["hanh_vi"] },
+};
 
 // "Điều 5." / "Điều 5:" / "Điều 5a." ở đầu dòng
 const ARTICLE_HEADING = /^[ \t]*Điều[ \t]+(\d+)[a-zđ]?[ \t]*[.:]/gmu;
@@ -134,6 +150,7 @@ export function validateExtraction(articles: Article[], output: ExtractOutput): 
   const relKeys = new Set<string>();
   const chunkText = [...articleText.values()].join(" ");
   const resolve = (id: string) => remap.get(id) ?? id;
+  const loaiCua = new Map(kept.map((e) => [e.ma_tam, e.loai_entity]));
 
   output.relationships.forEach((raw, i) => {
     const label = `r${i + 1}`;
@@ -160,6 +177,27 @@ export function validateExtraction(articles: Article[], output: ExtractOutput): 
     if (r.target === r.source) {
       rejected.push(issue("relationship", label, "tu_tro_vao_chinh_no", r.source));
       return;
+    }
+
+    // Chiều cạnh: sai chiều mà đảo lại thì đúng → đảo; sai cả 2 chiều → loại (rule engine sẽ đọc sai)
+    const dau = DAU_CANH[r.loai_relationship];
+    if (dau) {
+      const loaiSource = loaiCua.get(r.source)!;
+      const loaiTarget = r.target === null ? null : loaiCua.get(r.target)!;
+      const hop = (s: LoaiEntity, t: LoaiEntity) => dau.source.includes(s) && dau.target.includes(t);
+      if (loaiTarget === null) {
+        if (!dau.source.includes(loaiSource)) {
+          warnings.push(issue("relationship", label, "source_sai_loai_canh_pending", `${r.loai_relationship}: ${loaiSource} → (ngoài chunk)`));
+        }
+      } else if (!hop(loaiSource, loaiTarget)) {
+        const chiTiet = `${r.loai_relationship}: ${loaiSource} → ${loaiTarget}`;
+        if (!hop(loaiTarget, loaiSource)) {
+          rejected.push(issue("relationship", label, "sai_loai_dau_canh", chiTiet));
+          return;
+        }
+        warnings.push(issue("relationship", label, "dao_chieu_canh", `${chiTiet} → đảo thành ${loaiTarget} → ${loaiSource}`));
+        [r.source, r.target] = [r.target!, r.source];
+      }
     }
 
     const key = `${r.loai_relationship}|${r.source}|${r.target ?? normalizeForMatch(r.target_ref_text ?? "")}`;
