@@ -36,9 +36,10 @@ export async function combine<T extends Record<string, Promise<Result<unknown>>>
 }
 
 /*
- * Map mã lỗi CONTRACT §6 ra hành vi UI. Trả về câu hiển thị (null = không có lỗi).
+ * Map mã lỗi CONTRACT §6–7 ra hành vi UI. Trả về câu hiển thị (null = không có lỗi).
  *  PT400 → hiện message tiếng Việt từ DB · PT401 → về trang đăng nhập · PT403 → ẩn nút
  *  PT404 → không tìm thấy · PT409 → tải lại bản ghi · 42501 / 23514 → lỗi lập trình, ghi log
+ *  AI_RATE_LIMIT (429) → Groq hết quota, thử lại sau · AI_ERROR (502) → lỗi AI
  */
 // Câu hiển thị cho từng mã (thuần, không side effect)
 export function describeError(err: AppError): string {
@@ -53,7 +54,12 @@ export function describeError(err: AppError): string {
     case "PT404":
       return "Không tìm thấy bản ghi (có thể đã bị thay đổi hoặc không thuộc quyền xem của bạn).";
     case "PT409":
-      return "Bản ghi đã được xử lý trước đó — đã tải lại dữ liệu mới nhất.";
+      // Route/DB gửi lý do cụ thể (vd "Chunk đã có 11 entity, không trích xuất lại") — ưu tiên hiện lý do đó
+      return err.message ? `${err.message} — đã tải lại dữ liệu mới nhất.` : "Bản ghi đã được xử lý trước đó — đã tải lại dữ liệu mới nhất.";
+    case "AI_RATE_LIMIT":
+      return "AI đang tạm hết lượt (giới hạn 8K token/phút). Đợi khoảng 1 phút rồi thử lại.";
+    case "AI_ERROR":
+      return `Gọi AI thất bại — thử lại sau. ${err.message ? `(${err.message})` : ""}`.trim();
     case "42501":
     case "23514":
       return "Lỗi hệ thống (đã ghi log để sửa).";

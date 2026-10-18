@@ -12,7 +12,7 @@ import { ModelCell } from "@/components/nexora/pipeline-log";
 import { ApDungBadge, RunBadge } from "@/components/nexora/status-badges";
 import { domainLabel, formatDateTime } from "@/lib/labels";
 import { combine, useErrorHandler } from "@/lib/data/errors";
-import { PipelineError, pipelineErrorCode, postPipeline, type FilterKetQua } from "@/lib/data/pipeline";
+import { generateAll, PipelineError, postPipeline, toAppError, type FilterKetQua } from "@/lib/data/pipeline";
 import { getAllDiagnostics, getCustomers, getPipelineRuns, getRunsByIds } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
 import type { PipelineRun, TrangThaiApDung } from "@/lib/types";
@@ -25,15 +25,31 @@ import type { PipelineRun, TrangThaiApDung } from "@/lib/types";
 
 const STATUSES: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 
+// 1 mục trong pipeline_runs.output.ket_qua của filter_domain (CONTRACT §7 — ghi chú triển khai)
+type FilterTrace = FilterKetQua & {
+  ten_entity?: string;
+  so_hieu?: string;
+  ly_do?: string;
+  dieu_kien?: { ten_entity: string; dieu_kien_may_doc: { thuoc_tinh: string }; gia_tri_khach_hang?: unknown; ket_qua: boolean | null }[];
+};
+
+const LY_DO_LABEL: Record<string, string> = {
+  ngoai_linh_vuc: "ngoài lĩnh vực khách hàng theo dõi",
+  dieu_kien_khong_thoa: "có điều kiện không thoả",
+  thieu_thong_tin: "hồ sơ còn thiếu dữ liệu",
+  chua_den_ngay_hieu_luc: "chưa tới ngày hiệu lực",
+  da_hieu_luc: "đã có hiệu lực, đủ điều kiện",
+};
+
 export function RescanPanel() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<{ run_ids: string[] } | null>(null);
   const [runs, setRuns] = useState<PipelineRun[]>([]);
-  const [generating, setGenerating] = useState<string | null>(null);
+  const [generating, setGenerating] = useState<{ customerId: string; written: number } | null>(null);
+  const [generated, setGenerated] = useState<Record<string, number>>({}); // số checklist AI đã viết theo khách hàng (phiên này)
   const handleError = useErrorHandler();
-  const toMessage = (e: unknown, fallback: string) =>
-    (e instanceof PipelineError ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }) : null) ?? fallback;
+  const toMessage = (e: unknown, fallback: string) => (e instanceof PipelineError ? handleError(toAppError(e)) : null) ?? fallback;
 
   const res = useQuery(() => combine({ customers: getCustomers(), allRuns: getPipelineRuns(), diagnostics: getAllDiagnostics() }), []);
   if (res.loading) return <LoadingBlock />;
@@ -58,11 +74,13 @@ export function RescanPanel() {
     setBusy(false);
   }
 
-  // Sau khi lọc: checklist áp dụng mới cần AI viết nội dung (POST /api/pipeline/generate)
+  // filter (rescan) KHÔNG tự gọi generate → checklist áp dụng mới cần AI viết nội dung.
+  // generate xử lý tối đa 6 mục/lần → generateAll gọi lại tới khi so_diagnostic = 0.
   async function generate(customerId: string) {
-    setGenerating(customerId);
+    setGenerating({ customerId, written: 0 });
     try {
-      await postPipeline("/api/pipeline/generate", { customer_id: customerId });
+      const out = await generateAll({ customer_id: customerId }, (_round, written) => setGenerating({ customerId, written }));
+      setGenerated((g) => ({ ...g, [customerId]: out.so_diagnostic }));
     } catch (e) {
       setError(toMessage(e, "AI chưa viết được checklist."));
     }
@@ -139,7 +157,8 @@ export function RescanPanel() {
                 </TableHeader>
                 <TableBody>
                   {runs.map((r) => {
-                    const ketQua = ((r.output as { ket_qua?: FilterKetQua[] } | null)?.ket_qua ?? []) as FilterKetQua[];
+                    // Chi tiết từng hành vi (kể cả khong_ap_dung) nằm trong pipeline_runs.output.ket_qua (CONTRACT §7)
+                    const ketQua = (r.output as { ket_qua?: FilterTrace[] } | null)?.ket_qua ?? [];
                     const n = (s: TrangThaiApDung) => ketQua.filter((k) => k.trang_thai_ap_dung === s).length;
                     const khongPhong = ketQua.filter((k) => k.trang_thai_ap_dung !== "khong_ap_dung" && k.diagnostic_ids.length === 0).length;
                     const choAi = diagnostics.filter(
@@ -150,6 +169,7 @@ export function RescanPanel() {
                         <TableCell className="font-medium whitespace-normal">
                           {customers.find((c) => c.id === r.customer_id)?.ten_cong_ty}
                           {khongPhong > 0 && <span className="block text-xs font-normal text-status-ap-dung">{khongPhong} nghĩa vụ chưa có phòng nhận — nhắc khách hàng thêm phòng ban</span>}
+                          {ketQua.length > 0 && <LyDoList ketQua={ketQua} />}
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
@@ -157,18 +177,28 @@ export function RescanPanel() {
                             <RunBadge status={r.trang_thai} />
                           </div>
                         </TableCell>
-                        {STATUSES.map((s) => (
-                          <TableCell key={s} className="text-right tabular-nums">
-                            {n(s)}
+                        {ketQua.length === 0 ? (
+                          // ket_qua [] = chưa có entity hanh_vi nào được duyệt — hợp lệ, không phải lỗi
+                          <TableCell colSpan={STATUSES.length} className="text-center text-sm text-muted-foreground">
+                            Chưa có entity được duyệt
                           </TableCell>
-                        ))}
+                        ) : (
+                          STATUSES.map((s) => (
+                            <TableCell key={s} className="text-right tabular-nums">
+                              {n(s)}
+                            </TableCell>
+                          ))
+                        )}
                         <TableCell>
                           {choAi > 0 ? (
                             <Button size="xs" variant="outline" disabled={generating !== null} onClick={() => generate(r.customer_id!)}>
-                              <Sparkles /> {generating === r.customer_id ? "AI đang viết…" : `AI viết ${choAi} checklist`}
+                              <Sparkles />{" "}
+                              {generating?.customerId === r.customer_id ? `AI đang viết… (đã xong ${generating.written})` : `AI viết ${choAi} checklist`}
                             </Button>
                           ) : (
-                            <span className="text-xs text-muted-foreground">Đủ nội dung</span>
+                            <span className="text-xs text-muted-foreground">
+                              {generated[r.customer_id!] !== undefined ? `AI đã viết ${generated[r.customer_id!]} checklist` : ketQua.length === 0 ? "—" : "Đủ nội dung"}
+                            </span>
                           )}
                         </TableCell>
                       </TableRow>
@@ -198,5 +228,32 @@ export function RescanPanel() {
         </ol>
       </details>
     </div>
+  );
+}
+
+// "Vì sao áp dụng / không áp dụng" — đọc từ pipeline_runs.output (rule engine ở backend ghi lại)
+function LyDoList({ ketQua }: { ketQua: FilterTrace[] }) {
+  return (
+    <details className="mt-1 text-xs font-normal">
+      <summary className="cursor-pointer text-muted-foreground">Vì sao ({ketQua.length} nghĩa vụ)</summary>
+      <ul className="mt-2 space-y-2">
+        {ketQua.map((k) => (
+          <li key={k.entity_id} className="space-y-0.5">
+            <span className="flex flex-wrap items-center gap-1.5">
+              <ApDungBadge status={k.trang_thai_ap_dung} />
+              <span className="font-medium">{k.ten_entity ?? k.entity_id}</span>
+              {k.so_hieu && <span className="text-muted-foreground">· {k.so_hieu}</span>}
+            </span>
+            {k.ly_do && <span className="block text-muted-foreground">Lý do: {LY_DO_LABEL[k.ly_do] ?? k.ly_do}</span>}
+            {(k.dieu_kien ?? []).map((dk, i) => (
+              <span key={i} className="block text-muted-foreground">
+                {dk.ket_qua === true ? "✓" : dk.ket_qua === false ? "✗" : "?"} {dk.ten_entity} — <code>{dk.dieu_kien_may_doc.thuoc_tinh}</code> ={" "}
+                {dk.gia_tri_khach_hang === undefined || dk.gia_tri_khach_hang === null ? "chưa khai" : JSON.stringify(dk.gia_tri_khach_hang)}
+              </span>
+            ))}
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }

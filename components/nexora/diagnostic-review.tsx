@@ -17,7 +17,7 @@ import { useAuth } from "@/lib/auth/auth-provider";
 import { combine, useErrorHandler } from "@/lib/data/errors";
 import { getChunks, getCustomer, getDepartments, getDiagnostics, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
-import { PipelineError, pipelineErrorCode, postPipeline } from "@/lib/data/pipeline";
+import { generateAll, PipelineError, toAppError } from "@/lib/data/pipeline";
 import { rpc } from "@/lib/data/rpc";
 import type { Department, Diagnostic, Entity, EntityGraphRow, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -88,7 +88,14 @@ export function DiagnosticReview() {
                 thuocTinhThieu={thieu}
                 dict={dict}
                 onDone={({ entityTen, status, error }) => {
-                  setFlash(error ? `${entityTen}: ${error}` : `${entityTen}: kết quả mới — ${status ? TRANG_THAI_AP_DUNG_LABEL[status] : "không đổi"}.`);
+                  // status null = filter trả ket_qua [] (chưa có entity được duyệt) — trạng thái hợp lệ, không phải lỗi
+                  setFlash(
+                    error
+                      ? `${entityTen}: ${error}`
+                      : status
+                        ? `${entityTen}: kết quả mới — ${TRANG_THAI_AP_DUNG_LABEL[status]}.`
+                        : `${entityTen}: chưa có entity được duyệt để đối chiếu — đã lưu câu trả lời.`,
+                  );
                   refresh();
                 }}
               />
@@ -202,12 +209,12 @@ function DiagnosticCard({
   async function askAi() {
     setBusy(true);
     try {
-      await postPipeline("/api/pipeline/generate", { customer_id: d.customer_id, diagnostic_ids: [d.id] });
+      await generateAll({ customer_id: d.customer_id, diagnostic_ids: [d.id] });
       setError(null);
     } catch (e) {
       setError(
         e instanceof PipelineError
-          ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }, { onForbidden: () => setForbidden(true) })
+          ? handleError(toAppError(e), { onForbidden: () => setForbidden(true) })
           : "AI chưa viết được checklist.",
       );
     }

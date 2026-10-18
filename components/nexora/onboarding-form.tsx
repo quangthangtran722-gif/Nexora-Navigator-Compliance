@@ -19,7 +19,7 @@ import { domainLabel, KNOWN_DOMAINS, QUY_MO_LABEL, toSlug } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
 import { useErrorHandler } from "@/lib/data/errors";
 import { saveOnboarding } from "@/lib/data/mutations";
-import { PipelineError, pipelineErrorCode, postPipeline, type FilterKetQua } from "@/lib/data/pipeline";
+import { filterThenGenerate, PipelineError, toAppError, type FilterKetQua } from "@/lib/data/pipeline";
 import { getThuocTinhHoSo } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
 import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4, toFieldErrors, type OnboardingPayload } from "@/lib/schemas";
@@ -57,7 +57,7 @@ export function OnboardingForm() {
   const [data, setData] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState<{ payload: OnboardingPayload; ketQua: FilterKetQua[] | null; loi?: string } | null>(null);
+  const [done, setDone] = useState<{ payload: OnboardingPayload; ketQua: FilterKetQua[] | null; soChecklist?: number; loi?: string } | null>(null);
   const { customerId } = useAuth(); // ghi vào hồ sơ của chính khách hàng đang đăng nhập (RequireRole đảm bảo có)
   const handleError = useErrorHandler();
   // Câu hỏi hồ sơ đọc từ bảng thuoc_tinh_ho_so (backend seed) — KHÔNG hard-code
@@ -100,11 +100,13 @@ export function OnboardingForm() {
       return setErrors({ _form: handleError(error)! });
     }
     try {
-      const { ket_qua } = await postPipeline("/api/pipeline/filter", { customer_id: customerId! });
-      setDone({ payload: full.data, ketQua: ket_qua });
+      // filter không tự gọi generate → có mục áp dụng thì generate (lặp tới khi so_diagnostic = 0)
+      const { filter, generate } = await filterThenGenerate({ customer_id: customerId! });
+      setDone({ payload: full.data, ketQua: filter.ket_qua, soChecklist: generate.so_diagnostic });
     } catch (e) {
-      const loi = e instanceof PipelineError ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }) : null;
-      setDone({ payload: full.data, ketQua: null, loi: loi ?? "Không chạy được rule engine." });
+      // Lỗi ở bước generate (vd AI_RATE_LIMIT) — hồ sơ đã lưu, filter có thể đã chạy xong
+      const loi = e instanceof PipelineError ? handleError(toAppError(e)) : null;
+      setDone({ payload: full.data, ketQua: null, loi: loi ?? "Không chạy được đối chiếu." });
     }
     setBusy(false);
   }
@@ -112,6 +114,7 @@ export function OnboardingForm() {
   if (done) {
     const by = (s: TrangThaiApDung) => done.ketQua?.filter((k) => k.trang_thai_ap_dung === s).length ?? 0;
     const khongPhong = done.ketQua?.filter((k) => k.trang_thai_ap_dung !== "khong_ap_dung" && k.diagnostic_ids.length === 0).length ?? 0;
+    const chuaCoEntity = done.ketQua !== null && done.ketQua.length === 0; // ket_qua [] = hợp lệ, không phải lỗi
     return (
       <Card className="max-w-2xl">
         <CardHeader>
@@ -121,14 +124,23 @@ export function OnboardingForm() {
           <CardDescription>Rule engine (không dùng AI) đã đối chiếu hồ sơ với kho nghĩa vụ đã duyệt.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {done.ketQua ? (
-            <div className="flex flex-wrap gap-3">
-              {(["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"] as const).map((s) => (
-                <span key={s} className="inline-flex items-center gap-1.5 text-sm">
-                  <ApDungBadge status={s} /> <strong className="tabular-nums">{by(s)}</strong>
-                </span>
-              ))}
-            </div>
+          {chuaCoEntity ? (
+            <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+              Chưa có entity được duyệt trong kho để đối chiếu. Hồ sơ đã được lưu — khi curator duyệt văn bản mới, hệ thống sẽ quét lại.
+            </p>
+          ) : done.ketQua ? (
+            <>
+              <div className="flex flex-wrap gap-3">
+                {(["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"] as const).map((s) => (
+                  <span key={s} className="inline-flex items-center gap-1.5 text-sm">
+                    <ApDungBadge status={s} /> <strong className="tabular-nums">{by(s)}</strong>
+                  </span>
+                ))}
+              </div>
+              {done.soChecklist !== undefined && done.soChecklist > 0 && (
+                <p className="text-sm text-muted-foreground">AI đã viết {done.soChecklist} checklist — chờ duyệt ở màn Duyệt diagnostic.</p>
+              )}
+            </>
           ) : (
             <p className="text-sm text-destructive">{done.loi}</p>
           )}
