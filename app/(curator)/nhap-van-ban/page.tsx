@@ -10,7 +10,7 @@ export default function Page() {
     <>
       <PageHeader
         title="Nhập văn bản luật"
-        description="Dán điều luật để AI trích xuất entity và quan hệ. Kết quả là bản nháp chờ curator duyệt."
+        description="Lưu văn bản và chia nội dung thành các chunk (1–2 điều) để AI trích xuất entity và quan hệ. Kết quả là bản nháp chờ curator duyệt."
       />
       <MockNotice />
       <LawInputForm />

@@ -1,139 +1,74 @@
-import type { ContextEntity, Diagnostic } from "@/lib/types";
-import { mockEntities } from "@/lib/mock/entities";
+import type { Diagnostic } from "@/lib/types";
 
 /*
- * MOCK DATA — diagnostic cho Minh Phát.
- * Quy ước UI (tự quyết, chờ backend xác nhận): noi_dung_diagnostic là các đầu mục check,
- * mỗi dòng (ngăn bằng "\n") hiển thị thành 1 ô checklist.
+ * MOCK DATA — diagnostic của Minh Phát (CONTRACT §3.6), khớp kết quả rule engine (lib/mock/rule-engine.ts)
+ * với thuoc_tinh hiện tại của Minh Phát. 1 row = 1 entity hanh_vi × 1 phòng ban (slug ∈ primary_departments).
+ *
+ * Quy ước UI (chờ backend xác nhận): noi_dung_diagnostic là các đầu mục check, mỗi dòng ("\n") = 1 ô checklist.
  */
 
-// Lấy context entity từ kho mock để nội dung khớp nhau
-function ctx(...ids: string[]): ContextEntity[] {
-  return ids.map((id) => {
-    const e = mockEntities.find((x) => x.id === id)!;
-    return { id: e.id, loai_entity: e.loai_entity, ten_entity: e.ten_entity, noi_dung_goc: e.noi_dung_goc };
-  });
+const T = "2026-10-16T02:00:20Z";
+
+function dg(p: Partial<Diagnostic> & Pick<Diagnostic, "id" | "entity_id" | "department_id" | "trang_thai_ap_dung">): Diagnostic {
+  return {
+    customer_id: "c-minh-phat",
+    thuoc_tinh_thieu: [],
+    noi_dung_diagnostic: null,
+    filter_run_id: "pr-f01",
+    generate_run_id: null,
+    trang_thai_duyet: "cho_duyet",
+    nguoi_duyet_id: null,
+    ghi_chu_duyet: null,
+    created_at: T,
+    updated_at: T,
+    ...p,
+  };
 }
 
-const base = { customer_id: "c-minh-phat", nguoi_duyet_id: null } as const;
-
 export const mockDiagnostics: Diagnostic[] = [
-  {
-    ...base,
-    id: "dg-01",
-    entity_id: "e-01",
-    department_id: "d-ke-toan",
-    muc_anh_huong: "primary",
-    trang_thai_ap_dung: "ap_dung",
+  // e-01 Lập HĐĐT qua sàn — primary [ke_toan, kinh_doanh] → 2 bản
+  dg({
+    id: "dg-01", entity_id: "e-01", department_id: "d-ke-toan", trang_thai_ap_dung: "ap_dung", generate_run_id: "pr-g01",
     noi_dung_diagnostic: [
       "Kiểm tra mọi đơn hàng hoàn tất trên Shopee/TikTok Shop đều đã có hoá đơn điện tử tương ứng",
       "Đối chiếu số đơn hoàn tất trong báo cáo sàn với số hoá đơn đã phát hành theo từng ngày",
       "Rà soát các đơn người mua không lấy hoá đơn — vẫn phải lập hoá đơn",
-      "Xác nhận phần mềm hoá đơn có kết nối hoặc quy trình xuất hoá đơn hàng loạt từ dữ liệu sàn",
     ].join("\n"),
-    trang_thai_duyet: "cho_duyet",
-    context_entities: ctx("e-02", "e-03"),
-  },
-  {
-    ...base,
-    id: "dg-02",
-    entity_id: "e-01",
-    department_id: "d-kinh-doanh",
-    muc_anh_huong: "secondary",
-    trang_thai_ap_dung: "ap_dung",
+  }),
+  dg({
+    id: "dg-02", entity_id: "e-01", department_id: "d-kinh-doanh", trang_thai_ap_dung: "ap_dung", generate_run_id: "pr-g01",
     noi_dung_diagnostic: [
       "Kiểm tra quy trình chuyển dữ liệu đơn hàng từ sàn sang phòng Kế toán có đủ thông tin để lập hoá đơn",
       "Rà soát đơn có khuyến mãi/voucher sàn — giá trên hoá đơn có khớp giá thực thu không",
     ].join("\n"),
-    trang_thai_duyet: "cho_duyet",
-    context_entities: ctx("e-02"),
-  },
-  {
-    ...base,
-    id: "dg-03",
-    entity_id: "e-05",
-    department_id: "d-ke-toan",
-    muc_anh_huong: "primary",
-    trang_thai_ap_dung: "ap_dung",
-    noi_dung_diagnostic: [
-      "Lọc các hoá đơn mua vào từ ngưỡng quy định trở lên trong kỳ",
-      "Kiểm tra mỗi hoá đơn đó đã có chứng từ thanh toán qua ngân hàng chưa",
-      "Đánh dấu khoản thuế GTGT đầu vào có rủi ro không được khấu trừ",
-    ].join("\n"),
-    trang_thai_duyet: "da_duyet",
-    context_entities: ctx("e-06", "e-07"),
-  },
-  {
-    ...base,
-    id: "dg-04",
-    entity_id: "e-05",
-    department_id: "d-ban-gd",
-    muc_anh_huong: "secondary",
-    trang_thai_ap_dung: "ap_dung",
-    noi_dung_diagnostic: [
-      "Kiểm tra quy định nội bộ về hạn mức thanh toán tiền mặt cho nhà cung cấp",
-      "Xác nhận người được uỷ quyền duyệt chi qua ngân hàng",
-    ].join("\n"),
-    trang_thai_duyet: "da_duyet",
-    context_entities: ctx("e-06"),
-  },
-  {
-    ...base,
-    id: "dg-05",
-    entity_id: "e-05",
-    department_id: "d-kho-van",
-    muc_anh_huong: "secondary",
-    trang_thai_ap_dung: "chua_du_thong_tin",
-    noi_dung_diagnostic: [
-      "Cần xác nhận: phòng Kho vận có trực tiếp thanh toán cho nhà cung cấp/đơn vị vận chuyển không?",
-    ].join("\n"),
-    trang_thai_duyet: "cho_duyet",
-  },
-  {
-    ...base,
-    id: "dg-06",
-    entity_id: "e-08",
-    department_id: "d-ke-toan",
-    muc_anh_huong: "primary",
-    trang_thai_ap_dung: "ap_dung",
+  }),
+  // e-05 — ngưỡng e-06 cần gia_tri_mua_vao_lon_nhat, Minh Phát đang "Chưa chắc" (null) → hỏi bổ sung
+  dg({
+    id: "dg-03", entity_id: "e-05", department_id: "d-ke-toan", trang_thai_ap_dung: "chua_du_thong_tin",
+    thuoc_tinh_thieu: ["gia_tri_mua_vao_lon_nhat"],
+  }),
+  // e-08 Khai thuế theo quý — đã được người đầu mối duyệt và giao Kế toán
+  dg({
+    id: "dg-04", entity_id: "e-08", department_id: "d-ke-toan", trang_thai_ap_dung: "ap_dung", generate_run_id: "pr-g01",
+    trang_thai_duyet: "da_duyet", nguoi_duyet_id: "u-dau-moi",
     noi_dung_diagnostic: [
       "Xác nhận doanh thu năm trước thuộc diện khai thuế GTGT theo quý",
-      "Kiểm tra lịch nộp hồ sơ khai thuế quý đã được đặt nhắc hạn",
+      "Đặt nhắc hạn nộp hồ sơ khai thuế cho từng quý",
     ].join("\n"),
-    trang_thai_duyet: "da_duyet",
-    context_entities: ctx("e-09"),
-  },
-  {
-    ...base,
-    id: "dg-07",
-    entity_id: "e-10",
-    department_id: "d-ke-toan",
-    muc_anh_huong: "primary",
-    trang_thai_ap_dung: "sap_ap_dung",
+  }),
+  // e-10 Lưu trữ chứng từ điện tử — hiệu lực 01/01/2027 → sắp áp dụng; primary [ke_toan, van_hanh]
+  dg({
+    id: "dg-05", entity_id: "e-10", department_id: "d-ke-toan", trang_thai_ap_dung: "sap_ap_dung", generate_run_id: "pr-g01",
     noi_dung_diagnostic: [
       "Rà soát nơi đang lưu chứng từ điện tử (máy cá nhân, email, ổ chung…)",
       "Kiểm tra khả năng tra cứu lại chứng từ theo số hoá đơn và kỳ kế toán",
     ].join("\n"),
-    trang_thai_duyet: "cho_duyet",
-  },
-  {
-    ...base,
-    id: "dg-08",
-    entity_id: "e-10",
-    department_id: "d-kho-van",
-    muc_anh_huong: "secondary",
-    trang_thai_ap_dung: "sap_ap_dung",
-    noi_dung_diagnostic: ["Kiểm tra phiếu xuất kho điện tử có được lưu kèm mã đơn hàng sàn không"].join("\n"),
-    trang_thai_duyet: "cho_duyet",
-  },
-  {
-    ...base,
-    id: "dg-09",
-    entity_id: "e-12",
-    department_id: "d-kinh-doanh",
-    muc_anh_huong: "primary",
-    trang_thai_ap_dung: "khong_ap_dung",
-    noi_dung_diagnostic: ["Không áp dụng: công ty không có điểm bán lẻ trực tiếp tại cửa hàng"].join("\n"),
-    trang_thai_duyet: "da_duyet",
-  },
+  }),
+  dg({ id: "dg-06", entity_id: "e-10", department_id: "d-kho-van", trang_thai_ap_dung: "sap_ap_dung" }), // chờ AI viết nội dung
+  // e-12 Máy tính tiền — trước đây áp dụng, sau khi Minh Phát bỏ cửa hàng trực tiếp thì hết áp dụng
+  dg({
+    id: "dg-07", entity_id: "e-12", department_id: "d-kinh-doanh", trang_thai_ap_dung: "khong_ap_dung", generate_run_id: "pr-g00",
+    trang_thai_duyet: "da_duyet", nguoi_duyet_id: "u-dau-moi", created_at: "2026-09-01T02:00:00Z",
+    noi_dung_diagnostic: "Kiểm tra máy tính tiền tại cửa hàng đã kết nối hoá đơn điện tử",
+  }),
 ];

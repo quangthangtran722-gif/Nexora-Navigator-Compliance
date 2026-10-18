@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
-import { PageHeader, PagePlaceholder } from "@/components/nexora/page-header";
+
+import { MockNotice, PageHeader } from "@/components/nexora/page-header";
+import { RescanPanel } from "@/components/nexora/rescan-panel";
 
 export const metadata: Metadata = { title: "Quét lại khách hàng" };
 
 export default function Page() {
   return (
     <>
-      <PageHeader title="Quét lại khách hàng" description="Chạy lại rule engine cho các khách hàng hiện có khi kho có entity mới." />
-      <PagePlaceholder />
+      <PageHeader
+        title="Quét lại khách hàng"
+        description="Chạy lại rule engine cho mọi khách hàng hiện có khi kho có entity mới được duyệt."
+      />
+      <MockNotice />
+      <RescanPanel />
     </>
   );
 }
