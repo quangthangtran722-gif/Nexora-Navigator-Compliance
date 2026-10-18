@@ -169,7 +169,6 @@ export function RescanPanel() {
                         <TableCell className="font-medium whitespace-normal">
                           {customers.find((c) => c.id === r.customer_id)?.ten_cong_ty}
                           {khongPhong > 0 && <span className="block text-xs font-normal text-status-ap-dung">{khongPhong} nghĩa vụ chưa có phòng nhận — nhắc khách hàng thêm phòng ban</span>}
-                          {ketQua.length > 0 && <LyDoList ketQua={ketQua} />}
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
@@ -207,6 +206,11 @@ export function RescanPanel() {
                 </TableBody>
               </Table>
             </div>
+            {/* Lý do để ngoài bảng — trong ô "Khách hàng" bị bóp còn 1 cột hẹp */}
+            {runs.map((r) => {
+              const ketQua = (r.output as { ket_qua?: FilterTrace[] } | null)?.ket_qua ?? [];
+              return ketQua.length > 0 ? <LyDoList key={r.id} ten={customers.find((c) => c.id === r.customer_id)?.ten_cong_ty} ketQua={ketQua} /> : null;
+            })}
             <div className="flex flex-wrap items-center gap-3 text-sm">
               <ModelCell model={null} />
               <Link href="/nhat-ky" className={buttonVariants({ variant: "outline", size: "sm" })}>
@@ -232,11 +236,13 @@ export function RescanPanel() {
 }
 
 // "Vì sao áp dụng / không áp dụng" — đọc từ pipeline_runs.output (rule engine ở backend ghi lại)
-function LyDoList({ ketQua }: { ketQua: FilterTrace[] }) {
+function LyDoList({ ten, ketQua }: { ten?: string; ketQua: FilterTrace[] }) {
   return (
-    <details className="mt-1 text-xs font-normal">
-      <summary className="cursor-pointer text-muted-foreground">Vì sao ({ketQua.length} nghĩa vụ)</summary>
-      <ul className="mt-2 space-y-2">
+    <details className="rounded-xl border p-4 text-sm">
+      <summary className="cursor-pointer font-medium">
+        Vì sao — {ten} ({ketQua.length} nghĩa vụ)
+      </summary>
+      <ul className="mt-3 grid gap-3 sm:grid-cols-2">
         {ketQua.map((k) => (
           <li key={k.entity_id} className="space-y-0.5">
             <span className="flex flex-wrap items-center gap-1.5">
