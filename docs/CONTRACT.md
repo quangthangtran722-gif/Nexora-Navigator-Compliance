@@ -488,6 +488,28 @@ POST /api/pipeline/rescan    body {}
 
 Lỗi: `{ error: string; code?: string }` với status như mục 6.
 
+**Ghi chú triển khai** (bổ sung 18/10/2026; shape request/response ở trên giữ nguyên):
+
+- **Xác thực:** gửi header `Authorization: Bearer <session.access_token>`. Lấy token qua `(await supabase.auth.getSession()).data.session.access_token`. Thiếu token hoặc token hết hạn → `401 PT401`. Route chạy bằng chính JWT người gọi nên RLS áp dụng y như khi gọi Supabase trực tiếp; route không dùng service role.
+- **Quyền:**
+  - `extract`, `rescan`: chỉ curator (`403 PT403`).
+  - `filter`, `generate`: curator, hoặc khách hàng có `customer_id` trùng với `customer_id` trong body.
+- **Mã lỗi riêng của route:**
+
+  | Status | code | Khi nào |
+  |---|---|---|
+  | `429` | `AI_RATE_LIMIT` | Groq hết quota 8K token/phút → đợi khoảng 1 phút rồi gọi lại |
+  | `502` | `AI_ERROR` | Groq lỗi khác |
+  | `409` | `PT409` | `extract` gọi vào chunk đang chạy hoặc đã có entity. Chỉ chunk `cho_xu_ly`/`loi` chưa có entity mới trích xuất được |
+
+- **Trạng thái chunk:** sau `extract`, chunk chuyển `da_trich_xuat`. Nếu không có entity nào qua grounding, chunk chuyển thẳng `hoan_tat`. Lỗi thì chunk chuyển `loi`.
+- **`filter` → `ket_qua`:** gồm mọi hanh_vi đã duyệt thuộc văn bản `active`, kể cả mục `khong_ap_dung` (lúc đó `diagnostic_ids` có thể là `[]`). Chi tiết từng điều kiện đã đánh giá (thuộc tính, toán tử, giá trị khách hàng, đúng/sai/thiếu) nằm trong `pipeline_runs.output.ket_qua` của `run_id`, dùng cho màn "vì sao áp dụng".
+- **`generate`:**
+  - Mỗi lần gọi xử lý tối đa 6 diagnostic (giới hạn quota). Còn dư thì gọi lại cho tới khi `so_diagnostic = 0`.
+  - Code loại mọi bản AI viết có con số không có trong văn bản gốc; mục bị loại giữ `noi_dung_diagnostic = null`, lý do ghi ở `pipeline_runs.output.chi_tiet`.
+  - Dòng "Căn cứ: …" do code ghép từ DB, không lấy từ AI.
+- **Thứ tự gọi:** `filter` không tự gọi `generate`. Frontend gọi `generate` sau `filter` khi có `ap_dung`/`sap_ap_dung`.
+
 ### Quy tắc rule engine (để frontend giải thích được kết quả)
 
 Với mỗi entity `hanh_vi` đã duyệt, thuộc văn bản `active`:
