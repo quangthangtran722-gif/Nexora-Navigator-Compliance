@@ -9,6 +9,7 @@ import type {
   Entity,
   EntityGraphRow,
   EntityRelationship,
+  Nganh,
   NerExtractionSummary,
   Notification,
   PipelineRun,
@@ -48,6 +49,8 @@ export const getChunks = () => rows<VanBanChunk>(db().from("van_ban_chunks").sel
 export const getEntities = () => rows<Entity>(db().from("entities").select("*"));
 export const getRelationships = () => rows<EntityRelationship>(db().from("entity_relationships").select("*"));
 export const getThuocTinhHoSo = () => rows<ThuocTinhHoSo>(db().from("thuoc_tinh_ho_so").select("*").order("ma"));
+// §3.10: chỉ cần mã + tên để tra nhãn ngành
+export const getNganh = () => rows<Pick<Nganh, "ma" | "ten_hien_thi">>(db().from("nganh").select("ma, ten_hien_thi"));
 
 // View entity_graph — mỗi row = 1 cạnh đã join tên 2 đầu (CONTRACT §3.5)
 export const getEntityGraph = () => rows<EntityGraphRow>(db().from("entity_graph").select("*"));

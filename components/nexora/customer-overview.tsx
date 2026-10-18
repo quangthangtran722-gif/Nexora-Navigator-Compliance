@@ -12,7 +12,7 @@ import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, QUY_MO_LABEL } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
 import { combine } from "@/lib/data/errors";
-import { getCustomer, getDepartments, getDiagnostics, getThuocTinhHoSo } from "@/lib/data/queries";
+import { getCustomer, getDepartments, getDiagnostics, getNganh, getThuocTinhHoSo } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
 import { formatGiaTri } from "@/lib/thuoc-tinh-format";
 import type { Diagnostic, TrangThaiApDung } from "@/lib/types";
@@ -33,12 +33,15 @@ export function CustomerOverview() {
         departments: getDepartments(customerId!),
         diagnostics: getDiagnostics(customerId!),
         dict: getThuocTinhHoSo(),
+        nganh: getNganh(),
       }),
     [customerId],
   );
   if (res.loading) return <LoadingBlock />;
   if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
-  const { customer, departments, diagnostics } = res.data!;
+  const { customer, departments, diagnostics, nganh } = res.data!;
+  // Mã không có trong bảng nganh (onboarding nhập tự do) → hiện nguyên mã (CONTRACT §3.10)
+  const tenNganh = customer.nganh ? (nganh.find((n) => n.ma === customer.nganh)?.ten_hien_thi ?? customer.nganh) : "chưa khai";
   const dict = res.data!.dict.filter((t) => t.domain === null || customer.domains.includes(t.domain));
 
   const count = (items: Diagnostic[], pred: (d: Diagnostic) => boolean) => items.filter(pred).length;
@@ -66,7 +69,7 @@ export function CustomerOverview() {
             {customer.ten_cong_ty}
           </CardTitle>
           <CardDescription>
-            Ngành: <code className="text-xs">{customer.nganh ?? "chưa khai"}</code> · Quy mô: {customer.quy_mo ? QUY_MO_LABEL[customer.quy_mo] : "chưa khai"}
+            Ngành: {tenNganh} · Quy mô: {customer.quy_mo ? QUY_MO_LABEL[customer.quy_mo] : "chưa khai"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
