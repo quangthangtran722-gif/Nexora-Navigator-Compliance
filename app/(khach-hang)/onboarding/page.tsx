@@ -10,7 +10,7 @@ export default function Page() {
     <>
       <PageHeader
         title="Onboarding"
-        description="3 bước: thông tin công ty, lĩnh vực theo dõi, phòng ban và email trưởng phòng."
+        description="4 bước: thông tin công ty, lĩnh vực theo dõi, hồ sơ doanh nghiệp, phòng ban."
       />
       <MockNotice />
       <OnboardingForm />

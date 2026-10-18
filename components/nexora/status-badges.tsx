@@ -11,62 +11,35 @@ import {
   Gauge,
   Gavel,
   ListChecks,
+  Loader,
   Package,
   Percent,
   ShieldAlert,
   TicketPercent,
+  TriangleAlert,
   XCircle,
 } from "lucide-react";
-import type { LoaiEntity } from "@/lib/types";
+import {
+  LOAI_ENTITY_LABEL,
+  TRANG_THAI_AP_DUNG_LABEL,
+  TRANG_THAI_CHUNK_LABEL,
+  TRANG_THAI_DUYET_LABEL,
+} from "@/lib/labels";
+import type { LoaiEntity, TrangThaiApDung, TrangThaiChunk, TrangThaiDuyet, TrangThaiRun } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /*
  * Badge trạng thái dùng chung cho cả 2 track — không tự vẽ badge trạng thái ở chỗ khác.
- * Màu lấy từ token --status-* / --duyet-* trong app/globals.css.
- *
- * Key ở đây là key HIỂN THỊ của UI, cố ý tách khỏi giá trị lưu trong DB:
- * khi schema v3 chốt, chỉ cần viết 1 hàm map giá trị DB → key này, badge không đổi.
+ * Nhãn lấy từ bảng *_LABEL của CONTRACT.md (lib/labels.ts); màu lấy từ token --status-* / --duyet-* (app/globals.css).
  */
 
 const base =
   "inline-flex w-fit shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap [&>svg]:size-3.5";
 
-type BadgeConfig = { label: string; className: string; Icon: LucideIcon };
+type Style = { className: string; Icon: LucideIcon };
 
-/* ---------- 1. Trạng thái áp dụng (kết quả match của rule engine) ---------- */
-
-// Draft v3 có thêm "chua_du_thong_tin" (cần hỏi bổ sung) — trùng key với TrangThaiApDung trong lib/types
-export type ApDungStatus = "ap_dung" | "sap_ap_dung" | "khong_ap_dung" | "chua_du_thong_tin";
-
-const apDungConfig: Record<ApDungStatus, BadgeConfig> = {
-  ap_dung: { label: "Áp dụng", className: "bg-status-ap-dung-bg text-status-ap-dung", Icon: ShieldAlert },
-  sap_ap_dung: { label: "Sắp áp dụng", className: "bg-status-sap-ap-dung-bg text-status-sap-ap-dung", Icon: Clock },
-  khong_ap_dung: {
-    label: "Không áp dụng",
-    className: "bg-status-khong-ap-dung-bg text-status-khong-ap-dung",
-    Icon: CircleMinus,
-  },
-  chua_du_thong_tin: {
-    label: "Chưa đủ thông tin",
-    className: "bg-status-chua-du-tt-bg text-status-chua-du-tt",
-    Icon: CircleHelp,
-  },
-};
-
-/* ---------- 2. Trạng thái duyệt (entity, relationship, diagnostic) ---------- */
-
-export type DuyetStatus = "cho_duyet" | "da_duyet" | "tu_choi";
-
-const duyetConfig: Record<DuyetStatus, BadgeConfig> = {
-  cho_duyet: { label: "Chờ duyệt", className: "bg-duyet-cho-bg text-duyet-cho", Icon: CircleDashed },
-  da_duyet: { label: "Đã duyệt", className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
-  tu_choi: { label: "Từ chối", className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: XCircle },
-};
-
-/* ---------- Khung chung ---------- */
-
-function StatusPill({ config, className }: { config: BadgeConfig; className?: string }) {
-  const { label, className: color, Icon } = config;
+function Pill({ label, style, className }: { label: string; style: Style; className?: string }) {
+  const { className: color, Icon } = style;
   return (
     <span className={cn(base, color, className)}>
       <Icon aria-hidden />
@@ -75,50 +48,95 @@ function StatusPill({ config, className }: { config: BadgeConfig; className?: st
   );
 }
 
-export function ApDungBadge({ status, className }: { status: ApDungStatus; className?: string }) {
-  return <StatusPill config={apDungConfig[status]} className={className} />;
-}
+/* ---------- 1. Trạng thái áp dụng — 4 trạng thái rule engine ---------- */
 
-export function DuyetBadge({ status, className }: { status: DuyetStatus; className?: string }) {
-  return <StatusPill config={duyetConfig[status]} className={className} />;
-}
-
-/* ---------- 4. Loại entity (nhãn phân loại, không phải trạng thái → tông trung tính) ---------- */
-
-const loaiEntityConfig: Record<LoaiEntity, BadgeConfig> = {
-  chu_the: { label: "Chủ thể", className: "", Icon: Building },
-  doi_tuong: { label: "Đối tượng", className: "", Icon: Package },
-  hanh_vi: { label: "Hành vi", className: "", Icon: ListChecks },
-  che_tai: { label: "Chế tài", className: "", Icon: Gavel },
-  dieu_kien: { label: "Điều kiện", className: "", Icon: Ban },
-  muc_thue: { label: "Mức thuế", className: "", Icon: Percent },
-  thoi_han: { label: "Thời hạn", className: "", Icon: CalendarClock },
-  mien_giam: { label: "Miễn giảm", className: "", Icon: TicketPercent },
-  nguong: { label: "Ngưỡng", className: "", Icon: Gauge },
+const apDungStyle: Record<TrangThaiApDung, Style> = {
+  ap_dung: { className: "bg-status-ap-dung-bg text-status-ap-dung", Icon: ShieldAlert },
+  sap_ap_dung: { className: "bg-status-sap-ap-dung-bg text-status-sap-ap-dung", Icon: Clock },
+  khong_ap_dung: { className: "bg-status-khong-ap-dung-bg text-status-khong-ap-dung", Icon: CircleMinus },
+  chua_du_thong_tin: { className: "bg-status-chua-du-tt-bg text-status-chua-du-tt", Icon: CircleHelp },
 };
 
-// Chấp nhận string vì context_entities.loai_entity trong draft là string
-export function LoaiEntityBadge({ loai, className }: { loai: LoaiEntity | string; className?: string }) {
-  const config = loaiEntityConfig[loai as LoaiEntity] ?? { label: loai, className: "", Icon: CircleDashed };
-  return <StatusPill config={config} className={cn("border bg-muted/60 text-foreground/80", className)} />;
+export function ApDungBadge({ status, className }: { status: TrangThaiApDung; className?: string }) {
+  return <Pill label={TRANG_THAI_AP_DUNG_LABEL[status]} style={apDungStyle[status]} className={className} />;
 }
 
-/* ---------- 3. Mức ảnh hưởng tới phòng ban ---------- */
+/* ---------- 2. Trạng thái duyệt (entity, diagnostic) ---------- */
 
-export type AnhHuongLevel = "primary" | "secondary";
+const duyetStyle: Record<TrangThaiDuyet, Style> = {
+  cho_duyet: { className: "bg-duyet-cho-bg text-duyet-cho", Icon: CircleDashed },
+  da_duyet: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
+  tu_choi: { className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: XCircle },
+};
 
-export function AnhHuongBadge({ level, className }: { level: AnhHuongLevel; className?: string }) {
+export function DuyetBadge({ status, className }: { status: TrangThaiDuyet; className?: string }) {
+  return <Pill label={TRANG_THAI_DUYET_LABEL[status]} style={duyetStyle[status]} className={className} />;
+}
+
+/* ---------- 3. Trạng thái chunk / lần chạy pipeline ---------- */
+
+const chunkStyle: Record<TrangThaiChunk, Style> = {
+  cho_xu_ly: { className: "bg-muted text-muted-foreground", Icon: CircleDashed },
+  dang_xu_ly: { className: "bg-duyet-cho-bg text-duyet-cho", Icon: Loader },
+  da_trich_xuat: { className: "bg-status-sap-ap-dung-bg text-status-sap-ap-dung", Icon: Clock },
+  hoan_tat: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
+  loi: { className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: TriangleAlert },
+};
+
+export function ChunkBadge({ status, className }: { status: TrangThaiChunk; className?: string }) {
+  return <Pill label={TRANG_THAI_CHUNK_LABEL[status]} style={chunkStyle[status]} className={className} />;
+}
+
+// CONTRACT không có *_LABEL cho TrangThaiRun → nhãn phía UI
+const RUN_LABEL: Record<TrangThaiRun, string> = { cho_xu_ly: "Chờ xử lý", dang_xu_ly: "Đang chạy", hoan_tat: "Hoàn tất", loi: "Lỗi" };
+
+const runStyle: Record<TrangThaiRun, Style> = {
+  cho_xu_ly: chunkStyle.cho_xu_ly,
+  dang_xu_ly: chunkStyle.dang_xu_ly,
+  hoan_tat: chunkStyle.hoan_tat,
+  loi: chunkStyle.loi,
+};
+
+export function RunBadge({ status, className }: { status: TrangThaiRun; className?: string }) {
+  return <Pill label={RUN_LABEL[status]} style={runStyle[status]} className={className} />;
+}
+
+/* ---------- 4. Loại entity (nhãn phân loại → tông trung tính) ---------- */
+
+const loaiIcon: Record<LoaiEntity, LucideIcon> = {
+  chu_the: Building,
+  doi_tuong: Package,
+  hanh_vi: ListChecks,
+  che_tai: Gavel,
+  dieu_kien: Ban,
+  muc_thue: Percent,
+  thoi_han: CalendarClock,
+  mien_giam: TicketPercent,
+  nguong: Gauge,
+};
+
+export function LoaiEntityBadge({ loai, className }: { loai: LoaiEntity; className?: string }) {
+  return (
+    <Pill
+      label={LOAI_ENTITY_LABEL[loai]}
+      style={{ className: "", Icon: loaiIcon[loai] }}
+      className={cn("border bg-muted/60 text-foreground/80", className)}
+    />
+  );
+}
+
+/* ---------- 5. Phòng ban chính / phụ của 1 entity (primary_departments / secondary_departments) ---------- */
+
+export function AnhHuongBadge({ level, className }: { level: "primary" | "secondary"; className?: string }) {
   return (
     <span
       className={cn(
         base,
-        level === "primary"
-          ? "bg-primary text-primary-foreground"
-          : "border border-primary/40 bg-transparent text-primary",
+        level === "primary" ? "bg-primary text-primary-foreground" : "border border-primary/40 bg-transparent text-primary",
         className,
       )}
     >
-      {level === "primary" ? "Ảnh hưởng chính" : "Ảnh hưởng phụ"}
+      {level === "primary" ? "Chính" : "Phụ"}
     </span>
   );
 }

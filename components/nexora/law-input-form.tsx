@@ -2,138 +2,152 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Sparkles } from "lucide-react";
+import { Info, Plus, Sparkles, Trash2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { FormField, PayloadPreview } from "@/components/nexora/form-field";
-import { domainLabel } from "@/lib/labels";
-import { extractRequestSchema, LOAI_VAN_BAN, toFieldErrors, type ExtractRequest } from "@/lib/schemas";
-import type { Domain } from "@/lib/types";
+import { FormField } from "@/components/nexora/form-field";
+import { ChunkBadge } from "@/components/nexora/status-badges";
+import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
+import { PipelineError, postPipeline, type PipelineRoutes } from "@/lib/mock/pipeline-api";
+import { createVanBanWithChunks } from "@/lib/mock/tables";
+import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
+import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
 
-const LOAI_LABEL: Record<(typeof LOAI_VAN_BAN)[number], string> = {
-  luat: "Luật",
-  nghi_dinh: "Nghị định",
-  thong_tu: "Thông tư",
-  quyet_dinh: "Quyết định",
-  khac: "Khác",
-};
-const LOAI_ITEMS = LOAI_VAN_BAN.map((v) => ({ value: v, label: LOAI_LABEL[v] }));
+/*
+ * Curator nạp văn bản: tạo van_ban (draft) + van_ban_chunks, rồi gọi POST /api/pipeline/extract
+ * TUẦN TỰ từng chunk (quota Groq 8K token/phút — CONTRACT §7). Mock: số entity trả về là giả lập.
+ */
 
-// State form cho phép giá trị rỗng; Zod quyết định hợp lệ lúc gửi
-type FormState = Omit<ExtractRequest, "loai_van_ban"> & {
-  loai_van_ban: ExtractRequest["loai_van_ban"] | "";
-};
+type ChunkState = { tieu_de: string; dieu_khoan_range: string; noi_dung: string };
+type Progress = { chunk_id: string; label: string; trang_thai: TrangThaiChunk; res?: PipelineRoutes["/api/pipeline/extract"]["res"]; loi?: string };
 
-const EMPTY: FormState = {
-  ten_van_ban: "",
-  so_hieu: "",
-  loai_van_ban: "",
-  domains: [],
-  ngay_co_hieu_luc: null,
-  noi_dung: "",
-};
+const LOAI_ITEMS = (Object.keys(LOAI_VAN_BAN_LABEL) as LoaiVanBan[]).map((v) => ({ value: v, label: LOAI_VAN_BAN_LABEL[v] }));
+const EMPTY_CHUNK: ChunkState = { tieu_de: "", dieu_khoan_range: "", noi_dung: "" };
 
 export function LawInputForm() {
-  const [data, setData] = useState<FormState>(EMPTY);
+  const [vb, setVb] = useState({
+    ten_van_ban: "",
+    so_hieu: "",
+    loai_van_ban: "" as LoaiVanBan | "",
+    co_quan_ban_hanh: "",
+    ngay_ban_hanh: "",
+    ngay_hieu_luc: "",
+    domains: [] as string[],
+  });
+  const [chunks, setChunks] = useState<ChunkState[]>([EMPTY_CHUNK]);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
-  const [payload, setPayload] = useState<ExtractRequest | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [progress, setProgress] = useState<Progress[] | null>(null);
+  const [running, setRunning] = useState(false);
 
-  const update = (patch: Partial<FormState>) => setData((d) => ({ ...d, ...patch }));
+  const updateVb = (patch: Partial<typeof vb>) => setVb((v) => ({ ...v, ...patch }));
+  const setChunk = (i: number, patch: Partial<ChunkState>) => setChunks((cs) => cs.map((c, j) => (j === i ? { ...c, ...patch } : c)));
+  const blankToNull = (s: string) => (s.trim() === "" ? null : s.trim());
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const result = extractRequestSchema.safeParse(data);
-    if (!result.success) return setErrors(toFieldErrors(result.error));
+    const parsed = nhapVanBanSchema.safeParse({
+      van_ban: { ...vb, co_quan_ban_hanh: blankToNull(vb.co_quan_ban_hanh), ngay_ban_hanh: blankToNull(vb.ngay_ban_hanh) },
+      chunks: chunks.map((c) => ({ tieu_de: blankToNull(c.tieu_de), dieu_khoan_range: blankToNull(c.dieu_khoan_range), noi_dung: c.noi_dung })),
+    });
+    if (!parsed.success) return setErrors(toFieldErrors(parsed.error));
     setErrors({});
-    setPayload(result.data);
-    setStatus("sending");
-    // MOCK: chưa gọi POST /api/pipeline/extract (Groq). Chỉ mô phỏng thời gian chờ.
-    setTimeout(() => setStatus("done"), 1500);
+    setFormError(null);
+    setRunning(true);
+
+    // 1. Ghi van_ban (draft) + chunks
+    const { data, error } = await createVanBanWithChunks(parsed.data.van_ban, parsed.data.chunks);
+    if (error) {
+      setRunning(false);
+      return setFormError(error.message);
+    }
+    const list: Progress[] = data.chunks.map((c) => ({
+      chunk_id: c.id,
+      label: `Chunk ${c.thu_tu}${c.dieu_khoan_range ? ` · ${c.dieu_khoan_range}` : ""}`,
+      trang_thai: "cho_xu_ly",
+    }));
+    setProgress(list);
+
+    // 2. Trích xuất tuần tự từng chunk
+    for (const p of list) {
+      setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "dang_xu_ly" } : x)));
+      try {
+        const res = await postPipeline("/api/pipeline/extract", { chunk_id: p.chunk_id });
+        setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "da_trich_xuat", res } : x)));
+      } catch (err) {
+        const msg = err instanceof PipelineError ? err.error : "Lỗi không xác định";
+        setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "loi", loi: msg } : x)));
+      }
+    }
+    setRunning(false);
   }
 
-  if (status === "done" && payload) {
+  if (progress) {
     return (
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="size-5 text-primary" aria-hidden /> Đã gửi yêu cầu trích xuất (mô phỏng)
+            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất (mô phỏng)"}
           </CardTitle>
           <CardDescription>
-            Chưa gọi AI. Khi có API, hệ thống sẽ chia văn bản thành các đoạn, trích entity + quan hệ dưới dạng bản nháp
-            chờ duyệt, và ghi lại lần chạy vào nhật ký pipeline.
+            Văn bản <strong>{vb.so_hieu}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ
+            curator duyệt. <em>Mock không gọi AI: số entity bên dưới là số giả lập, chưa tạo entity thật.</em>
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <PayloadPreview data={payload} />
+          <ul className="divide-y rounded-lg border">
+            {progress.map((p) => (
+              <li key={p.chunk_id} className="flex flex-col gap-1 p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+                <span className="font-medium">{p.label}</span>
+                <span className="flex flex-wrap items-center gap-2 text-muted-foreground">
+                  {p.res && (
+                    <span className="tabular-nums">
+                      {p.res.so_entity} entity · {p.res.so_relationship} quan hệ · {p.res.so_canh_bao} cảnh báo
+                    </span>
+                  )}
+                  {p.loi && <span className="text-destructive">{p.loi}</span>}
+                  <ChunkBadge status={p.trang_thai} />
+                </span>
+              </li>
+            ))}
+          </ul>
         </CardContent>
         <CardFooter className="gap-2">
-          <Link href="/duyet-ban-nhap" className={buttonVariants()}>
-            Xem ví dụ bản nháp
+          <Link href="/duyet-ban-nhap" className={buttonVariants()} aria-disabled={running}>
+            Sang Duyệt bản nháp
           </Link>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              setStatus("idle");
-              setData(EMPTY);
-              setPayload(null);
-            }}
-          >
-            Nhập văn bản khác
-          </Button>
+          <Link href="/nhat-ky" className={buttonVariants({ variant: "outline" })}>
+            Xem nhật ký
+          </Link>
         </CardFooter>
       </Card>
     );
   }
 
-  const sending = status === "sending";
-
   return (
-    <form onSubmit={submit} noValidate>
+    <form onSubmit={submit} noValidate className="space-y-6">
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle>Thông tin văn bản</CardTitle>
-          <CardDescription>Nguồn chính thống: vbpl.vn hoặc Công báo. Kiểm tra số hiệu và ngày hiệu lực trước khi gửi.</CardDescription>
+          <CardDescription>Nguồn chính thống: vbpl.vn hoặc Công báo. Kiểm tra số hiệu và ngày hiệu lực trước khi lưu.</CardDescription>
         </CardHeader>
-
         <CardContent className="space-y-5">
-          <FormField id="ten_van_ban" label="Tên văn bản" error={errors.ten_van_ban}>
-            <Input
-              id="ten_van_ban"
-              value={data.ten_van_ban}
-              onChange={(e) => update({ ten_van_ban: e.target.value })}
-              placeholder="Nghị định sửa đổi, bổ sung quy định về hoá đơn, chứng từ"
-              aria-invalid={!!errors.ten_van_ban}
-              disabled={sending}
-            />
+          <FormField id="ten_van_ban" label="Tên văn bản" error={errors["van_ban.ten_van_ban"]}>
+            <Input id="ten_van_ban" value={vb.ten_van_ban} onChange={(e) => updateVb({ ten_van_ban: e.target.value })} aria-invalid={!!errors["van_ban.ten_van_ban"]} />
           </FormField>
-
-          <div className="grid gap-5 sm:grid-cols-3">
-            <FormField id="so_hieu" label="Số hiệu" error={errors.so_hieu}>
-              <Input
-                id="so_hieu"
-                value={data.so_hieu}
-                onChange={(e) => update({ so_hieu: e.target.value })}
-                placeholder="70/2025/NĐ-CP"
-                aria-invalid={!!errors.so_hieu}
-                disabled={sending}
-              />
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormField id="so_hieu" label="Số hiệu" hint="Không trùng với văn bản đã có" error={errors["van_ban.so_hieu"]}>
+              <Input id="so_hieu" value={vb.so_hieu} onChange={(e) => updateVb({ so_hieu: e.target.value })} placeholder="109/2025/QH15" aria-invalid={!!errors["van_ban.so_hieu"]} />
             </FormField>
-            <FormField label="Loại văn bản" error={errors.loai_van_ban}>
-              <Select
-                items={LOAI_ITEMS}
-                value={data.loai_van_ban || null}
-                onValueChange={(v) => update({ loai_van_ban: (v ?? "") as FormState["loai_van_ban"] })}
-                disabled={sending}
-              >
-                <SelectTrigger className="w-full" aria-invalid={!!errors.loai_van_ban}>
+            <FormField label="Loại văn bản" error={errors["van_ban.loai_van_ban"]}>
+              <Select items={LOAI_ITEMS} value={vb.loai_van_ban || null} onValueChange={(v) => updateVb({ loai_van_ban: ((v as string | null) ?? "") as LoaiVanBan | "" })}>
+                <SelectTrigger className="w-full" aria-invalid={!!errors["van_ban.loai_van_ban"]}>
                   <SelectValue placeholder="Chọn loại" />
                 </SelectTrigger>
                 <SelectContent>
@@ -145,70 +159,90 @@ export function LawInputForm() {
                 </SelectContent>
               </Select>
             </FormField>
-            <FormField id="ngay_co_hieu_luc" label="Ngày có hiệu lực" hint="Bỏ trống nếu chưa rõ" error={errors.ngay_co_hieu_luc}>
-              <Input
-                id="ngay_co_hieu_luc"
-                type="date"
-                value={data.ngay_co_hieu_luc ?? ""}
-                onChange={(e) => update({ ngay_co_hieu_luc: e.target.value || null })}
-                disabled={sending}
-              />
+          </div>
+          <FormField id="co_quan" label="Cơ quan ban hành" hint="Không bắt buộc">
+            <Input id="co_quan" value={vb.co_quan_ban_hanh} onChange={(e) => updateVb({ co_quan_ban_hanh: e.target.value })} />
+          </FormField>
+          <div className="grid gap-5 sm:grid-cols-2">
+            <FormField id="ngay_ban_hanh" label="Ngày ban hành" hint="Không bắt buộc">
+              <Input id="ngay_ban_hanh" type="date" value={vb.ngay_ban_hanh} onChange={(e) => updateVb({ ngay_ban_hanh: e.target.value })} />
+            </FormField>
+            <FormField id="ngay_hieu_luc" label="Ngày có hiệu lực" hint="Mặc định cho mọi entity của văn bản" error={errors["van_ban.ngay_hieu_luc"]}>
+              <Input id="ngay_hieu_luc" type="date" value={vb.ngay_hieu_luc} onChange={(e) => updateVb({ ngay_hieu_luc: e.target.value })} aria-invalid={!!errors["van_ban.ngay_hieu_luc"]} />
             </FormField>
           </div>
-
-          {/* Chọn nhiều — khớp van_ban.domains TEXT[] */}
-          <FormField label="Lĩnh vực" hint="Chọn tất cả lĩnh vực văn bản này điều chỉnh" error={errors.domains}>
+          <FormField label="Lĩnh vực" hint="Chọn tất cả lĩnh vực văn bản điều chỉnh" error={errors["van_ban.domains"]}>
             <div className="flex gap-6">
-              {(Object.keys(domainLabel) as Domain[]).map((d) => (
+              {KNOWN_DOMAINS.map((d) => (
                 <Label key={d} className="flex items-center gap-2 font-normal">
                   <Checkbox
-                    checked={data.domains.includes(d)}
-                    disabled={sending}
-                    onCheckedChange={(on) =>
-                      update({ domains: on ? [...data.domains, d] : data.domains.filter((x) => x !== d) })
-                    }
+                    checked={vb.domains.includes(d)}
+                    onCheckedChange={(on) => updateVb({ domains: on ? [...vb.domains, d] : vb.domains.filter((x) => x !== d) })}
                   />
-                  {domainLabel[d]}
+                  {domainLabel(d)}
                 </Label>
               ))}
             </div>
           </FormField>
+        </CardContent>
+      </Card>
 
-          <FormField
-            id="noi_dung"
-            label="Nội dung điều luật"
-            hint={`Dán nguyên văn, không sửa chữ — AI chỉ trích xuất, curator sẽ so lại với bản gốc. ${data.noi_dung.length.toLocaleString("vi-VN")} ký tự.`}
-            error={errors.noi_dung}
-          >
-            <Textarea
-              id="noi_dung"
-              rows={12}
-              value={data.noi_dung}
-              onChange={(e) => update({ noi_dung: e.target.value })}
-              placeholder={"Điều 8. …\n1. …\n2. …"}
-              className="font-mono text-sm"
-              aria-invalid={!!errors.noi_dung}
-              disabled={sending}
-            />
-          </FormField>
-
+      <Card className="max-w-3xl">
+        <CardHeader>
+          <CardTitle>Nội dung — chia thành chunk</CardTitle>
+          <CardDescription>Mỗi chunk 1–2 điều, dán nguyên văn. Mỗi chunk là 1 lần gọi AI trích xuất.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {chunks.map((c, i) => (
+            <div key={i} className="space-y-3 rounded-lg border p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Chunk {i + 1}</span>
+                <Button type="button" variant="ghost" size="icon-sm" aria-label={`Xoá chunk ${i + 1}`} disabled={chunks.length === 1} onClick={() => setChunks(chunks.filter((_, j) => j !== i))}>
+                  <Trash2 />
+                </Button>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <FormField id={`c-${i}-range`} label="Điều khoản" hint="vd Điều 7–8 (không bắt buộc)">
+                  <Input id={`c-${i}-range`} value={c.dieu_khoan_range} onChange={(e) => setChunk(i, { dieu_khoan_range: e.target.value })} />
+                </FormField>
+                <FormField id={`c-${i}-title`} label="Tiêu đề" hint="Không bắt buộc">
+                  <Input id={`c-${i}-title`} value={c.tieu_de} onChange={(e) => setChunk(i, { tieu_de: e.target.value })} />
+                </FormField>
+              </div>
+              <FormField
+                id={`c-${i}-nd`}
+                label="Nội dung nguyên văn"
+                hint={`${c.noi_dung.length.toLocaleString("vi-VN")} ký tự`}
+                error={errors[`chunks.${i}.noi_dung`]}
+              >
+                <Textarea
+                  id={`c-${i}-nd`}
+                  rows={7}
+                  value={c.noi_dung}
+                  onChange={(e) => setChunk(i, { noi_dung: e.target.value })}
+                  placeholder={"Điều 7. …\n1. …\n2. …"}
+                  className="font-mono text-sm"
+                  aria-invalid={!!errors[`chunks.${i}.noi_dung`]}
+                />
+              </FormField>
+            </div>
+          ))}
+          <Button type="button" variant="outline" size="sm" onClick={() => setChunks([...chunks, EMPTY_CHUNK])}>
+            <Plus /> Thêm chunk
+          </Button>
           <p className="flex items-start gap-2 text-xs text-muted-foreground">
             <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
             Kết quả AI luôn là bản nháp &quot;Chờ duyệt&quot; — không có gì vào kho cho tới khi curator duyệt.
           </p>
-
-          {sending && (
-            <div className="space-y-2" aria-live="polite">
-              <p className="text-sm text-muted-foreground">Đang gửi yêu cầu trích xuất…</p>
-              <Skeleton className="h-4 w-2/3" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
+          {formError && (
+            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+              {formError}
+            </p>
           )}
         </CardContent>
-
         <CardFooter className="justify-end">
-          <Button type="submit" disabled={sending}>
-            <Sparkles /> {sending ? "Đang gửi…" : "Trích xuất bằng AI"}
+          <Button type="submit" disabled={running}>
+            <Sparkles /> Lưu & trích xuất {chunks.length} chunk
           </Button>
         </CardFooter>
       </Card>
