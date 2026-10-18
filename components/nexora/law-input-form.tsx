@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Info, Plus, RotateCcw, Sparkles, Trash2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,18 +14,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/nexora/form-field";
 import { ChunkBadge } from "@/components/nexora/status-badges";
 import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
-import { PipelineError, postPipeline, type PipelineRoutes } from "@/lib/mock/pipeline-api";
-import { createVanBanWithChunks } from "@/lib/mock/tables";
+import { describeError, useErrorHandler } from "@/lib/data/errors";
+import { createVanBanWithChunks } from "@/lib/data/mutations";
+import { PipelineError, pipelineErrorCode, postPipeline, toAppError, type PipelineRoutes } from "@/lib/data/pipeline";
 import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
 import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
 
 /*
  * Curator nạp văn bản: tạo van_ban (draft) + van_ban_chunks, rồi gọi POST /api/pipeline/extract
- * TUẦN TỰ từng chunk (quota Groq 8K token/phút — CONTRACT §7). Mock: số entity trả về là giả lập.
+ * TUẦN TỰ từng chunk (quota Groq 8K token/phút — CONTRACT §7).
  */
 
 type ChunkState = { tieu_de: string; dieu_khoan_range: string; noi_dung: string };
-type Progress = { chunk_id: string; label: string; trang_thai: TrangThaiChunk; res?: PipelineRoutes["/api/pipeline/extract"]["res"]; loi?: string };
+// khoa = route trả 409 (chunk đang chạy / đã có entity) → không cho trích lại
+type Progress = { chunk_id: string; label: string; trang_thai: TrangThaiChunk; res?: PipelineRoutes["/api/pipeline/extract"]["res"]; loi?: string; khoa?: boolean };
 
 const LOAI_ITEMS = (Object.keys(LOAI_VAN_BAN_LABEL) as LoaiVanBan[]).map((v) => ({ value: v, label: LOAI_VAN_BAN_LABEL[v] }));
 const EMPTY_CHUNK: ChunkState = { tieu_de: "", dieu_khoan_range: "", noi_dung: "" };
@@ -45,6 +47,8 @@ export function LawInputForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [progress, setProgress] = useState<Progress[] | null>(null);
   const [running, setRunning] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
+  const handleError = useErrorHandler();
 
   const updateVb = (patch: Partial<typeof vb>) => setVb((v) => ({ ...v, ...patch }));
   const setChunk = (i: number, patch: Partial<ChunkState>) => setChunks((cs) => cs.map((c, j) => (j === i ? { ...c, ...patch } : c)));
@@ -65,7 +69,7 @@ export function LawInputForm() {
     const { data, error } = await createVanBanWithChunks(parsed.data.van_ban, parsed.data.chunks);
     if (error) {
       setRunning(false);
-      return setFormError(error.message);
+      return setFormError(handleError(error)); // 23505: trùng số hiệu · PT400: dữ liệu sai nghiệp vụ
     }
     const list: Progress[] = data.chunks.map((c) => ({
       chunk_id: c.id,
@@ -75,29 +79,57 @@ export function LawInputForm() {
     setProgress(list);
 
     // 2. Trích xuất tuần tự từng chunk
-    for (const p of list) {
-      setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "dang_xu_ly" } : x)));
+    await extractChunks(list.map((p) => p.chunk_id));
+  }
+
+  const setChunkProgress = (id: string, patch: Partial<Progress>) =>
+    setProgress((ps) => ps!.map((x) => (x.chunk_id === id ? { ...x, ...patch } : x)));
+
+  // Gọi /extract lần lượt (quota Groq). 429 → dừng cả hàng đợi: các chunk sau chắc chắn cũng bị từ chối.
+  async function extractChunks(ids: string[]) {
+    setRunning(true);
+    setRateLimited(false);
+    for (const id of ids) {
+      setChunkProgress(id, { trang_thai: "dang_xu_ly", loi: undefined, khoa: false });
       try {
-        const res = await postPipeline("/api/pipeline/extract", { chunk_id: p.chunk_id });
-        setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "da_trich_xuat", res } : x)));
+        const res = await postPipeline("/api/pipeline/extract", { chunk_id: id });
+        // Không entity nào qua grounding → backend chuyển chunk thẳng sang hoan_tat
+        setChunkProgress(id, { trang_thai: res.so_entity === 0 ? "hoan_tat" : "da_trich_xuat", res });
       } catch (err) {
-        const msg = err instanceof PipelineError ? err.error : "Lỗi không xác định";
-        setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "loi", loi: msg } : x)));
+        if (!(err instanceof PipelineError)) {
+          setChunkProgress(id, { trang_thai: "loi", loi: "Lỗi không xác định" });
+          continue;
+        }
+        const code = pipelineErrorCode(err);
+        if (code === "AI_RATE_LIMIT") {
+          setChunkProgress(id, { trang_thai: "cho_xu_ly", loi: describeError(toAppError(err)) });
+          setRateLimited(true);
+          break; // các chunk còn lại giữ "Chờ xử lý" để thử lại sau
+        }
+        if (code === "PT409") {
+          // Chunk đang chạy hoặc đã có entity → không cho trích lại (hiện đúng lý do từ route)
+          setChunkProgress(id, { trang_thai: "loi", loi: err.error, khoa: true });
+          continue;
+        }
+        setChunkProgress(id, { trang_thai: "loi", loi: handleError(toAppError(err)) ?? err.error });
       }
     }
     setRunning(false);
   }
+
+  // Thử lại: chỉ chunk chưa chạy / lỗi mà chưa bị khoá (route chỉ nhận chunk cho_xu_ly | loi chưa có entity)
+  const retryIds = (progress ?? []).filter((p) => (p.trang_thai === "cho_xu_ly" || p.trang_thai === "loi") && !p.khoa).map((p) => p.chunk_id);
 
   if (progress) {
     return (
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất (mô phỏng)"}
+            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất"}
           </CardTitle>
           <CardDescription>
             Văn bản <strong>{vb.so_hieu}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ
-            curator duyệt. <em>Mock không gọi AI: số entity bên dưới là số giả lập, chưa tạo entity thật.</em>
+            curator duyệt.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,14 +143,24 @@ export function LawInputForm() {
                       {p.res.so_entity} entity · {p.res.so_relationship} quan hệ · {p.res.so_canh_bao} cảnh báo
                     </span>
                   )}
-                  {p.loi && <span className="text-destructive">{p.loi}</span>}
+                  {p.loi && <span className={p.khoa ? "text-muted-foreground" : "text-destructive"}>{p.loi}</span>}
                   <ChunkBadge status={p.trang_thai} />
                 </span>
               </li>
             ))}
           </ul>
+          {rateLimited && (
+            <p className="mt-3 rounded-lg bg-status-sap-ap-dung-bg px-3 py-2 text-sm text-status-sap-ap-dung" role="status">
+              Đã dừng vì AI tạm hết lượt (8K token/phút). Đợi khoảng 1 phút rồi bấm &quot;Thử lại&quot;.
+            </p>
+          )}
         </CardContent>
-        <CardFooter className="gap-2">
+        <CardFooter className="flex-wrap gap-2">
+          {!running && retryIds.length > 0 && (
+            <Button variant="outline" onClick={() => extractChunks(retryIds)}>
+              <RotateCcw /> Thử lại {retryIds.length} chunk
+            </Button>
+          )}
           <Link href="/duyet-ban-nhap" className={buttonVariants()} aria-disabled={running}>
             Sang Duyệt bản nháp
           </Link>
@@ -212,7 +254,7 @@ export function LawInputForm() {
               <FormField
                 id={`c-${i}-nd`}
                 label="Nội dung nguyên văn"
-                hint={`${c.noi_dung.length.toLocaleString("vi-VN")} ký tự`}
+                hint={`Mỗi điều bắt đầu bằng "Điều N." ở đầu dòng · ${c.noi_dung.length.toLocaleString("vi-VN")} ký tự`}
                 error={errors[`chunks.${i}.noi_dung`]}
               >
                 <Textarea

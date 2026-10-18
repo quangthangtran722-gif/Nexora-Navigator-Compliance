@@ -290,6 +290,14 @@ export type VanBanReplacementChain = {
   duong_di: string[];
 };
 
+/* ---------- §3.10 Nganh — tra cứu tên ngành (customers.nganh không có FK) ---------- */
+
+export type Nganh = {
+  ma: string; // PK, slug = customers.nganh, vd "van_tai_logistics"
+  ten_hien_thi: string; // nhãn tiếng Việt, vd "Vận tải & Logistics"
+  created_at: string;
+};
+
 /* ---------- §4 Vai trò (app_metadata) — chưa nối auth thật ---------- */
 
 export type AppMetadata = { nexora_role: "curator" } | { nexora_role: "customer"; customer_id: string };

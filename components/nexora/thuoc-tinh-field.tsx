@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { optionLabel, type GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
+import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { ThuocTinhHoSo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -78,7 +78,7 @@ export function ThuocTinhField({ tt, value, onChange, error }: Props) {
       {tt.kieu === "text" &&
         (tt.lua_chon ? (
           <Select
-            items={[...tt.lua_chon.map((o) => ({ value: o, label: optionLabel(o) })), { value: NULL_OPTION, label: "Chưa chắc" }]}
+            items={[...tt.lua_chon.map((o) => ({ value: o, label: o })), { value: NULL_OPTION, label: "Chưa chắc" }]}
             value={value === null ? NULL_OPTION : typeof value === "string" ? value : null}
             onValueChange={(v) => onChange(v === NULL_OPTION || v == null ? null : String(v))}
           >
@@ -88,7 +88,7 @@ export function ThuocTinhField({ tt, value, onChange, error }: Props) {
             <SelectContent>
               {tt.lua_chon.map((o) => (
                 <SelectItem key={o} value={o}>
-                  {optionLabel(o)}
+                  {o}
                 </SelectItem>
               ))}
               <SelectItem value={NULL_OPTION}>Chưa chắc</SelectItem>
@@ -115,7 +115,7 @@ export function ThuocTinhField({ tt, value, onChange, error }: Props) {
                     disabled={unsure}
                     onCheckedChange={(on) => onChange(on ? [...arr, o] : arr.filter((x) => x !== o))}
                   />
-                  {optionLabel(o)}
+                  {o}
                 </Label>
               );
             })}

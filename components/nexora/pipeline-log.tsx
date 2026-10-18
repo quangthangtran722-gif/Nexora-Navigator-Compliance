@@ -7,9 +7,12 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { RunBadge } from "@/components/nexora/status-badges";
 import { formatDateTime, PIPELINE_NAME_LABEL } from "@/lib/labels";
-import { getChunks, getCustomers, getPipelineRuns, getVanBanList } from "@/lib/mock";
+import { combine } from "@/lib/data/errors";
+import { getChunks, getCustomers, getPipelineRuns, getVanBanList } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import type { Json, PipelineName, PipelineRun } from "@/lib/types";
 
 /*
@@ -23,12 +26,10 @@ const NAMES: PipelineName[] = ["extract_entities", "filter_domain", "generate_di
 export function PipelineLog() {
   const [name, setName] = useState<PipelineName | typeof ALL>(ALL);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [{ runs, customers, chunks, vanBan }] = useState(() => ({
-    runs: getPipelineRuns(),
-    customers: getCustomers(),
-    chunks: getChunks(),
-    vanBan: getVanBanList(),
-  }));
+  const res = useQuery(() => combine({ runs: getPipelineRuns(), customers: getCustomers(), chunks: getChunks(), vanBan: getVanBanList() }), []);
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
+  const { runs, customers, chunks, vanBan } = res.data!;
 
   const shown = name === ALL ? runs : runs.filter((r) => r.pipeline_name === name);
   const selected = runs.find((r) => r.id === selectedId) ?? null;

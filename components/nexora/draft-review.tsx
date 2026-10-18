@@ -6,13 +6,17 @@ import { CalendarDays, CheckCheck, FileText, Pencil, TriangleAlert } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DieuKienEditor } from "@/components/nexora/dieu-kien-editor";
 import { EdgeLine } from "@/components/nexora/edge-line";
 import { AnhHuongBadge, ChunkBadge, DuyetBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, formatDate } from "@/lib/labels";
-import { getChunks, getEntities, getEntityGraph, getNerExtractionSummary, getThuocTinhHoSo, getVanBanList } from "@/lib/mock";
-import { rpc, thieuDieuKienMayDoc } from "@/lib/mock/rpc";
-import { updateEntity } from "@/lib/mock/tables";
+import { combine, useErrorHandler } from "@/lib/data/errors";
+import { updateEntity } from "@/lib/data/mutations";
+import { getChunks, getEntities, getEntityGraph, getNerExtractionSummary, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { rpc } from "@/lib/data/rpc";
+import { useQuery } from "@/lib/data/use-query";
+import { thieuDieuKienMayDoc } from "@/lib/entity-rules";
 import { formatDieuKien } from "@/lib/thuoc-tinh-format";
 import type { DieuKienMayDoc, Entity, EntityGraphRow, NerExtractionSummary, ThuocTinhHoSo } from "@/lib/types";
 
@@ -25,18 +29,30 @@ import type { DieuKienMayDoc, Entity, EntityGraphRow, NerExtractionSummary, Thuo
 const CO_DIEU_KIEN = ["dieu_kien", "nguong", "chu_the"];
 
 export function DraftReview() {
-  const [, setVersion] = useState(0);
-  const refresh = () => setVersion((v) => v + 1);
+  const q = useQuery(
+    () =>
+      combine({
+        summaries: getNerExtractionSummary(),
+        chunks: getChunks(),
+        vanBan: getVanBanList(),
+        entities: getEntities(),
+        graph: getEntityGraph(),
+        dict: getThuocTinhHoSo(),
+      }),
+    [],
+  );
+  const refresh = q.reload;
+  // Chunk vừa duyệt xong trong phiên vẫn giữ hiển thị (để thấy kết quả "Hoàn tất")
+  const [touchedChunkIds, setTouched] = useState<string[]>([]);
+  const touch = (chunkId: string) => {
+    setTouched((t) => (t.includes(chunkId) ? t : [...t, chunkId]));
+    refresh();
+  };
 
-  // Chunk đang chờ duyệt lúc mở màn — giữ hiển thị cả khi đã duyệt xong trong phiên
-  const [shownChunkIds] = useState(() => getNerExtractionSummary().filter((s) => s.trang_thai_chunk === "da_trich_xuat").map((s) => s.chunk_id));
-
-  const summaries = getNerExtractionSummary().filter((s) => shownChunkIds.includes(s.chunk_id));
-  const chunks = getChunks();
-  const vanBan = getVanBanList();
-  const entities = getEntities();
-  const graph = getEntityGraph();
-  const dict = getThuocTinhHoSo();
+  if (q.loading) return <LoadingBlock />;
+  if (q.error) return <ErrorBlock error={q.error} onRetry={refresh} />;
+  const { chunks, vanBan, entities, graph, dict } = q.data!;
+  const summaries = q.data!.summaries.filter((s) => s.trang_thai_chunk === "da_trich_xuat" || touchedChunkIds.includes(s.chunk_id));
 
   if (summaries.length === 0) {
     return <p className="rounded-xl border border-dashed p-10 text-center text-sm text-muted-foreground">Không có chunk nào đang chờ duyệt.</p>;
@@ -45,8 +61,9 @@ export function DraftReview() {
   return (
     <div className="space-y-8">
       {summaries.map((s) => {
-        const chunk = chunks.find((c) => c.id === s.chunk_id)!;
-        const vb = vanBan.find((v) => v.id === s.van_ban_id)!;
+        const chunk = chunks.find((c) => c.id === s.chunk_id);
+        const vb = vanBan.find((v) => v.id === s.van_ban_id);
+        if (!chunk || !vb) return null;
         const items = entities.filter((e) => e.chunk_id === s.chunk_id);
         return (
           <section key={s.chunk_id} className="space-y-3">
@@ -55,7 +72,7 @@ export function DraftReview() {
               subtitle={vb.ten_van_ban}
               noiDung={chunk.noi_dung}
               summary={s}
-              onApproved={refresh}
+              onApproved={() => touch(s.chunk_id)}
             />
             <div className="grid gap-4 xl:grid-cols-2">
               {items.map((e) => (
@@ -65,7 +82,7 @@ export function DraftReview() {
                   edges={graph.filter((g) => g.source_id === e.id || g.target_id === e.id)}
                   dict={dict}
                   ngayHieuLucVanBan={vb.ngay_hieu_luc}
-                  onChanged={refresh}
+                  onChanged={() => touch(e.chunk_id)}
                 />
               ))}
             </div>
@@ -92,6 +109,8 @@ function ChunkHeader({
   onApproved: () => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const handleError = useErrorHandler();
+  const [forbidden, setForbidden] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const blocked = s.so_dieu_kien_chua_may_doc > 0;
 
@@ -99,7 +118,7 @@ function ChunkHeader({
     setBusy(true);
     const { data, error } = await rpc("approve_chunk", { p_chunk_id: s.chunk_id });
     setBusy(false);
-    setMsg(error ? { ok: false, text: error.message } : { ok: true, text: `Đã duyệt ${data} entity.` });
+    setMsg(error ? { ok: false, text: handleError(error, { onReload: onApproved, onForbidden: () => setForbidden(true) })! } : { ok: true, text: `Đã duyệt ${data} entity.` });
     onApproved();
   }
 
@@ -116,9 +135,11 @@ function ChunkHeader({
             {s.so_pending_link > 0 && ` (${s.so_pending_link} chờ nối)`}
           </p>
         </div>
-        <Button onClick={approveChunk} disabled={busy || blocked || s.so_cho_duyet === 0}>
-          <CheckCheck /> Duyệt tất cả còn lại ({s.so_cho_duyet})
-        </Button>
+        {!forbidden && (
+          <Button onClick={approveChunk} disabled={busy || blocked || s.so_cho_duyet === 0}>
+            <CheckCheck /> Duyệt tất cả còn lại ({s.so_cho_duyet})
+          </Button>
+        )}
       </div>
       {blocked && (
         <p className="flex items-center gap-1.5 text-xs text-status-ap-dung">
@@ -160,6 +181,8 @@ function EntityReviewCard({
   const [ghiChu, setGhiChu] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [forbidden, setForbidden] = useState(false);
+  const handleError = useErrorHandler();
 
   const locked = e.trang_thai_duyet !== "cho_duyet";
   const missingDk = thieuDieuKienMayDoc(e);
@@ -168,7 +191,7 @@ function EntityReviewCard({
     setBusy(true);
     const { error } = await rpc("approve_entity", { p_entity_id: e.id, p_quyet_dinh: quyet_dinh, p_ghi_chu: ghiChu.trim() || undefined });
     setBusy(false);
-    setError(error?.message ?? null);
+    setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
     if (!error) setRejecting(false);
     onChanged();
   }
@@ -177,7 +200,7 @@ function EntityReviewCard({
     setBusy(true);
     const { error } = await updateEntity(e.id, { dieu_kien_may_doc: dk });
     setBusy(false);
-    setError(error?.message ?? null);
+    setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
     if (!error) setEditingDk(false);
     onChanged();
   }
@@ -241,7 +264,7 @@ function EntityReviewCard({
               <p className="text-xs font-medium text-muted-foreground">
                 Điều kiện máy đọc {e.loai_entity === "chu_the" ? "(không bắt buộc)" : "(bắt buộc khi duyệt)"}
               </p>
-              {!locked && !editingDk && (
+              {!locked && !forbidden && !editingDk && (
                 <Button size="xs" variant="outline" onClick={() => setEditingDk(true)}>
                   <Pencil /> {e.dieu_kien_may_doc ? "Sửa" : "Điền"}
                 </Button>
@@ -281,7 +304,7 @@ function EntityReviewCard({
           </p>
         )}
 
-        {!locked && (
+        {!locked && !forbidden && (
           <div className="flex flex-wrap items-center gap-2 border-t pt-3">
             {rejecting ? (
               <>

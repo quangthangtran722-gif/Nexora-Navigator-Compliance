@@ -10,29 +10,31 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { FormField, PayloadPreview } from "@/components/nexora/form-field";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { PHONG_BAN, PHONG_BAN_LABEL } from "@/lib/department-codes";
 import { domainLabel, KNOWN_DOMAINS, QUY_MO_LABEL, toSlug } from "@/lib/labels";
-import { getThuocTinhHoSo } from "@/lib/mock";
-import { PipelineError, postPipeline, type FilterKetQua } from "@/lib/mock/pipeline-api";
-import { saveOnboarding } from "@/lib/mock/tables";
+import { useAuth } from "@/lib/auth/auth-provider";
+import { combine, useErrorHandler } from "@/lib/data/errors";
+import { saveOnboarding } from "@/lib/data/mutations";
+import { filterThenGenerate, PipelineError, toAppError, type FilterKetQua } from "@/lib/data/pipeline";
+import { getCustomer, getDepartments, getThuocTinhHoSo } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4, toFieldErrors, type OnboardingPayload } from "@/lib/schemas";
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { QuyMo, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /*
- * Onboarding 4 bước — ghi customers (CONTRACT §3.1) + departments (§3.3), rồi chạy rule engine
+ * Onboarding 4 bước — ghi customers (CONTRACT §3.1) của khách hàng đang đăng nhập + departments (§3.3), rồi chạy rule engine ở backend
  * (POST /api/pipeline/filter) để ra danh sách nghĩa vụ ban đầu.
  * Bước 3 render câu hỏi TỪ thuoc_tinh_ho_so (§3.2), không hard-code — dùng chung ThuocTinhField với "hỏi bổ sung".
  */
 
 const STEPS = ["Thông tin công ty", "Lĩnh vực theo dõi", "Hồ sơ doanh nghiệp", "Phòng ban"] as const;
 const STEP_SCHEMAS = [onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4] as const;
-// Demo: hồ sơ onboarding ghi vào 1 khách hàng riêng, không đè dữ liệu Minh Phát
-const ONBOARDING_CUSTOMER_ID = "c-onboarding-demo";
 
 const QUY_MO_ITEMS = [
   { value: "chua_chon", label: "Chưa chọn" },
@@ -55,8 +57,28 @@ export function OnboardingForm() {
   const [data, setData] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState<{ payload: OnboardingPayload; ketQua: FilterKetQua[] | null; loi?: string } | null>(null);
-  const [dict] = useState(() => getThuocTinhHoSo());
+  const [done, setDone] = useState<{ payload: OnboardingPayload; ketQua: FilterKetQua[] | null; soChecklist?: number; loi?: string } | null>(null);
+  const { customerId } = useAuth(); // ghi vào hồ sơ của chính khách hàng đang đăng nhập (RequireRole đảm bảo có)
+  const handleError = useErrorHandler();
+  // Câu hỏi hồ sơ đọc từ bảng thuoc_tinh_ho_so (backend seed) — KHÔNG hard-code
+  const dictQuery = useQuery(getThuocTinhHoSo, []);
+  const dict = dictQuery.data ?? [];
+
+  // Khách hàng đã onboard (vd hồ sơ seed) → điền sẵn câu trả lời cũ để sửa, không bắt khai lại từ đầu
+  const profile = useQuery(() => combine({ customer: getCustomer(customerId!), departments: getDepartments(customerId!) }), [customerId]);
+  const [prefilled, setPrefilled] = useState(false);
+  if (!prefilled && profile.data) {
+    setPrefilled(true); // set state trong render (1 lần) — không cần effect
+    const { customer: c, departments: ds } = profile.data;
+    setData({
+      ten_cong_ty: c.ten_cong_ty,
+      nganh: c.nganh ?? "",
+      quy_mo: c.quy_mo ?? "chua_chon",
+      domains: c.domains,
+      thuoc_tinh: c.thuoc_tinh,
+      departments: ds.length ? ds.map((d) => ({ ten_phong_ban: d.ten_phong_ban, slug_phong_ban: d.slug_phong_ban, email_head: d.email_head ?? "" })) : [EMPTY_DEPT],
+    });
+  }
 
   const update = (patch: Partial<FormState>) => setData((d) => ({ ...d, ...patch }));
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
@@ -88,16 +110,19 @@ export function OnboardingForm() {
     const full = onboardingSchema.safeParse(payload);
     if (!full.success) return setErrors(toFieldErrors(full.error));
     setBusy(true);
-    const { error } = await saveOnboarding(ONBOARDING_CUSTOMER_ID, full.data);
+    const { error } = await saveOnboarding(customerId!, full.data);
     if (error) {
       setBusy(false);
-      return setErrors({ _form: error.message });
+      return setErrors({ _form: handleError(error)! });
     }
     try {
-      const { ket_qua } = await postPipeline("/api/pipeline/filter", { customer_id: ONBOARDING_CUSTOMER_ID });
-      setDone({ payload: full.data, ketQua: ket_qua });
+      // filter không tự gọi generate → có mục áp dụng thì generate (lặp tới khi so_diagnostic = 0)
+      const { filter, generate } = await filterThenGenerate({ customer_id: customerId! });
+      setDone({ payload: full.data, ketQua: filter.ket_qua, soChecklist: generate.so_diagnostic });
     } catch (e) {
-      setDone({ payload: full.data, ketQua: null, loi: e instanceof PipelineError ? e.error : "Không chạy được rule engine." });
+      // Lỗi ở bước generate (vd AI_RATE_LIMIT) — hồ sơ đã lưu, filter có thể đã chạy xong
+      const loi = e instanceof PipelineError ? handleError(toAppError(e)) : null;
+      setDone({ payload: full.data, ketQua: null, loi: loi ?? "Không chạy được đối chiếu." });
     }
     setBusy(false);
   }
@@ -105,23 +130,33 @@ export function OnboardingForm() {
   if (done) {
     const by = (s: TrangThaiApDung) => done.ketQua?.filter((k) => k.trang_thai_ap_dung === s).length ?? 0;
     const khongPhong = done.ketQua?.filter((k) => k.trang_thai_ap_dung !== "khong_ap_dung" && k.diagnostic_ids.length === 0).length ?? 0;
+    const chuaCoEntity = done.ketQua !== null && done.ketQua.length === 0; // ket_qua [] = hợp lệ, không phải lỗi
     return (
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CircleCheck className="size-5 text-duyet-da" aria-hidden /> Đã lưu hồ sơ & chạy đối chiếu (mô phỏng)
+            <CircleCheck className="size-5 text-duyet-da" aria-hidden /> Đã lưu hồ sơ & chạy đối chiếu
           </CardTitle>
           <CardDescription>Rule engine (không dùng AI) đã đối chiếu hồ sơ với kho nghĩa vụ đã duyệt.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {done.ketQua ? (
-            <div className="flex flex-wrap gap-3">
-              {(["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"] as const).map((s) => (
-                <span key={s} className="inline-flex items-center gap-1.5 text-sm">
-                  <ApDungBadge status={s} /> <strong className="tabular-nums">{by(s)}</strong>
-                </span>
-              ))}
-            </div>
+          {chuaCoEntity ? (
+            <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+              Chưa có entity được duyệt trong kho để đối chiếu. Hồ sơ đã được lưu — khi curator duyệt văn bản mới, hệ thống sẽ quét lại.
+            </p>
+          ) : done.ketQua ? (
+            <>
+              <div className="flex flex-wrap gap-3">
+                {(["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"] as const).map((s) => (
+                  <span key={s} className="inline-flex items-center gap-1.5 text-sm">
+                    <ApDungBadge status={s} /> <strong className="tabular-nums">{by(s)}</strong>
+                  </span>
+                ))}
+              </div>
+              {done.soChecklist !== undefined && done.soChecklist > 0 && (
+                <p className="text-sm text-muted-foreground">AI đã viết {done.soChecklist} checklist — chờ duyệt ở màn Duyệt diagnostic.</p>
+              )}
+            </>
           ) : (
             <p className="text-sm text-destructive">{done.loi}</p>
           )}
@@ -224,6 +259,15 @@ export function OnboardingForm() {
             <p className="text-sm text-muted-foreground">
               Trả lời để hệ thống xác định nghĩa vụ nào áp dụng. Chưa có số liệu thì chọn &quot;Chưa chắc&quot; — hệ thống sẽ hỏi lại khi cần.
             </p>
+            {dictQuery.loading && <LoadingBlock />}
+            {dictQuery.error && <ErrorBlock error={dictQuery.error} onRetry={dictQuery.reload} />}
+            {/* Bảng thuoc_tinh_ho_so chưa được seed → để trống, không hard-code câu hỏi */}
+            {!dictQuery.loading && !dictQuery.error && questions.length === 0 && (
+              <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                Chưa có câu hỏi hồ sơ cho lĩnh vực đã chọn (từ điển thuộc tính chưa được nạp). Có thể bỏ qua bước này — hệ thống sẽ hỏi bổ sung khi
+                cần.
+              </p>
+            )}
             {questions.map((q) => (
               <ThuocTinhField
                 key={q.ma}

@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { optionLabel, TOAN_TU_LABEL, TOAN_TU_THEO_KIEU } from "@/lib/thuoc-tinh-format";
+import { TOAN_TU_LABEL, TOAN_TU_THEO_KIEU } from "@/lib/thuoc-tinh-format";
 import type { DieuKienMayDoc, ThuocTinhHoSo } from "@/lib/types";
 
 /*
@@ -143,7 +143,7 @@ export function DieuKienEditor({ dict, value, onSave, onCancel, saving }: Props)
               {options.map((o) => (
                 <Label key={o} className="flex items-center gap-2 font-normal">
                   <Checkbox checked={multi.includes(o)} onCheckedChange={(on) => setMulti(on ? [...multi, o] : multi.filter((x) => x !== o))} />
-                  {optionLabel(o)}
+                  {o}
                 </Label>
               ))}
             </div>
@@ -154,14 +154,14 @@ export function DieuKienEditor({ dict, value, onSave, onCancel, saving }: Props)
               onChange={(e) => setMulti(e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
             />
           ) : options ? (
-            <Select items={options.map((o) => ({ value: o, label: optionLabel(o) }))} value={raw || null} onValueChange={(v) => setRaw((v as string | null) ?? "")}>
+            <Select items={options.map((o) => ({ value: o, label: o }))} value={raw || null} onValueChange={(v) => setRaw((v as string | null) ?? "")}>
               <SelectTrigger className="w-full sm:w-80">
                 <SelectValue placeholder="Chọn giá trị" />
               </SelectTrigger>
               <SelectContent>
                 {options.map((o) => (
                   <SelectItem key={o} value={o}>
-                    {optionLabel(o)}
+                    {o}
                   </SelectItem>
                 ))}
               </SelectContent>

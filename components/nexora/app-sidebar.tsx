@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ArrowLeftRight, Compass } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Compass, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -17,11 +17,14 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/lib/auth/auth-provider";
 import { navByRole, type Role } from "@/lib/navigation";
 
 export function AppSidebar({ role }: { role: Role }) {
   const pathname = usePathname();
   const nav = navByRole[role];
+  const router = useRouter();
+  const { email, signOut } = useAuth();
 
   return (
     <Sidebar collapsible="icon">
@@ -63,13 +66,26 @@ export function AppSidebar({ role }: { role: Role }) {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Tạm thời: đổi vai trò bằng link. Khi có Supabase Auth, vai trò lấy từ JWT. */}
+      {/* Tài khoản đăng nhập (Supabase Auth) + đăng xuất */}
       <SidebarFooter>
         <SidebarMenu>
+          {email && (
+            <SidebarMenuItem>
+              <span className="block truncate px-2 text-xs text-muted-foreground group-data-[collapsible=icon]:hidden" title={email}>
+                {email}
+              </span>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Đổi vai trò" render={<Link href="/" />}>
-              <ArrowLeftRight />
-              <span>Đổi vai trò</span>
+            <SidebarMenuButton
+              tooltip="Đăng xuất"
+              onClick={async () => {
+                await signOut();
+                router.replace("/login");
+              }}
+            >
+              <LogOut />
+              <span>Đăng xuất</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

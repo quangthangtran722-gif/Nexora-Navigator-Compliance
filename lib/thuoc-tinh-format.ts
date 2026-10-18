@@ -1,9 +1,7 @@
-import { LUA_CHON_LABEL } from "@/lib/mock/thuoc-tinh";
 import type { DieuKienMayDoc, ThuocTinhHoSo, ThuocTinhKhachHang } from "@/lib/types";
 
-// Hiển thị giá trị thuộc tính / điều kiện máy đọc cho người đọc (tiếng Việt)
-
-export const optionLabel = (v: string) => LUA_CHON_LABEL[v] ?? v;
+// Hiển thị giá trị thuộc tính / điều kiện máy đọc cho người đọc (tiếng Việt).
+// Giá trị lua_chon hiển thị NGUYÊN VĂN như trong thuoc_tinh_ho_so.lua_chon (không map nhãn ở frontend).
 
 export type GiaTriThuocTinh = ThuocTinhKhachHang[string];
 
@@ -12,8 +10,8 @@ export function formatGiaTri(tt: ThuocTinhHoSo | undefined, v: GiaTriThuocTinh |
   if (v === null) return "Chưa chắc";
   if (typeof v === "boolean") return v ? "Có" : "Không";
   if (typeof v === "number") return `${v.toLocaleString("vi-VN")}${tt?.don_vi ? ` ${tt.don_vi}` : ""}`;
-  if (Array.isArray(v)) return v.length ? v.map(optionLabel).join(", ") : "Không có";
-  return optionLabel(v);
+  if (Array.isArray(v)) return v.length ? v.join(", ") : "Không có";
+  return v;
 }
 
 export const TOAN_TU_LABEL: Record<DieuKienMayDoc["toan_tu"], string> = {
@@ -41,7 +39,7 @@ export function formatDieuKien(dk: DieuKienMayDoc, dict: ThuocTinhHoSo[]): strin
   const tt = dict.find((t) => t.ma === dk.thuoc_tinh);
   const ten = tt?.cau_hoi.replace(/\?$/, "") ?? dk.thuoc_tinh;
   const gt = Array.isArray(dk.gia_tri)
-    ? dk.gia_tri.map((x) => (typeof x === "number" ? x.toLocaleString("vi-VN") : optionLabel(x))).join(", ")
+    ? dk.gia_tri.map((x) => (typeof x === "number" ? x.toLocaleString("vi-VN") : x)).join(", ")
     : formatGiaTri(tt, dk.gia_tri);
   return `${ten} ${TOAN_TU_LABEL[dk.toan_tu]} ${gt}`;
 }

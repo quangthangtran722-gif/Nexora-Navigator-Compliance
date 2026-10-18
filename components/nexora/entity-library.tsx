@@ -1,19 +1,26 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarDays, Search } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Pencil, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
+import { DieuKienEditor } from "@/components/nexora/dieu-kien-editor";
 import { EdgeLine } from "@/components/nexora/edge-line";
 import { AnhHuongBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, formatDate, KNOWN_DOMAINS, LOAI_ENTITY_LABEL } from "@/lib/labels";
-import { getChunks, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/mock";
+import { combine, useErrorHandler } from "@/lib/data/errors";
+import { updateEntity } from "@/lib/data/mutations";
+import { getChunks, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import { formatDieuKien } from "@/lib/thuoc-tinh-format";
-import type { LoaiEntity } from "@/lib/types";
+import type { DieuKienMayDoc, LoaiEntity } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /*
@@ -22,6 +29,9 @@ import { cn } from "@/lib/utils";
  */
 
 const ALL = "all";
+// Loại entity mang được dieu_kien_may_doc (DB check constraint)
+const LOAI_CO_DIEU_KIEN: LoaiEntity[] = ["dieu_kien", "nguong", "chu_the"];
+
 const LOAI_ITEMS = [
   { value: ALL, label: "Tất cả loại" },
   ...(Object.keys(LOAI_ENTITY_LABEL) as LoaiEntity[]).map((v) => ({ value: v, label: LOAI_ENTITY_LABEL[v] })),
@@ -32,14 +42,18 @@ export function EntityLibrary() {
   const [domain, setDomain] = useState<string>(ALL);
   const [loai, setLoai] = useState<string>(ALL);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [editingDk, setEditingDk] = useState(false);
+  const [dkBusy, setDkBusy] = useState(false);
+  const [dkMsg, setDkMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const handleError = useErrorHandler();
 
-  const [{ entities, graph, vanBan, chunks, dict }] = useState(() => ({
-    entities: getEntities().filter((e) => e.trang_thai_duyet === "da_duyet"),
-    graph: getEntityGraph().filter((g) => g.source_trang_thai_duyet === "da_duyet"),
-    vanBan: getVanBanList(),
-    chunks: getChunks(),
-    dict: getThuocTinhHoSo(),
-  }));
+  const res = useQuery(
+    () => combine({ entities: getEntities(), graph: getEntityGraph(), vanBan: getVanBanList(), chunks: getChunks(), dict: getThuocTinhHoSo() }),
+    [],
+  );
+  const entities = useMemo(() => (res.data?.entities ?? []).filter((e) => e.trang_thai_duyet === "da_duyet"), [res.data]);
+  const graph = (res.data?.graph ?? []).filter((g) => g.source_trang_thai_duyet === "da_duyet");
+  const { vanBan = [], chunks = [], dict = [] } = res.data ?? {};
   const vanBanOf = (chunkId: string) => vanBan.find((v) => v.id === chunks.find((c) => c.id === chunkId)?.van_ban_id);
 
   const filtered = useMemo(() => {
@@ -52,9 +66,24 @@ export function EntityLibrary() {
     );
   }, [entities, query, domain, loai]);
 
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
+
   const selected = entities.find((e) => e.id === selectedId) ?? null;
   const edges = selected ? graph.filter((g) => g.source_id === selected.id || g.target_id === selected.id) : [];
   const selectedVb = selected ? vanBanOf(selected.chunk_id) : undefined;
+
+  // Entity đã duyệt vẫn sửa được dieu_kien_may_doc (RLS: curator). Không đổi trạng thái duyệt.
+  async function saveDk(dk: DieuKienMayDoc) {
+    if (!selected) return;
+    setDkBusy(true);
+    const { error } = await updateEntity(selected.id, { dieu_kien_may_doc: dk });
+    setDkBusy(false);
+    if (error) return setDkMsg({ ok: false, text: handleError(error) ?? error.message });
+    setEditingDk(false);
+    setDkMsg({ ok: true, text: "Đã lưu. Chạy \"Quét lại khách hàng\" để áp điều kiện mới cho khách hàng hiện có." });
+    res.reload();
+  }
 
   return (
     <div className="space-y-4">
@@ -148,7 +177,7 @@ export function EntityLibrary() {
       </div>
 
       {/* Chi tiết entity */}
-      <Sheet open={!!selected} onOpenChange={(open) => !open && setSelectedId(null)}>
+      <Sheet open={!!selected} onOpenChange={(open) => { if (!open) { setSelectedId(null); setEditingDk(false); setDkMsg(null); } }}>
         <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
           {selected && (
             <>
@@ -195,10 +224,35 @@ export function EntityLibrary() {
                       </dd>
                     </>
                   )}
-                  {selected.dieu_kien_may_doc && (
+                  {(selected.dieu_kien_may_doc || LOAI_CO_DIEU_KIEN.includes(selected.loai_entity)) && (
                     <>
                       <dt className="text-muted-foreground">Điều kiện máy đọc</dt>
-                      <dd>{formatDieuKien(selected.dieu_kien_may_doc, dict)}</dd>
+                      <dd className="space-y-2">
+                        {editingDk ? (
+                          <DieuKienEditor dict={dict} value={selected.dieu_kien_may_doc} onSave={saveDk} onCancel={() => setEditingDk(false)} saving={dkBusy} />
+                        ) : (
+                          <span className="flex flex-wrap items-center gap-2">
+                            {selected.dieu_kien_may_doc ? (
+                              formatDieuKien(selected.dieu_kien_may_doc, dict)
+                            ) : (
+                              <span className="text-muted-foreground">Chưa có — rule engine bỏ qua entity này khi đối chiếu</span>
+                            )}
+                            <Button size="xs" variant="outline" onClick={() => { setDkMsg(null); setEditingDk(true); }}>
+                              <Pencil /> {selected.dieu_kien_may_doc ? "Sửa" : "Điền"}
+                            </Button>
+                          </span>
+                        )}
+                        {dkMsg && (
+                          <p className={cn("text-xs", dkMsg.ok ? "text-muted-foreground" : "text-destructive")} role="status">
+                            {dkMsg.text}{" "}
+                            {dkMsg.ok && (
+                              <Link href="/quet-lai" className="underline">
+                                Mở Quét lại
+                              </Link>
+                            )}
+                          </p>
+                        )}
+                      </dd>
                     </>
                   )}
                   <dt className="text-muted-foreground">Lần trích xuất</dt>
