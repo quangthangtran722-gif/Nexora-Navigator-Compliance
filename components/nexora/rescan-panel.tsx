@@ -7,11 +7,14 @@ import { RefreshCw, Sparkles } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { ModelCell } from "@/components/nexora/pipeline-log";
 import { ApDungBadge, RunBadge } from "@/components/nexora/status-badges";
 import { domainLabel, formatDateTime } from "@/lib/labels";
-import { getCustomers, getDiagnostics, getPipelineRuns } from "@/lib/mock";
-import { getRunsByIds, PipelineError, postPipeline, type FilterKetQua } from "@/lib/mock/pipeline-api";
+import { combine, useErrorHandler } from "@/lib/data/errors";
+import { PipelineError, pipelineErrorCode, postPipeline, type FilterKetQua } from "@/lib/data/pipeline";
+import { getAllDiagnostics, getCustomers, getPipelineRuns, getRunsByIds } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import type { PipelineRun, TrangThaiApDung } from "@/lib/types";
 
 /*
@@ -23,25 +26,34 @@ import type { PipelineRun, TrangThaiApDung } from "@/lib/types";
 const STATUSES: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 
 export function RescanPanel() {
-  const [, setVersion] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<{ run_ids: string[] } | null>(null);
   const [runs, setRuns] = useState<PipelineRun[]>([]);
   const [generating, setGenerating] = useState<string | null>(null);
+  const handleError = useErrorHandler();
+  const toMessage = (e: unknown, fallback: string) =>
+    (e instanceof PipelineError ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }) : null) ?? fallback;
 
-  const customers = getCustomers();
-  const lastFilter = (cid: string) => getPipelineRuns().find((r) => r.pipeline_name === "filter_domain" && r.customer_id === cid);
+  const res = useQuery(() => combine({ customers: getCustomers(), allRuns: getPipelineRuns(), diagnostics: getAllDiagnostics() }), []);
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
+  const { customers, allRuns, diagnostics } = res.data!;
+  const lastFilter = (cid: string) => allRuns.find((r) => r.pipeline_name === "filter_domain" && r.customer_id === cid);
 
   async function rescan() {
     setBusy(true);
     setError(null);
     try {
-      const res = await postPipeline("/api/pipeline/rescan", {});
-      setResponse(res);
-      setRuns(getRunsByIds(res.run_ids));
+      const out = await postPipeline("/api/pipeline/rescan", {});
+      setResponse(out);
+      // Đọc lại các run vừa tạo + diagnostics mới từ DB
+      const r = await getRunsByIds(out.run_ids);
+      if (r.error) setError(handleError(r.error));
+      else setRuns(r.data);
+      res.reload();
     } catch (e) {
-      setError(e instanceof PipelineError ? e.error : "Quét lại thất bại.");
+      setError(toMessage(e, "Quét lại thất bại."));
     }
     setBusy(false);
   }
@@ -52,10 +64,10 @@ export function RescanPanel() {
     try {
       await postPipeline("/api/pipeline/generate", { customer_id: customerId });
     } catch (e) {
-      setError(e instanceof PipelineError ? e.error : "AI chưa viết được checklist.");
+      setError(toMessage(e, "AI chưa viết được checklist."));
     }
     setGenerating(null);
-    setVersion((v) => v + 1);
+    res.reload();
   }
 
   return (
@@ -130,8 +142,8 @@ export function RescanPanel() {
                     const ketQua = ((r.output as { ket_qua?: FilterKetQua[] } | null)?.ket_qua ?? []) as FilterKetQua[];
                     const n = (s: TrangThaiApDung) => ketQua.filter((k) => k.trang_thai_ap_dung === s).length;
                     const khongPhong = ketQua.filter((k) => k.trang_thai_ap_dung !== "khong_ap_dung" && k.diagnostic_ids.length === 0).length;
-                    const choAi = getDiagnostics(r.customer_id!).filter(
-                      (d) => (d.trang_thai_ap_dung === "ap_dung" || d.trang_thai_ap_dung === "sap_ap_dung") && d.noi_dung_diagnostic === null,
+                    const choAi = diagnostics.filter(
+                      (d) => d.customer_id === r.customer_id && (d.trang_thai_ap_dung === "ap_dung" || d.trang_thai_ap_dung === "sap_ap_dung") && d.noi_dung_diagnostic === null,
                     ).length;
                     return (
                       <TableRow key={r.id}>

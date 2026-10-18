@@ -8,15 +8,17 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
-import { PipelineError, postPipeline } from "@/lib/mock/pipeline-api";
-import { updateCustomerThuocTinh } from "@/lib/mock/tables";
+import { useErrorHandler } from "@/lib/data/errors";
+import { updateCustomerThuocTinh } from "@/lib/data/mutations";
+import { PipelineError, pipelineErrorCode, postPipeline } from "@/lib/data/pipeline";
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { Customer, Entity, ThuocTinhHoSo, TrangThaiApDung } from "@/lib/types";
 
 /*
  * "Hỏi bổ sung" — vòng đời chua_du_thong_tin (CONTRACT §3.6):
  *  câu hỏi = thuoc_tinh_thieu → thuoc_tinh_ho_so.cau_hoi → trả lời ghi customers.thuoc_tinh
- *  → gọi lại POST /api/pipeline/filter cho RIÊNG entity đó → áp dụng thì gọi /generate để AI viết checklist.
+ *  → gọi lại POST /api/pipeline/filter cho RIÊNG entity đó (rule engine ở backend) → áp dụng thì gọi /generate
+ *  → màn cha đọc lại bảng diagnostics để hiển thị (không tính trạng thái áp dụng ở client).
  * Dùng chung ThuocTinhField với onboarding (không tạo luồng nhập liệu mới).
  */
 
@@ -36,6 +38,7 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<TrangThaiApDung | null>(null);
+  const handleError = useErrorHandler();
 
   const unanswered = questions.filter((q) => answers[q.ma] === undefined);
 
@@ -47,7 +50,7 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
     const { error: err } = await updateCustomerThuocTinh(customer.id, patch);
     if (err) {
       setBusy(false);
-      return setError(err.message);
+      return setError(handleError(err)); // PT400: thuộc tính sai kiểu / ngoài lua_chon — message tiếng Việt từ DB
     }
     let status: TrangThaiApDung | null = null;
     let failMsg: string | undefined;
@@ -60,7 +63,9 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
         await postPipeline("/api/pipeline/generate", { customer_id: customer.id, diagnostic_ids: kq.diagnostic_ids });
       }
     } catch (e) {
-      failMsg = e instanceof PipelineError ? e.error : "Không chạy lại được rule engine.";
+      failMsg =
+        (e instanceof PipelineError ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }) : null) ??
+        "Không chạy lại được rule engine.";
       setError(failMsg);
     }
     setBusy(false);

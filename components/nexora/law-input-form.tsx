@@ -14,14 +14,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/nexora/form-field";
 import { ChunkBadge } from "@/components/nexora/status-badges";
 import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
-import { PipelineError, postPipeline, type PipelineRoutes } from "@/lib/mock/pipeline-api";
-import { createVanBanWithChunks } from "@/lib/mock/tables";
+import { useErrorHandler } from "@/lib/data/errors";
+import { createVanBanWithChunks } from "@/lib/data/mutations";
+import { PipelineError, pipelineErrorCode, postPipeline, type PipelineRoutes } from "@/lib/data/pipeline";
 import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
 import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
 
 /*
  * Curator nạp văn bản: tạo van_ban (draft) + van_ban_chunks, rồi gọi POST /api/pipeline/extract
- * TUẦN TỰ từng chunk (quota Groq 8K token/phút — CONTRACT §7). Mock: số entity trả về là giả lập.
+ * TUẦN TỰ từng chunk (quota Groq 8K token/phút — CONTRACT §7).
  */
 
 type ChunkState = { tieu_de: string; dieu_khoan_range: string; noi_dung: string };
@@ -45,6 +46,7 @@ export function LawInputForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [progress, setProgress] = useState<Progress[] | null>(null);
   const [running, setRunning] = useState(false);
+  const handleError = useErrorHandler();
 
   const updateVb = (patch: Partial<typeof vb>) => setVb((v) => ({ ...v, ...patch }));
   const setChunk = (i: number, patch: Partial<ChunkState>) => setChunks((cs) => cs.map((c, j) => (j === i ? { ...c, ...patch } : c)));
@@ -65,7 +67,7 @@ export function LawInputForm() {
     const { data, error } = await createVanBanWithChunks(parsed.data.van_ban, parsed.data.chunks);
     if (error) {
       setRunning(false);
-      return setFormError(error.message);
+      return setFormError(handleError(error)); // 23505: trùng số hiệu · PT400: dữ liệu sai nghiệp vụ
     }
     const list: Progress[] = data.chunks.map((c) => ({
       chunk_id: c.id,
@@ -81,7 +83,7 @@ export function LawInputForm() {
         const res = await postPipeline("/api/pipeline/extract", { chunk_id: p.chunk_id });
         setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "da_trich_xuat", res } : x)));
       } catch (err) {
-        const msg = err instanceof PipelineError ? err.error : "Lỗi không xác định";
+        const msg = (err instanceof PipelineError ? handleError({ code: pipelineErrorCode(err), message: err.error, status: err.status }) : null) ?? "Lỗi không xác định";
         setProgress((ps) => ps!.map((x) => (x.chunk_id === p.chunk_id ? { ...x, trang_thai: "loi", loi: msg } : x)));
       }
     }
@@ -93,11 +95,11 @@ export function LawInputForm() {
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất (mô phỏng)"}
+            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất"}
           </CardTitle>
           <CardDescription>
             Văn bản <strong>{vb.so_hieu}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ
-            curator duyệt. <em>Mock không gọi AI: số entity bên dưới là số giả lập, chưa tạo entity thật.</em>
+            curator duyệt.
           </CardDescription>
         </CardHeader>
         <CardContent>

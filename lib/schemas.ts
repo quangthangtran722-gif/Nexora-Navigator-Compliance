@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { PHONG_BAN } from "@/lib/department-codes";
-import type { ChunkInput, OnboardingInput, VanBanInput } from "@/lib/mock/tables";
+import type { ChunkInput, OnboardingInput, VanBanInput } from "@/lib/data/mutations";
 
 /*
  * Schema Zod cho 2 form — bám type CONTRACT.md §3 (lib/types.ts).
- * Có kiểm tra lúc compile: output của schema phải gán được cho input của lệnh ghi (lib/mock/tables.ts).
+ * Có kiểm tra lúc compile: output của schema phải gán được cho input của lệnh ghi (lib/data/mutations.ts).
  */
 
 // domain / domains / nganh là text slug: chỉ a-z và "_" (CONTRACT §2)

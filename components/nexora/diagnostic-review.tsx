@@ -8,13 +8,17 @@ import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader,
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
 import { HoiBoSungCard } from "@/components/nexora/hoi-bo-sung";
 import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { deptLabel, TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
-import { CURRENT_CUSTOMER_ID, getChunks, getCustomer, getDepartments, getDiagnostics, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/mock";
-import { PipelineError, postPipeline } from "@/lib/mock/pipeline-api";
-import { rpc } from "@/lib/mock/rpc";
+import { useAuth } from "@/lib/auth/auth-provider";
+import { combine, useErrorHandler } from "@/lib/data/errors";
+import { getChunks, getCustomer, getDepartments, getDiagnostics, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
+import { PipelineError, pipelineErrorCode, postPipeline } from "@/lib/data/pipeline";
+import { rpc } from "@/lib/data/rpc";
 import type { Department, Diagnostic, Entity, EntityGraphRow, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -30,19 +34,28 @@ import { cn } from "@/lib/utils";
 const RANK: Record<TrangThaiApDung, number> = { ap_dung: 0, sap_ap_dung: 1, chua_du_thong_tin: 2, khong_ap_dung: 3 };
 
 export function DiagnosticReview() {
-  const [, setVersion] = useState(0);
-  const refresh = () => setVersion((v) => v + 1);
+  const { customerId } = useAuth(); // RequireRole đảm bảo đã là customer có customer_id
   const [showHetApDung, setShowHetApDung] = useState(false);
   const [flash, setFlash] = useState<string | null>(null);
-
-  const customer = getCustomer(CURRENT_CUSTOMER_ID);
-  const departments = getDepartments(customer.id);
-  const diagnostics = getDiagnostics(customer.id);
-  const entities = getEntities();
-  const graph = getEntityGraph();
-  const dict = getThuocTinhHoSo();
-  const chunks = getChunks();
-  const vanBan = getVanBanList();
+  // Đọc lại từ DB sau mỗi thao tác (duyệt, trả lời hỏi bổ sung → /filter → /generate)
+  const res = useQuery(
+    () =>
+      combine({
+        customer: getCustomer(customerId!),
+        departments: getDepartments(customerId!),
+        diagnostics: getDiagnostics(customerId!),
+        entities: getEntities(),
+        graph: getEntityGraph(),
+        dict: getThuocTinhHoSo(),
+        chunks: getChunks(),
+        vanBan: getVanBanList(),
+      }),
+    [customerId],
+  );
+  const refresh = res.reload;
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
+  const { customer, departments, diagnostics, entities, graph, dict, chunks, vanBan } = res.data!;
 
   const soHieuOf = (e?: Entity) => vanBan.find((v) => v.id === chunks.find((c) => c.id === e?.chunk_id)?.van_ban_id)?.so_hieu;
   const contextOf = (entityId: string) => graph.filter((g) => g.target_id === entityId && g.source_trang_thai_duyet === "da_duyet");
@@ -65,19 +78,22 @@ export function DiagnosticReview() {
       {thieuTheoEntity.size > 0 && (
         <section id="hoi-bo-sung" className="scroll-mt-20 space-y-3">
           <h2 className="text-lg font-semibold">Cần bổ sung thông tin ({thieuTheoEntity.size})</h2>
-          {[...thieuTheoEntity].map(([entityId, thieu]) => (
-            <HoiBoSungCard
-              key={entityId}
-              customer={customer}
-              entity={entities.find((e) => e.id === entityId)!}
-              thuocTinhThieu={thieu}
-              dict={dict}
-              onDone={({ entityTen, status, error }) => {
-                setFlash(error ? `${entityTen}: ${error}` : `${entityTen}: kết quả mới — ${status ? TRANG_THAI_AP_DUNG_LABEL[status] : "không đổi"}.`);
-                refresh();
-              }}
-            />
-          ))}
+          {[...thieuTheoEntity].map(([entityId, thieu]) => {
+            const entity = entities.find((e) => e.id === entityId);
+            return !entity ? null : (
+              <HoiBoSungCard
+                key={entityId}
+                customer={customer}
+                entity={entity}
+                thuocTinhThieu={thieu}
+                dict={dict}
+                onDone={({ entityTen, status, error }) => {
+                  setFlash(error ? `${entityTen}: ${error}` : `${entityTen}: kết quả mới — ${status ? TRANG_THAI_AP_DUNG_LABEL[status] : "không đổi"}.`);
+                  refresh();
+                }}
+              />
+            );
+          })}
         </section>
       )}
 
@@ -161,6 +177,8 @@ function DiagnosticCard({
   const [ghiChu, setGhiChu] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [forbidden, setForbidden] = useState(false);
+  const handleError = useErrorHandler();
 
   const hetApDung = d.trang_thai_ap_dung === "khong_ap_dung";
   const chuaDu = d.trang_thai_ap_dung === "chua_du_thong_tin";
@@ -177,8 +195,8 @@ function DiagnosticCard({
       p_ghi_chu: ghiChu.trim() || undefined,
     });
     setBusy(false);
-    setError(error?.message ?? null);
-    onChanged();
+    setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
+    if (!error) onChanged();
   }
 
   async function askAi() {
@@ -187,7 +205,11 @@ function DiagnosticCard({
       await postPipeline("/api/pipeline/generate", { customer_id: d.customer_id, diagnostic_ids: [d.id] });
       setError(null);
     } catch (e) {
-      setError(e instanceof PipelineError ? e.error : "AI chưa viết được checklist.");
+      setError(
+        e instanceof PipelineError
+          ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }, { onForbidden: () => setForbidden(true) })
+          : "AI chưa viết được checklist.",
+      );
     }
     setBusy(false);
     onChanged();
@@ -231,7 +253,7 @@ function DiagnosticCard({
         )}
       </CardContent>
 
-      {choAi && (
+      {choAi && !forbidden && (
         <CardFooter>
           <Button size="sm" variant="outline" disabled={busy} onClick={askAi}>
             <Sparkles /> Yêu cầu AI viết checklist
@@ -239,7 +261,7 @@ function DiagnosticCard({
         </CardFooter>
       )}
 
-      {canApprove && (
+      {canApprove && !forbidden && (
         <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-end">
           <div className="space-y-1.5 sm:w-56">
             <Label className="text-xs">Giao cho phòng</Label>

@@ -10,29 +10,31 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { FormField, PayloadPreview } from "@/components/nexora/form-field";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { PHONG_BAN, PHONG_BAN_LABEL } from "@/lib/department-codes";
 import { domainLabel, KNOWN_DOMAINS, QUY_MO_LABEL, toSlug } from "@/lib/labels";
-import { getThuocTinhHoSo } from "@/lib/mock";
-import { PipelineError, postPipeline, type FilterKetQua } from "@/lib/mock/pipeline-api";
-import { saveOnboarding } from "@/lib/mock/tables";
+import { useAuth } from "@/lib/auth/auth-provider";
+import { useErrorHandler } from "@/lib/data/errors";
+import { saveOnboarding } from "@/lib/data/mutations";
+import { PipelineError, pipelineErrorCode, postPipeline, type FilterKetQua } from "@/lib/data/pipeline";
+import { getThuocTinhHoSo } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4, toFieldErrors, type OnboardingPayload } from "@/lib/schemas";
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { QuyMo, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /*
- * Onboarding 4 bước — ghi customers (CONTRACT §3.1) + departments (§3.3), rồi chạy rule engine
+ * Onboarding 4 bước — ghi customers (CONTRACT §3.1) của khách hàng đang đăng nhập + departments (§3.3), rồi chạy rule engine ở backend
  * (POST /api/pipeline/filter) để ra danh sách nghĩa vụ ban đầu.
  * Bước 3 render câu hỏi TỪ thuoc_tinh_ho_so (§3.2), không hard-code — dùng chung ThuocTinhField với "hỏi bổ sung".
  */
 
 const STEPS = ["Thông tin công ty", "Lĩnh vực theo dõi", "Hồ sơ doanh nghiệp", "Phòng ban"] as const;
 const STEP_SCHEMAS = [onboardingStep1, onboardingStep2, onboardingStep3, onboardingStep4] as const;
-// Demo: hồ sơ onboarding ghi vào 1 khách hàng riêng, không đè dữ liệu Minh Phát
-const ONBOARDING_CUSTOMER_ID = "c-onboarding-demo";
 
 const QUY_MO_ITEMS = [
   { value: "chua_chon", label: "Chưa chọn" },
@@ -56,7 +58,11 @@ export function OnboardingForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ payload: OnboardingPayload; ketQua: FilterKetQua[] | null; loi?: string } | null>(null);
-  const [dict] = useState(() => getThuocTinhHoSo());
+  const { customerId } = useAuth(); // ghi vào hồ sơ của chính khách hàng đang đăng nhập (RequireRole đảm bảo có)
+  const handleError = useErrorHandler();
+  // Câu hỏi hồ sơ đọc từ bảng thuoc_tinh_ho_so (backend seed) — KHÔNG hard-code
+  const dictQuery = useQuery(getThuocTinhHoSo, []);
+  const dict = dictQuery.data ?? [];
 
   const update = (patch: Partial<FormState>) => setData((d) => ({ ...d, ...patch }));
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
@@ -88,16 +94,17 @@ export function OnboardingForm() {
     const full = onboardingSchema.safeParse(payload);
     if (!full.success) return setErrors(toFieldErrors(full.error));
     setBusy(true);
-    const { error } = await saveOnboarding(ONBOARDING_CUSTOMER_ID, full.data);
+    const { error } = await saveOnboarding(customerId!, full.data);
     if (error) {
       setBusy(false);
-      return setErrors({ _form: error.message });
+      return setErrors({ _form: handleError(error)! });
     }
     try {
-      const { ket_qua } = await postPipeline("/api/pipeline/filter", { customer_id: ONBOARDING_CUSTOMER_ID });
+      const { ket_qua } = await postPipeline("/api/pipeline/filter", { customer_id: customerId! });
       setDone({ payload: full.data, ketQua: ket_qua });
     } catch (e) {
-      setDone({ payload: full.data, ketQua: null, loi: e instanceof PipelineError ? e.error : "Không chạy được rule engine." });
+      const loi = e instanceof PipelineError ? handleError({ code: pipelineErrorCode(e), message: e.error, status: e.status }) : null;
+      setDone({ payload: full.data, ketQua: null, loi: loi ?? "Không chạy được rule engine." });
     }
     setBusy(false);
   }
@@ -109,7 +116,7 @@ export function OnboardingForm() {
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CircleCheck className="size-5 text-duyet-da" aria-hidden /> Đã lưu hồ sơ & chạy đối chiếu (mô phỏng)
+            <CircleCheck className="size-5 text-duyet-da" aria-hidden /> Đã lưu hồ sơ & chạy đối chiếu
           </CardTitle>
           <CardDescription>Rule engine (không dùng AI) đã đối chiếu hồ sơ với kho nghĩa vụ đã duyệt.</CardDescription>
         </CardHeader>
@@ -224,6 +231,15 @@ export function OnboardingForm() {
             <p className="text-sm text-muted-foreground">
               Trả lời để hệ thống xác định nghĩa vụ nào áp dụng. Chưa có số liệu thì chọn &quot;Chưa chắc&quot; — hệ thống sẽ hỏi lại khi cần.
             </p>
+            {dictQuery.loading && <LoadingBlock />}
+            {dictQuery.error && <ErrorBlock error={dictQuery.error} onRetry={dictQuery.reload} />}
+            {/* Bảng thuoc_tinh_ho_so chưa được seed → để trống, không hard-code câu hỏi */}
+            {!dictQuery.loading && !dictQuery.error && questions.length === 0 && (
+              <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+                Chưa có câu hỏi hồ sơ cho lĩnh vực đã chọn (từ điển thuộc tính chưa được nạp). Có thể bỏ qua bước này — hệ thống sẽ hỏi bổ sung khi
+                cần.
+              </p>
+            )}
             {questions.map((q) => (
               <ThuocTinhField
                 key={q.ma}

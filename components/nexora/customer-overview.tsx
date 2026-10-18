@@ -7,24 +7,39 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, QUY_MO_LABEL } from "@/lib/labels";
-import { CURRENT_CUSTOMER_ID, getCustomer, getDepartments, getDiagnostics, getThuocTinhHoSo } from "@/lib/mock";
+import { useAuth } from "@/lib/auth/auth-provider";
+import { combine } from "@/lib/data/errors";
+import { getCustomer, getDepartments, getDiagnostics, getThuocTinhHoSo } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import { formatGiaTri } from "@/lib/thuoc-tinh-format";
 import type { Diagnostic, TrangThaiApDung } from "@/lib/types";
 
 /*
- * Tổng quan doanh nghiệp (vai trò khách hàng). Client component để đọc cùng "database" giả lập
- * với các màn có thao tác (hỏi bổ sung, duyệt) — số liệu khớp nhau trong 1 phiên.
+ * Tổng quan doanh nghiệp (vai trò khách hàng) — đọc dữ liệu thật của khách hàng đang đăng nhập.
+ * customer_id lấy từ app_metadata của session; RLS chỉ trả dữ liệu của chính khách hàng này.
  */
 
 const AP_DUNG_ORDER: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 
 export function CustomerOverview() {
-  const customer = getCustomer(CURRENT_CUSTOMER_ID);
-  const departments = getDepartments(customer.id);
-  const diagnostics = getDiagnostics(customer.id);
-  const dict = getThuocTinhHoSo().filter((t) => t.domain === null || customer.domains.includes(t.domain));
+  const { customerId } = useAuth(); // RequireRole đảm bảo đã là customer có customer_id
+  const res = useQuery(
+    () =>
+      combine({
+        customer: getCustomer(customerId!),
+        departments: getDepartments(customerId!),
+        diagnostics: getDiagnostics(customerId!),
+        dict: getThuocTinhHoSo(),
+      }),
+    [customerId],
+  );
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
+  const { customer, departments, diagnostics } = res.data!;
+  const dict = res.data!.dict.filter((t) => t.domain === null || customer.domains.includes(t.domain));
 
   const count = (items: Diagnostic[], pred: (d: Diagnostic) => boolean) => items.filter(pred).length;
   const choDuyet = count(diagnostics, (d) => d.trang_thai_duyet === "cho_duyet" && d.noi_dung_diagnostic !== null && d.trang_thai_ap_dung !== "khong_ap_dung");

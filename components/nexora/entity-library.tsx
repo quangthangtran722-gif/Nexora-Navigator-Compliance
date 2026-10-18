@@ -8,10 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { EdgeLine } from "@/components/nexora/edge-line";
 import { AnhHuongBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, formatDate, KNOWN_DOMAINS, LOAI_ENTITY_LABEL } from "@/lib/labels";
-import { getChunks, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/mock";
+import { combine } from "@/lib/data/errors";
+import { getChunks, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import { formatDieuKien } from "@/lib/thuoc-tinh-format";
 import type { LoaiEntity } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -33,13 +36,13 @@ export function EntityLibrary() {
   const [loai, setLoai] = useState<string>(ALL);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const [{ entities, graph, vanBan, chunks, dict }] = useState(() => ({
-    entities: getEntities().filter((e) => e.trang_thai_duyet === "da_duyet"),
-    graph: getEntityGraph().filter((g) => g.source_trang_thai_duyet === "da_duyet"),
-    vanBan: getVanBanList(),
-    chunks: getChunks(),
-    dict: getThuocTinhHoSo(),
-  }));
+  const res = useQuery(
+    () => combine({ entities: getEntities(), graph: getEntityGraph(), vanBan: getVanBanList(), chunks: getChunks(), dict: getThuocTinhHoSo() }),
+    [],
+  );
+  const entities = useMemo(() => (res.data?.entities ?? []).filter((e) => e.trang_thai_duyet === "da_duyet"), [res.data]);
+  const graph = (res.data?.graph ?? []).filter((g) => g.source_trang_thai_duyet === "da_duyet");
+  const { vanBan = [], chunks = [], dict = [] } = res.data ?? {};
   const vanBanOf = (chunkId: string) => vanBan.find((v) => v.id === chunks.find((c) => c.id === chunkId)?.van_ban_id);
 
   const filtered = useMemo(() => {
@@ -51,6 +54,9 @@ export function EntityLibrary() {
         (!q || [e.ten_entity, e.noi_dung_goc, e.dieu_khoan, e.mo_ta].some((s) => s.toLowerCase().includes(q))),
     );
   }, [entities, query, domain, loai]);
+
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
 
   const selected = entities.find((e) => e.id === selectedId) ?? null;
   const edges = selected ? graph.filter((g) => g.source_id === selected.id || g.target_id === selected.id) : [];

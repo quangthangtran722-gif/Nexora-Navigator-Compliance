@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Inbox, Mail, MessageCircleQuestion, UserCheck } from "lucide-react";
 
@@ -8,11 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
 import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { formatDateTime } from "@/lib/labels";
-import { CURRENT_CUSTOMER_ID, getChunks, getDepartments, getDiagnostics, getEntities, getEntityGraph, getNotifications, getThuocTinhHoSo, getVanBanList } from "@/lib/mock";
-import { markNotificationRead } from "@/lib/mock/tables";
+import { useAuth } from "@/lib/auth/auth-provider";
+import { combine } from "@/lib/data/errors";
+import { markNotificationRead } from "@/lib/data/mutations";
+import { getChunks, getDepartments, getDiagnostics, getEntities, getEntityGraph, getNotifications, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { useQuery } from "@/lib/data/use-query";
 import type { Notification } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -26,17 +29,25 @@ import { cn } from "@/lib/utils";
 const DAU_MOI = "dau-moi";
 
 export function DepartmentInbox() {
-  const [, setVersion] = useState(0);
-  const refresh = () => setVersion((v) => v + 1);
-
-  const departments = getDepartments(CURRENT_CUSTOMER_ID);
-  const notifications = getNotifications(CURRENT_CUSTOMER_ID);
-  const diagnostics = getDiagnostics(CURRENT_CUSTOMER_ID);
-  const entities = getEntities();
-  const graph = getEntityGraph();
-  const dict = getThuocTinhHoSo();
-  const chunks = getChunks();
-  const vanBan = getVanBanList();
+  const { customerId } = useAuth(); // RequireRole đảm bảo đã là customer có customer_id
+  const res = useQuery(
+    () =>
+      combine({
+        departments: getDepartments(customerId!),
+        notifications: getNotifications(customerId!),
+        diagnostics: getDiagnostics(customerId!),
+        entities: getEntities(),
+        graph: getEntityGraph(),
+        dict: getThuocTinhHoSo(),
+        chunks: getChunks(),
+        vanBan: getVanBanList(),
+      }),
+    [customerId],
+  );
+  const refresh = res.reload;
+  if (res.loading) return <LoadingBlock />;
+  if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
+  const { departments, notifications, diagnostics, entities, graph, dict, chunks, vanBan } = res.data!;
 
   const forTab = (tab: string) => notifications.filter((n) => (tab === DAU_MOI ? n.department_id === null : n.giai_doan === "da_giao" && n.department_id === tab));
   const unread = (tab: string) => forTab(tab).filter((n) => !n.da_doc).length;
