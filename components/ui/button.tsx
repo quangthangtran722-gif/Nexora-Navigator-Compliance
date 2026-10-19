@@ -17,6 +17,8 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
         link: "text-primary underline-offset-4 hover:underline",
+        // Nexora: nút hành động chính (ánh kim) — tối đa 1 nút/màn (palette v2 mục 2)
+        metal: "bg-gold-metal border-gold-metal-border hover:brightness-105",
       },
       size: {
         default:

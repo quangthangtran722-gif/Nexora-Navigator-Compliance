@@ -14,12 +14,12 @@ import type { Entity, EntityGraphRow } from "@/lib/types";
 type Props = {
   noiDung: string | null;
   entity: Entity | undefined; // entity hanh_vi gốc
-  soHieu?: string; // số hiệu văn bản chứa entity
+  nguon?: string; // tên văn bản chứa entity (không hiện số hiệu kỹ thuật kiểu DEMO-01/2026)
   context: EntityGraphRow[]; // cạnh trỏ vào entity (target_id = entity_id), nguồn đã duyệt
   entities: Entity[]; // để lấy noi_dung_goc của đầu nguồn
 };
 
-export function DiagnosticBody({ noiDung, entity, soHieu, context, entities }: Props) {
+export function DiagnosticBody({ noiDung, entity, nguon, context, entities }: Props) {
   const checklist = noiDung?.split("\n").filter(Boolean) ?? [];
 
   return (
@@ -29,10 +29,10 @@ export function DiagnosticBody({ noiDung, entity, soHieu, context, entities }: P
           <Hourglass className="size-4" aria-hidden /> AI chưa viết checklist cho mục này.
         </p>
       ) : (
-        <ul className="space-y-1.5 text-sm">
+        <ul className="space-y-1.5 border-l-[3px] border-gold-edge bg-accent px-3 py-2.5 text-sm">
           {checklist.map((line) => (
             <li key={line} className="flex gap-2">
-              <CheckSquare className="mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+              <CheckSquare className="mt-0.5 size-4 shrink-0 text-gold-text" strokeWidth={1.75} aria-hidden />
               <span>{line}</span>
             </li>
           ))}
@@ -49,7 +49,8 @@ export function DiagnosticBody({ noiDung, entity, soHieu, context, entities }: P
                   <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                     <LoaiEntityBadge loai={entity.loai_entity} /> {entity.ten_entity}
                     <span className="font-normal text-muted-foreground">
-                      {soHieu} · {entity.dieu_khoan}
+                      {entity.dieu_khoan}
+                      {nguon && ` — ${nguon}`}
                     </span>
                   </div>
                   <blockquote className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">{entity.noi_dung_goc}</blockquote>

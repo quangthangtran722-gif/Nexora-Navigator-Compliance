@@ -126,7 +126,7 @@ export function DepartmentInbox() {
             {items.map((n) => {
               const d = diagnostics.find((x) => x.id === n.diagnostic_id);
               const entity = entities.find((e) => e.id === d?.entity_id);
-              const soHieu = vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.so_hieu;
+              const tenVanBan = vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.ten_van_ban;
               return (
                 <Card key={n.id} className={cn(!n.da_doc && "ring-2 ring-primary/30", d?.trang_thai_ap_dung === "khong_ap_dung" && "opacity-60")}>
                   <CardHeader>
@@ -152,7 +152,7 @@ export function DepartmentInbox() {
                       <DiagnosticBody
                         noiDung={d.noi_dung_diagnostic}
                         entity={entity}
-                        soHieu={soHieu}
+                        nguon={tenVanBan}
                         context={graph.filter((g) => g.target_id === d.entity_id && g.source_trang_thai_duyet === "da_duyet")}
                         entities={entities}
                       />

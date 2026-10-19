@@ -70,6 +70,8 @@
   --color-brand-red: var(--brand-red);
   --color-brand-red-bg: var(--brand-red-bg);
   --color-gold-text: var(--gold-text);
+  --color-gold-edge: var(--gold-edge);
+  --color-gold-metal-border: var(--gold-metal-border);
 }
 
 /*
@@ -98,8 +100,10 @@
   --input: #D0D5DD;
   --ring: #AE8C4C;
 
-  --gold-metal: linear-gradient(100deg, #C6A462 0%, #DDC894 30%, #EFE3C4 50%, #D2B679 72%, #C9AA6A 100%);
+  --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%); /* bản đậm 19/10 */
   --gold-text: #6E5730;
+  --gold-edge: #CFAE68;             /* viền trái nhấn: dải phòng ban, ô checklist, gạch chân tab */
+  --gold-metal-border: #9C7A3A;
 
   --topbar: #2A1D14;                /* nâu espresso */
   --topbar-foreground: #FFF5E6;
@@ -165,8 +169,10 @@
   --input: #2E333D;
   --ring: #D2B679;
 
-  --gold-metal: linear-gradient(100deg, #AE8C4C 0%, #D2B679 40%, #E9DCBA 55%, #C6A462 100%);
+  --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%);
   --gold-text: #DDC894;
+  --gold-edge: #CFAE68;
+  --gold-metal-border: #9C7A3A;
 
   --topbar: #1C130D;
   --topbar-foreground: #FFF5E6;
@@ -207,11 +213,13 @@
   --sidebar-ring: #D2B679;
 }
 
-/* Ánh kim sâm panh — CHỈ 3 chỗ: nút chính mỗi màn (tối đa 1), thẻ KPI đầu /tong-quan, vạch 2px dưới top bar */
+/* Ánh kim sâm panh (bản đậm, team chỉnh 19/10) — CHỈ 3 chỗ: nút chính mỗi màn, thẻ KPI đầu /tong-quan, vạch 2px dưới top bar.
+ * Dùng qua <Button variant="metal"> (đã kèm hover:brightness-105). Nút chính không dùng gold phẳng. */
 @utility bg-gold-metal {
   background-image: var(--gold-metal);
   color: #2A2112;
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), inset 0 -1px 0 rgb(0 0 0 / 0.1);
+  border: 1px solid #9C7A3A;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55), inset 0 -1px 0 rgb(0 0 0 / 0.15);
 }
 @layer base {
   * {

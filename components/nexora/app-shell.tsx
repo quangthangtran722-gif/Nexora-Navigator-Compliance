@@ -8,7 +8,8 @@ export function AppShell({ role, children }: { role: Role; children: React.React
   return (
     <SidebarProvider>
       <AppSidebar role={role} />
-      <SidebarInset>
+      {/* min-w-0: nội dung rộng (bảng, tab bar) cuộn trong vùng của nó, không đẩy cả trang cuộn ngang */}
+      <SidebarInset className="min-w-0">
         <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
