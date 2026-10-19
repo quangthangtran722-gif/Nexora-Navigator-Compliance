@@ -73,9 +73,11 @@ export const LOAI_RELATIONSHIP_LABEL: Record<LoaiRelationship, string> = {
   dieu_kien: "Là điều kiện của", che_tai_cua: "Là chế tài của", ap_dung_cho: "Áp dụng cho",
 };
 
-export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "khac";
+// §3.11 — huong_dan thêm ở migration 004
+export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "huong_dan" | "khac";
 export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {
-  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", khac: "Khác",
+  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định",
+  huong_dan: "Hướng dẫn", khac: "Khác",
 };
 
 export type TrangThaiVanBan = "draft" | "active" | "replaced";
@@ -417,6 +419,22 @@ export type Nganh = {
 ```
 
 Đọc: `supabase.from("nganh").select("ma, ten_hien_thi")` (mọi user đăng nhập; curator thêm/sửa). `customers.nganh` **không có FK** sang bảng này (onboarding cho nhập tự do) → mã không có trong bảng thì hiện nguyên mã làm fallback. Form onboarding có thể dùng bảng này làm danh sách gợi ý.
+
+### 3.11 Loại văn bản — cột `van_ban.loai_van_ban`
+
+Enum Postgres `public.loai_van_ban`, **bắt buộc** khi tạo văn bản (không có default). Chỉ để phân loại/hiển thị — rule engine và pipeline **không** đổi hành vi theo loại.
+
+| Giá trị | Nhãn | Mô tả |
+|---|---|---|
+| `luat` | Luật | Do Quốc hội ban hành; quy định khung, thường cần nghị định/thông tư hướng dẫn mới áp dụng chi tiết được. |
+| `nghi_dinh` | Nghị định | Do Chính phủ ban hành; quy định chi tiết thi hành luật. |
+| `thong_tu` | Thông tư | Do Bộ trưởng/Thủ trưởng cơ quan ngang bộ ban hành; hướng dẫn thi hành nghị định/luật, thường nêu thủ tục, biểu mẫu, thời hạn cụ thể. |
+| `nghi_quyet` | Nghị quyết | Của Quốc hội, Ủy ban Thường vụ Quốc hội, Chính phủ hoặc HĐND; quyết định chủ trương hoặc quy định có hiệu lực áp dụng. |
+| `quyet_dinh` | Quyết định | Của Thủ tướng, Bộ trưởng hoặc UBND; thường áp dụng cho trường hợp/phạm vi cụ thể. |
+| `huong_dan` | Hướng dẫn | Công văn/văn bản hướng dẫn nghiệp vụ của cơ quan nhà nước (vd công văn của Tổng cục Thuế) — không phải văn bản quy phạm pháp luật nhưng doanh nghiệp vẫn cần theo. |
+| `khac` | Khác | Loại chưa có ở trên, hoặc dữ liệu demo. |
+
+Dữ liệu demo: `DEMO-01/2026` = `nghi_dinh` (active), `TT-DEMO-01/2026` = `thong_tu` (draft) — thông tư mẫu hướng dẫn DEMO-01, dẫn chiếu "Điều X Nghị định mẫu DEMO-01/2026" để test cross-reference: extract ra cạnh `tham_chieu` pending (`target_ref_text`), curator nối sang entity của DEMO-01 bằng cách cập nhật `target_entity_id` (đích được phép thuộc văn bản khác).
 
 ---
 

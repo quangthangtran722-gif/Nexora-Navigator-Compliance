@@ -175,7 +175,7 @@ const THUOC_TINH_HO_SO = [
 const VAN_BAN_MAU = {
   ten_van_ban: "Văn bản mẫu về thuế đối với kinh doanh trực tuyến và tiền lương (dữ liệu demo — không phải văn bản pháp luật thật)",
   so_hieu: "DEMO-01/2026",
-  loai_van_ban: "khac",
+  loai_van_ban: "nghi_dinh", // migration 004 cập nhật row đã có (seed không ghi đè van_ban)
   co_quan_ban_hanh: "Nexora (dữ liệu demo)",
   ngay_ban_hanh: "2026-06-01",
   ngay_hieu_luc: "2026-07-01",
@@ -214,6 +214,36 @@ Người bán hàng có doanh thu năm từ 200 triệu đồng trở xuống đ
 
 Điều 8. Hoàn thuế
 Người nộp thuế có số thuế đã nộp lớn hơn số thuế phải nộp được hoàn thuế. Hồ sơ, thủ tục hoàn thuế thực hiện theo quy định tại Điều 40 của Văn bản mẫu này. Chính phủ quy định chi tiết Điều này.`,
+  },
+];
+
+// 2b. Thông tư MẪU hướng dẫn DEMO-01/2026 — test cross-reference giữa 2 văn bản.
+//     Cố ý lặp lại chủ thể / hành vi của DEMO-01 và dẫn chiếu "Điều X Nghị định mẫu DEMO-01/2026"
+//     → extract sinh entity trùng tên + cạnh tham_chieu pending (target_ref_text) để curator nối
+//     sang entity của DEMO-01. Để draft: curator kích hoạt sau khi duyệt.
+const VAN_BAN_TT = {
+  ten_van_ban: "Thông tư mẫu hướng dẫn thi hành Nghị định mẫu DEMO-01/2026 (dữ liệu demo — không phải văn bản pháp luật thật)",
+  so_hieu: "TT-DEMO-01/2026",
+  loai_van_ban: "thong_tu",
+  co_quan_ban_hanh: "Nexora (dữ liệu demo)",
+  ngay_ban_hanh: "2026-07-15",
+  ngay_hieu_luc: "2026-09-01",
+  domains: ["thue", "ke_toan"],
+  trang_thai: "draft",
+};
+
+const CHUNKS_TT = [
+  {
+    thu_tu: 1,
+    tieu_de: "Hướng dẫn khai thuế theo quý và khấu trừ thuế tiền lương",
+    dieu_khoan_range: "Điều 1–2",
+    noi_dung: `Điều 1. Hướng dẫn khai thuế theo quý đối với người bán hàng trực tuyến
+1. Người bán hàng trên nền tảng thương mại điện tử thực hiện khai thuế theo quý quy định tại điểm b khoản 1 Điều 2 Nghị định mẫu DEMO-01/2026 bằng phương thức điện tử qua cổng thông tin của cơ quan thuế.
+2. Trường hợp người bán hàng có doanh thu năm từ 200 triệu đồng trở xuống theo quy định tại Điều 3 Nghị định mẫu DEMO-01/2026 thì không phải nộp hồ sơ khai thuế theo quý nhưng phải thông báo doanh thu cho cơ quan thuế chậm nhất là ngày 31 tháng 01 của năm tiếp theo.
+
+Điều 2. Hướng dẫn khấu trừ thuế đối với thu nhập từ tiền lương
+1. Tổ chức trả thu nhập thực hiện khấu trừ thuế theo quy định tại Điều 7 Nghị định mẫu DEMO-01/2026 phải lập bảng kê thu nhập và số thuế đã khấu trừ của từng người lao động theo tháng.
+2. Kế toán của tổ chức trả thu nhập phải lưu trữ bảng kê quy định tại khoản 1 Điều này cùng với chứng từ khấu trừ thuế trong thời hạn 10 năm.`,
   },
 ];
 
@@ -292,21 +322,25 @@ async function step(label, promise) {
 
 await step("thuoc_tinh_ho_so", db.from("thuoc_tinh_ho_so").upsert(THUOC_TINH_HO_SO, { onConflict: "ma" }).select("ma"));
 
-await step(
-  "van_ban (mẫu)",
-  db.from("van_ban").upsert(VAN_BAN_MAU, { onConflict: "so_hieu", ignoreDuplicates: true }).select("id"),
-);
-const vanBan = await step("đọc van_ban mẫu", db.from("van_ban").select("id").eq("so_hieu", VAN_BAN_MAU.so_hieu).single());
-await step(
-  "van_ban_chunks (mẫu)",
-  db
-    .from("van_ban_chunks")
-    .upsert(
-      CHUNKS_MAU.map((c) => ({ ...c, van_ban_id: vanBan.id })),
-      { onConflict: "van_ban_id,thu_tu", ignoreDuplicates: true },
-    )
-    .select("id"),
-);
+const vanBanIds = {};
+for (const [vb, chunks] of [
+  [VAN_BAN_MAU, CHUNKS_MAU],
+  [VAN_BAN_TT, CHUNKS_TT],
+]) {
+  await step(`van_ban ${vb.so_hieu}`, db.from("van_ban").upsert(vb, { onConflict: "so_hieu", ignoreDuplicates: true }).select("id"));
+  const row = await step(`đọc van_ban ${vb.so_hieu}`, db.from("van_ban").select("id").eq("so_hieu", vb.so_hieu).single());
+  vanBanIds[vb.so_hieu] = row.id;
+  await step(
+    `van_ban_chunks ${vb.so_hieu}`,
+    db
+      .from("van_ban_chunks")
+      .upsert(
+        chunks.map((c) => ({ ...c, van_ban_id: row.id })),
+        { onConflict: "van_ban_id,thu_tu", ignoreDuplicates: true },
+      )
+      .select("id"),
+  );
+}
 
 await step("customers", db.from("customers").upsert(CUSTOMERS, { onConflict: "id", ignoreDuplicates: true }).select("id"));
 await step(
@@ -314,9 +348,11 @@ await step(
   db.from("departments").upsert(DEPARTMENTS, { onConflict: "customer_id,ten_phong_ban", ignoreDuplicates: true }).select("id"),
 );
 
-const chunks = await step(
-  "đọc chunks",
-  db.from("van_ban_chunks").select("id, thu_tu, dieu_khoan_range, trang_thai").eq("van_ban_id", vanBan.id).order("thu_tu"),
-);
 console.log("\nChunk mẫu (dùng chunk_id này gọi POST /api/pipeline/extract):");
-for (const c of chunks) console.log(`  #${c.thu_tu} ${c.dieu_khoan_range}  ${c.id}  [${c.trang_thai}]`);
+for (const [soHieu, id] of Object.entries(vanBanIds)) {
+  const chunks = await step(
+    `đọc chunks ${soHieu}`,
+    db.from("van_ban_chunks").select("id, thu_tu, dieu_khoan_range, trang_thai").eq("van_ban_id", id).order("thu_tu"),
+  );
+  for (const c of chunks) console.log(`  ${soHieu} #${c.thu_tu} ${c.dieu_khoan_range}  ${c.id}  [${c.trang_thai}]`);
+}
