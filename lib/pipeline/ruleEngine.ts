@@ -94,6 +94,12 @@ export function evaluateEntity(input: {
     : { ...base, trang_thai_ap_dung: "ap_dung", ly_do: "da_hieu_luc", dieu_kien: dieuKien };
 }
 
+// Thuộc tính rule engine thấy = customers.thuoc_tinh + "nganh" lấy từ cột customers.nganh (nguồn sự thật,
+// form onboarding có field riêng) → curator viết được điều kiện {"thuoc_tinh":"nganh","toan_tu":"eq","gia_tri":"chung_khoan"}.
+export function thuocTinhRuleEngine(customer: { nganh: string | null; thuoc_tinh: ThuocTinhKhachHang }): ThuocTinhKhachHang {
+  return { ...customer.thuoc_tinh, nganh: customer.nganh ?? customer.thuoc_tinh.nganh ?? null };
+}
+
 export function todayInVietnam(now = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(now);
 }

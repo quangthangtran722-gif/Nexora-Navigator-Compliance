@@ -44,6 +44,7 @@ const PHONG_BAN_ITEMS = PHONG_BAN.map((s) => ({ value: s, label: PHONG_BAN_LABEL
 const DOMAIN_HINT: Record<string, string> = {
   thue: "Hoá đơn, thuế GTGT, thuế TNDN, kê khai và nộp thuế",
   ke_toan: "Chứng từ, sổ sách, báo cáo tài chính, lưu trữ",
+  chung_khoan: "Môi giới, tự doanh, tư vấn đầu tư, giấy phép UBCKNN",
 };
 
 type DeptState = { ten_phong_ban: string; slug_phong_ban: string; email_head: string };
@@ -84,7 +85,8 @@ export function OnboardingForm() {
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
 
   // Câu hỏi: dùng chung (domain null) + theo lĩnh vực đã chọn
-  const questions = dict.filter((t) => t.domain === null || data.domains.includes(t.domain));
+  // "nganh" đã có field riêng ở bước 1 (cột customers.nganh) → không hỏi lại
+  const questions = dict.filter((t) => t.ma !== "nganh" && (t.domain === null || data.domains.includes(t.domain)));
 
   // State form → payload đúng shape CONTRACT
   function toPayload() {

@@ -5,6 +5,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError, fromDb } from "@/lib/api/http";
 import {
   evaluateEntity,
+  thuocTinhRuleEngine,
   todayInVietnam,
   type DanhGia,
   type DieuKien,
@@ -48,13 +49,14 @@ export async function filterDomain(
 ): Promise<FilterResult> {
   const { data: customer, error } = await supabase
     .from("customers")
-    .select("id, domains, thuoc_tinh")
+    .select("id, nganh, domains, thuoc_tinh")
     .eq("id", customerId)
-    .maybeSingle<{ id: string; domains: string[]; thuoc_tinh: ThuocTinhKhachHang }>();
+    .maybeSingle<{ id: string; nganh: string | null; domains: string[]; thuoc_tinh: ThuocTinhKhachHang }>();
   if (error) throw fromDb(error);
   if (!customer) throw new ApiError(404, "Không tìm thấy khách hàng", "PT404");
 
   const homNay = todayInVietnam();
+  const thuocTinh = thuocTinhRuleEngine(customer);
   const runId = await startRun(
     supabase,
     { pipeline_name: "filter_domain", customer_id: customerId, parent_run_id: options.parentRunId ?? null },
@@ -63,7 +65,7 @@ export async function filterDomain(
       entity_id: options.entityId ?? null,
       hom_nay: homNay,
       customer_domains: customer.domains,
-      thuoc_tinh: customer.thuoc_tinh,
+      thuoc_tinh: thuocTinh,
     },
   );
 
@@ -79,7 +81,7 @@ export async function filterDomain(
       const danhGia = evaluateEntity({
         domain: h.domain,
         customerDomains: customer.domains,
-        thuocTinh: customer.thuoc_tinh,
+        thuocTinh,
         dieuKien: dieuKienTheoHanhVi.get(h.id) ?? [],
         ngayHieuLuc: h.ngay_co_hieu_luc ?? h.chunk.van_ban.ngay_hieu_luc,
         homNay,

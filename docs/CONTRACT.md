@@ -550,4 +550,6 @@ Với mỗi entity `hanh_vi` đã duyệt, thuộc văn bản `active`:
 2. Điều kiện = mọi entity `dieu_kien`/`nguong` đã duyệt có cạnh `dieu_kien → hanh_vi`, cộng `chu_the` đã duyệt có cạnh `hanh_vi → ap_dung_cho → chu_the` và có `dieu_kien_may_doc`. Các điều kiện nối bằng AND.
 3. Có điều kiện sai → `khong_ap_dung`. Không sai nhưng thiếu dữ liệu (key thiếu/null) → `chua_du_thong_tin` + `thuoc_tinh_thieu`. Tất cả đúng (hoặc không có điều kiện) → bước 4.
 4. Ngày hiệu lực = `entity.ngay_co_hieu_luc ?? van_ban.ngay_hieu_luc`; > hôm nay → `sap_ap_dung`, ngược lại `ap_dung`.
+
+   _Thuộc tính rule engine thấy_ = `customers.thuoc_tinh` + key ảo `nganh` lấy từ cột `customers.nganh` (`thuocTinhRuleEngine`). Curator viết được `{ "thuoc_tinh": "nganh", "toan_tu": "eq", "gia_tri": "chung_khoan" }` (từ điển có row `nganh`); form onboarding / Tổng quan **không** render row `nganh` vì đã có field Ngành riêng.
 5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban).

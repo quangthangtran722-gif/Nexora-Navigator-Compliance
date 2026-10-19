@@ -42,7 +42,7 @@ export function CustomerOverview() {
   const { customer, departments, diagnostics, nganh } = res.data!;
   // Mã không có trong bảng nganh (onboarding nhập tự do) → hiện nguyên mã (CONTRACT §3.10)
   const tenNganh = customer.nganh ? (nganh.find((n) => n.ma === customer.nganh)?.ten_hien_thi ?? customer.nganh) : "chưa khai";
-  const dict = res.data!.dict.filter((t) => t.domain === null || customer.domains.includes(t.domain));
+  const dict = res.data!.dict.filter((t) => t.ma !== "nganh" && (t.domain === null || customer.domains.includes(t.domain)));
 
   const count = (items: Diagnostic[], pred: (d: Diagnostic) => boolean) => items.filter(pred).length;
   const choDuyet = count(diagnostics, (d) => d.trang_thai_duyet === "cho_duyet" && d.noi_dung_diagnostic !== null && d.trang_thai_ap_dung !== "khong_ap_dung");

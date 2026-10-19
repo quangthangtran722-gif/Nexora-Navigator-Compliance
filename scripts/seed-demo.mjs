@@ -26,6 +26,16 @@ const db = createClient(url, serviceKey, { auth: { persistSession: false, autoRe
 const THUOC_TINH_HO_SO = [
   // Chung
   {
+    ma: "nganh",
+    cau_hoi: "Đơn vị hoạt động trong ngành nào?",
+    kieu: "text",
+    domain: null,
+    lua_chon: null,
+    don_vi: null,
+    mo_ta:
+      "Giá trị lấy từ cột customers.nganh (mã trong bảng nganh) — rule engine tự đọc, form onboarding hỏi ở field Ngành riêng nên không render lại câu này.",
+  },
+  {
     ma: "loai_hinh_kinh_doanh",
     cau_hoi: "Đơn vị của bạn thuộc loại hình nào?",
     kieu: "text",
@@ -136,6 +146,17 @@ const THUOC_TINH_HO_SO = [
     lua_chon: null,
     don_vi: null,
     mo_ta: "Liên quan nghĩa vụ / quyền hoàn thuế.",
+  },
+
+  // Chứng khoán
+  {
+    ma: "co_giay_phep_kinh_doanh_chung_khoan",
+    cau_hoi: "Đơn vị đã được Ủy ban Chứng khoán Nhà nước cấp giấy phép kinh doanh chứng khoán chưa?",
+    kieu: "boolean",
+    domain: "chung_khoan",
+    lua_chon: null,
+    don_vi: null,
+    mo_ta: null,
   },
 
   // Kế toán
@@ -254,6 +275,12 @@ const CHUNKS_TT = [
 // ---------------------------------------------------------------------
 const ABC_ID = "a0000000-0000-4000-8000-000000000001";
 const SMILE_ID = "a0000000-0000-4000-8000-000000000002";
+// Thiên Phú (ngành chứng khoán) — để demo điều kiện nganh eq "chung_khoan": chỉ khớp DN này, ABC/Smile Care → khong_ap_dung.
+// Không seed văn bản cho DN này: curator tải Thông tư lên live khi demo.
+const THIENPHU_ID = "a0000000-0000-4000-8000-000000000003";
+
+// Ngành mới chưa có trong 003_nganh.sql — thêm để Tổng quan hiện tên tiếng Việt
+const NGANH_MOI = [{ ma: "chung_khoan", ten_hien_thi: "Chứng khoán" }];
 
 const CUSTOMERS = [
   {
@@ -295,6 +322,22 @@ const CUSTOMERS = [
       ky_khai_thue_gtgt: "quy",
     },
   },
+  {
+    // MST 0301234569 (giả), địa chỉ 72 Nguyễn Huệ, Q.1, TP.HCM — customers chưa có cột cho các thông tin này;
+    // dịch vụ: môi giới, tự doanh, tư vấn đầu tư chứng khoán.
+    id: THIENPHU_ID,
+    ten_cong_ty: "Công ty CP Chứng khoán Thiên Phú",
+    nganh: "chung_khoan",
+    quy_mo: "vua",
+    domains: ["thue", "ke_toan", "chung_khoan"],
+    thuoc_tinh: {
+      loai_hinh_kinh_doanh: "doanh_nghiep",
+      so_lao_dong: 50,
+      doanh_thu_nam: 12000000000,
+      co_tra_luong: true,
+      co_giay_phep_kinh_doanh_chung_khoan: true,
+    },
+  },
 ];
 
 const DEPARTMENTS = [
@@ -306,6 +349,10 @@ const DEPARTMENTS = [
   { customer_id: SMILE_ID, ten_phong_ban: "Ban Giám đốc", slug_phong_ban: "ban_giam_doc", email_head: "bacsi.truong@smilecare.example" },
   { customer_id: SMILE_ID, ten_phong_ban: "Kế toán - Bảo hiểm", slug_phong_ban: "ke_toan", email_head: "ketoan@smilecare.example" },
   { customer_id: SMILE_ID, ten_phong_ban: "Lễ tân", slug_phong_ban: "van_hanh", email_head: "letan@smilecare.example" },
+  { customer_id: THIENPHU_ID, ten_phong_ban: "Ban Giám đốc", slug_phong_ban: "ban_giam_doc", email_head: "giamdoc@thienphu.example" },
+  { customer_id: THIENPHU_ID, ten_phong_ban: "Phòng Kế toán", slug_phong_ban: "ke_toan", email_head: "ketoan@thienphu.example" },
+  { customer_id: THIENPHU_ID, ten_phong_ban: "Khối Môi giới", slug_phong_ban: "kinh_doanh", email_head: "moigioi@thienphu.example" },
+  { customer_id: THIENPHU_ID, ten_phong_ban: "Phòng Pháp chế - Kiểm soát nội bộ", slug_phong_ban: "phap_che", email_head: "phapche@thienphu.example" },
 ];
 
 // ---------------------------------------------------------------------
@@ -342,6 +389,7 @@ for (const [vb, chunks] of [
   );
 }
 
+await step("nganh", db.from("nganh").upsert(NGANH_MOI, { onConflict: "ma", ignoreDuplicates: true }).select("ma"));
 await step("customers", db.from("customers").upsert(CUSTOMERS, { onConflict: "id", ignoreDuplicates: true }).select("id"));
 await step(
   "departments",

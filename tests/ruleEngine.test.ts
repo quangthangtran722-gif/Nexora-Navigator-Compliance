@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { numbersNotInSource } from "../lib/pipeline/generateDiagnostic.prompt.ts";
-import { evaluateCondition, evaluateEntity, todayInVietnam, type DieuKienMayDoc } from "../lib/pipeline/ruleEngine.ts";
+import { evaluateCondition, evaluateEntity, thuocTinhRuleEngine, todayInVietnam, type DieuKienMayDoc } from "../lib/pipeline/ruleEngine.ts";
 
 const dk = (thuoc_tinh: string, toan_tu: DieuKienMayDoc["toan_tu"], gia_tri: DieuKienMayDoc["gia_tri"]) => ({
   entity_id: thuoc_tinh,
@@ -52,4 +52,20 @@ test("generate: bắt con số không có trong văn bản", () => {
   const nguon = "Chậm nhất ngày thứ 20 ... mức 10% ... dưới 03 tháng";
   assert.deepEqual(numbersNotInSource(item, nguon), []);
   assert.deepEqual(numbersNotInSource({ ...item, luu_y: "Phạt 5 triệu" }, nguon), ["5"]);
+});
+
+test("nganh lấy từ cột customers.nganh → điều kiện nganh eq chung_khoan phân biệt được doanh nghiệp", () => {
+  const dieuKien = [dk("nganh", "eq", "chung_khoan")];
+  const danhGia = (nganh: string | null) =>
+    evaluateEntity({
+      domain: "thue",
+      customerDomains: ["thue"],
+      thuocTinh: thuocTinhRuleEngine({ nganh, thuoc_tinh: { so_lao_dong: 50 } }),
+      dieuKien,
+      ngayHieuLuc: "2026-01-01",
+      homNay: "2026-10-19",
+    }).trang_thai_ap_dung;
+  assert.equal(danhGia("chung_khoan"), "ap_dung");
+  assert.equal(danhGia("van_tai_logistics"), "khong_ap_dung");
+  assert.equal(danhGia(null), "chua_du_thong_tin");
 });
