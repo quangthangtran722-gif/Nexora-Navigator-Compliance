@@ -110,7 +110,7 @@ export function DiagnosticReview() {
           {departments.map((dept) => {
             const pending = diagnostics.filter((d) => d.department_id === dept.id && d.trang_thai_duyet === "cho_duyet" && d.trang_thai_ap_dung !== "khong_ap_dung");
             return (
-              <a key={dept.id} href={`#${dept.id}`} className="rounded-full border px-3 py-1 text-sm transition-colors hover:bg-accent">
+              <a key={dept.id} href={`#${dept.id}`} className="rounded-none border px-3 py-1 text-sm transition-colors hover:bg-accent">
                 {dept.ten_phong_ban}
                 {pending.length > 0 && <span className="ml-1.5 font-semibold text-duyet-cho">{pending.length}</span>}
               </a>

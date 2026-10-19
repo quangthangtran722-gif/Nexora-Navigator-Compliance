@@ -62,100 +62,157 @@
   --color-duyet-da-bg: var(--duyet-da-bg);
   --color-duyet-tu-choi: var(--duyet-tu-choi);
   --color-duyet-tu-choi-bg: var(--duyet-tu-choi-bg);
+
+  /* Nexora palette v2 (Champagne) — mục 3.1 */
+  --color-topbar: var(--topbar);
+  --color-topbar-foreground: var(--topbar-foreground);
+  --color-topbar-muted: var(--topbar-muted);
+  --color-brand-red: var(--brand-red);
+  --color-brand-red-bg: var(--brand-red-bg);
+  --color-gold-text: var(--gold-text);
 }
 
 /*
- * BẢNG MÀU NEXORA — bản nháp, chờ team chốt.
- * Đổi màu chỉ cần sửa các biến trong :root, mọi component tự cập nhật.
+ * BẢNG MÀU NEXORA — palette v2 (Champagne), team đã duyệt (docs: nexora-palette-v2.md).
+ * Light-first: :root; bản tối: .dark. Giữ tên biến shadcn + status-badges đang đọc.
+ * Không xanh dương ở bất kỳ đâu. Gradient chỉ dùng qua bg-gold-metal (3 chỗ, mục 2).
  */
 :root {
-  --background: oklch(0.99 0.002 250);
-  --foreground: oklch(0.2 0.03 260);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.03 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.03 260);
-  /* Màu chính: xanh navy — nút chính, link, mục sidebar đang chọn */
-  --primary: oklch(0.38 0.1 258);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.95 0.015 255);
-  --secondary-foreground: oklch(0.3 0.08 258);
-  --muted: oklch(0.96 0.005 255);
-  --muted-foreground: oklch(0.5 0.02 260);
-  --accent: oklch(0.95 0.015 255);
-  --accent-foreground: oklch(0.3 0.08 258);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.91 0.01 255);
-  --input: oklch(0.91 0.01 255);
-  --ring: oklch(0.55 0.12 258);
+  --background: #F6F7F9;
+  --foreground: #101828;
+  --card: #FFFFFF;
+  --card-foreground: #101828;
+  --popover: #FFFFFF;
+  --popover-foreground: #101828;
 
-  /* 3 trạng thái áp dụng (output rule engine) */
-  --status-ap-dung: oklch(0.5 0.17 35);          /* cam đỏ — cần hành động */
-  --status-ap-dung-bg: oklch(0.95 0.04 40);
-  --status-sap-ap-dung: oklch(0.52 0.12 70);     /* hổ phách — chuẩn bị */
-  --status-sap-ap-dung-bg: oklch(0.96 0.06 90);
-  --status-khong-ap-dung: oklch(0.5 0.01 260);   /* xám — không cần quan tâm */
-  --status-khong-ap-dung-bg: oklch(0.95 0.005 260);
-  --status-chua-du-tt: oklch(0.48 0.13 300);     /* tím — cần hỏi bổ sung */
-  --status-chua-du-tt-bg: oklch(0.95 0.03 300);
+  --primary: #C6A462;               /* gold-500 sâm panh */
+  --primary-foreground: #2A2112;    /* chữ trên gold */
+  --secondary: #F2F4F7;
+  --secondary-foreground: #344054;
+  --muted: #F2F4F7;
+  --muted-foreground: #667085;
+  --accent: #FAF7F0;                /* gold-50: hover, mục đang chọn */
+  --accent-foreground: #6E5730;     /* gold-800 */
+  --destructive: #B42318;
+  --border: #EAECF0;
+  --input: #D0D5DD;
+  --ring: #AE8C4C;
 
-  /* 3 trạng thái duyệt (entity, relationship, diagnostic) */
-  --duyet-cho: oklch(0.48 0.14 250);
-  --duyet-cho-bg: oklch(0.95 0.03 250);
-  --duyet-da: oklch(0.48 0.12 150);
-  --duyet-da-bg: oklch(0.95 0.04 150);
-  --duyet-tu-choi: oklch(0.52 0.19 25);
-  --duyet-tu-choi-bg: oklch(0.95 0.03 25);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.975 0.006 255);
-  --sidebar-foreground: oklch(0.25 0.03 260);
-  --sidebar-primary: oklch(0.38 0.1 258);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.93 0.02 255);
-  --sidebar-accent-foreground: oklch(0.3 0.08 258);
-  --sidebar-border: oklch(0.91 0.01 255);
-  --sidebar-ring: oklch(0.55 0.12 258);
+  --gold-metal: linear-gradient(100deg, #C6A462 0%, #DDC894 30%, #EFE3C4 50%, #D2B679 72%, #C9AA6A 100%);
+  --gold-text: #6E5730;
+
+  --topbar: #2A1D14;                /* nâu espresso */
+  --topbar-foreground: #FFF5E6;
+  --topbar-muted: #BFA88E;
+
+  --brand-red: #D14343;
+  --brand-red-bg: #FDF2F1;
+
+  /* Trạng thái áp dụng (4) */
+  --status-ap-dung: #8F1F17;
+  --status-ap-dung-bg: #FBE3E1;
+  --status-sap-ap-dung: #6E5730;
+  --status-sap-ap-dung-bg: #F3ECDA;
+  --status-chua-du-tt: #6941C6;
+  --status-chua-du-tt-bg: #F4F3FF;
+  --status-khong-ap-dung: #475467;
+  --status-khong-ap-dung-bg: #F2F4F7;
+
+  /* Trạng thái duyệt (3) */
+  --duyet-cho: #B42318;
+  --duyet-cho-bg: #FDF2F1;
+  --duyet-da: #067647;
+  --duyet-da-bg: #ECFDF3;
+  --duyet-tu-choi: #475467;
+  --duyet-tu-choi-bg: #F2F4F7;
+
+  --chart-1: #C6A462;
+  --chart-2: #D14343;
+  --chart-3: #6E5730;
+  --chart-4: #DDC894;
+  --chart-5: #98A2B3;
+
+  --radius: 0rem;
+
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #344054;
+  --sidebar-primary: #C6A462;
+  --sidebar-primary-foreground: #2A2112;
+  --sidebar-accent: #FAF7F0;
+  --sidebar-accent-foreground: #6E5730;
+  --sidebar-border: #EAECF0;
+  --sidebar-ring: #AE8C4C;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0F1115;
+  --foreground: #F2F4F7;
+  --card: #171A20;
+  --card-foreground: #F2F4F7;
+  --popover: #171A20;
+  --popover-foreground: #F2F4F7;
+
+  --primary: #D2B679;
+  --primary-foreground: #2A2112;
+  --secondary: #1D2027;
+  --secondary-foreground: #F2F4F7;
+  --muted: #1D2027;
+  --muted-foreground: #98A2B3;
+  --accent: #26211A;
+  --accent-foreground: #DDC894;
+  --destructive: #E57373;
+  --border: #262A33;
+  --input: #2E333D;
+  --ring: #D2B679;
+
+  --gold-metal: linear-gradient(100deg, #AE8C4C 0%, #D2B679 40%, #E9DCBA 55%, #C6A462 100%);
+  --gold-text: #DDC894;
+
+  --topbar: #1C130D;
+  --topbar-foreground: #FFF5E6;
+  --topbar-muted: #A8927A;
+
+  --brand-red: #E57373;
+  --brand-red-bg: #3A1918;
+
+  --status-ap-dung: #F3A39B;
+  --status-ap-dung-bg: #4A1915;
+  --status-sap-ap-dung: #DDC894;
+  --status-sap-ap-dung-bg: #2A2418;
+  --status-chua-du-tt: #BDB4FE;
+  --status-chua-du-tt-bg: #2A2350;
+  --status-khong-ap-dung: #98A2B3;
+  --status-khong-ap-dung-bg: #262A33;
+
+  --duyet-cho: #F3A39B;
+  --duyet-cho-bg: #3A1918;
+  --duyet-da: #75E0A7;
+  --duyet-da-bg: #0F2E1F;
+  --duyet-tu-choi: #98A2B3;
+  --duyet-tu-choi-bg: #262A33;
+
+  --chart-1: #D2B679;
+  --chart-2: #E57373;
+  --chart-3: #E9DCBA;
+  --chart-4: #AE8C4C;
+  --chart-5: #667085;
+
+  --sidebar: #13161B;
+  --sidebar-foreground: #D0D5DD;
+  --sidebar-primary: #D2B679;
+  --sidebar-primary-foreground: #2A2112;
+  --sidebar-accent: #26211A;
+  --sidebar-accent-foreground: #DDC894;
+  --sidebar-border: #262A33;
+  --sidebar-ring: #D2B679;
 }
 
+/* Ánh kim sâm panh — CHỈ 3 chỗ: nút chính mỗi màn (tối đa 1), thẻ KPI đầu /tong-quan, vạch 2px dưới top bar */
+@utility bg-gold-metal {
+  background-image: var(--gold-metal);
+  color: #2A2112;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5), inset 0 -1px 0 rgb(0 0 0 / 0.1);
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;

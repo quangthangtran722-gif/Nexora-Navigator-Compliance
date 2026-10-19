@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
  */
 
 const base =
-  "inline-flex w-fit shrink-0 items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium whitespace-nowrap [&>svg]:size-3.5";
+  "inline-flex w-fit shrink-0 items-center gap-1 rounded-none px-2.5 py-0.5 text-xs font-medium whitespace-nowrap [&>svg]:size-3.5";
 
 type Style = { className: string; Icon: LucideIcon };
 

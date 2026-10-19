@@ -88,7 +88,7 @@ export function DepartmentInbox() {
             <div key={n.id} className={cn("flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center", !n.da_doc && "border-primary/40 bg-accent/50")}>
               <div className="flex-1 space-y-0.5">
                 <p className={cn("flex items-center gap-1.5 text-sm", !n.da_doc && "font-medium")}>
-                  {!n.da_doc && <span className="inline-block size-2 shrink-0 rounded-full bg-primary" aria-label="Chưa đọc" />}
+                  {!n.da_doc && <span className="inline-block size-2 shrink-0 rounded-none bg-primary" aria-label="Chưa đọc" />}
                   {hoiBoSung && <MessageCircleQuestion className="size-4 shrink-0 text-status-chua-du-tt" aria-hidden />}
                   {n.tieu_de}
                 </p>

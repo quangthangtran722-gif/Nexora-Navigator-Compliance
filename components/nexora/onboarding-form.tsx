@@ -192,7 +192,7 @@ export function OnboardingForm() {
         <ol className="flex gap-2" aria-label="Các bước onboarding">
           {STEPS.map((label, i) => (
             <li key={label} className="flex-1 space-y-1.5">
-              <div className={cn("h-1.5 rounded-full", i <= step ? "bg-primary" : "bg-muted")} />
+              <div className={cn("h-1.5 rounded-none", i <= step ? "bg-primary" : "bg-muted")} />
               <p className={cn("hidden text-xs sm:block", i === step ? "font-medium text-foreground" : "text-muted-foreground")}>
                 {i + 1}. {label}
               </p>

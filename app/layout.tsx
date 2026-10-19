@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Geist_Mono } from "next/font/google";
+import { Lexend, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth/auth-provider";
 import "./globals.css";
 
-// Font chính: thiết kế cho tiếng Việt, có subset vietnamese để hiển thị đủ dấu
-const beVietnamPro = Be_Vietnam_Pro({
+// Font chính (palette v2 mục 5): Lexend, một họ duy nhất, có subset vietnamese để hiển thị đủ dấu
+const lexend = Lexend({
   variable: "--font-sans",
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="vi"
-      className={`${beVietnamPro.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${lexend.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <AuthProvider>
