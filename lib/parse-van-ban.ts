@@ -36,10 +36,13 @@ const LOAI_CHU: Record<LoaiVanBan, string> = {
 function cleanLines(text: string): string[] {
   return text
     .replace(/\r\n?/g, "\n")
+    // Markdown xuất từ Word/Pandoc escape ký tự: "**Điều 1\. …**", "1\.", "\_", "\*" → bỏ "\" (trừ "\|" giữ để không tách nhầm ô bảng)
+    .replace(/\\([\\.*_[\]()#+\-!>`{}~])/g, "$1")
     .split("\n")
-    .flatMap((l) => (l.includes("|") ? l.split("|") : [l]))
+    .flatMap((l) => (/(?<!\\)\|/.test(l) ? l.split(/(?<!\\)\|/) : [l]))
     .map((l) =>
       l
+        .replace(/\\\|/g, "|")
         .replace(/^\s*(#{1,6}\s+|>\s*)/, "")
         .replace(/\*\*|__/g, "")
         .replace(/^\s*[-:]{3,}\s*$/, "") // dòng kẻ của bảng markdown

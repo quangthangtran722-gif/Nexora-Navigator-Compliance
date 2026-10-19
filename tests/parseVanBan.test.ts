@@ -62,6 +62,22 @@ test("tách chunk theo Điều, gộp Điều ngắn (1+2+3, 4+5)", () => {
   assert.match(chunks[0].tieu_de, /^Phạm vi điều chỉnh/);
 });
 
+test("file .md thật: heading Điều in đậm + dấu chấm bị escape (\\.)", () => {
+  // Đúng dạng TT 77/2025 bản .md: **Điều 1\. …**, danh sách "1\.", "\_"
+  const esc = MD.replace(/\*\*Điều (\d)\. ([^*]+)\*\*/g, "**Điều $1\\. $2**").replace(/^(\d)\. /gm, "$1\\. ").replace("**Điều 5", "Mã\\_số \\*ghi chú\\*\n\n**Điều 5");
+  assert.match(esc, /\*\*Điều 1\\\. Phạm vi/); // chắc chắn mẫu có escape
+  const { chunks, so_hieu } = parseVanBan(esc);
+  assert.equal(so_hieu, "77/2025/TT-BTC");
+  assert.deepEqual(
+    chunks.map((c) => c.dieu_khoan_range),
+    ["Điều 1–3", "Điều 4–5"],
+  );
+  assert.deepEqual(splitArticles(chunks[0].noi_dung).map((a) => a.soDieu), [1, 2, 3]);
+  assert.ok(!/\\/.test(chunks.map((c) => c.noi_dung).join("")), "không còn dấu \\ escape");
+  assert.match(chunks[0].noi_dung, /^Điều 1\. Phạm vi điều chỉnh/);
+  assert.match(chunks[1].noi_dung, /Mã_số \*ghi chú\*/);
+});
+
 test("parse không ra thì để trống, không lỗi", () => {
   const p = parseVanBan("Văn bản không có cấu trúc gì cả.");
   assert.equal(p.so_hieu, "");
