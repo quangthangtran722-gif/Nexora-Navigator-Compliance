@@ -1,35 +1,39 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight, Check, Inbox, Mail, MessageCircleQuestion, UserCheck } from "lucide-react";
+import { useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
+import { EmptyGroupLine, GroupHeader } from "@/components/nexora/group-header";
+import { ItemList, ItemMeta, ItemRow } from "@/components/nexora/item-row";
 import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
+import { TabBar } from "@/components/nexora/tab-bar";
 import { formatDateTime } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
 import { combine } from "@/lib/data/errors";
 import { markNotificationRead } from "@/lib/data/mutations";
 import { getChunks, getDepartments, getDiagnostics, getEntities, getEntityGraph, getNotifications, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
 import { useQuery } from "@/lib/data/use-query";
-import type { Notification } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import type { GiaiDoanThongBao, Notification } from "@/lib/types";
 
 /*
- * Hộp thư — 3 giai đoạn thông báo (CONTRACT §3.8):
- *  Tab "Người đầu mối": hoi_bo_sung (trả lời câu hỏi) + cho_duyet (duyệt checklist) — department_id = null
- *  Tab từng phòng ban:  da_giao — nội dung checklist đã duyệt
+ * Hộp thư — 3 giai đoạn thông báo (CONTRACT §3.8), gom theo giai đoạn (palette v3 mục 9.10):
+ *  Chờ duyệt (cho_duyet) · Hỏi bổ sung (hoi_bo_sung) → người đầu mối xử lý ở /duyet-diagnostic (mở đúng mục)
+ *  Đã giao (da_giao) → phòng ban nhận checklist đã duyệt, mở tại chỗ để đọc
  * Client chỉ được update({ da_doc: true }).
  */
 
-const DAU_MOI = "dau-moi";
+const ALL = "tat-ca";
+const GROUPS: { giaiDoan: GiaiDoanThongBao; title: string; subtitle: string; empty: string }[] = [
+  { giaiDoan: "cho_duyet", title: "Chờ duyệt", subtitle: "Checklist mới cần người đầu mối duyệt trước khi giao phòng ban", empty: "chưa có checklist chờ duyệt" },
+  { giaiDoan: "hoi_bo_sung", title: "Hỏi bổ sung", subtitle: "Hệ thống cần thêm thông tin hồ sơ để xác định nghĩa vụ", empty: "chưa có câu hỏi" },
+  { giaiDoan: "da_giao", title: "Đã giao", subtitle: "Checklist đã duyệt, đã giao xuống phòng ban", empty: "chưa giao checklist nào" },
+];
 
 export function DepartmentInbox() {
   const { customerId } = useAuth(); // RequireRole đảm bảo đã là customer có customer_id
+  const [loc, setLoc] = useState<string>(ALL); // tat-ca | chua-doc | da-doc
+  const [openId, setOpenId] = useState<string | null>(null);
   const res = useQuery(
     () =>
       combine({
@@ -49,8 +53,8 @@ export function DepartmentInbox() {
   if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
   const { departments, notifications, diagnostics, entities, graph, dict, chunks, vanBan } = res.data!;
 
-  const forTab = (tab: string) => notifications.filter((n) => (tab === DAU_MOI ? n.department_id === null : n.giai_doan === "da_giao" && n.department_id === tab));
-  const unread = (tab: string) => forTab(tab).filter((n) => !n.da_doc).length;
+  const soChuaDoc = notifications.filter((n) => !n.da_doc).length;
+  const hopLoc = (n: Notification) => loc === ALL || (loc === "chua-doc" ? !n.da_doc : n.da_doc);
 
   async function markRead(n: Notification) {
     if (n.da_doc) return;
@@ -58,122 +62,105 @@ export function DepartmentInbox() {
     refresh();
   }
 
-  const tabs = [{ id: DAU_MOI, label: "Người đầu mối", Icon: UserCheck }, ...departments.map((d) => ({ id: d.id, label: d.ten_phong_ban, Icon: Inbox }))];
-
   return (
-    <Tabs defaultValue={DAU_MOI}>
-      {/* Màn hẹp: 1 hàng, cuộn ngang thay vì xuống dòng */}
-      <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <TabsList className="w-max">
-          {tabs.map(({ id, label, Icon }) => (
-            <TabsTrigger key={id} value={id}>
-              <Icon aria-hidden /> {label}
-              {unread(id) > 0 && <Badge className="ml-0.5">{unread(id)}</Badge>}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </div>
-
-      {/* Người đầu mối: hỏi bổ sung + chờ duyệt */}
-      <TabsContent value={DAU_MOI} className="mt-4 space-y-2">
-        <p className="text-sm text-muted-foreground">Câu hỏi bổ sung và checklist mới cần người đầu mối xử lý trước khi giao phòng ban.</p>
-        {forTab(DAU_MOI).map((n) => {
-          const d = diagnostics.find((x) => x.id === n.diagnostic_id);
-          const entity = entities.find((e) => e.id === d?.entity_id);
-          const hoiBoSung = n.giai_doan === "hoi_bo_sung";
-          // noi_dung của hoi_bo_sung = danh sách mã thuộc tính thiếu → hiện câu hỏi
-          const cauHoi = hoiBoSung && n.noi_dung ? n.noi_dung.split(",").map((ma) => dict.find((t) => t.ma === ma.trim())?.cau_hoi ?? ma.trim()) : [];
-          const daXuLy = hoiBoSung ? d?.trang_thai_ap_dung !== "chua_du_thong_tin" : d?.trang_thai_duyet !== "cho_duyet";
-          return (
-            <div key={n.id} className={cn("flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center", !n.da_doc && "border-primary/40 bg-accent/50")}>
-              <div className="flex-1 space-y-0.5">
-                <p className={cn("flex items-center gap-1.5 text-sm", !n.da_doc && "font-medium")}>
-                  {!n.da_doc && <span className="inline-block size-2 shrink-0 rounded-none bg-primary" aria-label="Chưa đọc" />}
-                  {hoiBoSung && <MessageCircleQuestion className="size-4 shrink-0 text-status-chua-du-tt" aria-hidden />}
-                  {n.tieu_de}
-                </p>
-                {entity && <p className="text-sm text-foreground">{entity.ten_entity}</p>}
-                {cauHoi.length > 0 && <p className="text-xs text-muted-foreground">Câu hỏi: {cauHoi.join(" · ")}</p>}
-                <p className="text-xs text-muted-foreground tabular-nums">{formatDateTime(n.created_at)}</p>
-              </div>
-              {d && daXuLy ? (
-                hoiBoSung ? <ApDungBadge status={d.trang_thai_ap_dung} /> : <DuyetBadge status={d.trang_thai_duyet} />
-              ) : (
-                <Link
-                  href={hoiBoSung ? "/duyet-diagnostic#hoi-bo-sung" : `/duyet-diagnostic#${d?.department_id ?? ""}`}
-                  onClick={() => markRead(n)}
-                  className={buttonVariants({ variant: "outline", size: "sm" })}
-                >
-                  {hoiBoSung ? "Trả lời" : "Mở để duyệt"} <ArrowRight />
-                </Link>
-              )}
-            </div>
-          );
-        })}
-        {forTab(DAU_MOI).length === 0 && <EmptyInbox />}
-      </TabsContent>
-
-      {/* Từng phòng ban: đã giao */}
-      {departments.map((dept) => {
-        const items = forTab(dept.id);
+    <TabBar
+      label="Lọc thông báo"
+      value={loc}
+      onValueChange={setLoc}
+      items={[
+        { value: ALL, label: "Tất cả", count: notifications.length, countTone: "neutral" },
+        { value: "chua-doc", label: "Chưa đọc", count: soChuaDoc, countTone: "action" },
+        { value: "da-doc", label: "Đã đọc" },
+      ]}
+    >
+      {GROUPS.map((g) => {
+        const items = notifications.filter((n) => n.giai_doan === g.giaiDoan && hopLoc(n));
+        if (items.length === 0) return <EmptyGroupLine key={g.giaiDoan} title={g.title} text={loc === ALL ? g.empty : "không có thông báo khớp bộ lọc"} />;
+        const chuaDoc = items.filter((n) => !n.da_doc).length;
         return (
-          <TabsContent key={dept.id} value={dept.id} className="mt-4 space-y-3">
-            {dept.email_head && (
-              <p className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Mail className="size-3.5" aria-hidden /> Gửi tới {dept.email_head}
-              </p>
-            )}
-            {items.map((n) => {
-              const d = diagnostics.find((x) => x.id === n.diagnostic_id);
-              const entity = entities.find((e) => e.id === d?.entity_id);
-              const tenVanBan = vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.ten_van_ban;
-              return (
-                <Card key={n.id} className={cn(!n.da_doc && "ring-2 ring-primary/30", d?.trang_thai_ap_dung === "khong_ap_dung" && "opacity-60")}>
-                  <CardHeader>
-                    <CardTitle className={cn(d?.trang_thai_ap_dung === "khong_ap_dung" && "line-through")}>{entity?.ten_entity ?? n.tieu_de}</CardTitle>
-                    <CardDescription className="flex flex-wrap items-center gap-2">
+          <section key={g.giaiDoan} aria-labelledby={`gd-${g.giaiDoan}`}>
+            <GroupHeader
+              id={`gd-${g.giaiDoan}`}
+              title={g.title}
+              subtitle={g.subtitle}
+              counts={[
+                ...(chuaDoc > 0 ? [{ label: "chưa đọc", n: chuaDoc, tone: "action" as const }] : []),
+                { label: "thông báo", n: items.length },
+              ]}
+            />
+            <ItemList className="border-t-0">
+              {items.map((n) => {
+                const d = diagnostics.find((x) => x.id === n.diagnostic_id);
+                const entity = entities.find((e) => e.id === d?.entity_id);
+                const tenVanBan = vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.ten_van_ban;
+                const dept = departments.find((x) => x.id === n.department_id);
+                const title = entity?.ten_entity ?? n.tieu_de;
+                const right = (
+                  <>
+                    {d && (g.giaiDoan === "hoi_bo_sung" ? <ApDungBadge status={d.trang_thai_ap_dung} /> : <DuyetBadge status={d.trang_thai_duyet} />)}
+                    <span className="text-xs text-muted-foreground tabular-nums">{formatDateTime(n.created_at)}</span>
+                  </>
+                );
+
+                // Chờ duyệt / hỏi bổ sung: dẫn sang /duyet-diagnostic, mở đúng mục đó
+                if (g.giaiDoan !== "da_giao") {
+                  return (
+                    <ItemRow
+                      key={n.id}
+                      title={title}
+                      unread={!n.da_doc}
+                      right={right}
+                      hint={
+                        g.giaiDoan === "hoi_bo_sung" && n.noi_dung
+                          ? `Câu hỏi: ${n.noi_dung.split(",").map((ma) => dict.find((t) => t.ma === ma.trim())?.cau_hoi ?? ma.trim()).join(" · ")}`
+                          : tenVanBan
+                      }
+                      href={g.giaiDoan === "hoi_bo_sung" ? "/duyet-diagnostic#hoi-bo-sung" : `/duyet-diagnostic#diag-${n.diagnostic_id}`}
+                      onNavigate={() => markRead(n)}
+                    />
+                  );
+                }
+
+                // Đã giao: mở tại chỗ để phòng ban đọc checklist; mở = đã đọc
+                return (
+                  <ItemRow
+                    key={n.id}
+                    title={title}
+                    unread={!n.da_doc}
+                    muted={d?.trang_thai_ap_dung === "khong_ap_dung"}
+                    right={right}
+                    open={openId === n.id}
+                    onToggle={() => {
+                      setOpenId((cur) => (cur === n.id ? null : n.id));
+                      markRead(n);
+                    }}
+                  >
+                    <ItemMeta>
                       {d && <ApDungBadge status={d.trang_thai_ap_dung} />}
-                      <span className="tabular-nums">Nhận lúc {formatDateTime(n.created_at)}</span>
-                    </CardDescription>
-                    <CardAction>
-                      {n.da_doc ? (
-                        <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                          <Check className="size-3.5" aria-hidden /> Đã đọc
+                      {dept && <span>Giao cho {dept.ten_phong_ban}{dept.email_head ? ` (${dept.email_head})` : ""}</span>}
+                      {entity && (
+                        <span>
+                          {entity.dieu_khoan}
+                          {tenVanBan && ` — ${tenVanBan}`}
                         </span>
-                      ) : (
-                        <Button size="sm" variant="outline" onClick={() => markRead(n)}>
-                          Đánh dấu đã đọc
-                        </Button>
                       )}
-                    </CardAction>
-                  </CardHeader>
-                  {d && (
-                    <CardContent>
+                    </ItemMeta>
+                    {d && (
                       <DiagnosticBody
                         noiDung={d.noi_dung_diagnostic}
                         entity={entity}
                         nguon={tenVanBan}
-                        context={graph.filter((g) => g.target_id === d.entity_id && g.source_trang_thai_duyet === "da_duyet")}
+                        context={graph.filter((x) => x.target_id === d.entity_id && x.source_trang_thai_duyet === "da_duyet")}
                         entities={entities}
                       />
-                    </CardContent>
-                  )}
-                </Card>
-              );
-            })}
-            {items.length === 0 && <EmptyInbox />}
-          </TabsContent>
+                    )}
+                  </ItemRow>
+                );
+              })}
+            </ItemList>
+          </section>
         );
       })}
-    </Tabs>
-  );
-}
-
-function EmptyInbox() {
-  return (
-    <div className="flex flex-col items-center gap-1 rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">
-      <Inbox className="size-5" aria-hidden />
-      Chưa có thông báo nào.
-    </div>
+    </TabBar>
   );
 }

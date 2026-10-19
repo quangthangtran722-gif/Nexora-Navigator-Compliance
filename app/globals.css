@@ -72,6 +72,7 @@
   --color-gold-text: var(--gold-text);
   --color-gold-edge: var(--gold-edge);
   --color-gold-metal-border: var(--gold-metal-border);
+  --color-ink-soft: var(--ink-soft);
 }
 
 /*
@@ -100,10 +101,11 @@
   --input: #D0D5DD;
   --ring: #AE8C4C;
 
-  --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%); /* bản đậm 19/10 */
+  --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%);
   --gold-text: #6E5730;
   --gold-edge: #CFAE68;             /* viền trái nhấn: dải phòng ban, ô checklist, gạch chân tab */
   --gold-metal-border: #9C7A3A;
+  --ink-soft: #475467;              /* chữ nút phụ (Từ chối, Huỷ, Sửa, Quay lại) */
 
   --topbar: #2A1D14;                /* nâu espresso */
   --topbar-foreground: #FFF5E6;
@@ -169,10 +171,11 @@
   --input: #2E333D;
   --ring: #D2B679;
 
-  --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%);
+  --gold-metal: linear-gradient(100deg, #9C7A3A 0%, #CFAE68 35%, #EADBB4 50%, #C6A462 68%, #A8843F 100%);
   --gold-text: #DDC894;
   --gold-edge: #CFAE68;
   --gold-metal-border: #9C7A3A;
+  --ink-soft: #D0D5DD;
 
   --topbar: #1C130D;
   --topbar-foreground: #FFF5E6;
@@ -213,13 +216,18 @@
   --sidebar-ring: #D2B679;
 }
 
-/* Ánh kim sâm panh (bản đậm, team chỉnh 19/10) — CHỈ 3 chỗ: nút chính mỗi màn, thẻ KPI đầu /tong-quan, vạch 2px dưới top bar.
- * Dùng qua <Button variant="metal"> (đã kèm hover:brightness-105). Nút chính không dùng gold phẳng. */
+/* Ánh kim sâm panh — v3 mục 2, ĐÚNG 5 chỗ: (1) nút chính <Button> mặc định, (2) thẻ KPI đầu /tong-quan,
+ * (3) vạch 2px dưới top bar, (4) gạch chân 3px tab đang chọn, (5) phần đã chạy của progress. */
 @utility bg-gold-metal {
   background-image: var(--gold-metal);
   color: #2A2112;
   border: 1px solid #9C7A3A;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55), inset 0 -1px 0 rgb(0 0 0 / 0.15);
+}
+
+/* Dùng cho vạch dưới top bar, gạch chân tab, thanh tiến độ: chỉ có gradient, không viền, không bóng */
+@utility bg-gold-metal-flat {
+  background-image: var(--gold-metal);
 }
 @layer base {
   * {
@@ -233,5 +241,13 @@
   }
   html {
     @apply font-sans;
+  }
+  /* v3 mục 7: icon Lucide nét 1.75 toàn app */
+  svg.lucide {
+    stroke-width: 1.75;
+  }
+  /* v3 mục 5: body 14px, line-height 1.55 */
+  body {
+    line-height: 1.55;
   }
 }

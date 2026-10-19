@@ -101,3 +101,13 @@ export async function createVanBanWithChunks(vb: VanBanInput, chunks: ChunkInput
   if (c.error) return { data: null, error: fromPostgrest(c.error, c.status)! };
   return ok({ van_ban, chunks: (c.data ?? []) as VanBanChunk[] });
 }
+
+/* ---------- Kích hoạt văn bản (draft → active) ---------- */
+// Rule engine chỉ đọc entity của văn bản active (CONTRACT §7). Curator bấm tay — không tự kích hoạt.
+// RLS van_ban_update: chỉ curator. Chỉ đổi văn bản đang draft để không ghi đè trạng thái replaced.
+export async function activateVanBan(id: string): Promise<Result<VanBan>> {
+  const { data, error, status } = await db().from("van_ban").update({ trang_thai: "active" }).eq("id", id).eq("trang_thai", "draft").select("*").maybeSingle();
+  if (error) return { data: null, error: fromPostgrest(error, status)! };
+  if (!data) return fail("PT409", "Văn bản không còn ở trạng thái Bản nháp — đã được kích hoạt trước đó.", 409);
+  return ok(data as VanBan);
+}

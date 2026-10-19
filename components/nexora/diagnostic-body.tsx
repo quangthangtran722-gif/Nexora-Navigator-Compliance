@@ -1,6 +1,7 @@
 import { CheckSquare, Hourglass } from "lucide-react";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { InsetBlock } from "@/components/nexora/inset-block";
 import { LoaiEntityBadge } from "@/components/nexora/status-badges";
 import type { Entity, EntityGraphRow } from "@/lib/types";
 
@@ -29,14 +30,14 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities }: Pr
           <Hourglass className="size-4" aria-hidden /> AI chưa viết checklist cho mục này.
         </p>
       ) : (
-        <ul className="space-y-1.5 border-l-[3px] border-gold-edge bg-accent px-3 py-2.5 text-sm">
+        <InsetBlock as="ul" className="space-y-1.5">
           {checklist.map((line) => (
             <li key={line} className="flex gap-2">
               <CheckSquare className="mt-0.5 size-4 shrink-0 text-gold-text" strokeWidth={1.75} aria-hidden />
               <span>{line}</span>
             </li>
           ))}
-        </ul>
+        </InsetBlock>
       )}
 
       {entity && (
@@ -53,7 +54,7 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities }: Pr
                       {nguon && ` — ${nguon}`}
                     </span>
                   </div>
-                  <blockquote className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">{entity.noi_dung_goc}</blockquote>
+                  <InsetBlock as="blockquote" className="text-muted-foreground">{entity.noi_dung_goc}</InsetBlock>
                 </li>
                 {context.map((g) => {
                   const src = entities.find((e) => e.id === g.source_id);
@@ -63,7 +64,7 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities }: Pr
                         <LoaiEntityBadge loai={g.source_loai} /> {g.source_ten}
                         {src && <span className="font-normal text-muted-foreground">{src.dieu_khoan}</span>}
                       </div>
-                      <blockquote className="border-l-2 border-primary/30 pl-3 text-sm text-muted-foreground">{src?.noi_dung_goc ?? g.can_cu}</blockquote>
+                      <InsetBlock as="blockquote" className="text-muted-foreground">{src?.noi_dung_goc ?? g.can_cu}</InsetBlock>
                     </li>
                   );
                 })}

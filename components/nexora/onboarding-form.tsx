@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
-import { FormField, PayloadPreview } from "@/components/nexora/form-field";
+import { FormField } from "@/components/nexora/form-field";
+import { Stepper } from "@/components/nexora/progress";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { PHONG_BAN, PHONG_BAN_LABEL } from "@/lib/department-codes";
@@ -141,7 +142,7 @@ export function OnboardingForm() {
         </CardHeader>
         <CardContent className="space-y-4">
           {chuaCoEntity ? (
-            <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+            <p className="border bg-muted px-4 py-3 text-sm text-muted-foreground">
               Chưa có entity được duyệt trong kho để đối chiếu. Hồ sơ đã được lưu — khi curator duyệt văn bản mới, hệ thống sẽ quét lại.
             </p>
           ) : done.ketQua ? (
@@ -165,14 +166,14 @@ export function OnboardingForm() {
               {khongPhong} nghĩa vụ không giao được cho phòng nào (không có phòng khớp và không có Ban Giám đốc) — nên thêm phòng ban.
             </p>
           )}
-          <PayloadPreview data={done.payload} />
+
         </CardContent>
         <CardFooter className="gap-2">
           <Link href="/tong-quan" className={buttonVariants()}>
             Xem tổng quan
           </Link>
           <Button
-            variant="ghost"
+            variant="outline"
             onClick={() => {
               setDone(null);
               setData(EMPTY);
@@ -189,16 +190,7 @@ export function OnboardingForm() {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <ol className="flex gap-2" aria-label="Các bước onboarding">
-          {STEPS.map((label, i) => (
-            <li key={label} className="flex-1 space-y-1.5">
-              <div className={cn("h-1.5 rounded-none", i <= step ? "bg-primary" : "bg-muted")} />
-              <p className={cn("hidden text-xs sm:block", i === step ? "font-medium text-foreground" : "text-muted-foreground")}>
-                {i + 1}. {label}
-              </p>
-            </li>
-          ))}
-        </ol>
+        <Stepper steps={STEPS} current={step} />
         <CardTitle className="pt-2">
           Bước {step + 1}/{STEPS.length} — {STEPS[step]}
         </CardTitle>
@@ -263,7 +255,7 @@ export function OnboardingForm() {
             {dictQuery.error && <ErrorBlock error={dictQuery.error} onRetry={dictQuery.reload} />}
             {/* Bảng thuoc_tinh_ho_so chưa được seed → để trống, không hard-code câu hỏi */}
             {!dictQuery.loading && !dictQuery.error && questions.length === 0 && (
-              <p className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+              <p className="border bg-muted px-4 py-3 text-sm text-muted-foreground">
                 Chưa có câu hỏi hồ sơ cho lĩnh vực đã chọn (từ điển thuộc tính chưa được nạp). Có thể bỏ qua bước này — hệ thống sẽ hỏi bổ sung khi
                 cần.
               </p>
@@ -335,7 +327,7 @@ export function OnboardingForm() {
       </CardContent>
 
       <CardFooter className="justify-between">
-        <Button variant="ghost" disabled={step === 0 || busy} onClick={() => (setErrors({}), setStep(step - 1))}>
+        <Button variant="outline" disabled={step === 0 || busy} onClick={() => (setErrors({}), setStep(step - 1))}>
           Quay lại
         </Button>
         <Button onClick={next} disabled={busy}>

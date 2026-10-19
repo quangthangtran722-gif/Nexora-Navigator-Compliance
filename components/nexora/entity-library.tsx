@@ -13,6 +13,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DieuKienEditor } from "@/components/nexora/dieu-kien-editor";
 import { EdgeLine } from "@/components/nexora/edge-line";
+import { TabBar } from "@/components/nexora/tab-bar";
 import { AnhHuongBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, formatDate, KNOWN_DOMAINS, LOAI_ENTITY_LABEL } from "@/lib/labels";
 import { combine, useErrorHandler } from "@/lib/data/errors";
@@ -32,10 +33,7 @@ const ALL = "all";
 // Loại entity mang được dieu_kien_may_doc (DB check constraint)
 const LOAI_CO_DIEU_KIEN: LoaiEntity[] = ["dieu_kien", "nguong", "chu_the"];
 
-const LOAI_ITEMS = [
-  { value: ALL, label: "Tất cả loại" },
-  ...(Object.keys(LOAI_ENTITY_LABEL) as LoaiEntity[]).map((v) => ({ value: v, label: LOAI_ENTITY_LABEL[v] })),
-];
+const DOMAIN_ITEMS = [{ value: ALL, label: "Mọi lĩnh vực" }, ...KNOWN_DOMAINS.map((d) => ({ value: d, label: domainLabel(d) }))];
 
 export function EntityLibrary() {
   const [query, setQuery] = useState("");
@@ -87,44 +85,42 @@ export function EntityLibrary() {
 
   return (
     <div className="space-y-4">
-      {/* Bộ lọc */}
+      {/* Bộ lọc: TabBar theo loại entity (v3 mục 9.10) + tìm kiếm + lĩnh vực */}
+      <TabBar
+        label="Lọc theo loại entity"
+        value={loai}
+        onValueChange={setLoai}
+        items={[
+          { value: ALL, label: "Tất cả", count: entities.length, countTone: "neutral" },
+          ...(Object.keys(LOAI_ENTITY_LABEL) as LoaiEntity[])
+            .map((v) => ({ value: v, label: LOAI_ENTITY_LABEL[v], count: entities.filter((e) => e.loai_entity === v).length, countTone: "neutral" as const }))
+            .filter((t) => t.count > 0),
+        ]}
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative sm:max-w-xs sm:flex-1">
           <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Tìm theo tên, điều khoản, nội dung…" className="pl-8" aria-label="Tìm entity" />
         </div>
-        <div className="flex gap-1 rounded-lg bg-muted p-1" role="group" aria-label="Lọc theo lĩnh vực">
-          {[ALL, ...KNOWN_DOMAINS].map((d) => (
-            <button
-              key={d}
-              type="button"
-              onClick={() => setDomain(d)}
-              aria-pressed={domain === d}
-              className={cn("rounded-md px-3 py-1 text-sm transition-colors", domain === d ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground")}
-            >
-              {d === ALL ? "Tất cả" : domainLabel(d)}
-            </button>
-          ))}
-        </div>
-        <Select items={LOAI_ITEMS} value={loai} onValueChange={(v) => setLoai((v as string | null) ?? ALL)}>
-          <SelectTrigger className="w-full sm:w-44" aria-label="Lọc theo loại entity">
+        <Select items={DOMAIN_ITEMS} value={domain} onValueChange={(v) => setDomain((v as string | null) ?? ALL)}>
+          <SelectTrigger className="w-full sm:w-44" aria-label="Lọc theo lĩnh vực">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {LOAI_ITEMS.map((l) => (
-              <SelectItem key={l.value} value={l.value}>
-                {l.label}
+            {DOMAIN_ITEMS.map((d) => (
+              <SelectItem key={d.value} value={d.value}>
+                {d.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <span className="text-sm text-muted-foreground sm:ml-auto">
+        <span className="text-xs font-medium text-muted-foreground tabular-nums sm:ml-auto">
           {filtered.length}/{entities.length} entity
         </span>
       </div>
 
       {/* Bảng */}
-      <div className="rounded-xl border bg-card">
+      <div className="border bg-card">
         <Table>
           <TableHeader>
             <TableRow>
@@ -141,7 +137,7 @@ export function EntityLibrary() {
               const vb = vanBanOf(e.chunk_id);
               return (
                 <TableRow key={e.id} className="cursor-pointer" onClick={() => setSelectedId(e.id)}>
-                  <TableCell className="max-w-xs">
+                  <TableCell className="min-w-48 max-w-xs">
                     <button
                       type="button"
                       className="text-left font-medium whitespace-normal hover:underline"
@@ -156,7 +152,7 @@ export function EntityLibrary() {
                   <TableCell>
                     <LoaiEntityBadge loai={e.loai_entity} />
                   </TableCell>
-                  <TableCell className="text-muted-foreground">
+                  <TableCell className="min-w-44 whitespace-normal text-muted-foreground">
                     {vb?.so_hieu} · {e.dieu_khoan}
                   </TableCell>
                   <TableCell>{domainLabel(e.domain)}</TableCell>
@@ -255,11 +251,6 @@ export function EntityLibrary() {
                       </dd>
                     </>
                   )}
-                  <dt className="text-muted-foreground">Lần trích xuất</dt>
-                  <dd>
-                    <code className="text-xs">{selected.pipeline_run_id}</code> · <code className="text-xs">{selected.chunk_id}</code> ·{" "}
-                    <code className="text-xs">{selected.ma_tam}</code>
-                  </dd>
                   {selected.ghi_chu_curator && (
                     <>
                       <dt className="text-muted-foreground">Ghi chú curator</dt>

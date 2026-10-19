@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Compass, LogIn } from "lucide-react";
+import Image from "next/image";
+import { LogIn } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,11 +40,12 @@ export function LoginForm() {
     <form onSubmit={submit} className="w-full max-w-sm">
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-2 text-primary">
-            <Compass className="size-5" aria-hidden />
-            <span className="text-sm font-semibold">Nexora Compliance Navigator</span>
+          {/* Logo gốc 1024×1024 nhiều nền trắng → khung 13:5 cắt bớt trên/dưới, giữ nguyên tỉ lệ */}
+          <div className="relative -mx-2 aspect-[13/5]">
+            <Image src="/logo-nexora.jpg" alt="Nexora Compliance Navigator" fill priority sizes="384px" className="object-cover" />
           </div>
-          <CardTitle className="pt-2 text-xl">Đăng nhập</CardTitle>
+          <p className="text-center text-sm text-muted-foreground">Theo dõi liên tục nghĩa vụ thuế &amp; kế toán cho doanh nghiệp</p>
+          <CardTitle className="pt-4 text-xl font-bold">Đăng nhập</CardTitle>
           <CardDescription>Dùng tài khoản được cấp cho curator hoặc người đầu mối tuân thủ.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -54,7 +56,7 @@ export function LoginForm() {
             <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </FormField>
           {error && (
-            <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+            <p className="bg-brand-red-bg px-3 py-2 text-sm text-destructive" role="alert">
               {error}
             </p>
           )}

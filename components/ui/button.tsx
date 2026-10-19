@@ -7,18 +7,21 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        // Nexora v3 mục 9.4 — Chính: ánh kim (không dùng gold phẳng cho nút)
+        default: "bg-gold-metal border-gold-metal-border hover:brightness-105",
+        // Phụ: Từ chối, Huỷ, Sửa, Quay lại — nền trắng, viền input, chữ #475467
         outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-input bg-card text-ink-soft hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
           "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+        // Nguy hiểm: xoá / không hoàn tác — chữ + viền destructive, nền trắng (không nút nền đỏ)
         destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
-        // Nexora: nút hành động chính (ánh kim) — tối đa 1 nút/màn (palette v2 mục 2)
-        metal: "bg-gold-metal border-gold-metal-border hover:brightness-105",
+          "border-destructive bg-card text-destructive hover:bg-brand-red-bg focus-visible:border-destructive/40 focus-visible:ring-destructive/20",
+        // Liên kết: Xem thêm, mở chi tiết
+        link: "text-gold-text underline-offset-4 hover:underline",
+        metal: "bg-gold-metal border-gold-metal-border hover:brightness-105", // = default, giữ tên cho rõ nghĩa
       },
       size: {
         default:

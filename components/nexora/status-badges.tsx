@@ -88,7 +88,7 @@ export function ChunkBadge({ status, className }: { status: TrangThaiChunk; clas
 }
 
 // CONTRACT không có *_LABEL cho TrangThaiRun → nhãn phía UI
-const RUN_LABEL: Record<TrangThaiRun, string> = { cho_xu_ly: "Chờ xử lý", dang_xu_ly: "Đang chạy", hoan_tat: "Hoàn tất", loi: "Lỗi" };
+export const RUN_LABEL: Record<TrangThaiRun, string> = { cho_xu_ly: "Chờ xử lý", dang_xu_ly: "Đang chạy", hoan_tat: "Hoàn tất", loi: "Lỗi" };
 
 const runStyle: Record<TrangThaiRun, Style> = {
   cho_xu_ly: chunkStyle.cho_xu_ly,

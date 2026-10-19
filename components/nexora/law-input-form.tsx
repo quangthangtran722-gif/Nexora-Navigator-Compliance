@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Plus, RotateCcw, Sparkles, Trash2 } from "lucide-react";
+import { Info, Plus, Power, RotateCcw, Sparkles, Trash2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,10 +12,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/nexora/form-field";
+import { ProgressBar } from "@/components/nexora/progress";
 import { ChunkBadge } from "@/components/nexora/status-badges";
 import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
 import { describeError, useErrorHandler } from "@/lib/data/errors";
-import { createVanBanWithChunks } from "@/lib/data/mutations";
+import { activateVanBan, createVanBanWithChunks } from "@/lib/data/mutations";
 import { PipelineError, pipelineErrorCode, postPipeline, toAppError, type PipelineRoutes } from "@/lib/data/pipeline";
 import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
 import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
@@ -48,6 +49,9 @@ export function LawInputForm() {
   const [progress, setProgress] = useState<Progress[] | null>(null);
   const [running, setRunning] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
+  const [vanBanId, setVanBanId] = useState<string | null>(null);
+  const [activating, setActivating] = useState(false);
+  const [activateMsg, setActivateMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const handleError = useErrorHandler();
 
   const updateVb = (patch: Partial<typeof vb>) => setVb((v) => ({ ...v, ...patch }));
@@ -71,6 +75,7 @@ export function LawInputForm() {
       setRunning(false);
       return setFormError(handleError(error)); // 23505: trùng số hiệu · PT400: dữ liệu sai nghiệp vụ
     }
+    setVanBanId(data.van_ban.id);
     const list: Progress[] = data.chunks.map((c) => ({
       chunk_id: c.id,
       label: `Chunk ${c.thu_tu}${c.dieu_khoan_range ? ` · ${c.dieu_khoan_range}` : ""}`,
@@ -120,22 +125,32 @@ export function LawInputForm() {
   // Thử lại: chỉ chunk chưa chạy / lỗi mà chưa bị khoá (route chỉ nhận chunk cho_xu_ly | loi chưa có entity)
   const retryIds = (progress ?? []).filter((p) => (p.trang_thai === "cho_xu_ly" || p.trang_thai === "loi") && !p.khoa).map((p) => p.chunk_id);
 
+  async function activate() {
+    if (!vanBanId) return;
+    setActivating(true);
+    const { error } = await activateVanBan(vanBanId);
+    setActivating(false);
+    if (error) return setActivateMsg({ ok: false, text: handleError(error) ?? error.message });
+    setActivateMsg({ ok: true, text: "Đã kích hoạt — rule engine sẽ đọc các entity đã duyệt của văn bản này. Chạy Quét lại để áp cho khách hàng." });
+  }
+
   if (progress) {
+    const xong = progress.filter((p) => p.trang_thai === "da_trich_xuat" || p.trang_thai === "hoan_tat").length;
+    const daKichHoat = activateMsg?.ok === true;
     return (
       <Card className="max-w-3xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="size-5 text-primary" aria-hidden /> {running ? "Đang trích xuất…" : "Đã gửi trích xuất"}
-          </CardTitle>
+          <CardTitle>{running ? "Đang trích xuất…" : "Đã gửi trích xuất"}</CardTitle>
           <CardDescription>
-            Văn bản <strong>{vb.so_hieu}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ
-            curator duyệt.
+            Văn bản <strong>{vb.ten_van_ban}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ curator
+            duyệt.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <ul className="divide-y rounded-lg border">
+        <CardContent className="space-y-4">
+          <ProgressBar label={`Đã trích xuất ${xong}/${progress.length} chunk`} value={xong} max={progress.length} />
+          <ul className="divide-y border">
             {progress.map((p) => (
-              <li key={p.chunk_id} className="flex flex-col gap-1 p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+              <li key={p.chunk_id} className="flex min-h-11 flex-col gap-1 px-4 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between">
                 <span className="font-medium">{p.label}</span>
                 <span className="flex flex-wrap items-center gap-2 text-muted-foreground">
                   {p.res && (
@@ -150,23 +165,34 @@ export function LawInputForm() {
             ))}
           </ul>
           {rateLimited && (
-            <p className="mt-3 rounded-lg bg-status-sap-ap-dung-bg px-3 py-2 text-sm text-status-sap-ap-dung" role="status">
+            <p className="bg-status-sap-ap-dung-bg px-3 py-2 text-sm text-status-sap-ap-dung" role="status">
               Đã dừng vì AI tạm hết lượt (8K token/phút). Đợi khoảng 1 phút rồi bấm &quot;Thử lại&quot;.
             </p>
           )}
+          {activateMsg && (
+            <p className={activateMsg.ok ? "text-sm text-duyet-da" : "text-sm text-destructive"} role="status">
+              {activateMsg.text}
+            </p>
+          )}
         </CardContent>
-        <CardFooter className="flex-wrap gap-2">
+        <CardFooter className="flex-wrap justify-end gap-2">
+          {/* Phụ trước, chính sát phải */}
+          <Link href="/nhat-ky" className={buttonVariants({ variant: "outline" })}>
+            Xem nhật ký
+          </Link>
           {!running && retryIds.length > 0 && (
             <Button variant="outline" onClick={() => extractChunks(retryIds)}>
               <RotateCcw /> Thử lại {retryIds.length} chunk
             </Button>
           )}
-          <Link href="/duyet-ban-nhap" className={buttonVariants()} aria-disabled={running}>
+          <Link href="/duyet-ban-nhap" className={buttonVariants({ variant: "outline" })} aria-disabled={running}>
             Sang Duyệt bản nháp
           </Link>
-          <Link href="/nhat-ky" className={buttonVariants({ variant: "outline" })}>
-            Xem nhật ký
-          </Link>
+          {!daKichHoat && (
+            <Button onClick={activate} disabled={running || activating || !vanBanId}>
+              <Power /> {activating ? "Đang kích hoạt…" : "Kích hoạt văn bản"}
+            </Button>
+          )}
         </CardFooter>
       </Card>
     );

@@ -43,7 +43,7 @@ export function ThuocTinhField({ tt, value, onChange, error }: Props) {
               onClick={() => onChange(opt)}
               className={cn(
                 "rounded-md px-3 py-1 text-sm transition-colors",
-                value === opt ? "bg-background font-medium shadow-sm" : "text-muted-foreground hover:text-foreground",
+                value === opt ? "bg-card font-semibold text-foreground ring-1 ring-gold-edge" : "text-muted-foreground hover:text-foreground",
               )}
             >
               {opt === true ? "Có" : opt === false ? "Không" : "Chưa chắc"}
