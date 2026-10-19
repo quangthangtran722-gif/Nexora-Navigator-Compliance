@@ -5,7 +5,7 @@ import { createGroq } from "@ai-sdk/groq";
 import { generateText, Output } from "ai";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError, fromDb } from "@/lib/api/http";
-import { buildExtractSchema } from "./extractEntities.schema";
+import { buildExtractSchema, buildExtractSchemaMotLinhVuc, type ExtractOutput } from "./extractEntities.schema";
 import { buildExtractUserPrompt, EXTRACT_PROMPT_VERSION, EXTRACT_SYSTEM_PROMPT } from "./extractEntities.prompt";
 import { splitArticles, validateExtraction, type GroundingResult } from "./grounding";
 import { aiError, failRun, finishRun, GROQ_MODEL, startRun } from "./runs";
@@ -89,15 +89,22 @@ export async function extractEntities(supabase: SupabaseClient, chunkId: string)
   let grounding: GroundingResult | undefined;
   try {
     const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
-    const { output, usage, finishReason } = await generateText({
+    const schema = restDomains.length ? buildExtractSchema([firstDomain, ...restDomains]) : buildExtractSchemaMotLinhVuc(firstDomain);
+    const { output: raw, usage, finishReason } = await generateText({
       model: groq(GROQ_MODEL),
       system: EXTRACT_SYSTEM_PROMPT,
       prompt: userPrompt,
-      output: Output.object({ schema: buildExtractSchema([firstDomain, ...restDomains]) }),
+      output: Output.object({ schema }),
       temperature: 0,
       maxOutputTokens: MAX_OUTPUT_TOKENS,
       providerOptions: { groq: { structuredOutputs: true, strictJsonSchema: true, reasoningEffort: "low" } },
     });
+
+    // 1 lĩnh vực → schema không có domain, gán ở đây
+    const output: ExtractOutput = {
+      ...raw,
+      entities: raw.entities.map((e) => ({ domain: firstDomain, ...e })),
+    };
 
     // Grounding = chốt chặn bằng code: chỉ entity có trích dẫn nguyên văn trong đúng điều mới vào DB
     grounding = validateExtraction(articles, output);
