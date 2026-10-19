@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Plus, Power, RotateCcw, Sparkles, Trash2 } from "lucide-react";
+import { Info, Plus, Power, RotateCcw, Sparkles, Trash2, Upload } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +18,9 @@ import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
 import { describeError, useErrorHandler } from "@/lib/data/errors";
 import { activateVanBan, createVanBanWithChunks } from "@/lib/data/mutations";
 import { PipelineError, pipelineErrorCode, postPipeline, toAppError, type PipelineRoutes } from "@/lib/data/pipeline";
+import { parseVanBan } from "@/lib/parse-van-ban";
 import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
 
 /*
@@ -52,6 +54,8 @@ export function LawInputForm() {
   const [vanBanId, setVanBanId] = useState<string | null>(null);
   const [activating, setActivating] = useState(false);
   const [activateMsg, setActivateMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [uploadMsg, setUploadMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [dragging, setDragging] = useState(false);
   const handleError = useErrorHandler();
 
   const updateVb = (patch: Partial<typeof vb>) => setVb((v) => ({ ...v, ...patch }));
@@ -198,8 +202,89 @@ export function LawInputForm() {
     );
   }
 
+  // Tải file .txt/.md → tách metadata + chunk theo Điều (client-side, lib/parse-van-ban.ts) → điền form, curator sửa lại được
+  function loadFile(file: File) {
+    if (!/\.(txt|md)$/i.test(file.name)) return setUploadMsg({ ok: false, text: "Chỉ nhận file .txt hoặc .md." });
+    const coDuLieu = Object.entries(vb).some(([k, v]) => k !== "domains" && v !== "") || chunks.some((c) => c.noi_dung.trim() !== "");
+    if (coDuLieu && !window.confirm("Dữ liệu hiện tại sẽ bị thay thế. Tiếp tục?")) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const p = parseVanBan(String(reader.result ?? ""), file.name);
+      setVb((v) => ({
+        ...v,
+        ten_van_ban: p.ten_van_ban,
+        so_hieu: p.so_hieu,
+        loai_van_ban: p.loai_van_ban,
+        co_quan_ban_hanh: p.co_quan_ban_hanh,
+        ngay_ban_hanh: p.ngay_ban_hanh,
+        ngay_hieu_luc: p.ngay_hieu_luc,
+      }));
+      if (p.chunks.length) setChunks(p.chunks);
+      setErrors({});
+      // Báo trường nào chưa tách được để curator điền tay
+      const thieu = [
+        !p.ten_van_ban && "tên văn bản",
+        !p.so_hieu && "số hiệu",
+        !p.loai_van_ban && "loại",
+        !p.ngay_hieu_luc && "ngày có hiệu lực",
+      ].filter(Boolean);
+      setUploadMsg(
+        p.chunks.length
+          ? {
+              ok: true,
+              text: `Đã điền tự động từ ${file.name}: ${p.chunks.length} chunk. Kiểm tra lại trước khi lưu${thieu.length ? ` — chưa tìm thấy ${thieu.join(", ")}` : ""}.`,
+            }
+          : { ok: false, text: `Không tìm thấy "Điều N." ở đầu dòng trong ${file.name} — chưa tách được chunk, hãy dán nội dung thủ công.` },
+      );
+    };
+    reader.onerror = () => setUploadMsg({ ok: false, text: "Không đọc được file." });
+    reader.readAsText(file, "utf-8");
+  }
+
   return (
     <form onSubmit={submit} noValidate className="space-y-6">
+      {/* Tải file văn bản: đặt trên cùng, trước "Thông tin văn bản" */}
+      <div className="max-w-3xl space-y-2">
+        <label
+          htmlFor="file-van-ban"
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setDragging(false);
+            const f = e.dataTransfer.files[0];
+            if (f) loadFile(f);
+          }}
+          className={cn(
+            "flex cursor-pointer flex-col items-center gap-1.5 border border-dashed border-input bg-card px-4 py-6 text-center transition-colors hover:bg-accent focus-within:ring-3 focus-within:ring-ring/50",
+            dragging && "border-gold-edge bg-accent",
+          )}
+        >
+          <Upload className="size-5 text-gold-text" aria-hidden />
+          <span className="text-sm font-medium">Tải file văn bản</span>
+          <span className="text-xs text-muted-foreground">Kéo thả hoặc chọn file .txt / .md — tự điền thông tin và tách chunk theo Điều</span>
+          <input
+            id="file-van-ban"
+            type="file"
+            accept=".txt,.md,text/plain,text/markdown"
+            className="sr-only"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) loadFile(f);
+              e.target.value = ""; // chọn lại cùng file vẫn chạy
+            }}
+          />
+        </label>
+        {uploadMsg && (
+          <p className={cn("px-3 py-2 text-sm", uploadMsg.ok ? "border-l-[3px] border-gold-edge bg-accent" : "bg-brand-red-bg text-destructive")} role="status">
+            {uploadMsg.text}
+          </p>
+        )}
+      </div>
+
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle>Thông tin văn bản</CardTitle>
