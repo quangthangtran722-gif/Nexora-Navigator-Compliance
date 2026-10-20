@@ -209,7 +209,7 @@ function ChunkActions({ summary: s, onApproved }: { summary: NerExtractionSummar
         )}
       </div>
       {blocked && (
-        <p className="flex items-center gap-1.5 text-xs text-duyet-cho">
+        <p className="flex items-center gap-1.5 text-xs text-destructive">
           <TriangleAlert className="size-3.5" aria-hidden /> Còn {s.so_dieu_kien_chua_may_doc} điều kiện/ngưỡng chưa có điều kiện máy đọc — điền xong mới duyệt cả chunk được.
         </p>
       )}
@@ -328,7 +328,7 @@ function EntityRow({
           ) : e.dieu_kien_may_doc ? (
             <p className="text-sm">{formatDieuKien(e.dieu_kien_may_doc, dict)}</p>
           ) : (
-            <p className={cn("text-sm", missingDk ? "text-duyet-cho" : "text-muted-foreground")}>{missingDk ? "Chưa có — cần điền trước khi duyệt." : "Chưa có."}</p>
+            <p className={cn("text-sm", missingDk ? "text-destructive" : "text-muted-foreground")}>{missingDk ? "Chưa có — cần điền trước khi duyệt." : "Chưa có."}</p>
           )}
         </div>
       )}

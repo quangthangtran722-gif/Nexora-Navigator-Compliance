@@ -45,7 +45,7 @@ export function ActivateVanBanButton({
         <Power /> Kích hoạt văn bản
       </Button>
       <Dialog open={open} onOpenChange={(o) => !busy && setOpen(o)}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Kích hoạt văn bản?</DialogTitle>
             <DialogDescription>

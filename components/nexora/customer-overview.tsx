@@ -90,7 +90,7 @@ export function CustomerOverview() {
       {chuaDu > 0 && (
         <p className="flex flex-wrap items-center justify-between gap-2 border bg-card px-4 py-3 text-sm">
           <span>
-            Có <span className="font-semibold text-duyet-cho tabular-nums">{chuaDu}</span> mục chưa đủ thông tin để xác định — cần trả lời câu hỏi bổ sung.
+            Có <span className="font-semibold text-destructive tabular-nums">{chuaDu}</span> mục chưa đủ thông tin để xác định — cần trả lời câu hỏi bổ sung.
           </span>
           <Link href="/duyet-diagnostic#hoi-bo-sung" className={buttonVariants({ variant: "outline", size: "sm" })}>
             Trả lời ngay
@@ -161,8 +161,8 @@ export function CustomerOverview() {
                     </TableCell>
                     <TableCell className="text-right tabular-nums">{n("ap_dung")}</TableCell>
                     <TableCell className="text-right tabular-nums">{n("sap_ap_dung")}</TableCell>
-                    <TableCell className={cn("text-right tabular-nums", n("chua_du_thong_tin") > 0 && "font-semibold text-duyet-cho")}>{n("chua_du_thong_tin")}</TableCell>
-                    <TableCell className={cn("text-right tabular-nums", cho > 0 && "font-semibold text-duyet-cho")}>{cho}</TableCell>
+                    <TableCell className={cn("text-right tabular-nums", n("chua_du_thong_tin") > 0 && "font-semibold text-destructive")}>{n("chua_du_thong_tin")}</TableCell>
+                    <TableCell className={cn("text-right tabular-nums", cho > 0 && "font-semibold text-destructive")}>{cho}</TableCell>
                     <TableCell className="text-right tabular-nums">{count(items, (d) => d.trang_thai_duyet === "da_duyet")}</TableCell>
                   </TableRow>
                 );

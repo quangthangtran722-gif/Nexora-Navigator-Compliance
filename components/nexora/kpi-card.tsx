@@ -25,13 +25,13 @@ export function KpiCard({
     <div className={cn("flex items-start justify-between gap-3 p-4", featured ? "bg-gold-metal" : "border bg-card")}>
       <div className="min-w-0 space-y-1">
         <p className={cn("text-xs font-medium", featured ? "text-[#2A2112]/80" : "text-muted-foreground")}>{label}</p>
-        <p className={cn("text-[28px] leading-none font-bold tabular-nums", attention && !featured && "text-duyet-cho")}>{value}</p>
+        <p className={cn("text-[28px] leading-none font-bold tabular-nums", attention && !featured && "text-destructive")}>{value}</p>
         {hint && <p className={cn("text-xs", featured ? "text-[#2A2112]/80" : "text-muted-foreground")}>{hint}</p>}
       </div>
       <span
         className={cn(
           "flex size-8 shrink-0 items-center justify-center",
-          featured ? "bg-white/35 text-[#2A2112]" : attention ? "bg-brand-red-bg text-duyet-cho" : "bg-accent text-gold-text",
+          featured ? "bg-white/35 text-[#2A2112]" : attention ? "bg-brand-red-bg text-destructive" : "bg-accent text-gold-text",
         )}
         aria-hidden
       >

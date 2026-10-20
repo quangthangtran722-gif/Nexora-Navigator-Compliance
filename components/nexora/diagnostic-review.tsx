@@ -292,19 +292,18 @@ function DiagnosticRow({
       muted={hetApDung}
       open={open}
       onToggle={onToggle}
-      right={
-        <>
-          <ApDungBadge status={d.trang_thai_ap_dung} />
-          <DuyetBadge status={d.trang_thai_duyet} />
-        </>
-      }
+      // Thu gọn: chỉ 1 badge (trạng thái duyệt) — badge áp dụng chỉ hiện khi mở mục (duyệt đợt 2)
+      right={<DuyetBadge status={d.trang_thai_duyet} />}
     >
-      {entity && (
-        <ItemMeta>
-          {entity.dieu_khoan}
-          {tenVanBan && ` — ${tenVanBan}`}
-        </ItemMeta>
-      )}
+      <ItemMeta>
+        <ApDungBadge status={d.trang_thai_ap_dung} />
+        {entity && (
+          <span>
+            {entity.dieu_khoan}
+            {tenVanBan && ` — ${tenVanBan}`}
+          </span>
+        )}
+      </ItemMeta>
       {chuaDu ? (
         <p className="text-sm text-status-chua-du-tt">
           Đang chờ trả lời câu hỏi bổ sung —{" "}

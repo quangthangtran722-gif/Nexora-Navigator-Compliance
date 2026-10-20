@@ -125,8 +125,8 @@
   --status-khong-ap-dung-bg: #F2F4F7;
 
   /* Trạng thái duyệt (3) */
-  --duyet-cho: #B42318;
-  --duyet-cho-bg: #FDF2F1;
+  --duyet-cho: #667085;             /* trung tính (duyệt đợt 2): chờ duyệt là trạng thái mặc định, không tô màu */
+  --duyet-cho-bg: transparent;      /* + viền nét đứt #D0D5DD (= --input) ở badge */
   --duyet-da: #067647;
   --duyet-da-bg: #ECFDF3;
   --duyet-tu-choi: #475467;
@@ -193,8 +193,8 @@
   --status-khong-ap-dung: #98A2B3;
   --status-khong-ap-dung-bg: #262A33;
 
-  --duyet-cho: #F3A39B;
-  --duyet-cho-bg: #3A1918;
+  --duyet-cho: #98A2B3;
+  --duyet-cho-bg: transparent;
   --duyet-da: #75E0A7;
   --duyet-da-bg: #0F2E1F;
   --duyet-tu-choi: #98A2B3;
