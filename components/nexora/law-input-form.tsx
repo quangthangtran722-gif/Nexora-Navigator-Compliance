@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Info, Plus, Power, RotateCcw, Sparkles, Trash2, Upload } from "lucide-react";
+import { Info, Plus, RotateCcw, Sparkles, Trash2, Upload } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,15 +13,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { FormField } from "@/components/nexora/form-field";
 import { ProgressBar } from "@/components/nexora/progress";
-import { ChunkBadge } from "@/components/nexora/status-badges";
+import { ActivateVanBanButton } from "@/components/nexora/activate-van-ban";
+import { ChunkBadge, VanBanBadge } from "@/components/nexora/status-badges";
 import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
 import { describeError, useErrorHandler } from "@/lib/data/errors";
-import { activateVanBan, createVanBanWithChunks } from "@/lib/data/mutations";
+import { createVanBanWithChunks } from "@/lib/data/mutations";
 import { PipelineError, pipelineErrorCode, postPipeline, toAppError, type PipelineRoutes } from "@/lib/data/pipeline";
 import { parseVanBan } from "@/lib/parse-van-ban";
 import { nhapVanBanSchema, toFieldErrors } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import type { LoaiVanBan, TrangThaiChunk } from "@/lib/types";
+import type { LoaiVanBan, TrangThaiChunk, VanBan } from "@/lib/types";
 
 /*
  * Curator nạp văn bản: tạo van_ban (draft) + van_ban_chunks, rồi gọi POST /api/pipeline/extract
@@ -51,9 +52,8 @@ export function LawInputForm() {
   const [progress, setProgress] = useState<Progress[] | null>(null);
   const [running, setRunning] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
-  const [vanBanId, setVanBanId] = useState<string | null>(null);
-  const [activating, setActivating] = useState(false);
-  const [activateMsg, setActivateMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [vanBanMoi, setVanBanMoi] = useState<VanBan | null>(null); // văn bản vừa tạo (draft) — để kích hoạt + hiện badge
+  const [daKichHoat, setDaKichHoat] = useState(false);
   const [uploadMsg, setUploadMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const handleError = useErrorHandler();
@@ -79,7 +79,8 @@ export function LawInputForm() {
       setRunning(false);
       return setFormError(handleError(error)); // 23505: trùng số hiệu · PT400: dữ liệu sai nghiệp vụ
     }
-    setVanBanId(data.van_ban.id);
+    setVanBanMoi(data.van_ban);
+    setDaKichHoat(false);
     const list: Progress[] = data.chunks.map((c) => ({
       chunk_id: c.id,
       label: `Chunk ${c.thu_tu}${c.dieu_khoan_range ? ` · ${c.dieu_khoan_range}` : ""}`,
@@ -129,25 +130,17 @@ export function LawInputForm() {
   // Thử lại: chỉ chunk chưa chạy / lỗi mà chưa bị khoá (route chỉ nhận chunk cho_xu_ly | loi chưa có entity)
   const retryIds = (progress ?? []).filter((p) => (p.trang_thai === "cho_xu_ly" || p.trang_thai === "loi") && !p.khoa).map((p) => p.chunk_id);
 
-  async function activate() {
-    if (!vanBanId) return;
-    setActivating(true);
-    const { error } = await activateVanBan(vanBanId);
-    setActivating(false);
-    if (error) return setActivateMsg({ ok: false, text: handleError(error) ?? error.message });
-    setActivateMsg({ ok: true, text: "Đã kích hoạt — rule engine sẽ đọc các entity đã duyệt của văn bản này. Chạy Quét lại để áp cho khách hàng." });
-  }
-
   if (progress) {
     const xong = progress.filter((p) => p.trang_thai === "da_trich_xuat" || p.trang_thai === "hoan_tat").length;
-    const daKichHoat = activateMsg?.ok === true;
     return (
       <Card className="max-w-3xl">
         <CardHeader>
           <CardTitle>{running ? "Đang trích xuất…" : "Đã gửi trích xuất"}</CardTitle>
           <CardDescription>
-            Văn bản <strong>{vb.ten_van_ban}</strong> được lưu ở trạng thái Bản nháp. Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ curator
-            duyệt.
+            <span className="flex flex-wrap items-center gap-2">
+              <strong>{vb.ten_van_ban}</strong> <VanBanBadge status={daKichHoat ? "active" : "draft"} />
+            </span>
+            Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ curator duyệt.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -173,9 +166,9 @@ export function LawInputForm() {
               Đã dừng vì AI tạm hết lượt (8K token/phút). Đợi khoảng 1 phút rồi bấm &quot;Thử lại&quot;.
             </p>
           )}
-          {activateMsg && (
-            <p className={activateMsg.ok ? "text-sm text-duyet-da" : "text-sm text-destructive"} role="status">
-              {activateMsg.text}
+          {daKichHoat && (
+            <p className="text-sm text-duyet-da" role="status">
+              Đã kích hoạt — rule engine sẽ đọc các entity đã duyệt của văn bản này. Chạy Quét lại để áp cho khách hàng.
             </p>
           )}
         </CardContent>
@@ -192,11 +185,7 @@ export function LawInputForm() {
           <Link href="/duyet-ban-nhap" className={buttonVariants({ variant: "outline" })} aria-disabled={running}>
             Sang Duyệt bản nháp
           </Link>
-          {!daKichHoat && (
-            <Button onClick={activate} disabled={running || activating || !vanBanId}>
-              <Power /> {activating ? "Đang kích hoạt…" : "Kích hoạt văn bản"}
-            </Button>
-          )}
+          {vanBanMoi && !daKichHoat && <ActivateVanBanButton vanBan={vanBanMoi} disabled={running} onActivated={() => setDaKichHoat(true)} />}
         </CardFooter>
       </Card>
     );

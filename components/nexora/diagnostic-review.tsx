@@ -36,6 +36,7 @@ import type { Department, Diagnostic, Entity, EntityGraphRow, TrangThaiApDung } 
 const RANK: Record<TrangThaiApDung, number> = { ap_dung: 0, sap_ap_dung: 1, chua_du_thong_tin: 2, khong_ap_dung: 3 };
 const STATUSES: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 const ALL = "tat-ca";
+const LOC_ITEMS = [{ value: ALL, label: "Tất cả trạng thái" }, ...STATUSES.map((s) => ({ value: s, label: TRANG_THAI_AP_DUNG_LABEL[s] }))];
 
 // Đếm chờ duyệt / đã duyệt của 1 nhóm diagnostic (bỏ mục đã hết áp dụng)
 const demDuyet = (ds: Diagnostic[]) => {
@@ -43,6 +44,7 @@ const demDuyet = (ds: Diagnostic[]) => {
   return {
     cho: conHieuLuc.filter((d) => d.trang_thai_duyet === "cho_duyet").length,
     da: conHieuLuc.filter((d) => d.trang_thai_duyet === "da_duyet").length,
+    tuChoi: conHieuLuc.filter((d) => d.trang_thai_duyet === "tu_choi").length,
   };
 };
 
@@ -150,26 +152,24 @@ export function DiagnosticReview() {
           })),
         ]}
       >
-        {/* Lọc trạng thái + bộ đếm duyệt */}
+        {/* Bộ đếm duyệt (trái) + lọc trạng thái áp dụng bằng Select nhỏ (phải) — chỉ 1 TabBar trên màn (team chốt 20/10) */}
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <TabBar
-            label="Lọc theo trạng thái áp dụng"
-            value={loc}
-            onValueChange={setLoc}
-            className="min-w-0 flex-1"
-            items={[
-              { value: ALL, label: "Tất cả" },
-              ...STATUSES.map((s) => ({
-                value: s,
-                label: TRANG_THAI_AP_DUNG_LABEL[s],
-                count: diagnostics.filter((d) => d.trang_thai_ap_dung === s).length,
-                countTone: "neutral" as const,
-              })),
-            ]}
-          />
           <p className="text-xs font-medium text-muted-foreground tabular-nums">
-            {tong.cho} chờ duyệt · {tong.da} đã duyệt
+            {tong.cho} chờ duyệt · {tong.da} đã duyệt · {tong.tuChoi} từ chối
           </p>
+          <Select items={LOC_ITEMS} value={loc} onValueChange={(v) => setLoc((v as string | null) ?? ALL)}>
+            <SelectTrigger size="sm" className="w-52" aria-label="Lọc theo trạng thái áp dụng">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {LOC_ITEMS.map((i) => (
+                <SelectItem key={i.value} value={i.value}>
+                  {i.label}
+                  {i.value !== ALL && ` (${diagnostics.filter((d) => d.trang_thai_ap_dung === i.value).length})`}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {coChecklist.map((dept) => {

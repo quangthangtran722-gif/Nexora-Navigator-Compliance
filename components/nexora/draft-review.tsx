@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { CheckCheck, Pencil, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import { GroupHeader } from "@/components/nexora/group-header";
 import { InsetBlock } from "@/components/nexora/inset-block";
 import { ItemActions, ItemList, ItemMeta, ItemRow } from "@/components/nexora/item-row";
 import { ProgressBar } from "@/components/nexora/progress";
-import { AnhHuongBadge, DuyetBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
+import { AnhHuongBadge, DuyetBadge, LoaiEntityBadge, VanBanBadge } from "@/components/nexora/status-badges";
 import { TabBar } from "@/components/nexora/tab-bar";
 import { deptLabel, domainLabel, formatDate } from "@/lib/labels";
 import { combine, useErrorHandler } from "@/lib/data/errors";
@@ -75,6 +76,8 @@ export function DraftReview() {
   const vb = vanBan.find((v) => v.id === current.van_ban_id);
   const items = entities.filter((e) => e.chunk_id === current.chunk_id);
   const opened = items.find((e) => e.id === openId);
+  // Tính trên MỌI chunk của văn bản (kể cả chunk đã duyệt xong, không còn trong danh sách tab)
+  const conChoDuyetCuaVanBan = q.data!.summaries.filter((s) => s.van_ban_id === current.van_ban_id).reduce((n, s) => n + s.so_cho_duyet, 0);
 
   return (
     <TabBar
@@ -103,13 +106,24 @@ export function DraftReview() {
                 { label: "chờ duyệt", n: current.so_cho_duyet, tone: "action" },
                 { label: "đã duyệt", n: current.so_da_duyet },
               ]}
-            />
+            >
+              <VanBanBadge status={vb.trang_thai} />
+            </GroupHeader>
             <ChunkText noiDung={chunk.noi_dung} highlight={opened?.noi_dung_goc} />
           </section>
 
           {/* Phải: entity của chunk */}
           <section className="space-y-4" aria-label="Entity trích xuất">
             <ChunkActions summary={current} onApproved={() => touch(current.chunk_id)} />
+            {/* Duyệt hết entity của cả văn bản mà văn bản còn Bản nháp → nhắc kích hoạt (rule engine chỉ đọc văn bản active) */}
+            {vb.trang_thai === "draft" && conChoDuyetCuaVanBan === 0 && (
+              <p className="flex flex-wrap items-center gap-x-2 border-l-[3px] border-gold-edge bg-accent px-3 py-2.5 text-sm" role="status">
+                Đã duyệt hết entity của văn bản này nhưng văn bản vẫn là Bản nháp — rule engine chưa đọc.
+                <Link href="/nhap-van-ban#cho-kich-hoat" className="font-medium text-gold-text underline-offset-4 hover:underline">
+                  Sang trang Nhập văn bản để kích hoạt
+                </Link>
+              </p>
+            )}
             <ItemList>
               {items.map((e) => (
                 <EntityRow

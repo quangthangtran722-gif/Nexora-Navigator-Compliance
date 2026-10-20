@@ -55,9 +55,12 @@ export function ItemRow({
       ) : (
         <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", !open && "-rotate-90")} aria-hidden />
       )}
-      {unread && <span className="size-2 shrink-0 bg-brand-red" aria-label="Chưa đọc" />}
+      {unread && <span className="size-1.5 shrink-0 bg-brand-red" aria-label="Chưa đọc" />}
       <span className="min-w-40 flex-1 basis-40">
-        <span className={cn("block", open ? "text-[15px] font-semibold" : "text-sm font-medium", muted && "line-through")}>{title}</span>
+        {/* Hộp thư (unread được truyền): chưa đọc 600, đã đọc 400 — phân biệt bằng độ đậm + chấm đỏ 6px */}
+        <span className={cn("block", open ? "text-[15px] font-semibold" : unread === undefined ? "text-sm font-medium" : unread ? "text-sm font-semibold" : "text-sm font-normal", muted && "line-through")}>
+          {title}
+        </span>
         {hint && !open && <span className="block truncate text-xs text-muted-foreground">{hint}</span>}
       </span>
       {right && <span className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-1.5">{right}</span>}

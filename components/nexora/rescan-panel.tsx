@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { RefreshCw, Sparkles } from "lucide-react";
+import { ChevronDown, History, RefreshCw, Sparkles } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { ItemList, ItemRow } from "@/components/nexora/item-row";
@@ -22,7 +23,7 @@ import type { TrangThaiApDung } from "@/lib/types";
  * (CONTRACT §7): chạy rule engine (KHÔNG AI) cho từng khách hàng, mỗi khách hàng 1 run filter_domain.
  * "Quét lại" từng hàng = POST /api/pipeline/filter cho riêng khách hàng đó — cùng logic rule engine.
  * Kết quả đọc lại từ pipeline_runs (lần filter_domain mới nhất của mỗi khách hàng). Không hiện run_id/UUID.
- * Palette v3 mục 9.10: nút từng hàng là nút phụ (outline), chỉ "Quét lại tất cả" là nút chính.
+ * Palette v3 mục 9.10 + team chốt 20/10: mỗi hàng 1 nút phụ "Thao tác" (menu), chỉ "Quét lại tất cả" là nút chính.
  */
 
 const STATUSES: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
@@ -190,17 +191,26 @@ export function RescanPanel() {
                         <span className="text-xs text-muted-foreground">Chưa chạy</span>
                       )}
                     </TableCell>
-                    <TableCell className="whitespace-normal">
-                      <span className="flex flex-wrap justify-end gap-2">
-                        {choAi > 0 && (
-                          <Button size="sm" variant="outline" disabled={running} onClick={() => generate(c.id)}>
-                            <Sparkles /> {generating?.customerId === c.id ? `Đang viết… (${generating.written})` : `AI viết ${choAi} checklist`}
-                          </Button>
-                        )}
-                        <Button size="sm" variant="outline" disabled={running} onClick={() => rescanOne(c.id)}>
-                          <RefreshCw className={busyId === c.id ? "animate-spin" : undefined} /> Quét lại
-                        </Button>
-                      </span>
+                    <TableCell className="text-right">
+                      {/* Mỗi hàng đúng 1 nút (team chốt 20/10): mọi thao tác của khách hàng gom vào menu "Thao tác" */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={<Button size="sm" variant="outline" disabled={running} />}>
+                          {busyId === c.id || generating?.customerId === c.id ? <RefreshCw className="animate-spin" /> : null}
+                          Thao tác <ChevronDown />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-56">
+                          <DropdownMenuItem onClick={() => rescanOne(c.id)}>
+                            <RefreshCw /> Quét lại khách hàng này
+                          </DropdownMenuItem>
+                          <DropdownMenuItem disabled={choAi === 0} onClick={() => generate(c.id)}>
+                            <Sparkles /> {choAi > 0 ? `AI viết ${choAi} checklist` : "Không có checklist chờ AI viết"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem render={<Link href="/nhat-ky" />}>
+                            <History /> Xem nhật ký pipeline
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      {generating?.customerId === c.id && <p className="mt-1 text-xs text-muted-foreground tabular-nums">AI đã viết {generating.written}</p>}
                     </TableCell>
                   </TableRow>
                 );

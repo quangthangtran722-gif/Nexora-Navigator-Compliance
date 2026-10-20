@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { DraftVanBanList } from "@/components/nexora/draft-van-ban-list";
 import { LawInputForm } from "@/components/nexora/law-input-form";
 import { PageHeader } from "@/components/nexora/page-header";
 
@@ -12,6 +13,7 @@ export default function Page() {
         title="Nhập văn bản luật"
         description="Lưu văn bản và chia nội dung thành các chunk (1–2 điều) để AI trích xuất entity và quan hệ. Kết quả là bản nháp chờ curator duyệt."
       />
+      <DraftVanBanList />
       <LawInputForm />
     </>
   );

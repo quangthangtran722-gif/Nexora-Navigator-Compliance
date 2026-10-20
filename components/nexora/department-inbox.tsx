@@ -6,7 +6,7 @@ import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
 import { EmptyGroupLine, GroupHeader } from "@/components/nexora/group-header";
 import { ItemList, ItemMeta, ItemRow } from "@/components/nexora/item-row";
-import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
+import { ApDungBadge } from "@/components/nexora/status-badges";
 import { TabBar } from "@/components/nexora/tab-bar";
 import { formatDateTime } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
@@ -53,7 +53,22 @@ export function DepartmentInbox() {
   if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
   const { departments, notifications, diagnostics, entities, graph, dict, chunks, vanBan } = res.data!;
 
-  const soChuaDoc = notifications.filter((n) => !n.da_doc).length;
+  // Thông báo "chờ duyệt" / "hỏi bổ sung" là việc cần làm: khi diagnostic đã được xử lý (duyệt / từ chối / đã trả lời)
+  // thì thông báo đó hết hiệu lực → ẩn khỏi nhóm (mục đã duyệt có thông báo "Đã giao" riêng). Trước đây mục "Đã duyệt"
+  // vẫn nằm trong nhóm "Chờ duyệt" vì nhóm chỉ lọc theo notifications.giai_doan, không xét trạng thái hiện tại của diagnostic.
+  const daXuLy = (n: Notification) => {
+    const d = diagnostics.find((x) => x.id === n.diagnostic_id);
+    if (!d) return false;
+    if (n.giai_doan === "cho_duyet") return d.trang_thai_duyet !== "cho_duyet";
+    if (n.giai_doan === "hoi_bo_sung") return d.trang_thai_ap_dung !== "chua_du_thong_tin";
+    return false;
+  };
+  const conHieuLuc = notifications.filter((n) => !daXuLy(n));
+  const soChuaDoc = conHieuLuc.filter((n) => !n.da_doc).length;
+  const tenVanBanOf = (n: Notification) => {
+    const entity = entities.find((e) => e.id === diagnostics.find((x) => x.id === n.diagnostic_id)?.entity_id);
+    return vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.ten_van_ban;
+  };
   const hopLoc = (n: Notification) => loc === ALL || (loc === "chua-doc" ? !n.da_doc : n.da_doc);
 
   async function markRead(n: Notification) {
@@ -68,21 +83,25 @@ export function DepartmentInbox() {
       value={loc}
       onValueChange={setLoc}
       items={[
-        { value: ALL, label: "Tất cả", count: notifications.length, countTone: "neutral" },
+        { value: ALL, label: "Tất cả", count: conHieuLuc.length, countTone: "neutral" },
         { value: "chua-doc", label: "Chưa đọc", count: soChuaDoc, countTone: "action" },
         { value: "da-doc", label: "Đã đọc" },
       ]}
     >
       {GROUPS.map((g) => {
-        const items = notifications.filter((n) => n.giai_doan === g.giaiDoan && hopLoc(n));
+        const items = conHieuLuc.filter((n) => n.giai_doan === g.giaiDoan && hopLoc(n));
+        const soDaXuLy = notifications.filter((n) => n.giai_doan === g.giaiDoan && daXuLy(n)).length;
         if (items.length === 0) return <EmptyGroupLine key={g.giaiDoan} title={g.title} text={loc === ALL ? g.empty : "không có thông báo khớp bộ lọc"} />;
         const chuaDoc = items.filter((n) => !n.da_doc).length;
+        // Mọi mục cùng 1 văn bản → đưa tên văn bản lên dòng phụ của dải đầu nhóm, không lặp ở từng dòng
+        const vbs = [...new Set(items.map(tenVanBanOf))];
+        const vbChung = vbs.length === 1 ? vbs[0] : undefined;
         return (
           <section key={g.giaiDoan} aria-labelledby={`gd-${g.giaiDoan}`}>
             <GroupHeader
               id={`gd-${g.giaiDoan}`}
               title={g.title}
-              subtitle={g.subtitle}
+              subtitle={vbChung ?? g.subtitle}
               counts={[
                 ...(chuaDoc > 0 ? [{ label: "chưa đọc", n: chuaDoc, tone: "action" as const }] : []),
                 { label: "thông báo", n: items.length },
@@ -92,12 +111,13 @@ export function DepartmentInbox() {
               {items.map((n) => {
                 const d = diagnostics.find((x) => x.id === n.diagnostic_id);
                 const entity = entities.find((e) => e.id === d?.entity_id);
-                const tenVanBan = vanBan.find((v) => v.id === chunks.find((c) => c.id === entity?.chunk_id)?.van_ban_id)?.ten_van_ban;
+                const tenVanBan = tenVanBanOf(n);
                 const dept = departments.find((x) => x.id === n.department_id);
                 const title = entity?.ten_entity ?? n.tieu_de;
+                // Không lặp badge trùng tên nhóm (Chờ duyệt / Chưa đủ thông tin / Đã duyệt); chỉ hiện khi khác thường
                 const right = (
                   <>
-                    {d && (g.giaiDoan === "hoi_bo_sung" ? <ApDungBadge status={d.trang_thai_ap_dung} /> : <DuyetBadge status={d.trang_thai_duyet} />)}
+                    {d && g.giaiDoan === "da_giao" && d.trang_thai_ap_dung !== "ap_dung" && <ApDungBadge status={d.trang_thai_ap_dung} />}
                     <span className="text-xs text-muted-foreground tabular-nums">{formatDateTime(n.created_at)}</span>
                   </>
                 );
@@ -113,7 +133,9 @@ export function DepartmentInbox() {
                       hint={
                         g.giaiDoan === "hoi_bo_sung" && n.noi_dung
                           ? `Câu hỏi: ${n.noi_dung.split(",").map((ma) => dict.find((t) => t.ma === ma.trim())?.cau_hoi ?? ma.trim()).join(" · ")}`
-                          : tenVanBan
+                          : vbChung
+                            ? undefined
+                            : tenVanBan
                       }
                       href={g.giaiDoan === "hoi_bo_sung" ? "/duyet-diagnostic#hoi-bo-sung" : `/duyet-diagnostic#diag-${n.diagnostic_id}`}
                       onNavigate={() => markRead(n)}
@@ -158,6 +180,11 @@ export function DepartmentInbox() {
                 );
               })}
             </ItemList>
+            {soDaXuLy > 0 && loc === ALL && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Ẩn {soDaXuLy} thông báo đã xử lý{g.giaiDoan === "cho_duyet" ? " — mục đã duyệt nằm ở nhóm Đã giao" : ""}.
+              </p>
+            )}
           </section>
         );
       })}

@@ -8,6 +8,7 @@ import {
   CircleHelp,
   CircleMinus,
   Clock,
+  FilePen,
   Gauge,
   Gavel,
   ListChecks,
@@ -24,8 +25,9 @@ import {
   TRANG_THAI_AP_DUNG_LABEL,
   TRANG_THAI_CHUNK_LABEL,
   TRANG_THAI_DUYET_LABEL,
+  TRANG_THAI_VAN_BAN_LABEL,
 } from "@/lib/labels";
-import type { LoaiEntity, TrangThaiApDung, TrangThaiChunk, TrangThaiDuyet, TrangThaiRun } from "@/lib/types";
+import type { LoaiEntity, TrangThaiApDung, TrangThaiChunk, TrangThaiDuyet, TrangThaiRun, TrangThaiVanBan } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 /*
@@ -139,4 +141,16 @@ export function AnhHuongBadge({ level, className }: { level: "primary" | "second
       {level === "primary" ? "Chính" : "Phụ"}
     </span>
   );
+}
+
+/* ---------- Trạng thái văn bản (draft → active → replaced) ---------- */
+
+const vanBanStyle: Record<TrangThaiVanBan, Style> = {
+  draft: { className: "bg-duyet-cho-bg text-duyet-cho", Icon: FilePen },
+  active: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
+  replaced: { className: "bg-status-khong-ap-dung-bg text-status-khong-ap-dung", Icon: CircleMinus },
+};
+
+export function VanBanBadge({ status, className }: { status: TrangThaiVanBan; className?: string }) {
+  return <Pill label={TRANG_THAI_VAN_BAN_LABEL[status]} style={vanBanStyle[status]} className={className} />;
 }

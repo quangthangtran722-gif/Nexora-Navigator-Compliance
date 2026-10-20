@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 const AP_DUNG_ORDER: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 // Biểu đồ dùng đúng màu trạng thái (v3 mục 4), không dùng --chart-*
 const BAR_COLOR: Record<TrangThaiApDung, string> = {
-  ap_dung: "bg-status-ap-dung",
+  ap_dung: "bg-[#E57373]", // red-400 (team chốt 20/10): mảng lớn không dùng đỏ đậm
   sap_ap_dung: "bg-status-sap-ap-dung",
   chua_du_thong_tin: "bg-status-chua-du-tt",
   khong_ap_dung: "bg-status-khong-ap-dung",
@@ -114,7 +114,7 @@ export function CustomerOverview() {
           <p className="text-sm text-muted-foreground">Chưa có nghĩa vụ nào được đối chiếu cho doanh nghiệp.</p>
         ) : (
           <>
-            <div className="flex h-3 w-full gap-px bg-border" role="img" aria-label={AP_DUNG_ORDER.map((s) => `${TRANG_THAI_AP_DUNG_LABEL[s]}: ${nTrangThai(s)}`).join(", ")}>
+            <div className="flex h-2 w-full gap-px bg-border" role="img" aria-label={AP_DUNG_ORDER.map((s) => `${TRANG_THAI_AP_DUNG_LABEL[s]}: ${nTrangThai(s)}`).join(", ")}>
               {AP_DUNG_ORDER.filter((s) => nTrangThai(s) > 0).map((s) => (
                 <div key={s} className={BAR_COLOR[s]} style={{ width: `${(nTrangThai(s) / diagnostics.length) * 100}%` }} />
               ))}
