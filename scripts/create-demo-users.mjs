@@ -26,9 +26,12 @@ const CREDENTIALS_FILE = ".env.demo.local";
 // Tên miền .test (RFC 2606) — không gửi được email, không trùng địa chỉ thật
 const USERS = [
   { key: "CURATOR", email: "curator@nexora-demo.test", app_metadata: { nexora_role: "curator" } },
+  // Trước là ABC Logistics (key ABC, daumoi@abc-logistics.test) — user cũ được đổi email tại chỗ, giữ mật khẩu.
   {
-    key: "ABC",
-    email: "daumoi@abc-logistics.test",
+    key: "NEXORA",
+    email: "daumoi@nexoratech.test",
+    email_cu: "daumoi@abc-logistics.test",
+    key_cu: "ABC",
     app_metadata: { nexora_role: "customer", customer_id: "a0000000-0000-4000-8000-000000000001" },
   },
   {
@@ -73,14 +76,19 @@ if (listError) {
 
 const out = { ...saved };
 for (const u of USERS) {
-  const existing = list.users.find((x) => x.email === u.email);
-  const savedPassword = saved[`DEMO_${u.key}_PASSWORD`];
+  const existing = list.users.find((x) => x.email === u.email) ?? list.users.find((x) => u.email_cu && x.email === u.email_cu);
+  const doiEmail = existing && existing.email !== u.email;
+  const savedPassword = saved[`DEMO_${u.key}_PASSWORD`] ?? (u.key_cu ? saved[`DEMO_${u.key_cu}_PASSWORD`] : undefined);
   // reset / chưa có mật khẩu lưu → sinh mới; user mới + có mật khẩu lưu sẵn → tạo bằng mật khẩu đó
   const password =
     reset || !savedPassword ? randomBytes(12).toString("base64url") : existing ? undefined : savedPassword;
 
   const { error } = existing
-    ? await admin.auth.admin.updateUserById(existing.id, { app_metadata: u.app_metadata, ...(password ? { password } : {}) })
+    ? await admin.auth.admin.updateUserById(existing.id, {
+        app_metadata: u.app_metadata,
+        ...(doiEmail ? { email: u.email, email_confirm: true } : {}),
+        ...(password ? { password } : {}),
+      })
     : await admin.auth.admin.createUser({ email: u.email, password, email_confirm: true, app_metadata: u.app_metadata });
   if (error) {
     console.error(`✗ ${u.email}: ${error.message}`);
@@ -89,8 +97,13 @@ for (const u of USERS) {
 
   out[`DEMO_${u.key}_EMAIL`] = u.email;
   if (password) out[`DEMO_${u.key}_PASSWORD`] = password;
+  else if (savedPassword) out[`DEMO_${u.key}_PASSWORD`] = savedPassword;
+  if (u.key_cu) {
+    delete out[`DEMO_${u.key_cu}_EMAIL`];
+    delete out[`DEMO_${u.key_cu}_PASSWORD`];
+  }
   console.log(
-    `✓ ${existing ? "cập nhật" : "tạo mới"} ${u.email}  app_metadata=${JSON.stringify(u.app_metadata)}` +
+    `✓ ${existing ? "cập nhật" : "tạo mới"} ${doiEmail ? `${existing.email} → ` : ""}${u.email}  app_metadata=${JSON.stringify(u.app_metadata)}` +
       (password ? "  (mật khẩu mới)" : ""),
   );
 }

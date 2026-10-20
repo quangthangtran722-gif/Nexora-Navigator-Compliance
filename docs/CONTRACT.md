@@ -297,7 +297,7 @@ export type PipelineRun = {
   input: Json;
   output: Json | null;            // bắt buộc khi hoan_tat
   model: string | null;           // null ⇔ filter_domain (rule engine không AI); 2 bước AI luôn có, vd "openai/gpt-oss-120b"
-  prompt_version: string | null;  // null ⇔ filter_domain; vd "extract-v2"
+  prompt_version: string | null;  // null ⇔ filter_domain; vd "extract-v4"
   error_log: string | null;       // bắt buộc khi loi
   nguoi_chay_id: string | null;
   started_at: string | null;
@@ -434,7 +434,7 @@ Enum Postgres `public.loai_van_ban`, **bắt buộc** khi tạo văn bản (khô
 | `huong_dan` | Hướng dẫn | Công văn/văn bản hướng dẫn nghiệp vụ của cơ quan nhà nước (vd công văn của Tổng cục Thuế) — không phải văn bản quy phạm pháp luật nhưng doanh nghiệp vẫn cần theo. |
 | `khac` | Khác | Loại chưa có ở trên, hoặc dữ liệu demo. |
 
-Dữ liệu demo: `DEMO-01/2026` = `nghi_dinh` (active), `TT-DEMO-01/2026` = `thong_tu` (draft) — thông tư mẫu hướng dẫn DEMO-01, dẫn chiếu "Điều X Nghị định mẫu DEMO-01/2026" để test cross-reference: extract ra cạnh `tham_chieu` pending (`target_ref_text`), curator nối sang entity của DEMO-01 bằng cách cập nhật `target_entity_id` (đích được phép thuộc văn bản khác).
+Dữ liệu demo: chỉ dùng văn bản thật do curator tải lên (vd `77/2025/TT-BTC`, `108/2025/QH15`). Văn bản mẫu tự viết `DEMO-01/2026` / `TT-DEMO-01/2026` đã bỏ khỏi seed. Cross-reference: extract ra cạnh `tham_chieu` pending (`target_ref_text`), curator nối sang entity của văn bản khác bằng cách cập nhật `target_entity_id`.
 
 ---
 
@@ -531,6 +531,7 @@ Lỗi: `{ error: string; code?: string }` với status như mục 6.
   | Status | code | Khi nào |
   |---|---|---|
   | `429` | `AI_RATE_LIMIT` | Groq hết quota 8K token/phút → đợi khoảng 1 phút rồi gọi lại |
+  | `413` | `AI_TOO_LARGE` | `extract`: chunk quá dài so với giới hạn Groq free tier (input + output > 8K token/request, kể cả sau khi tự hạ trần output) → tách chunk theo khoản |
   | `502` | `AI_ERROR` | Groq lỗi khác |
   | `409` | `PT409` | `extract` gọi vào chunk đang chạy hoặc đã có entity. Chỉ chunk `cho_xu_ly`/`loi` chưa có entity mới trích xuất được |
 

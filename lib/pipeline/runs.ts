@@ -49,6 +49,9 @@ export function aiError(err: unknown): unknown {
   if (err instanceof ApiError) return err;
   const statusCode = (err as { statusCode?: number }).statusCode;
   const message = err instanceof Error ? err.message : String(err);
+  if (/Request too large/i.test(message)) {
+    return new ApiError(413, "Chunk quá dài so với giới hạn Groq free tier (8K token/request) — tách chunk theo khoản rồi chạy lại", "AI_TOO_LARGE");
+  }
   if (statusCode === 429 || /rate limit|tokens per minute/i.test(message)) {
     return new ApiError(429, "Groq hết quota tạm thời (8K token/phút) — đợi khoảng 1 phút rồi chạy lại", "AI_RATE_LIMIT");
   }

@@ -5,8 +5,8 @@
 // entity phải đi qua /api/pipeline/extract + curator duyệt, không seed thẳng.
 // Chạy lại an toàn:
 //   - thuoc_tinh_ho_so: ghi đè theo file này (file là nguồn sự thật của từ điển).
-//   - van_ban / chunks / customers / departments: chỉ thêm row còn thiếu, không ghi đè
-//     (tránh reset trạng thái chunk đã trích xuất hoặc câu trả lời onboarding frontend đã sửa).
+//   - customers / departments: chỉ thêm row còn thiếu, không ghi đè
+//     (tránh reset câu trả lời onboarding frontend đã sửa).
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -147,6 +147,24 @@ const THUOC_TINH_HO_SO = [
     don_vi: null,
     mo_ta: "Liên quan nghĩa vụ / quyền hoàn thuế.",
   },
+  {
+    ma: "co_san_tmdt",
+    cau_hoi: "Đơn vị có quản lý / vận hành sàn thương mại điện tử có chức năng đặt hàng và thanh toán không?",
+    kieu: "boolean",
+    domain: "thue",
+    lua_chon: null,
+    don_vi: null,
+    mo_ta: "Khác ban_hang_qua_san_tmdt (người bán trên sàn): đây là đơn vị VẬN HÀNH sàn — diện khấu trừ, nộp thay thuế cho người bán.",
+  },
+  {
+    ma: "doanh_thu_tap_doan",
+    cau_hoi: "Doanh thu hợp nhất hằng năm của tập đoàn đa quốc gia mà đơn vị là thành viên là bao nhiêu?",
+    kieu: "number",
+    domain: "thue",
+    lua_chon: null,
+    don_vi: "EUR",
+    mo_ta: "Ghi 0 nếu đơn vị không thuộc tập đoàn đa quốc gia. Dùng cho ngưỡng thuế tối thiểu toàn cầu (750 triệu EUR).",
+  },
 
   // Chứng khoán
   {
@@ -190,121 +208,55 @@ const THUOC_TINH_HO_SO = [
 ];
 
 // ---------------------------------------------------------------------
-// 2. Văn bản MẪU để test extract — TỰ VIẾT, KHÔNG PHẢI LUẬT THẬT (ghi rõ ở tên văn bản).
-//    Chunk 1–2 là 2 chunk đã dùng verify prompt v2.
+// 2. Văn bản pháp luật: KHÔNG seed. Văn bản mẫu tự viết DEMO-01/2026 + TT-DEMO-01/2026 đã bỏ (số hiệu giả
+//    lộ ra trong checklist) — xem git history. Văn bản thật curator tải lên qua UI.
 // ---------------------------------------------------------------------
-const VAN_BAN_MAU = {
-  ten_van_ban: "Văn bản mẫu về thuế đối với kinh doanh trực tuyến và tiền lương (dữ liệu demo — không phải văn bản pháp luật thật)",
-  so_hieu: "DEMO-01/2026",
-  loai_van_ban: "nghi_dinh", // migration 004 cập nhật row đã có (seed không ghi đè van_ban)
-  co_quan_ban_hanh: "Nexora (dữ liệu demo)",
-  ngay_ban_hanh: "2026-06-01",
-  ngay_hieu_luc: "2026-07-01",
-  domains: ["thue", "ke_toan"],
-  trang_thai: "active",
-};
-
-const CHUNKS_MAU = [
-  {
-    thu_tu: 1,
-    tieu_de: "Nghĩa vụ của người bán hàng trực tuyến",
-    dieu_khoan_range: "Điều 1–3",
-    noi_dung: `Điều 1. Phạm vi điều chỉnh
-Văn bản mẫu này quy định về việc khai và nộp một loại thuế giả định đối với hoạt động kinh doanh trực tuyến.
-
-Điều 2. Nghĩa vụ của người bán hàng trực tuyến
-1. Người bán hàng trên nền tảng thương mại điện tử có các nghĩa vụ sau đây:
-a) Đăng ký mã số thuế trước khi bắt đầu hoạt động kinh doanh;
-b) Khai thuế theo quý và nộp hồ sơ khai thuế chậm nhất là ngày cuối cùng của tháng đầu tiên của quý tiếp theo;
-c) Lưu trữ hóa đơn, chứng từ liên quan trong thời hạn 10 năm.
-2. Việc xác định doanh thu tính thuế thực hiện theo quy định tại Điều 15 của Văn bản mẫu này.
-3. Người bán hàng vi phạm thời hạn nộp hồ sơ khai thuế bị xử phạt theo quy định của pháp luật về quản lý thuế.
-
-Điều 3. Miễn thuế
-Người bán hàng có doanh thu năm từ 200 triệu đồng trở xuống được miễn thuế theo Văn bản mẫu này nhưng vẫn phải thực hiện nghĩa vụ quy định tại điểm a khoản 1 Điều 2.`,
-  },
-  {
-    thu_tu: 2,
-    tieu_de: "Khấu trừ thuế đối với tiền lương; hoàn thuế",
-    dieu_khoan_range: "Điều 7–8",
-    noi_dung: `Điều 7. Khấu trừ thuế đối với thu nhập từ tiền lương
-1. Tổ chức trả thu nhập có trách nhiệm khấu trừ thuế trước khi trả thu nhập cho người lao động có thu nhập từ tiền lương, tiền công.
-2. Trường hợp người lao động ký hợp đồng lao động có thời hạn dưới 03 tháng, tổ chức trả thu nhập khấu trừ thuế theo mức 10% trên thu nhập trả cho người lao động.
-3. Tổ chức trả thu nhập phải cấp chứng từ khấu trừ thuế cho người lao động khi có yêu cầu.
-4. Chậm nhất ngày thứ 20 của tháng tiếp theo, tổ chức trả thu nhập phải nộp số thuế đã khấu trừ vào ngân sách nhà nước.
-
-Điều 8. Hoàn thuế
-Người nộp thuế có số thuế đã nộp lớn hơn số thuế phải nộp được hoàn thuế. Hồ sơ, thủ tục hoàn thuế thực hiện theo quy định tại Điều 40 của Văn bản mẫu này. Chính phủ quy định chi tiết Điều này.`,
-  },
-];
-
-// 2b. Thông tư MẪU hướng dẫn DEMO-01/2026 — test cross-reference giữa 2 văn bản.
-//     Cố ý lặp lại chủ thể / hành vi của DEMO-01 và dẫn chiếu "Điều X Nghị định mẫu DEMO-01/2026"
-//     → extract sinh entity trùng tên + cạnh tham_chieu pending (target_ref_text) để curator nối
-//     sang entity của DEMO-01. Để draft: curator kích hoạt sau khi duyệt.
-const VAN_BAN_TT = {
-  ten_van_ban: "Thông tư mẫu hướng dẫn thi hành Nghị định mẫu DEMO-01/2026 (dữ liệu demo — không phải văn bản pháp luật thật)",
-  so_hieu: "TT-DEMO-01/2026",
-  loai_van_ban: "thong_tu",
-  co_quan_ban_hanh: "Nexora (dữ liệu demo)",
-  ngay_ban_hanh: "2026-07-15",
-  ngay_hieu_luc: "2026-09-01",
-  domains: ["thue", "ke_toan"],
-  trang_thai: "draft",
-};
-
-const CHUNKS_TT = [
-  {
-    thu_tu: 1,
-    tieu_de: "Hướng dẫn khai thuế theo quý và khấu trừ thuế tiền lương",
-    dieu_khoan_range: "Điều 1–2",
-    noi_dung: `Điều 1. Hướng dẫn khai thuế theo quý đối với người bán hàng trực tuyến
-1. Người bán hàng trên nền tảng thương mại điện tử thực hiện khai thuế theo quý quy định tại điểm b khoản 1 Điều 2 Nghị định mẫu DEMO-01/2026 bằng phương thức điện tử qua cổng thông tin của cơ quan thuế.
-2. Trường hợp người bán hàng có doanh thu năm từ 200 triệu đồng trở xuống theo quy định tại Điều 3 Nghị định mẫu DEMO-01/2026 thì không phải nộp hồ sơ khai thuế theo quý nhưng phải thông báo doanh thu cho cơ quan thuế chậm nhất là ngày 31 tháng 01 của năm tiếp theo.
-
-Điều 2. Hướng dẫn khấu trừ thuế đối với thu nhập từ tiền lương
-1. Tổ chức trả thu nhập thực hiện khấu trừ thuế theo quy định tại Điều 7 Nghị định mẫu DEMO-01/2026 phải lập bảng kê thu nhập và số thuế đã khấu trừ của từng người lao động theo tháng.
-2. Kế toán của tổ chức trả thu nhập phải lưu trữ bảng kê quy định tại khoản 1 Điều này cùng với chứng từ khấu trừ thuế trong thời hạn 10 năm.`,
-  },
-];
 
 // ---------------------------------------------------------------------
-// 3. 2 khách hàng demo (CLAUDE.md mục 12) — giữ customer_id cũ để frontend không phải đổi.
+// 3. Khách hàng demo (CLAUDE.md mục 12) — giữ customer_id cũ để frontend không phải đổi.
+//    ...0001 trước là "ABC Logistics", đã đổi thành Nexora Technology (công ty phần mềm) — xem doiAbcSangNexora().
 //    Smile Care CỐ Ý để co_lao_dong_hop_dong_duoi_3_thang = null ("Chưa chắc") và thiếu doanh_thu_nam
 //    → demo được trạng thái chua_du_thong_tin + hỏi bổ sung.
 // ---------------------------------------------------------------------
-const ABC_ID = "a0000000-0000-4000-8000-000000000001";
+const NEXORA_ID = "a0000000-0000-4000-8000-000000000001";
 const SMILE_ID = "a0000000-0000-4000-8000-000000000002";
-// Thiên Phú (ngành chứng khoán) — để demo điều kiện nganh eq "chung_khoan": chỉ khớp DN này, ABC/Smile Care → khong_ap_dung.
+// Thiên Phú (ngành chứng khoán) — để demo điều kiện nganh eq "chung_khoan": chỉ khớp DN này, Nexora Tech/Smile Care → khong_ap_dung.
 // Không seed văn bản cho DN này: curator tải Thông tư lên live khi demo.
 const THIENPHU_ID = "a0000000-0000-4000-8000-000000000003";
 
 // Ngành mới chưa có trong 003_nganh.sql — thêm để Tổng quan hiện tên tiếng Việt
 const NGANH_MOI = [{ ma: "chung_khoan", ten_hien_thi: "Chứng khoán" }];
 
+const NEXORA_THUOC_TINH = {
+  loai_hinh_kinh_doanh: "doanh_nghiep",
+  so_lao_dong: 35,
+  kenh_ban_hang: ["website_rieng"],
+  doanh_thu_nam: 8000000000,
+  ban_hang_qua_san_tmdt: false,
+  co_san_tmdt: false,
+  doanh_thu_tap_doan: 0,
+  co_tra_luong: true,
+  co_lao_dong_hop_dong_duoi_3_thang: true,
+  ky_khai_thue_gtgt: "quy",
+  phuong_phap_tinh_thue_gtgt: "khau_tru",
+  co_giao_dich_lien_ket: false,
+  co_xuat_nhap_khau: true, // xuất khẩu dịch vụ phần mềm
+  su_dung_hoa_don_dien_tu: true,
+  che_do_ke_toan: "doanh_nghiep_nho_va_vua",
+  co_ke_toan_truong: true,
+};
+
 const CUSTOMERS = [
   {
-    id: ABC_ID,
-    ten_cong_ty: "Công ty TNHH ABC Logistics",
-    nganh: "van_tai_logistics",
+    // Công ty phần mềm quy mô nhỏ: MST 0312345678 (giả), địa chỉ Tòa nhà Bitexco, Q.1, TP.HCM — customers chưa có cột.
+    // Luật Quản lý thuế 108/2025/QH15 nhóm B (hộ kinh doanh / vận hành sàn TMĐT / tập đoàn đa quốc gia)
+    // phải ra khong_ap_dung → loai_hinh_kinh_doanh, co_san_tmdt, doanh_thu_tap_doan ghi rõ giá trị (không để trống).
+    id: NEXORA_ID,
+    ten_cong_ty: "Công ty TNHH Nexora Technology",
+    nganh: "cong_nghe_thong_tin",
     quy_mo: "nho",
     domains: ["thue", "ke_toan"],
-    thuoc_tinh: {
-      loai_hinh_kinh_doanh: "doanh_nghiep",
-      so_lao_dong: 45,
-      kenh_ban_hang: ["website_rieng", "ban_buon_dai_ly"],
-      doanh_thu_nam: 12000000000,
-      ban_hang_qua_san_tmdt: false,
-      co_tra_luong: true,
-      co_lao_dong_hop_dong_duoi_3_thang: true,
-      ky_khai_thue_gtgt: "quy",
-      phuong_phap_tinh_thue_gtgt: "khau_tru",
-      co_giao_dich_lien_ket: false,
-      co_xuat_nhap_khau: true,
-      su_dung_hoa_don_dien_tu: true,
-      che_do_ke_toan: "doanh_nghiep_nho_va_vua",
-      co_ke_toan_truong: true,
-    },
+    thuoc_tinh: NEXORA_THUOC_TINH,
   },
   {
     id: SMILE_ID,
@@ -320,6 +272,8 @@ const CUSTOMERS = [
       co_tra_luong: true,
       co_lao_dong_hop_dong_duoi_3_thang: null,
       ky_khai_thue_gtgt: "quy",
+      co_san_tmdt: false,
+      doanh_thu_tap_doan: 0,
     },
   },
   {
@@ -336,16 +290,17 @@ const CUSTOMERS = [
       doanh_thu_nam: 12000000000,
       co_tra_luong: true,
       co_giay_phep_kinh_doanh_chung_khoan: true,
+      co_san_tmdt: false,
+      doanh_thu_tap_doan: 0,
     },
   },
 ];
 
 const DEPARTMENTS = [
-  { customer_id: ABC_ID, ten_phong_ban: "Ban Giám đốc", slug_phong_ban: "ban_giam_doc", email_head: "giamdoc@abc-logistics.example" },
-  { customer_id: ABC_ID, ten_phong_ban: "Phòng Kế toán", slug_phong_ban: "ke_toan", email_head: "ketoan@abc-logistics.example" },
-  { customer_id: ABC_ID, ten_phong_ban: "Phòng Nhân sự", slug_phong_ban: "nhan_su", email_head: "nhansu@abc-logistics.example" },
-  { customer_id: ABC_ID, ten_phong_ban: "Phòng Vận hành", slug_phong_ban: "van_hanh", email_head: "vanhanh@abc-logistics.example" },
-  { customer_id: ABC_ID, ten_phong_ban: "Phòng Marketing", slug_phong_ban: "marketing", email_head: "marketing@abc-logistics.example" },
+  { customer_id: NEXORA_ID, ten_phong_ban: "Ban Giám đốc", slug_phong_ban: "ban_giam_doc", email_head: "giamdoc@nexoratech.demo" },
+  { customer_id: NEXORA_ID, ten_phong_ban: "Phòng Kế toán", slug_phong_ban: "ke_toan", email_head: "ketoan@nexoratech.demo" },
+  { customer_id: NEXORA_ID, ten_phong_ban: "Phòng Nhân sự", slug_phong_ban: "nhan_su", email_head: "nhansu@nexoratech.demo" },
+  { customer_id: NEXORA_ID, ten_phong_ban: "Phòng Kinh doanh", slug_phong_ban: "kinh_doanh", email_head: "kinhdoanh@nexoratech.demo" },
   { customer_id: SMILE_ID, ten_phong_ban: "Ban Giám đốc", slug_phong_ban: "ban_giam_doc", email_head: "bacsi.truong@smilecare.example" },
   { customer_id: SMILE_ID, ten_phong_ban: "Kế toán - Bảo hiểm", slug_phong_ban: "ke_toan", email_head: "ketoan@smilecare.example" },
   { customer_id: SMILE_ID, ten_phong_ban: "Lễ tân", slug_phong_ban: "van_hanh", email_head: "letan@smilecare.example" },
@@ -369,23 +324,47 @@ async function step(label, promise) {
 
 await step("thuoc_tinh_ho_so", db.from("thuoc_tinh_ho_so").upsert(THUOC_TINH_HO_SO, { onConflict: "ma" }).select("ma"));
 
-const vanBanIds = {};
-for (const [vb, chunks] of [
-  [VAN_BAN_MAU, CHUNKS_MAU],
-  [VAN_BAN_TT, CHUNKS_TT],
-]) {
-  await step(`van_ban ${vb.so_hieu}`, db.from("van_ban").upsert(vb, { onConflict: "so_hieu", ignoreDuplicates: true }).select("id"));
-  const row = await step(`đọc van_ban ${vb.so_hieu}`, db.from("van_ban").select("id").eq("so_hieu", vb.so_hieu).single());
-  vanBanIds[vb.so_hieu] = row.id;
-  await step(
-    `van_ban_chunks ${vb.so_hieu}`,
+// ABC Logistics → Nexora Technology (chạy 1 lần): seed thường không ghi đè customers/departments đã có,
+// nên đổi tại chỗ — chỉ khi row còn tên cũ, chạy lại không đè câu trả lời frontend sửa sau này.
+// Phòng Vận hành đổi thành Phòng Kinh doanh (giữ id → diagnostic đang gắn không mất).
+// Phòng Marketing cũ KHÔNG xóa ở đây (xóa là cascade diagnostics) — xóa tay nếu cần.
+async function doiAbcSangNexora() {
+  const renamed = await step(
+    "đổi ABC Logistics → Nexora Technology",
     db
-      .from("van_ban_chunks")
-      .upsert(
-        chunks.map((c) => ({ ...c, van_ban_id: row.id })),
-        { onConflict: "van_ban_id,thu_tu", ignoreDuplicates: true },
-      )
+      .from("customers")
+      .update({ ten_cong_ty: "Công ty TNHH Nexora Technology", nganh: "cong_nghe_thong_tin", domains: ["thue", "ke_toan"], thuoc_tinh: NEXORA_THUOC_TINH })
+      .eq("id", NEXORA_ID)
+      .eq("ten_cong_ty", "Công ty TNHH ABC Logistics")
       .select("id"),
+  );
+  if (!renamed.length) return;
+  await step(
+    "Phòng Vận hành → Phòng Kinh doanh",
+    db.from("departments").update({ ten_phong_ban: "Phòng Kinh doanh", slug_phong_ban: "kinh_doanh" })
+      .eq("customer_id", NEXORA_ID).eq("ten_phong_ban", "Phòng Vận hành").select("id"),
+  );
+  for (const d of DEPARTMENTS.filter((x) => x.customer_id === NEXORA_ID)) {
+    await step(
+      `email ${d.ten_phong_ban}`,
+      db.from("departments").update({ email_head: d.email_head })
+        .eq("customer_id", NEXORA_ID).eq("ten_phong_ban", d.ten_phong_ban).select("id"),
+    );
+  }
+}
+await doiAbcSangNexora();
+
+// Thuộc tính thêm vào từ điển sau khi khách hàng đã seed → điền cho khách hàng cũ, CHỈ key còn thiếu
+// (không đè câu trả lời đã có). Không áp dụng cho DN nào → để rule engine ra khong_ap_dung thay vì chua_du_thong_tin.
+const THUOC_TINH_BO_SUNG = { co_san_tmdt: false, doanh_thu_tap_doan: 0 };
+for (const id of [SMILE_ID, THIENPHU_ID]) {
+  const row = await step(`đọc thuoc_tinh ${id}`, db.from("customers").select("thuoc_tinh").eq("id", id).maybeSingle());
+  if (!row) continue;
+  const thieu = Object.fromEntries(Object.entries(THUOC_TINH_BO_SUNG).filter(([k]) => !(k in row.thuoc_tinh)));
+  if (!Object.keys(thieu).length) continue;
+  await step(
+    `bổ sung ${Object.keys(thieu).join(", ")} cho ${id}`,
+    db.from("customers").update({ thuoc_tinh: { ...row.thuoc_tinh, ...thieu } }).eq("id", id).select("id"),
   );
 }
 
@@ -395,12 +374,3 @@ await step(
   "departments",
   db.from("departments").upsert(DEPARTMENTS, { onConflict: "customer_id,ten_phong_ban", ignoreDuplicates: true }).select("id"),
 );
-
-console.log("\nChunk mẫu (dùng chunk_id này gọi POST /api/pipeline/extract):");
-for (const [soHieu, id] of Object.entries(vanBanIds)) {
-  const chunks = await step(
-    `đọc chunks ${soHieu}`,
-    db.from("van_ban_chunks").select("id, thu_tu, dieu_khoan_range, trang_thai").eq("van_ban_id", id).order("thu_tu"),
-  );
-  for (const c of chunks) console.log(`  ${soHieu} #${c.thu_tu} ${c.dieu_khoan_range}  ${c.id}  [${c.trang_thai}]`);
-}

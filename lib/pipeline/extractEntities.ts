@@ -8,11 +8,11 @@ import { ApiError, fromDb } from "@/lib/api/http";
 import { buildExtractSchema, buildExtractSchemaMotLinhVuc, type ExtractOutput } from "./extractEntities.schema";
 import { buildExtractUserPrompt, EXTRACT_PROMPT_VERSION, EXTRACT_SYSTEM_PROMPT } from "./extractEntities.prompt";
 import { splitArticles, validateExtraction, type GroundingResult } from "./grounding";
+import { maxOutputTokensSauTuChoi } from "./groqLimit";
 import { aiError, failRun, finishRun, GROQ_MODEL, startRun } from "./runs";
 
 // Output 1 chunk 2 điều ~4.300 token; mặc định 3.072 làm cắt mất phần relationships
 const MAX_OUTPUT_TOKENS = 4600;
-
 export type ExtractResult = {
   run_id: string;
   so_entity: number;
@@ -90,15 +90,29 @@ export async function extractEntities(supabase: SupabaseClient, chunkId: string)
   try {
     const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
     const schema = restDomains.length ? buildExtractSchema([firstDomain, ...restDomains]) : buildExtractSchemaMotLinhVuc(firstDomain);
-    const { output: raw, usage, finishReason } = await generateText({
-      model: groq(GROQ_MODEL),
-      system: EXTRACT_SYSTEM_PROMPT,
-      prompt: userPrompt,
-      output: Output.object({ schema }),
-      temperature: 0,
-      maxOutputTokens: MAX_OUTPUT_TOKENS,
-      providerOptions: { groq: { structuredOutputs: true, strictJsonSchema: true, reasoningEffort: "low" } },
-    });
+    const goi = (maxOutputTokens: number) =>
+      generateText({
+        model: groq(GROQ_MODEL),
+        system: EXTRACT_SYSTEM_PROMPT,
+        prompt: userPrompt,
+        output: Output.object({ schema }),
+        temperature: 0,
+        maxOutputTokens,
+        providerOptions: { groq: { structuredOutputs: true, strictJsonSchema: true, reasoningEffort: "low" } },
+      });
+    // Groq báo "Request too large" → hạ trần output theo số Groq báo, tối đa 2 lần (số báo không tuyến tính)
+    let maxOutputTokens = MAX_OUTPUT_TOKENS;
+    let result: Awaited<ReturnType<typeof goi>> | undefined;
+    for (let lan = 0; !result; lan++) {
+      try {
+        result = await goi(maxOutputTokens);
+      } catch (err) {
+        const next = lan < 2 ? maxOutputTokensSauTuChoi(err, maxOutputTokens) : null;
+        if (next === null) throw err;
+        maxOutputTokens = next;
+      }
+    }
+    const { output: raw, usage, finishReason } = result;
 
     // 1 lĩnh vực → schema không có domain, gán ở đây
     const output: ExtractOutput = {
@@ -115,6 +129,7 @@ export async function extractEntities(supabase: SupabaseClient, chunkId: string)
       dieu_bo_qua: output.dieu_bo_qua,
       entity_ids: Object.fromEntries(idByMaTam),
       finish_reason: finishReason,
+      max_output_tokens: maxOutputTokens,
       usage: { input_tokens: usage.inputTokens ?? null, output_tokens: usage.outputTokens ?? null },
     });
     // Không còn gì để duyệt (mọi điều đều bị bỏ qua / bị loại) → chunk xong luôn

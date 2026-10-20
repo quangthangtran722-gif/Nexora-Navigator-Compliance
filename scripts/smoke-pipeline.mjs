@@ -35,12 +35,12 @@ async function call(label, token, path, body) {
 }
 
 const curator = await login("CURATOR");
-const abc = await login("ABC");
+const nexora = await login("NEXORA");
 
 console.log("\n--- quyền ---");
-await call("ABC gọi extract (mong 403)", abc.token, "extract", { chunk_id: "00000000-0000-4000-8000-000000000000" });
-await call("ABC gọi filter cho Smile (mong 403)", abc.token, "filter", { customer_id: "a0000000-0000-4000-8000-000000000002" });
-await call("ABC gọi rescan (mong 403)", abc.token, "rescan", {});
+await call("Nexora gọi extract (mong 403)", nexora.token, "extract", { chunk_id: "00000000-0000-4000-8000-000000000000" });
+await call("Nexora gọi filter cho Smile (mong 403)", nexora.token, "filter", { customer_id: "a0000000-0000-4000-8000-000000000002" });
+await call("Nexora gọi rescan (mong 403)", nexora.token, "rescan", {});
 
 if (chunkId) {
   console.log("\n--- extract ---");
@@ -49,6 +49,6 @@ if (chunkId) {
 }
 
 console.log("\n--- filter / generate / rescan ---");
-await call("ABC filter", abc.token, "filter", { customer_id: abc.meta.customer_id });
-await call("ABC generate", abc.token, "generate", { customer_id: abc.meta.customer_id });
+await call("Nexora filter", nexora.token, "filter", { customer_id: nexora.meta.customer_id });
+await call("Nexora generate", nexora.token, "generate", { customer_id: nexora.meta.customer_id });
 await call("curator rescan", curator.token, "rescan", {});
