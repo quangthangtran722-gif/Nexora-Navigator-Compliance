@@ -172,7 +172,7 @@ export function RescanPanel() {
                     <TableCell className="min-w-28 whitespace-normal text-muted-foreground">{tenNganh(c.nganh)}</TableCell>
                     <TableCell className="text-right tabular-nums">
                       {!last ? (
-                        <span className="text-[#98A2B3]">–</span>
+                        <span className="text-ink-faint">–</span>
                       ) : ketQua.length === 0 ? (
                         <span className="text-xs text-muted-foreground">Chưa có entity được duyệt</span>
                       ) : (

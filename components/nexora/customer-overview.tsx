@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 const AP_DUNG_ORDER: TrangThaiApDung[] = ["ap_dung", "sap_ap_dung", "chua_du_thong_tin", "khong_ap_dung"];
 // Biểu đồ dùng đúng màu trạng thái (v3 mục 4), không dùng --chart-*
 const BAR_COLOR: Record<TrangThaiApDung, string> = {
-  ap_dung: "bg-[#E57373]", // red-400 (team chốt 20/10): mảng lớn không dùng đỏ đậm
+  ap_dung: "bg-status-ap-dung-bar", // red-400 rượu vang (v4): mảng lớn không dùng đỏ đậm
   sap_ap_dung: "bg-status-sap-ap-dung",
   chua_du_thong_tin: "bg-status-chua-du-tt",
   khong_ap_dung: "bg-status-khong-ap-dung",

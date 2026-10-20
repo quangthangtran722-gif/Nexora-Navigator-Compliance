@@ -1,14 +1,15 @@
 import { cn } from "@/lib/utils";
 
 /*
- * Dải đầu nhóm (palette v3 mục 9.2) — chia trang thành NHÓM LỚN. Mỗi màn tối đa 1 cấp, không lồng.
- * Nền espresso + viền trái 4px gold; badge đếm trên nền tối. Nhóm rỗng dùng EmptyGroupLine, không hiện dải.
+ * Dải đầu nhóm (palette v4 mục 9.2) — chia trang thành NHÓM LỚN. Mỗi màn tối đa 1 cấp, không lồng.
+ * Chỉ đọc màu từ biến --group-* / --alert-chip-*: bản sáng = khối espresso đặc; bản tối = nền ánh vàng nhẹ + viền vàng.
+ * Nhóm rỗng dùng EmptyGroupLine, không hiện dải.
  */
 
 export type GroupCount = {
   label: string; // vd "chờ duyệt"
   n: number;
-  tone?: "action" | "neutral"; // action = cần làm (đỏ nhạt), neutral = số khác
+  tone?: "action" | "neutral"; // action = số việc cần làm (chip đỏ đặc), neutral = số khác
 };
 
 export function GroupHeader({
@@ -27,12 +28,17 @@ export function GroupHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-l-4 border-gold-edge bg-topbar px-4 py-3", className)}>
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border border-l-4 border-group-border border-l-group-edge bg-group px-4 py-3",
+        className,
+      )}
+    >
       <div className="min-w-0">
-        <h2 id={id} className="text-base font-bold text-topbar-foreground">
+        <h2 id={id} className="text-base font-bold text-group-title">
           {title}
         </h2>
-        {subtitle && <p className="truncate text-xs text-topbar-muted">{subtitle}</p>}
+        {subtitle && <p className="truncate text-xs text-group-sub">{subtitle}</p>}
       </div>
       {(counts.length > 0 || children) && (
         <div className="flex flex-wrap items-center gap-2">
@@ -41,7 +47,7 @@ export function GroupHeader({
               key={c.label}
               className={cn(
                 "px-2 py-0.5 text-xs font-medium tabular-nums",
-                c.tone === "action" ? "bg-[rgb(209_67_67/0.18)] text-[#F3A39B]" : "bg-white/8 text-[#D0D5DD]",
+                c.tone === "action" ? "bg-alert-chip text-alert-chip-foreground" : "bg-group-chip text-group-chip-foreground",
               )}
             >
               {c.n} {c.label}
@@ -54,7 +60,7 @@ export function GroupHeader({
   );
 }
 
-// Nhóm rỗng: 1 dòng trắng viền border, chữ xám — "Tên nhóm · chưa có …"
+// Nhóm rỗng: 1 dòng nền card viền border, chữ muted — "Tên nhóm · chưa có …"
 export function EmptyGroupLine({ title, text }: { title: React.ReactNode; text: string }) {
   return (
     <p className="border bg-card px-4 py-2.5 text-xs text-muted-foreground">

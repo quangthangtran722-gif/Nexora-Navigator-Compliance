@@ -66,7 +66,7 @@ export function ApDungBadge({ status, className }: { status: TrangThaiApDung; cl
 /* ---------- 2. Trạng thái duyệt (entity, diagnostic) ---------- */
 
 const duyetStyle: Record<TrangThaiDuyet, Style> = {
-  cho_duyet: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-input", Icon: CircleDashed },
+  cho_duyet: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-duyet-cho-border", Icon: CircleDashed },
   da_duyet: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
   tu_choi: { className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: XCircle },
 };
@@ -79,7 +79,7 @@ export function DuyetBadge({ status, className }: { status: TrangThaiDuyet; clas
 
 const chunkStyle: Record<TrangThaiChunk, Style> = {
   cho_xu_ly: { className: "bg-muted text-muted-foreground", Icon: CircleDashed },
-  dang_xu_ly: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-input", Icon: Loader },
+  dang_xu_ly: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-duyet-cho-border", Icon: Loader },
   da_trich_xuat: { className: "bg-status-sap-ap-dung-bg text-status-sap-ap-dung", Icon: Clock },
   hoan_tat: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
   loi: { className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: TriangleAlert },
@@ -146,7 +146,7 @@ export function AnhHuongBadge({ level, className }: { level: "primary" | "second
 /* ---------- Trạng thái văn bản (draft → active → replaced) ---------- */
 
 const vanBanStyle: Record<TrangThaiVanBan, Style> = {
-  draft: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-input", Icon: FilePen },
+  draft: { className: "bg-duyet-cho-bg text-duyet-cho outline-1 -outline-offset-1 outline-dashed outline-duyet-cho-border", Icon: FilePen },
   active: { className: "bg-duyet-da-bg text-duyet-da", Icon: CircleCheck },
   replaced: { className: "bg-status-khong-ap-dung-bg text-status-khong-ap-dung", Icon: CircleMinus },
 };

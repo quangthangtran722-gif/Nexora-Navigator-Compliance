@@ -63,22 +63,36 @@
   --color-duyet-tu-choi: var(--duyet-tu-choi);
   --color-duyet-tu-choi-bg: var(--duyet-tu-choi-bg);
 
-  /* Nexora palette v2 (Champagne) — mục 3.1 */
+  /* Nexora palette v4 — mục 3.1 */
   --color-topbar: var(--topbar);
   --color-topbar-foreground: var(--topbar-foreground);
   --color-topbar-muted: var(--topbar-muted);
   --color-brand-red: var(--brand-red);
   --color-brand-red-bg: var(--brand-red-bg);
   --color-gold-text: var(--gold-text);
+  --color-group: var(--group-bg);
+  --color-group-border: var(--group-border);
+  --color-group-edge: var(--group-edge);
+  --color-group-title: var(--group-title);
+  --color-group-sub: var(--group-sub);
+  --color-group-chip: var(--group-chip-bg);
+  --color-group-chip-foreground: var(--group-chip-fg);
+  --color-alert-chip: var(--alert-chip-bg);
+  --color-alert-chip-foreground: var(--alert-chip-fg);
+  /* Biến phụ của Nexora (để component không hard-code màu, tự đúng ở bản tối) */
   --color-gold-edge: var(--gold-edge);
   --color-gold-metal-border: var(--gold-metal-border);
   --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-logo-sub: var(--logo-sub);
+  --color-duyet-cho-border: var(--duyet-cho-border);
+  --color-status-ap-dung-bar: var(--status-ap-dung-bar);
 }
 
 /*
- * BẢNG MÀU NEXORA — palette v2 (Champagne), team đã duyệt (docs: nexora-palette-v2.md).
- * Light-first: :root; bản tối: .dark. Giữ tên biến shadcn + status-badges đang đọc.
- * Không xanh dương ở bất kỳ đâu. Gradient chỉ dùng qua bg-gold-metal (3 chỗ, mục 2).
+ * BẢNG MÀU NEXORA — palette v4 (Champagne · đỏ rượu vang · dark mode "Viền vàng"), team đã duyệt (nexora-palette-v4.md).
+ * Light-first: :root; bản tối: .dark (bật bằng next-themes, class="dark" trên <html>). Giữ tên biến shadcn + status-badges.
+ * Không xanh dương ở bất kỳ đâu. Gradient chỉ dùng qua bg-gold-metal / bg-gold-metal-flat (5 chỗ, mục 2).
  */
 :root {
   --background: #F6F7F9;
@@ -96,27 +110,37 @@
   --muted-foreground: #667085;
   --accent: #FAF7F0;                /* gold-50: hover, mục đang chọn */
   --accent-foreground: #6E5730;     /* gold-800 */
-  --destructive: #B42318;
+  --destructive: #8F2A22;
   --border: #EAECF0;
   --input: #D0D5DD;
   --ring: #AE8C4C;
 
   --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%);
   --gold-text: #6E5730;
-  --gold-edge: #CFAE68;             /* viền trái nhấn: dải phòng ban, ô checklist, gạch chân tab */
-  --gold-metal-border: #9C7A3A;
-  --ink-soft: #475467;              /* chữ nút phụ (Từ chối, Huỷ, Sửa, Quay lại) */
 
   --topbar: #2A1D14;                /* nâu espresso */
   --topbar-foreground: #FFF5E6;
   --topbar-muted: #BFA88E;
 
-  --brand-red: #D14343;
-  --brand-red-bg: #FDF2F1;
+  --brand-red: #A8392F;               /* chấm thông báo */
+  --brand-red-bg: #FBF1EF;
+
+  /* Badge đỏ đặc: số việc cần làm trên dải đầu nhóm, tab */
+  --alert-chip-bg: #6E2420;
+  --alert-chip-fg: #F6DCD8;
+
+  /* Dải đầu nhóm (GroupHeader): bản sáng = khối espresso đặc */
+  --group-bg: #2A1D14;
+  --group-border: transparent;
+  --group-edge: #CFAE68;
+  --group-title: #FFF5E6;
+  --group-sub: #BFA88E;
+  --group-chip-bg: rgb(255 255 255 / 0.08);
+  --group-chip-fg: #D0D5DD;
 
   /* Trạng thái áp dụng (4) */
-  --status-ap-dung: #8F1F17;
-  --status-ap-dung-bg: #FBE3E1;
+  --status-ap-dung: #8F2A22;
+  --status-ap-dung-bg: #F5DEDA;
   --status-sap-ap-dung: #6E5730;
   --status-sap-ap-dung-bg: #F3ECDA;
   --status-chua-du-tt: #6941C6;
@@ -125,15 +149,16 @@
   --status-khong-ap-dung-bg: #F2F4F7;
 
   /* Trạng thái duyệt (3) */
-  --duyet-cho: #667085;             /* trung tính (duyệt đợt 2): chờ duyệt là trạng thái mặc định, không tô màu */
-  --duyet-cho-bg: transparent;      /* + viền nét đứt #D0D5DD (= --input) ở badge */
+  --duyet-cho: #667085;              /* trung tính: viền nét đứt #D0D5DD, nền trong suốt */
+  --duyet-cho-bg: transparent;
+  --duyet-cho-border: #D0D5DD;
   --duyet-da: #067647;
   --duyet-da-bg: #ECFDF3;
   --duyet-tu-choi: #475467;
   --duyet-tu-choi-bg: #F2F4F7;
 
   --chart-1: #C6A462;
-  --chart-2: #D14343;
+  --chart-2: #A8392F;
   --chart-3: #6E5730;
   --chart-4: #DDC894;
   --chart-5: #98A2B3;
@@ -148,72 +173,98 @@
   --sidebar-accent-foreground: #6E5730;
   --sidebar-border: #EAECF0;
   --sidebar-ring: #AE8C4C;
+
+  /* Biến phụ Nexora (giá trị lấy từ dải màu mục 1) */
+  --gold-edge: #CFAE68;             /* viền trái InsetBlock, gạch nhấn */
+  --gold-metal-border: #9C7A3A;     /* viền nút ánh kim (= utility bg-gold-metal) */
+  --ink-soft: #475467;              /* chữ nút phụ (mục 9.4) */
+  --ink-faint: #98A2B3;             /* dấu "–" thay số 0 trong bảng */
+  --logo-sub: #8F713C;              /* dòng "COMPLIANCE NAVIGATOR" cạnh logo mark (gold-700) */
+  --status-ap-dung-bar: #C4665A;    /* mảng "Áp dụng" của thanh phân bổ (red-400, không tô đỏ đậm mảng lớn) */
 }
 
+/* Hướng C "Viền vàng": khối quan trọng sáng hơn nền; nền đen ấm; dải đầu nhóm trong suốt viền vàng */
 .dark {
-  --background: #0F1115;
-  --foreground: #F2F4F7;
-  --card: #171A20;
-  --card-foreground: #F2F4F7;
-  --popover: #171A20;
-  --popover-foreground: #F2F4F7;
+  --background: #111010;
+  --foreground: #F2EEE8;
+  --card: #1A1918;
+  --card-foreground: #F2EEE8;
+  --popover: #1A1918;
+  --popover-foreground: #F2EEE8;
 
   --primary: #D2B679;
   --primary-foreground: #2A2112;
-  --secondary: #1D2027;
-  --secondary-foreground: #F2F4F7;
-  --muted: #1D2027;
-  --muted-foreground: #98A2B3;
-  --accent: #26211A;
-  --accent-foreground: #DDC894;
-  --destructive: #E57373;
-  --border: #262A33;
-  --input: #2E333D;
+  --secondary: #211F1D;
+  --secondary-foreground: #F2EEE8;
+  --muted: #211F1D;
+  --muted-foreground: #A39A90;
+  --accent: #2A2620;                /* mục đang chọn, hover */
+  --accent-foreground: #E9DCBA;
+  --destructive: #D98C82;
+  --border: #2B2926;
+  --input: #34312D;
   --ring: #D2B679;
 
   --gold-metal: linear-gradient(100deg, #9C7A3A 0%, #CFAE68 35%, #EADBB4 50%, #C6A462 68%, #A8843F 100%);
-  --gold-text: #DDC894;
-  --gold-edge: #CFAE68;
-  --gold-metal-border: #9C7A3A;
-  --ink-soft: #D0D5DD;
+  --gold-text: #E9DCBA;
 
-  --topbar: #1C130D;
-  --topbar-foreground: #FFF5E6;
-  --topbar-muted: #A8927A;
+  --topbar: #151413;
+  --topbar-foreground: #E9DCBA;
+  --topbar-muted: #A39A90;
 
-  --brand-red: #E57373;
-  --brand-red-bg: #3A1918;
+  --brand-red: #A8392F;
+  --brand-red-bg: #3A1F1C;
 
-  --status-ap-dung: #F3A39B;
-  --status-ap-dung-bg: #4A1915;
-  --status-sap-ap-dung: #DDC894;
-  --status-sap-ap-dung-bg: #2A2418;
-  --status-chua-du-tt: #BDB4FE;
+  --alert-chip-bg: #6E2420;
+  --alert-chip-fg: #F6DCD8;
+
+  /* Dải đầu nhóm: trong suốt, viền vàng */
+  --group-bg: rgb(210 182 121 / 0.10);
+  --group-border: rgb(210 182 121 / 0.35);
+  --group-edge: #D2B679;
+  --group-title: #E9DCBA;
+  --group-sub: #B8A98C;
+  --group-chip-bg: rgb(255 255 255 / 0.06);
+  --group-chip-fg: #C9C2B8;
+
+  --status-ap-dung: #D98C82;
+  --status-ap-dung-bg: #3A1F1C;
+  --status-sap-ap-dung: #E9DCBA;
+  --status-sap-ap-dung-bg: #2A2620;
+  --status-chua-du-tt: #C4B5FD;
   --status-chua-du-tt-bg: #2A2350;
-  --status-khong-ap-dung: #98A2B3;
-  --status-khong-ap-dung-bg: #262A33;
+  --status-khong-ap-dung: #A39A90;
+  --status-khong-ap-dung-bg: #262421;
 
-  --duyet-cho: #98A2B3;
+  --duyet-cho: #A39A90;             /* trung tính: viền nét đứt #4A4540 */
   --duyet-cho-bg: transparent;
+  --duyet-cho-border: #4A4540;
   --duyet-da: #75E0A7;
   --duyet-da-bg: #0F2E1F;
-  --duyet-tu-choi: #98A2B3;
-  --duyet-tu-choi-bg: #262A33;
+  --duyet-tu-choi: #A39A90;
+  --duyet-tu-choi-bg: #262421;
 
   --chart-1: #D2B679;
-  --chart-2: #E57373;
+  --chart-2: #A8392F;
   --chart-3: #E9DCBA;
-  --chart-4: #AE8C4C;
-  --chart-5: #667085;
+  --chart-4: #9C7A3A;
+  --chart-5: #5C5650;
 
-  --sidebar: #13161B;
-  --sidebar-foreground: #D0D5DD;
+  --sidebar: #151413;
+  --sidebar-foreground: #D9D2C9;
   --sidebar-primary: #D2B679;
   --sidebar-primary-foreground: #2A2112;
-  --sidebar-accent: #26211A;
-  --sidebar-accent-foreground: #DDC894;
-  --sidebar-border: #262A33;
+  --sidebar-accent: #2A2620;
+  --sidebar-accent-foreground: #E9DCBA;
+  --sidebar-border: #2B2926;
   --sidebar-ring: #D2B679;
+
+  --gold-edge: #D2B679;
+  --gold-metal-border: #9C7A3A;
+  --ink-soft: #C9C2B8;
+  --ink-faint: #5C5650;
+  --logo-sub: #B8A98C;
+  --status-ap-dung-bar: #A8392F;
 }
 
 /* Ánh kim sâm panh — v3 mục 2, ĐÚNG 5 chỗ: (1) nút chính <Button> mặc định, (2) thẻ KPI đầu /tong-quan,

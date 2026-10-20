@@ -19,6 +19,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { ThemeToggle } from "@/components/nexora/theme-toggle";
 import { useAuth } from "@/lib/auth/auth-provider";
 import { navByRole, type Role } from "@/lib/navigation";
 
@@ -45,7 +46,7 @@ export function AppSidebar({ role }: { role: Role }) {
           <Image src="/logo-mark.png" alt="" width={28} height={28} priority className="size-7 shrink-0" />
           <span className="leading-[1.15] whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">
             <span className="block text-[15px] font-bold tracking-[0.06em] text-gold-text">NEXORA</span>
-            <span className="block text-[10.5px] font-semibold tracking-[0.08em] text-[#8F713C]">COMPLIANCE NAVIGATOR</span>
+            <span className="block text-[10.5px] font-semibold tracking-[0.08em] text-logo-sub">COMPLIANCE NAVIGATOR</span>
           </span>
         </Link>
       </SidebarHeader>
@@ -88,6 +89,9 @@ export function AppSidebar({ role }: { role: Role }) {
                 <span className="mt-0.5 inline-block bg-accent px-1.5 py-px text-[11px] font-medium text-accent-foreground">{nav.label}</span>
               </span>
             </div>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <ThemeToggle />
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
