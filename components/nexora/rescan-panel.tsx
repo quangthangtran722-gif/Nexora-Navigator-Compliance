@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { ItemList, ItemRow } from "@/components/nexora/item-row";
 import { ModelCell } from "@/components/nexora/pipeline-log";
+import { SoLieu } from "@/components/nexora/so-lieu";
 import { ApDungBadge, RunBadge } from "@/components/nexora/status-badges";
 import { formatDateTime, TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
 import { combine, useErrorHandler } from "@/lib/data/errors";
@@ -171,12 +172,14 @@ export function RescanPanel() {
                     <TableCell className="min-w-28 whitespace-normal text-muted-foreground">{tenNganh(c.nganh)}</TableCell>
                     <TableCell className="text-right tabular-nums">
                       {!last ? (
-                        "—"
+                        <span className="text-[#98A2B3]">–</span>
                       ) : ketQua.length === 0 ? (
                         <span className="text-xs text-muted-foreground">Chưa có entity được duyệt</span>
                       ) : (
                         <>
-                          <span className="font-semibold">{apDung}</span>
+                          <span className="font-semibold">
+                            <SoLieu n={apDung} />
+                          </span>
                           <span className="text-muted-foreground">/{ketQua.length} áp dụng</span>
                         </>
                       )}

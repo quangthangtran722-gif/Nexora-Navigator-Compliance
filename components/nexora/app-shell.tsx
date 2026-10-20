@@ -28,7 +28,8 @@ export function AppShell({ role, children }: { role: Role; children: React.React
       {/* min-w-0: nội dung rộng (bảng, tab bar) cuộn trong vùng của nó, không đẩy cả trang cuộn ngang */}
       <SidebarInset className="min-w-0">
         <TopBar role={role} />
-        <div className="flex flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
+        {/* max-w 1200px: màn rộng thì nội dung không dàn lại theo độ rộng sidebar khi co giãn */}
+        <div className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col gap-6 p-4 md:p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

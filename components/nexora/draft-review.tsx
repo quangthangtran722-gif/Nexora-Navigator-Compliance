@@ -276,14 +276,11 @@ function EntityRow({
       hint={missingDk && !locked ? "Cần điền điều kiện máy đọc trước khi duyệt" : undefined}
       open={open}
       onToggle={onToggle}
-      right={
-        <>
-          <LoaiEntityBadge loai={e.loai_entity} />
-          <DuyetBadge status={e.trang_thai_duyet} />
-        </>
-      }
+      // Thu gọn: chỉ 1 badge (trạng thái duyệt); loại entity nằm ở dòng meta khi mở
+      right={<DuyetBadge status={e.trang_thai_duyet} />}
     >
       <ItemMeta>
+        <LoaiEntityBadge loai={e.loai_entity} />
         <span>{domainLabel(e.domain)}</span>
         <span aria-hidden>·</span>
         <span>{e.dieu_khoan}</span>

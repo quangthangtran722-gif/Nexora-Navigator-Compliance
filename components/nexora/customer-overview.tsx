@@ -9,6 +9,7 @@ import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { GroupHeader } from "@/components/nexora/group-header";
 import { ItemList, ItemRow } from "@/components/nexora/item-row";
 import { KpiCard } from "@/components/nexora/kpi-card";
+import { SoLieu } from "@/components/nexora/so-lieu";
 import { ApDungBadge, DuyetBadge } from "@/components/nexora/status-badges";
 import { domainLabel, QUY_MO_LABEL, TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
@@ -159,11 +160,11 @@ export function CustomerOverview() {
                         {dept.ten_phong_ban}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">{n("ap_dung")}</TableCell>
-                    <TableCell className="text-right tabular-nums">{n("sap_ap_dung")}</TableCell>
-                    <TableCell className={cn("text-right tabular-nums", n("chua_du_thong_tin") > 0 && "font-semibold text-destructive")}>{n("chua_du_thong_tin")}</TableCell>
-                    <TableCell className={cn("text-right tabular-nums", cho > 0 && "font-semibold text-destructive")}>{cho}</TableCell>
-                    <TableCell className="text-right tabular-nums">{count(items, (d) => d.trang_thai_duyet === "da_duyet")}</TableCell>
+                    <TableCell className="text-right tabular-nums"><SoLieu n={n("ap_dung")} /></TableCell>
+                    <TableCell className="text-right tabular-nums"><SoLieu n={n("sap_ap_dung")} /></TableCell>
+                    <TableCell className={cn("text-right tabular-nums", n("chua_du_thong_tin") > 0 && "font-semibold text-destructive")}><SoLieu n={n("chua_du_thong_tin")} /></TableCell>
+                    <TableCell className={cn("text-right tabular-nums", cho > 0 && "font-semibold text-destructive")}><SoLieu n={cho} /></TableCell>
+                    <TableCell className="text-right tabular-nums"><SoLieu n={count(items, (d) => d.trang_thai_duyet === "da_duyet")} /></TableCell>
                   </TableRow>
                 );
               })}
@@ -191,12 +192,8 @@ export function CustomerOverview() {
                 title={entities.find((e) => e.id === d.entity_id)?.ten_entity ?? "Nghĩa vụ"}
                 muted={d.trang_thai_ap_dung === "khong_ap_dung"}
                 href={`/duyet-diagnostic#diag-${d.id}`}
-                right={
-                  <>
-                    <ApDungBadge status={d.trang_thai_ap_dung} />
-                    <DuyetBadge status={d.trang_thai_duyet} />
-                  </>
-                }
+                // Như dòng thu gọn ở /duyet-diagnostic: chỉ 1 badge (trạng thái duyệt)
+                right={<DuyetBadge status={d.trang_thai_duyet} />}
               />
             ))}
           </ItemList>

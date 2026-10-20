@@ -41,7 +41,7 @@ export function LoginForm() {
       <Card>
         <CardHeader>
           {/* Logo đã cắt sát (public/logo-nexora.png, 900×360) */}
-          <Image src="/logo-nexora.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="320px" className="mx-auto h-auto w-full max-w-80" />
+          <Image src="/logo-nexora.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="240px" className="mx-auto h-auto w-60" />
           <p className="text-center text-sm text-muted-foreground">Theo dõi liên tục nghĩa vụ thuế &amp; kế toán cho doanh nghiệp</p>
           <CardTitle className="pt-4 text-xl font-bold">Đăng nhập</CardTitle>
           <CardDescription>Dùng tài khoản được cấp cho curator hoặc người đầu mối tuân thủ.</CardDescription>
