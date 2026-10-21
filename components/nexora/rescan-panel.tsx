@@ -15,7 +15,8 @@ import { COPY } from "@/lib/copy";
 import { formatDateTime, TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
 import { combine, useErrorHandler } from "@/lib/data/errors";
 import { generateAll, PipelineError, postPipeline, toAppError, type FilterKetQua } from "@/lib/data/pipeline";
-import { getAllDiagnostics, getCustomers, getNganh, getPipelineRuns } from "@/lib/data/queries";
+import { getAllDiagnostics, getCustomers, getNganh, getPipelineRuns, getThuocTinhHoSo } from "@/lib/data/queries";
+import { formatGiaTri, type GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import { useQuery } from "@/lib/data/use-query";
 import type { TrangThaiApDung } from "@/lib/types";
 
@@ -55,10 +56,13 @@ export function RescanPanel() {
   const handleError = useErrorHandler();
   const toMessage = (e: unknown, fallback: string) => (e instanceof PipelineError ? handleError(toAppError(e)) : null) ?? fallback;
 
-  const res = useQuery(() => combine({ customers: getCustomers(), allRuns: getPipelineRuns(), diagnostics: getAllDiagnostics(), nganh: getNganh() }), []);
+  const res = useQuery(
+    () => combine({ customers: getCustomers(), allRuns: getPipelineRuns(), diagnostics: getAllDiagnostics(), nganh: getNganh(), dict: getThuocTinhHoSo() }),
+    [],
+  );
   if (res.loading) return <LoadingBlock />;
   if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
-  const { customers, allRuns, diagnostics, nganh } = res.data!;
+  const { customers, allRuns, diagnostics, nganh, dict } = res.data!;
   const lastFilter = (cid: string) => allRuns.find((r) => r.pipeline_name === "filter_domain" && r.customer_id === cid);
   const ketQuaOf = (cid: string) => ((lastFilter(cid)?.output as { ket_qua?: FilterTrace[] } | null)?.ket_qua ?? []) as FilterTrace[];
   const tenNganh = (ma: string | null) => (ma ? (nganh.find((n) => n.ma === ma)?.ten_hien_thi ?? ma) : "—");
@@ -154,7 +158,7 @@ export function RescanPanel() {
                 <TableHead>Khách hàng</TableHead>
                 <TableHead>Ngành</TableHead>
                 <TableHead className="text-right">Nghĩa vụ</TableHead>
-                <TableHead>Lần lọc gần nhất</TableHead>
+                <TableHead>Lần cập nhật gần nhất</TableHead>
                 <TableHead className="text-right">Thao tác</TableHead>
               </TableRow>
             </TableHeader>
@@ -191,7 +195,7 @@ export function RescanPanel() {
                           <span className="text-xs text-muted-foreground tabular-nums">{formatDateTime(last.started_at ?? last.created_at)}</span>
                         </span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">Chưa chạy</span>
+                        <span className="text-xs text-muted-foreground">Chưa cập nhật</span>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
@@ -262,7 +266,10 @@ export function RescanPanel() {
                         {(k.dieu_kien ?? []).map((dk, i) => (
                           <span key={i} className="block text-muted-foreground">
                             {dk.ket_qua === true ? "Đạt" : dk.ket_qua === false ? "Không đạt" : "Thiếu thông tin"}: {dk.ten_entity} — hồ sơ khai{" "}
-                            {dk.gia_tri_khach_hang === undefined || dk.gia_tri_khach_hang === null ? "chưa có" : String(dk.gia_tri_khach_hang)}
+                            {/* Hiện nhãn tiếng Việt ("Có", "Website/app riêng"…), không lộ mã / true-false */}
+                            {dk.gia_tri_khach_hang === undefined || dk.gia_tri_khach_hang === null
+                              ? "chưa có"
+                              : formatGiaTri(dict.find((t) => t.ma === dk.dieu_kien_may_doc.thuoc_tinh), dk.gia_tri_khach_hang as GiaTriThuocTinh)}
                           </span>
                         ))}
                       </li>

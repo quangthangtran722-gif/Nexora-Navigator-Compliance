@@ -6,16 +6,13 @@ import {
   ArrowRight,
   Archive,
   BellRing,
-  Briefcase,
   Building2,
-  Calculator,
   Check,
   CircleHelp,
   Library,
   ListChecks,
   Menu,
   ShieldCheck,
-  UserRound,
 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -155,8 +152,9 @@ export function LandingPage() {
               <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-bold text-balance text-group-title sm:text-4xl lg:text-[44px]">
                 {L.hero.tieuDe}
               </h1>
+              {/* Phần "Vấn đề" gộp vào đây thành 1 câu dẫn */}
               <p data-hero style={tre(100)} className="max-w-2xl text-base text-group-sub sm:text-lg">
-                {L.hero.phu}
+                {L.hero.dan} <span className="text-group-title">{L.hero.phu}</span>
               </p>
               <div data-hero style={tre(200)} className="flex flex-wrap gap-3 pt-1">
                 <Link href="/dang-ky" className={cn(buttonVariants({ size: "lg" }), "h-11 px-5 text-[15px]")}>
@@ -177,56 +175,16 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* 3. Vấn đề */}
-        <section className="pt-28 pb-16 sm:pt-32 lg:pt-40 lg:pb-24" aria-labelledby="van-de-title">
-          <div className={cn(KHUNG, "grid items-center gap-10 lg:grid-cols-12")}>
-            <div className="space-y-4 lg:col-span-6" data-reveal>
-              <Nhan>{L.vanDe.nhan}</Nhan>
-              <h2 id="van-de-title" className="text-2xl font-bold text-balance sm:text-3xl">
-                {L.vanDe.tieuDe}
-              </h2>
-              <div className="space-y-2 text-base text-muted-foreground">
-                {L.vanDe.than.map((c) => (
-                  <p key={c}>{c}</p>
-                ))}
-              </div>
-            </div>
-            <ul className="grid grid-cols-4 gap-2 sm:gap-3 lg:col-span-6" aria-label="Bốn người trong công ty">
-              {L.vanDe.nguoi.map((n, i) => {
-                const Icon = [UserRound, Briefcase, Briefcase, Calculator][i];
-                const keToan = "ghiChu" in n;
-                return (
-                  <li
-                    key={i}
-                    data-reveal
-                    style={tre(i * 60)}
-                    className={cn(
-                      "flex flex-col items-center justify-center gap-1.5 border bg-card px-1 py-4 text-center sm:aspect-square sm:gap-2 sm:p-3",
-                      keToan && "border-2 border-primary bg-accent",
-                    )}
-                  >
-                    <Icon className={cn("size-5 sm:size-6", keToan ? "text-gold-text" : "text-muted-foreground")} aria-hidden />
-                    <span className="text-xs font-medium sm:text-sm">{n.ten}</span>
-                    {keToan && <span className="text-[11px] leading-tight text-gold-text sm:text-xs">{n.ghiChu}</span>}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </section>
-
         {/* 4. Sản phẩm làm gì — chữ trái, ảnh phải */}
-        <section id="san-pham" className="scroll-mt-20 border-y bg-card py-16 lg:py-24" aria-labelledby="san-pham-title">
+        <section id="san-pham" className="scroll-mt-20 border-b bg-card pt-28 pb-16 sm:pt-32 lg:pt-40 lg:pb-24" aria-labelledby="san-pham-title">
           <div className={cn(KHUNG, "grid items-center gap-10 lg:grid-cols-12")}>
             <div className="space-y-5 lg:col-span-5" data-reveal>
-              <Nhan>{L.sanPham.nhan}</Nhan>
               <h2 id="san-pham-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.sanPham.tieuDe}
               </h2>
-              <p className="text-base text-muted-foreground">{L.sanPham.than}</p>
-              <ul className="space-y-4">
-                {L.sanPham.y.map((y, i) => (
-                  <Y key={y.ten} icon={[CircleHelp, ListChecks, Building2][i]} ten={y.ten} mo={y.mo} />
+              <ul className="space-y-3">
+                {L.sanPham.nhan.map((ten, i) => (
+                  <Y key={ten} icon={[CircleHelp, ListChecks, Building2][i]} ten={ten} />
                 ))}
               </ul>
             </div>
@@ -240,7 +198,6 @@ export function LandingPage() {
         <section id="cach-hoat-dong" className="scroll-mt-20 py-16 lg:py-24" aria-labelledby="cach-title">
           <div className={cn(KHUNG, "space-y-10")}>
             <div className="max-w-2xl space-y-4" data-reveal>
-              <Nhan>{L.cachHoatDong.nhan}</Nhan>
               <h2 id="cach-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.cachHoatDong.tieuDe}
               </h2>
@@ -285,15 +242,10 @@ export function LandingPage() {
               </ul>
             </div>
             <div className="space-y-4 lg:col-span-5" data-reveal style={tre(80)}>
-              <Nhan>{L.bangChung.nhan}</Nhan>
               <h2 id="bang-chung-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.bangChung.tieuDe}
               </h2>
-              <div className="space-y-2 text-base text-muted-foreground">
-                {L.bangChung.than.map((c) => (
-                  <p key={c}>{c}</p>
-                ))}
-              </div>
+              <p className="text-base text-muted-foreground">{L.bangChung.than}</p>
               <p className="text-xs text-muted-foreground">{L.bangChung.ghiChu}</p>
             </div>
           </div>
@@ -303,7 +255,6 @@ export function LandingPage() {
         <section id="goi-dich-vu" className="scroll-mt-20 py-16 lg:py-24" aria-labelledby="goi-title">
           <div className={cn(KHUNG, "space-y-10")}>
             <div className="max-w-2xl space-y-4" data-reveal>
-              <Nhan>{L.goi.nhan}</Nhan>
               <h2 id="goi-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.goi.tieuDe}
               </h2>
@@ -313,7 +264,6 @@ export function LandingPage() {
                 <div key={g.ten} data-reveal style={tre(i * 80)} className="relative flex flex-col border bg-card p-6">
                   {i === 0 && <div className="absolute inset-x-0 top-0 h-0.5 bg-gold-metal-flat" aria-hidden />}
                   <h3 className="text-lg font-semibold">{g.ten}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{g.mo}</p>
                   <ul className="mt-5 flex-1 space-y-3">
                     {g.y.map((y) => (
                       <li key={y} className="flex gap-2.5 text-sm">
@@ -338,13 +288,12 @@ export function LandingPage() {
               <LandingShot name="thong-bao" alt={L.oLai.anh} />
             </div>
             <div className="order-1 space-y-5 lg:order-2 lg:col-span-5" data-reveal style={tre(80)}>
-              <Nhan>{L.oLai.nhan}</Nhan>
               <h2 id="o-lai-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.oLai.tieuDe}
               </h2>
-              <ul className="space-y-4">
-                {L.oLai.y.map((y, i) => (
-                  <Y key={y.ten} icon={[Library, Archive, BellRing][i]} ten={y.ten} mo={y.mo} />
+              <ul className="space-y-3">
+                {L.oLai.nhan.map((ten, i) => (
+                  <Y key={ten} icon={[Library, Archive, BellRing][i]} ten={ten} />
                 ))}
               </ul>
             </div>
@@ -362,7 +311,6 @@ export function LandingPage() {
                   <h2 id="doi-tac-title" className="text-2xl font-bold text-balance text-group-title sm:text-3xl">
                     {L.doiTac.tieuDe}
                   </h2>
-                  <p className="text-base text-group-sub">{L.doiTac.than}</p>
                 </div>
                 <a href={lienHe} className={cn(buttonVariants({ size: "lg" }), "h-11 shrink-0 px-5 text-[15px]")}>
                   {L.doiTac.nut}
@@ -403,21 +351,17 @@ export function LandingPage() {
   );
 }
 
-// Nhãn nhỏ trên tiêu đề phần
-function Nhan({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm font-semibold text-gold-text">{children}</p>;
-}
 
 // 1 ý: icon Lucide trong ô vuông nền accent (như thẻ KPI) + tên + 1 câu
-function Y({ icon: Icon, ten, mo }: { icon: React.ComponentType<{ className?: string }>; ten: string; mo: string }) {
+function Y({ icon: Icon, ten, mo }: { icon: React.ComponentType<{ className?: string }>; ten: string; mo?: string }) {
   return (
-    <li className="flex gap-3">
+    <li className={cn("flex gap-3", !mo && "items-center")}>
       <span className="flex size-9 shrink-0 items-center justify-center bg-accent" aria-hidden>
         <Icon className="size-[18px] text-gold-text" />
       </span>
       <span>
         <span className="block font-semibold">{ten}</span>
-        <span className="block text-sm text-muted-foreground">{mo}</span>
+        {mo && <span className="block text-sm text-muted-foreground">{mo}</span>}
       </span>
     </li>
   );

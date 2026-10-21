@@ -342,7 +342,7 @@ function EntityRow({
               {missingDk
                 ? "Cần điền điều kiện áp dụng trước khi duyệt."
                 : chuTheChung
-                  ? "Chưa có — mọi nghĩa vụ gắn với chủ thể này sẽ áp dụng cho MỌI doanh nghiệp."
+                  ? "Chưa có. Nếu duyệt, mọi nghĩa vụ gắn với chủ thể này sẽ áp dụng cho tất cả doanh nghiệp."
                   : "Chưa có."}
             </p>
           )}

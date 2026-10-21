@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s · Nexora",
   },
   description:
-    "Theo dõi liên tục nghĩa vụ thuế & kế toán cho doanh nghiệp vừa và nhỏ Việt Nam.",
+    "Biết văn bản pháp luật mới nào ảnh hưởng tới doanh nghiệp bạn, và phòng nào phải làm gì.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
