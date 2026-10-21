@@ -27,6 +27,7 @@ import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, on
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { QuyMo, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { THUOC_TINH_TU_COT } from "@/lib/pipeline/ruleEngine";
 
 /*
  * Onboarding 4 bước — ghi customers (CONTRACT §3.1) của khách hàng đang đăng nhập + departments (§3.3), rồi chạy rule engine ở backend
@@ -45,6 +46,7 @@ const PHONG_BAN_ITEMS = PHONG_BAN.map((s) => ({ value: s, label: PHONG_BAN_LABEL
 const DOMAIN_HINT: Record<string, string> = {
   thue: "Hoá đơn, thuế GTGT, thuế TNDN, kê khai và nộp thuế",
   ke_toan: "Chứng từ, sổ sách, báo cáo tài chính, lưu trữ",
+  chung_khoan: "Môi giới, tự doanh, tư vấn đầu tư, giấy phép UBCKNN",
 };
 
 type DeptState = { ten_phong_ban: string; slug_phong_ban: string; email_head: string };
@@ -85,7 +87,8 @@ export function OnboardingForm() {
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
 
   // Câu hỏi: dùng chung (domain null) + theo lĩnh vực đã chọn
-  const questions = dict.filter((t) => t.domain === null || data.domains.includes(t.domain));
+  // nganh, quy_mo đã có field riêng ở bước 1 (cột customers) → không hỏi lại
+  const questions = dict.filter((t) => !THUOC_TINH_TU_COT.includes(t.ma) && (t.domain === null || data.domains.includes(t.domain)));
 
   // State form → payload đúng shape CONTRACT
   function toPayload() {

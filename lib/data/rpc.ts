@@ -11,7 +11,8 @@ import type { Diagnostic, Entity } from "@/lib/types";
 
 export type RpcFunctions = {
   approve_entity: {
-    args: { p_entity_id: string; p_quyet_dinh: "da_duyet" | "tu_choi"; p_ghi_chu?: string };
+    // p_ap_dung_moi_doanh_nghiep: bắt buộc true khi duyệt chu_the chưa có dieu_kien_may_doc (migration 005)
+    args: { p_entity_id: string; p_quyet_dinh: "da_duyet" | "tu_choi"; p_ghi_chu?: string; p_ap_dung_moi_doanh_nghiep?: boolean };
     returns: Entity;
   };
   approve_chunk: {

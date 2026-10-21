@@ -35,7 +35,7 @@ export const LOAI_RELATIONSHIP_LABEL: Record<LoaiRelationship, string> = {
 };
 
 export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {
-  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", khac: "Khác",
+  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", huong_dan: "Hướng dẫn", khac: "Khác",
 };
 
 export const TRANG_THAI_VAN_BAN_LABEL: Record<TrangThaiVanBan, string> = {
@@ -55,8 +55,8 @@ export const PIPELINE_NAME_LABEL: Record<PipelineName, string> = {
 /* ---------- Bổ sung phía UI (không có trong CONTRACT) ---------- */
 
 // domain là text slug tự do (CONTRACT §2). Nhãn cho các giá trị đang dùng; slug lạ hiển thị nguyên văn.
-export const KNOWN_DOMAINS = ["thue", "ke_toan"] as const;
-const DOMAIN_LABEL: Record<string, string> = { thue: "Thuế", ke_toan: "Kế toán" };
+export const KNOWN_DOMAINS = ["thue", "ke_toan", "chung_khoan"] as const;
+const DOMAIN_LABEL: Record<string, string> = { thue: "Thuế", ke_toan: "Kế toán", chung_khoan: "Chứng khoán" };
 export function domainLabel(slug: string) {
   return DOMAIN_LABEL[slug] ?? slug;
 }

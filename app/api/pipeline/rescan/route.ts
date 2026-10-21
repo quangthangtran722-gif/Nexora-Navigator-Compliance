@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     // Tuần tự: mỗi khách hàng 1 pipeline_run riêng, lỗi giữa chừng vẫn còn log các run trước
     const runIds: string[] = [];
-    for (const c of customers) runIds.push((await filterDomain(caller.supabase, c.id as string)).run_id);
+    for (const c of customers) runIds.push((await filterDomain(caller.supabase, c.id as string, { kichHoat: "rescan" })).run_id);
     return Response.json({ run_ids: runIds });
   } catch (err) {
     return errorResponse(err);

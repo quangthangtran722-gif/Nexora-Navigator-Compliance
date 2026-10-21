@@ -81,6 +81,13 @@ export function buildExtractSchema(domains: readonly [string, ...string[]]) {
   });
 }
 
+// Văn bản chỉ 1 lĩnh vực → bỏ field domain khỏi schema (code tự gán). Enum 1 giá trị không cho model chọn gì,
+// nhưng model vẫn hay bỏ sót field → Groq trả 400 "missing properties: 'domain'" (TT 77/2025 chunk Điều 4).
+export function buildExtractSchemaMotLinhVuc(domain: string) {
+  const full = buildExtractSchema([domain]);
+  return full.extend({ entities: z.array(full.shape.entities.element.omit({ domain: true })) });
+}
+
 export type ExtractOutput = z.infer<ReturnType<typeof buildExtractSchema>>;
 export type ExtractedEntity = ExtractOutput["entities"][number];
 export type ExtractedRelationship = ExtractOutput["relationships"][number];

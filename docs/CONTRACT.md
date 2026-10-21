@@ -73,9 +73,11 @@ export const LOAI_RELATIONSHIP_LABEL: Record<LoaiRelationship, string> = {
   dieu_kien: "Là điều kiện của", che_tai_cua: "Là chế tài của", ap_dung_cho: "Áp dụng cho",
 };
 
-export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "khac";
+// §3.11 — huong_dan thêm ở migration 004
+export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "huong_dan" | "khac";
 export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {
-  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", khac: "Khác",
+  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định",
+  huong_dan: "Hướng dẫn", khac: "Khác",
 };
 
 export type TrangThaiVanBan = "draft" | "active" | "replaced";
@@ -117,6 +119,7 @@ export type GiaiDoanThongBao = "cho_duyet" | "hoi_bo_sung" | "da_giao";
 export type Customer = {
   id: string;
   ten_cong_ty: string;
+  ma_so_thue: string | null;     // migration 006: 10 số hoặc 10 số-3 số, unique
   nganh: string | null;          // slug tự do, vd "thuong_mai_dien_tu" — tên hiển thị tra bảng `nganh` (§3.10)
   quy_mo: QuyMo | null;
   domains: string[];             // lĩnh vực đăng ký theo dõi; [] = chưa chọn
@@ -295,7 +298,7 @@ export type PipelineRun = {
   input: Json;
   output: Json | null;            // bắt buộc khi hoan_tat
   model: string | null;           // null ⇔ filter_domain (rule engine không AI); 2 bước AI luôn có, vd "openai/gpt-oss-120b"
-  prompt_version: string | null;  // null ⇔ filter_domain; vd "extract-v2"
+  prompt_version: string | null;  // null ⇔ filter_domain; vd "extract-v4"
   error_log: string | null;       // bắt buộc khi loi
   nguoi_chay_id: string | null;
   started_at: string | null;
@@ -390,7 +393,8 @@ export type NerExtractionSummary = {
   chunk_id: string; van_ban_id: string; so_hieu: string; thu_tu: number;
   dieu_khoan_range: string | null; trang_thai_chunk: TrangThaiChunk;
   so_entity: number; so_cho_duyet: number; so_da_duyet: number; so_tu_choi: number;
-  so_dieu_kien_chua_may_doc: number;          // > 0 thì approve_chunk sẽ bị từ chối
+  so_dieu_kien_chua_may_doc: number;          // dieu_kien/nguong cho_duyet chưa có dieu_kien_may_doc
+  so_can_dieu_kien: number;                   // + chu_the — approve_chunk bỏ qua các entity này (migration 005)
   theo_loai: Partial<Record<LoaiEntity, number>>;
   so_relationship: number; so_pending_link: number;
 };
@@ -417,6 +421,24 @@ export type Nganh = {
 ```
 
 Đọc: `supabase.from("nganh").select("ma, ten_hien_thi")` (mọi user đăng nhập; curator thêm/sửa). `customers.nganh` **không có FK** sang bảng này (onboarding cho nhập tự do) → mã không có trong bảng thì hiện nguyên mã làm fallback. Form onboarding có thể dùng bảng này làm danh sách gợi ý.
+
+### 3.11 Loại văn bản — cột `van_ban.loai_van_ban`
+
+Enum Postgres `public.loai_van_ban`, **bắt buộc** khi tạo văn bản (không có default). Chỉ để phân loại/hiển thị — rule engine và pipeline **không** đổi hành vi theo loại.
+
+| Giá trị | Nhãn | Mô tả |
+|---|---|---|
+| `luat` | Luật | Do Quốc hội ban hành; quy định khung, thường cần nghị định/thông tư hướng dẫn mới áp dụng chi tiết được. |
+| `nghi_dinh` | Nghị định | Do Chính phủ ban hành; quy định chi tiết thi hành luật. |
+| `thong_tu` | Thông tư | Do Bộ trưởng/Thủ trưởng cơ quan ngang bộ ban hành; hướng dẫn thi hành nghị định/luật, thường nêu thủ tục, biểu mẫu, thời hạn cụ thể. |
+| `nghi_quyet` | Nghị quyết | Của Quốc hội, Ủy ban Thường vụ Quốc hội, Chính phủ hoặc HĐND; quyết định chủ trương hoặc quy định có hiệu lực áp dụng. |
+| `quyet_dinh` | Quyết định | Của Thủ tướng, Bộ trưởng hoặc UBND; thường áp dụng cho trường hợp/phạm vi cụ thể. |
+| `huong_dan` | Hướng dẫn | Công văn/văn bản hướng dẫn nghiệp vụ của cơ quan nhà nước (vd công văn của Tổng cục Thuế) — không phải văn bản quy phạm pháp luật nhưng doanh nghiệp vẫn cần theo. |
+| `khac` | Khác | Loại chưa có ở trên, hoặc dữ liệu demo. |
+
+Form tải văn bản điền sẵn `so_hieu` / `ten_van_ban` / `loai_van_ban` bằng `parseVanBanHeader(noiDung, tenFile)` (`lib/van-ban-parse.ts`): đọc "Luật số: …", "Số: …" và dòng tên in hoa ở phần đầu nội dung trước, tên file chỉ là fallback.
+
+Dữ liệu demo: chỉ dùng văn bản thật do curator tải lên (vd `77/2025/TT-BTC`, `108/2025/QH15`). Văn bản mẫu tự viết `DEMO-01/2026` / `TT-DEMO-01/2026` đã bỏ khỏi seed. Cross-reference: extract ra cạnh `tham_chieu` pending (`target_ref_text`), curator nối sang entity của văn bản khác bằng cách cập nhật `target_entity_id`.
 
 ---
 
@@ -450,7 +472,8 @@ Gọi bằng supabase-js với session người dùng (không dùng service role
 
 ```ts
 // Curator duyệt 1 entity
-supabase.rpc("approve_entity", { p_entity_id: string, p_quyet_dinh: "da_duyet" | "tu_choi", p_ghi_chu?: string }) // → Entity
+supabase.rpc("approve_entity", { p_entity_id: string, p_quyet_dinh: "da_duyet" | "tu_choi", p_ghi_chu?: string,
+                                 p_ap_dung_moi_doanh_nghiep?: boolean }) // → Entity
 
 // Curator duyệt TẤT CẢ entity còn cho_duyet trong 1 chunk (từ chối lẻ trước, rồi duyệt phần còn lại)
 supabase.rpc("approve_chunk", { p_chunk_id: string, p_ghi_chu?: string }) // → number (số entity vừa duyệt)
@@ -460,6 +483,11 @@ supabase.rpc("approve_diagnostic", { p_diagnostic_id: string, p_quyet_dinh: "da_
 ```
 
 Chunk tự chuyển `hoan_tat` khi không còn entity `cho_duyet`.
+
+Điều kiện máy đọc khi duyệt (migration 005):
+- `dieu_kien` / `nguong` chưa có `dieu_kien_may_doc` → `approve_entity` trả `PT400`.
+- `chu_the` chưa có `dieu_kien_may_doc` → `PT400`, trừ khi `p_ap_dung_moi_doanh_nghiep: true` (curator xác nhận "chủ thể chung — áp dụng mọi doanh nghiệp"; ghi vào `approvals.ghi_chu`). Mọi hanh_vi nối tới chủ thể không điều kiện áp dụng cho mọi doanh nghiệp đăng ký lĩnh vực đó.
+- `approve_chunk` **bỏ qua** (để `cho_duyet`) mọi entity 3 loại trên chưa có điều kiện, không báo lỗi; số bị bỏ qua = `ner_extraction_summary.so_can_dieu_kien`.
 
 ---
 
@@ -504,7 +532,7 @@ Lỗi: `{ error: string; code?: string }` với status như mục 6.
 
 **Ghi chú triển khai** (bổ sung 18/10/2026; shape request/response ở trên giữ nguyên):
 
-- **Xác thực:** gửi header `Authorization: Bearer <session.access_token>`. Lấy token qua `(await supabase.auth.getSession()).data.session.access_token`. Thiếu token hoặc token hết hạn → `401 PT401`. Route chạy bằng chính JWT người gọi nên RLS áp dụng y như khi gọi Supabase trực tiếp; route không dùng service role.
+- **Xác thực:** gửi header `Authorization: Bearer <session.access_token>`. Lấy token qua `(await supabase.auth.getSession()).data.session.access_token`. Thiếu token hoặc token hết hạn → `401 PT401`. Route chạy bằng chính JWT người gọi nên RLS áp dụng y như khi gọi Supabase trực tiếp; route không dùng service role (ngoại lệ duy nhất: bước quét của `POST /api/onboard` cho tài khoản vừa đăng ký, xem §8 và `lib/api/admin.ts`).
 - **Quyền:**
   - `extract`, `rescan`: chỉ curator (`403 PT403`).
   - `filter`, `generate`: curator, hoặc khách hàng có `customer_id` trùng với `customer_id` trong body.
@@ -513,6 +541,7 @@ Lỗi: `{ error: string; code?: string }` với status như mục 6.
   | Status | code | Khi nào |
   |---|---|---|
   | `429` | `AI_RATE_LIMIT` | Groq hết quota 8K token/phút → đợi khoảng 1 phút rồi gọi lại |
+  | `413` | `AI_TOO_LARGE` | `extract`: chunk quá dài so với giới hạn Groq free tier (input + output > 8K token/request, kể cả sau khi tự hạ trần output) → tách chunk theo khoản |
   | `502` | `AI_ERROR` | Groq lỗi khác |
   | `409` | `PT409` | `extract` gọi vào chunk đang chạy hoặc đã có entity. Chỉ chunk `cho_xu_ly`/`loi` chưa có entity mới trích xuất được |
 
@@ -532,4 +561,57 @@ Với mỗi entity `hanh_vi` đã duyệt, thuộc văn bản `active`:
 2. Điều kiện = mọi entity `dieu_kien`/`nguong` đã duyệt có cạnh `dieu_kien → hanh_vi`, cộng `chu_the` đã duyệt có cạnh `hanh_vi → ap_dung_cho → chu_the` và có `dieu_kien_may_doc`. Các điều kiện nối bằng AND.
 3. Có điều kiện sai → `khong_ap_dung`. Không sai nhưng thiếu dữ liệu (key thiếu/null) → `chua_du_thong_tin` + `thuoc_tinh_thieu`. Tất cả đúng (hoặc không có điều kiện) → bước 4.
 4. Ngày hiệu lực = `entity.ngay_co_hieu_luc ?? van_ban.ngay_hieu_luc`; > hôm nay → `sap_ap_dung`, ngược lại `ap_dung`.
-5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban).
+
+   _Thuộc tính rule engine thấy_ = `customers.thuoc_tinh` + key `nganh`, `quy_mo` lấy từ **cột** `customers.nganh` / `customers.quy_mo` (`thuocTinhRuleEngine`; cột thắng bản sao trong JSONB nếu có — không cần, và không nên, chép cột vào `thuoc_tinh`). Curator viết được `{ "thuoc_tinh": "nganh", "toan_tu": "eq", "gia_tri": "chung_khoan" }` hay `{ "thuoc_tinh": "quy_mo", "toan_tu": "in", "gia_tri": ["nho", "vua"] }` (từ điển có row `nganh`, `quy_mo`); form onboarding / Tổng quan **không** render 2 row này vì đã có field riêng (`THUOC_TINH_TU_COT`).
+   _Kế thừa điều kiện_: hanh_vi nhận điều kiện của chủ thể qua cạnh `ap_dung_cho` (cố ý — test ở `tests/ruleEngine.test.ts`). hanh_vi không có cạnh nào tới entity mang điều kiện → áp dụng mọi doanh nghiệp; vì vậy duyệt chủ thể không điều kiện phải xác nhận rõ (§5).
+5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban). Dòng `cho_duyet` cũ của phòng không còn khớp (khách hàng thêm/đổi phòng) được **chuyển** `department_id` sang phòng đích còn thiếu; còn thừa → `khong_ap_dung` (không thành 2 task trùng).
+6. Quét toàn bộ (không truyền `entity_id`): diagnostic `cho_duyet` của entity không còn là hanh_vi đã duyệt thuộc văn bản `active` → `khong_ap_dung` (liệt kê ở `pipeline_runs.output.diagnostic_mo_coi`).
+
+**Một hàm lọc, nhiều điểm kích hoạt.** `filter`, `rescan` (chiều thuận: văn bản mới → doanh nghiệp đang có) và `/api/onboard` (chiều ngược: doanh nghiệp mới → mọi văn bản active) đều gọi `filterDomain` → `quetKhachHang` (`lib/pipeline/ruleEngine.ts`). Logic không rẽ nhánh theo điểm kích hoạt; `pipeline_runs.input.kich_hoat` (`filter` | `rescan` | `onboard`) chỉ để audit. Phép thử đối xứng: `tests/doiXung.test.ts` — 2 chiều ra **cùng tập entity** (so cả 4 trạng thái từng entity, không chỉ số lượng).
+
+---
+
+## 8. API onboarding doanh nghiệp (BE-7) — cần migration `006_onboard.sql`
+
+```ts
+// Đăng ký doanh nghiệp + quét ngược ngay. Người gọi: tài khoản mới (chưa gắn doanh nghiệp) hoặc curator (tạo hộ).
+POST /api/onboard
+  body {
+    ten_cong_ty: string;
+    ma_so_thue?: string | null;            // "0312345678" | "0312345678-001"
+    nganh?: string | null;                 // slug, cột riêng
+    quy_mo?: "nho" | "vua" | "lon" | null; // cột riêng
+    domains: string[];                     // ≥ 1
+    thuoc_tinh?: Record<string, boolean | number | string | string[] | null>; // key ∈ thuoc_tinh_ho_so, KHÔNG gửi nganh/quy_mo ở đây
+    phong_ban: { ten_phong_ban: string; slug_phong_ban?: SlugPhongBan; email_head?: string | null }[]; // ≥ 1
+  }
+  → 201 OnboardKetQua                                    // quét xong trong ~8 giây
+  → 202 { khach_hang_id; trang_thai: "dang_quet" }        // quét lâu hơn → chạy tiếp ở nền, hỏi GET bên dưới
+  → 202 { khach_hang_id; trang_thai: "loi_quet"; error }  // doanh nghiệp ĐÃ tạo, quét lỗi → POST /api/onboard/{id}
+  → 202 { khach_hang_id; trang_thai: "can_lam_moi_phien" } // server thiếu service role key → refresh session rồi POST /api/onboard/{id}
+
+GET  /api/onboard/{id}   → 200 OnboardKetQua | 202 { khach_hang_id; trang_thai: "dang_quet" | "chua_quet" }  // đọc lần quét gần nhất, không chạy lại
+POST /api/onboard/{id}   → 200 OnboardKetQua                                                           // quét ngược lại
+
+type OnboardKetQua = {
+  khach_hang_id: string;
+  run_id: string;                     // pipeline_runs filter_domain, input.kich_hoat = "onboard"
+  tong_nghia_vu: number;              // số NGHĨA VỤ (hanh_vi) ap_dung + sap_ap_dung
+  thong_ke: Record<TrangThaiApDung, number>; // đếm theo nghĩa vụ, đủ 4 trạng thái
+  theo_phong_ban: { ten_phong_ban: string; so_nghia_vu: number }[]; // MỌI phòng đã khai (kể cả 0), giảm dần
+  ket_qua: {
+    entity_id: string;
+    ten_entity: string;
+    trang_thai_ap_dung: TrangThaiApDung;
+    ten_phong_ban: string | null;     // 1 dòng / (nghĩa vụ, phòng nhận); null = không áp dụng / chưa đủ thông tin
+    thuoc_tinh_thieu: string[];       // chua_du_thong_tin → hiện câu hỏi bổ sung
+    van_ban: { so_hieu: string; ten_van_ban: string; so_dieu: number | null };
+  }[];                                // sắp: ap_dung → sap_ap_dung → chua_du_thong_tin → khong_ap_dung, rồi số hiệu, số điều
+};
+```
+
+- **Lỗi kiểm tra:** `400 PT400` kèm `chi_tiet: { truong: string; loi: string }[]` — đủ mọi trường sai trong 1 lần (khóa lạ, sai kiểu, ngoài `lua_chon`, MST sai dạng, phòng trùng tên, không đoán được mã phòng). `409` khi mã số thuế đã đăng ký (`chi_tiet` trỏ `ma_so_thue`) hoặc tài khoản đã gắn doanh nghiệp (`PT409` — sửa hồ sơ ở trang Onboarding).
+- **`slug_phong_ban`** không bắt buộc: backend đoán từ tên ("Phòng Tài chính - Kế toán" → `ke_toan`, "Phòng IT" → `cong_nghe`…). Không đoán được → lỗi ở `phong_ban[i].slug_phong_ban`, frontend cho chọn 1 trong 8 mã.
+- **Sau 201 với tài khoản mới:** gọi `supabase.auth.refreshSession()` — JWT mới mới có `customer_id`, các trang khác (RLS) mới thấy doanh nghiệp.
+- **Không có AI trong route này.** Nội dung checklist vẫn do `POST /api/pipeline/generate` viết sau (draft chờ người đầu mối duyệt), như luồng onboarding cũ.
+- **Transaction:** `onboard_customer` tạo `customers` + `departments` + gắn tài khoản trong 1 transaction; lỗi giữa chừng không để lại doanh nghiệp thiếu phòng ban.

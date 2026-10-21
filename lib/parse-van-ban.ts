@@ -29,7 +29,7 @@ const LOAI_THEO_TU_KHOA: [RegExp, LoaiVanBan][] = [
   [/^CÔNG VĂN$/u, "khac"],
 ];
 const LOAI_CHU: Record<LoaiVanBan, string> = {
-  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", khac: "Công văn",
+  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", huong_dan: "Hướng dẫn", khac: "Công văn",
 };
 
 // Bỏ định dạng markdown của 1 dòng: #, **, __, >, gạch đầu bảng; bảng "| A | B |" tách thành nhiều ô

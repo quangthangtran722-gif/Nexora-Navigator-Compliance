@@ -18,6 +18,7 @@ import { getCustomer, getDepartments, getDiagnostics, getEntities, getNganh, get
 import { useQuery } from "@/lib/data/use-query";
 import { formatGiaTri } from "@/lib/thuoc-tinh-format";
 import type { Diagnostic, TrangThaiApDung } from "@/lib/types";
+import { THUOC_TINH_TU_COT } from "@/lib/pipeline/ruleEngine";
 import { cn } from "@/lib/utils";
 
 /*
@@ -54,7 +55,7 @@ export function CustomerOverview() {
   const { customer, departments, diagnostics, nganh, entities } = res.data!;
   // Mã không có trong bảng nganh (onboarding nhập tự do) → hiện nguyên mã (CONTRACT §3.10)
   const tenNganh = customer.nganh ? (nganh.find((n) => n.ma === customer.nganh)?.ten_hien_thi ?? customer.nganh) : "chưa khai";
-  const dict = res.data!.dict.filter((t) => t.domain === null || customer.domains.includes(t.domain));
+  const dict = res.data!.dict.filter((t) => !THUOC_TINH_TU_COT.includes(t.ma) && (t.domain === null || customer.domains.includes(t.domain)));
 
   const count = (items: Diagnostic[], pred: (d: Diagnostic) => boolean) => items.filter(pred).length;
   const nTrangThai = (s: TrangThaiApDung) => count(diagnostics, (d) => d.trang_thai_ap_dung === s);

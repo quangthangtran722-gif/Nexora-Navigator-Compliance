@@ -94,6 +94,74 @@ export function evaluateEntity(input: {
     : { ...base, trang_thai_ap_dung: "ap_dung", ly_do: "da_hieu_luc", dieu_kien: dieuKien };
 }
 
+// Thuộc tính rule engine thấy = customers.thuoc_tinh + các CỘT nganh, quy_mo của customers (nguồn sự thật — form
+// onboarding có field riêng, ghi vào cột). Cột thắng JSONB: bản sao cũ trong thuoc_tinh (nếu có) không làm lệch kết quả.
+// → curator viết được {"thuoc_tinh":"nganh","toan_tu":"eq","gia_tri":"chung_khoan"} hay {"thuoc_tinh":"quy_mo",...}.
+export const THUOC_TINH_TU_COT: readonly string[] = ["nganh", "quy_mo"];
+
+export function thuocTinhRuleEngine(customer: {
+  nganh: string | null;
+  quy_mo?: string | null;
+  thuoc_tinh: ThuocTinhKhachHang;
+}): ThuocTinhKhachHang {
+  return {
+    ...customer.thuoc_tinh,
+    nganh: customer.nganh ?? customer.thuoc_tinh.nganh ?? null,
+    quy_mo: customer.quy_mo ?? customer.thuoc_tinh.quy_mo ?? null,
+  };
+}
+
+// Quy tắc 2 — điều kiện của 1 hanh_vi = entity điều kiện nối với nó bằng cạnh (cả 2 đầu đã duyệt):
+//   dieu_kien | nguong —dieu_kien→ hanh_vi,   và   hanh_vi —ap_dung_cho→ chu_the  (hanh_vi KẾ THỪA điều kiện của chủ thể).
+// Entity nối tới mà không có dieu_kien_may_doc (chủ thể chung) không thêm điều kiện nào.
+// hanh_vi không có cạnh nào tới entity mang điều kiện → [] → áp dụng MỌI doanh nghiệp đăng ký lĩnh vực đó.
+export type CanhDieuKien = { hanhViId: string; entityId: string };
+export type EntityDieuKien = { id: string; ten_entity: string; dieu_kien_may_doc: DieuKienMayDoc | null };
+
+export function ghepDieuKien(canh: readonly CanhDieuKien[], entities: readonly EntityDieuKien[]): Map<string, DieuKien[]> {
+  const byId = new Map(entities.map((e) => [e.id, e]));
+  const result = new Map<string, DieuKien[]>();
+  for (const { hanhViId, entityId } of canh) {
+    const e = byId.get(entityId);
+    if (!e?.dieu_kien_may_doc) continue;
+    const list = result.get(hanhViId) ?? [];
+    if (list.some((d) => d.entity_id === entityId)) continue;
+    list.push({ entity_id: entityId, ten_entity: e.ten_entity, dieu_kien_may_doc: e.dieu_kien_may_doc });
+    result.set(hanhViId, list);
+  }
+  return result;
+}
+
+// Lõi quét DUY NHẤT — mọi điểm kích hoạt đều đi qua đây (filterDomain.ts):
+//   chiều thuận  — văn bản mới được duyệt → nút "Quét lại khách hàng hiện có" (/api/pipeline/rescan), từng khách hàng;
+//   chiều ngược  — doanh nghiệp mới onboard (/api/onboard) → toàn bộ văn bản active cho 1 khách hàng;
+//   hỏi bổ sung — 1 entity (/api/pipeline/filter với entity_id).
+// Kết quả của 1 hanh_vi chỉ phụ thuộc chính nó + điều kiện nối với nó + hồ sơ, không phụ thuộc tập đang quét
+// → 2 chiều ra cùng một tập (tests/doiXung.test.ts).
+export type HanhViQuet = { id: string; domain: string; ngayHieuLuc: string };
+
+export function quetKhachHang(input: {
+  hanhVi: readonly HanhViQuet[];
+  dieuKienTheoHanhVi: ReadonlyMap<string, readonly DieuKien[]>;
+  customerDomains: readonly string[];
+  thuocTinh: ThuocTinhKhachHang;
+  homNay: string;
+}): Map<string, DanhGia> {
+  return new Map(
+    input.hanhVi.map((h) => [
+      h.id,
+      evaluateEntity({
+        domain: h.domain,
+        customerDomains: input.customerDomains,
+        thuocTinh: input.thuocTinh,
+        dieuKien: input.dieuKienTheoHanhVi.get(h.id) ?? [],
+        ngayHieuLuc: h.ngayHieuLuc,
+        homNay: input.homNay,
+      }),
+    ]),
+  );
+}
+
 export function todayInVietnam(now = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(now);
 }

@@ -131,7 +131,7 @@ Mọi lần chạy (dù là bước AI hay bước rule engine) đều ghi vào 
 
 ## 12. 2 bộ hồ sơ demo (dùng để test + trình bày)
 
-1. **Công ty TNHH ABC Logistics** (45 nhân viên) — thuê server nước ngoài, chạy ads nhắm mục tiêu → nghĩa vụ liên quan: chuyển dữ liệu ra nước ngoài, xác nhận đồng ý quảng cáo → giao phòng Marketing/Vận hành.
+1. **Công ty TNHH Nexora Technology** (công ty phần mềm, 35 nhân viên; trước đây là ABC Logistics, cùng `customer_id` `…0001`) — doanh nghiệp thường, lĩnh vực thuế + kế toán → nghĩa vụ Luật Quản lý thuế 108/2025/QH15 áp dụng cho DN, loại trừ các điều chỉ dành cho hộ kinh doanh / sàn TMĐT / tập đoàn đa quốc gia → giao Kế toán / Ban Giám đốc.
 2. **Phòng khám Nha khoa Smile Care** (25 nhân viên) — xử lý dữ liệu sức khỏe, chia sẻ dữ liệu với bên bảo hiểm → nghĩa vụ liên quan: thỏa thuận chia sẻ dữ liệu (DPA) → giao phòng Kế toán/Bảo hiểm.
 
 Cả hai dùng **chung một pipeline**, chỉ khác câu trả lời onboarding — mục đích là chứng minh hệ thống tổng quát hóa được, không hard-code riêng theo ngành.

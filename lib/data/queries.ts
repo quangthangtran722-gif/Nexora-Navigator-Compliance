@@ -69,6 +69,7 @@ export async function getNerExtractionSummary(): Promise<Result<NerExtractionSum
       so_da_duyet: n(s.so_da_duyet),
       so_tu_choi: n(s.so_tu_choi),
       so_dieu_kien_chua_may_doc: n(s.so_dieu_kien_chua_may_doc),
+      so_can_dieu_kien: n(s.so_can_dieu_kien ?? s.so_dieu_kien_chua_may_doc), // DB chưa chạy 005 → chỉ có cột cũ
       so_relationship: n(s.so_relationship),
       so_pending_link: n(s.so_pending_link),
     })),
