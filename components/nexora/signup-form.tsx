@@ -32,6 +32,7 @@ export function SignupForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [choXacNhan, setChoXacNhan] = useState<string | null>(null);
+  const [daTonTai, setDaTonTai] = useState(false); // email đã có tài khoản → hiện link Đăng nhập ngay trong lỗi
 
   // Đã có phiên: chưa gắn doanh nghiệp → thiết lập hồ sơ; đã có vai trò → trang chính (đăng nhập form login lo)
   useEffect(() => {
@@ -50,6 +51,7 @@ export function SignupForm() {
     ev.preventDefault();
     const e = kiemTra();
     setErrors(e);
+    setDaTonTai(false);
     if (Object.keys(e).length) return;
     setBusy(true);
     const { data, error } = await getSupabase().auth.signUp({
@@ -63,9 +65,11 @@ export function SignupForm() {
       // Không hiện lỗi gốc (tiếng Anh) — wording mục 5; chi tiết ở console
       console.warn("[Nexora] Đăng ký thất bại", error);
       const m = error.message.toLowerCase();
-      const loi = /already|registered|exists/.test(m)
-        ? D.loi.daTonTai
-        : /signups? not allowed|disabled/.test(m)
+      if (/already|registered|exists/.test(m)) {
+        setDaTonTai(true);
+        return setErrors({ _form: D.loi.daTonTai });
+      }
+      const loi = /signups? not allowed|disabled/.test(m)
           ? D.loi.dongDangKy
           : /password/.test(m)
             ? D.loi.matKhauYeu
@@ -73,9 +77,14 @@ export function SignupForm() {
       return setErrors({ _form: loi });
     }
     // Supabase không báo lỗi khi email đã tồn tại (chống dò email) mà trả user không có identity
-    if (data.user && data.user.identities?.length === 0) return setErrors({ _form: D.loi.daTonTai });
-    if (!data.session) setChoXacNhan(email.trim());
-    // Có session → useEffect ở trên chuyển tới /onboarding
+    if (data.user && data.user.identities?.length === 0) {
+      setDaTonTai(true);
+      return setErrors({ _form: D.loi.daTonTai });
+    }
+    // Đã tắt xác nhận email ở Supabase → có phiên ngay: vào thẳng bước thiết lập hồ sơ (tài khoản mới chưa có customer_id)
+    if (data.session) return router.replace("/onboarding");
+    // Dự phòng khi dự án bật lại xác nhận email — không chặn luồng chính
+    setChoXacNhan(email.trim());
   }
 
   if (choXacNhan) {
@@ -121,7 +130,12 @@ export function SignupForm() {
         </FormField>
         {errors._form && (
           <p className="bg-brand-red-bg px-3 py-2 text-sm text-destructive" role="alert">
-            {errors._form}
+            {errors._form}{" "}
+            {daTonTai && (
+              <Link href={`/login?email=${encodeURIComponent(email.trim())}`} className="font-medium underline underline-offset-4">
+                {D.loi.daTonTaiLink}
+              </Link>
+            )}
           </p>
         )}
         <Button type="submit" size="lg" className="w-full" disabled={busy}>

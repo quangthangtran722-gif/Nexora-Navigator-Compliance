@@ -22,9 +22,10 @@ const L = AUTH.login;
 
 export function LoginForm() {
   const router = useRouter();
-  const next = useSearchParams().get("next");
+  const params = useSearchParams();
+  const next = params.get("next");
   const { session, role, loading } = useAuth();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => params.get("email") ?? ""); // từ link "Đăng nhập bằng email này" ở trang đăng ký
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
