@@ -35,7 +35,7 @@ export const LOAI_RELATIONSHIP_LABEL: Record<LoaiRelationship, string> = {
 };
 
 export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {
-  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", khac: "Khác",
+  luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", huong_dan: "Hướng dẫn", khac: "Khác",
 };
 
 export const TRANG_THAI_VAN_BAN_LABEL: Record<TrangThaiVanBan, string> = {

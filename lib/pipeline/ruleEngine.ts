@@ -94,10 +94,42 @@ export function evaluateEntity(input: {
     : { ...base, trang_thai_ap_dung: "ap_dung", ly_do: "da_hieu_luc", dieu_kien: dieuKien };
 }
 
-// Thuộc tính rule engine thấy = customers.thuoc_tinh + "nganh" lấy từ cột customers.nganh (nguồn sự thật,
-// form onboarding có field riêng) → curator viết được điều kiện {"thuoc_tinh":"nganh","toan_tu":"eq","gia_tri":"chung_khoan"}.
-export function thuocTinhRuleEngine(customer: { nganh: string | null; thuoc_tinh: ThuocTinhKhachHang }): ThuocTinhKhachHang {
-  return { ...customer.thuoc_tinh, nganh: customer.nganh ?? customer.thuoc_tinh.nganh ?? null };
+// Thuộc tính rule engine thấy = customers.thuoc_tinh + các CỘT nganh, quy_mo của customers (nguồn sự thật — form
+// onboarding có field riêng, ghi vào cột). Cột thắng JSONB: bản sao cũ trong thuoc_tinh (nếu có) không làm lệch kết quả.
+// → curator viết được {"thuoc_tinh":"nganh","toan_tu":"eq","gia_tri":"chung_khoan"} hay {"thuoc_tinh":"quy_mo",...}.
+export const THUOC_TINH_TU_COT: readonly string[] = ["nganh", "quy_mo"];
+
+export function thuocTinhRuleEngine(customer: {
+  nganh: string | null;
+  quy_mo?: string | null;
+  thuoc_tinh: ThuocTinhKhachHang;
+}): ThuocTinhKhachHang {
+  return {
+    ...customer.thuoc_tinh,
+    nganh: customer.nganh ?? customer.thuoc_tinh.nganh ?? null,
+    quy_mo: customer.quy_mo ?? customer.thuoc_tinh.quy_mo ?? null,
+  };
+}
+
+// Quy tắc 2 — điều kiện của 1 hanh_vi = entity điều kiện nối với nó bằng cạnh (cả 2 đầu đã duyệt):
+//   dieu_kien | nguong —dieu_kien→ hanh_vi,   và   hanh_vi —ap_dung_cho→ chu_the  (hanh_vi KẾ THỪA điều kiện của chủ thể).
+// Entity nối tới mà không có dieu_kien_may_doc (chủ thể chung) không thêm điều kiện nào.
+// hanh_vi không có cạnh nào tới entity mang điều kiện → [] → áp dụng MỌI doanh nghiệp đăng ký lĩnh vực đó.
+export type CanhDieuKien = { hanhViId: string; entityId: string };
+export type EntityDieuKien = { id: string; ten_entity: string; dieu_kien_may_doc: DieuKienMayDoc | null };
+
+export function ghepDieuKien(canh: readonly CanhDieuKien[], entities: readonly EntityDieuKien[]): Map<string, DieuKien[]> {
+  const byId = new Map(entities.map((e) => [e.id, e]));
+  const result = new Map<string, DieuKien[]>();
+  for (const { hanhViId, entityId } of canh) {
+    const e = byId.get(entityId);
+    if (!e?.dieu_kien_may_doc) continue;
+    const list = result.get(hanhViId) ?? [];
+    if (list.some((d) => d.entity_id === entityId)) continue;
+    list.push({ entity_id: entityId, ten_entity: e.ten_entity, dieu_kien_may_doc: e.dieu_kien_may_doc });
+    result.set(hanhViId, list);
+  }
+  return result;
 }
 
 export function todayInVietnam(now = new Date()): string {

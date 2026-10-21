@@ -36,6 +36,16 @@ const THUOC_TINH_HO_SO = [
       "Giá trị lấy từ cột customers.nganh (mã trong bảng nganh) — rule engine tự đọc, form onboarding hỏi ở field Ngành riêng nên không render lại câu này.",
   },
   {
+    ma: "quy_mo",
+    cau_hoi: "Quy mô doanh nghiệp?",
+    kieu: "text",
+    domain: null,
+    lua_chon: ["nho", "vua", "lon"],
+    don_vi: null,
+    mo_ta:
+      "Giá trị lấy từ cột customers.quy_mo — rule engine tự đọc, form onboarding hỏi ở field Quy mô riêng nên không render lại câu này.",
+  },
+  {
     ma: "loai_hinh_kinh_doanh",
     cau_hoi: "Đơn vị của bạn thuộc loại hình nào?",
     kieu: "text",
@@ -235,6 +245,7 @@ const NEXORA_THUOC_TINH = {
   ban_hang_qua_san_tmdt: false,
   co_san_tmdt: false,
   doanh_thu_tap_doan: 0,
+  co_giay_phep_kinh_doanh_chung_khoan: false,
   co_tra_luong: true,
   co_lao_dong_hop_dong_duoi_3_thang: true,
   ky_khai_thue_gtgt: "quy",
@@ -272,6 +283,7 @@ const CUSTOMERS = [
       co_tra_luong: true,
       co_lao_dong_hop_dong_duoi_3_thang: null,
       ky_khai_thue_gtgt: "quy",
+      co_giay_phep_kinh_doanh_chung_khoan: false,
       co_san_tmdt: false,
       doanh_thu_tap_doan: 0,
     },
@@ -356,11 +368,17 @@ await doiAbcSangNexora();
 
 // Thuộc tính thêm vào từ điển sau khi khách hàng đã seed → điền cho khách hàng cũ, CHỈ key còn thiếu
 // (không đè câu trả lời đã có). Không áp dụng cho DN nào → để rule engine ra khong_ap_dung thay vì chua_du_thong_tin.
-const THUOC_TINH_BO_SUNG = { co_san_tmdt: false, doanh_thu_tap_doan: 0 };
-for (const id of [SMILE_ID, THIENPHU_ID]) {
+// co_giay_phep_kinh_doanh_chung_khoan = false cho DN không phải công ty chứng khoán: điều kiện TT 77
+// {"thuoc_tinh":"co_giay_phep_kinh_doanh_chung_khoan","toan_tu":"eq","gia_tri":true} ra khong_ap_dung, không phải hỏi bổ sung.
+const THUOC_TINH_BO_SUNG = {
+  [NEXORA_ID]: { co_giay_phep_kinh_doanh_chung_khoan: false },
+  [SMILE_ID]: { co_san_tmdt: false, doanh_thu_tap_doan: 0, co_giay_phep_kinh_doanh_chung_khoan: false },
+  [THIENPHU_ID]: { co_san_tmdt: false, doanh_thu_tap_doan: 0 },
+};
+for (const [id, boSung] of Object.entries(THUOC_TINH_BO_SUNG)) {
   const row = await step(`đọc thuoc_tinh ${id}`, db.from("customers").select("thuoc_tinh").eq("id", id).maybeSingle());
   if (!row) continue;
-  const thieu = Object.fromEntries(Object.entries(THUOC_TINH_BO_SUNG).filter(([k]) => !(k in row.thuoc_tinh)));
+  const thieu = Object.fromEntries(Object.entries(boSung).filter(([k]) => !(k in row.thuoc_tinh)));
   if (!Object.keys(thieu).length) continue;
   await step(
     `bổ sung ${Object.keys(thieu).join(", ")} cho ${id}`,

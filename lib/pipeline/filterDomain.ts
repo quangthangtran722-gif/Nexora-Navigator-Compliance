@@ -5,14 +5,16 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError, fromDb } from "@/lib/api/http";
 import {
   evaluateEntity,
+  ghepDieuKien,
   thuocTinhRuleEngine,
   todayInVietnam,
   type DanhGia,
   type DieuKien,
-  type DieuKienMayDoc,
+  type EntityDieuKien,
   type ThuocTinhKhachHang,
   type TrangThaiApDung,
 } from "./ruleEngine";
+import { phanBoDiagnostic } from "./phanBoDiagnostic";
 import { failRun, finishRun, startRun } from "./runs";
 
 export type FilterKetQua = {
@@ -49,9 +51,9 @@ export async function filterDomain(
 ): Promise<FilterResult> {
   const { data: customer, error } = await supabase
     .from("customers")
-    .select("id, nganh, domains, thuoc_tinh")
+    .select("id, nganh, quy_mo, domains, thuoc_tinh")
     .eq("id", customerId)
-    .maybeSingle<{ id: string; nganh: string | null; domains: string[]; thuoc_tinh: ThuocTinhKhachHang }>();
+    .maybeSingle<{ id: string; nganh: string | null; quy_mo: string | null; domains: string[]; thuoc_tinh: ThuocTinhKhachHang }>();
   if (error) throw fromDb(error);
   if (!customer) throw new ApiError(404, "Không tìm thấy khách hàng", "PT404");
 
@@ -74,7 +76,7 @@ export async function filterDomain(
     const hanhVi = await loadHanhVi(supabase, options.entityId);
     const dieuKienTheoHanhVi = await loadDieuKien(supabase, hanhVi.map((h) => h.id));
     const departments = await loadDepartments(supabase, customerId);
-    const existing = await loadDiagnostics(supabase, customerId, hanhVi.map((h) => h.id));
+    const existing = await loadDiagnostics(supabase, customerId, options.entityId ? [options.entityId] : null);
 
     const ketQua: FilterKetQua[] = [];
     for (const h of hanhVi) {
@@ -103,7 +105,11 @@ export async function filterDomain(
       trace.push({ entity_id: h.id, ten_entity: h.ten_entity, so_hieu: h.chunk.van_ban.so_hieu, ...danhGia, diagnostic_ids: ids, ghi_chu: ghiChu });
     }
 
-    await finishRun(supabase, runId, { ket_qua: trace });
+    // Quét toàn bộ: diagnostic của entity không còn là hanh_vi đã duyệt thuộc văn bản active (văn bản bị gỡ /
+    // hết hiệu lực) mà còn cho_duyet → khong_ap_dung, không để task mồ côi treo trên hộp thư.
+    const moCoi = options.entityId ? [] : await donMoCoi(supabase, runId, existing, new Set(hanhVi.map((h) => h.id)));
+
+    await finishRun(supabase, runId, { ket_qua: trace, diagnostic_mo_coi: moCoi });
     return { run_id: runId, ket_qua: ketQua };
   } catch (err) {
     await failRun(supabase, runId, err, { ket_qua: trace });
@@ -132,11 +138,10 @@ async function loadHanhVi(supabase: SupabaseClient, entityId?: string): Promise<
   return data;
 }
 
-// Quy tắc 2: dieu_kien/nguong —dieu_kien→ hanh_vi, và hanh_vi —ap_dung_cho→ chu_the có dieu_kien_may_doc.
-// Chỉ dùng cạnh mà cả 2 đầu đã duyệt.
+// Quy tắc 2 (ghép điều kiện ở ruleEngine.ghepDieuKien): đọc cạnh dieu_kien → hanh_vi và hanh_vi ap_dung_cho → chu_the,
+// rồi entity điều kiện đã duyệt.
 async function loadDieuKien(supabase: SupabaseClient, hanhViIds: string[]): Promise<Map<string, DieuKien[]>> {
-  const result = new Map<string, DieuKien[]>();
-  if (!hanhViIds.length) return result;
+  if (!hanhViIds.length) return new Map();
 
   const [incoming, outgoing] = await Promise.all([
     supabase
@@ -154,33 +159,23 @@ async function loadDieuKien(supabase: SupabaseClient, hanhViIds: string[]): Prom
   if (incoming.error) throw fromDb(incoming.error);
   if (outgoing.error) throw fromDb(outgoing.error);
 
-  // [hanh_vi, entity điều kiện]
-  const pairs: [string, string][] = [
-    ...incoming.data.map((r) => [r.target_entity_id as string, r.source_entity_id as string] as [string, string]),
-    ...outgoing.data.map((r) => [r.source_entity_id as string, r.target_entity_id as string] as [string, string]),
+  const canh = [
+    ...incoming.data.map((r) => ({ hanhViId: r.target_entity_id as string, entityId: r.source_entity_id as string })),
+    ...outgoing.data.map((r) => ({ hanhViId: r.source_entity_id as string, entityId: r.target_entity_id as string })),
   ];
-  const condIds = [...new Set(pairs.map(([, c]) => c))];
-  if (!condIds.length) return result;
+  const condIds = [...new Set(canh.map((c) => c.entityId))];
+  if (!condIds.length) return new Map();
 
   const { data: conds, error } = await supabase
     .from("entities")
-    .select("id, ten_entity, loai_entity, dieu_kien_may_doc")
+    .select("id, ten_entity, dieu_kien_may_doc")
     .in("id", condIds)
     .eq("trang_thai_duyet", "da_duyet")
     .in("loai_entity", ["dieu_kien", "nguong", "chu_the"])
-    .not("dieu_kien_may_doc", "is", null);
+    .not("dieu_kien_may_doc", "is", null)
+    .returns<EntityDieuKien[]>();
   if (error) throw fromDb(error);
-  const byId = new Map(conds.map((c) => [c.id as string, c]));
-
-  for (const [hanhViId, condId] of pairs) {
-    const c = byId.get(condId);
-    if (!c) continue;
-    const list = result.get(hanhViId) ?? [];
-    if (list.some((d) => d.entity_id === condId)) continue;
-    list.push({ entity_id: condId, ten_entity: c.ten_entity as string, dieu_kien_may_doc: c.dieu_kien_may_doc as DieuKienMayDoc });
-    result.set(hanhViId, list);
-  }
-  return result;
+  return ghepDieuKien(canh, conds);
 }
 
 async function loadDepartments(supabase: SupabaseClient, customerId: string) {
@@ -193,20 +188,40 @@ async function loadDepartments(supabase: SupabaseClient, customerId: string) {
   return data as { id: string; slug_phong_ban: string }[];
 }
 
-async function loadDiagnostics(supabase: SupabaseClient, customerId: string, entityIds: string[]): Promise<DiagnosticRow[]> {
-  if (!entityIds.length) return [];
-  const { data, error } = await supabase
+// entityIds = null → mọi diagnostic của khách hàng
+async function loadDiagnostics(supabase: SupabaseClient, customerId: string, entityIds: string[] | null): Promise<DiagnosticRow[]> {
+  let query = supabase
     .from("diagnostics")
     .select("id, entity_id, department_id, trang_thai_ap_dung, thuoc_tinh_thieu, trang_thai_duyet")
-    .eq("customer_id", customerId)
-    .in("entity_id", entityIds);
+    .eq("customer_id", customerId);
+  if (entityIds) query = query.in("entity_id", entityIds);
+  const { data, error } = await query;
   if (error) throw fromDb(error);
   return data as DiagnosticRow[];
+}
+
+async function datKhongApDung(supabase: SupabaseClient, runId: string, ids: string[]): Promise<void> {
+  if (!ids.length) return;
+  const { error } = await supabase
+    .from("diagnostics")
+    .update({ trang_thai_ap_dung: "khong_ap_dung", thuoc_tinh_thieu: [], filter_run_id: runId })
+    .in("id", ids)
+    .eq("trang_thai_duyet", "cho_duyet");
+  if (error) throw fromDb(error);
+}
+
+async function donMoCoi(supabase: SupabaseClient, runId: string, existing: DiagnosticRow[], hanhViIds: Set<string>) {
+  const moCoi = existing.filter(
+    (d) => !hanhViIds.has(d.entity_id) && d.trang_thai_duyet === "cho_duyet" && d.trang_thai_ap_dung !== "khong_ap_dung",
+  );
+  await datKhongApDung(supabase, runId, moCoi.map((d) => d.id));
+  return moCoi.map((d) => ({ diagnostic_id: d.id, entity_id: d.entity_id, ly_do: "entity_khong_con_hieu_luc" }));
 }
 
 // Quy tắc 5 + vòng đời diagnostic (CONTRACT.md §3.6):
 //   - khong_ap_dung: không tạo mới; row cũ còn cho_duyet → đổi sang khong_ap_dung (giữ lịch sử).
 //   - còn lại: 1 row / phòng có slug ∈ primary_departments (không có → ban_giam_doc; không có nốt → không tạo).
+//     Row cũ của phòng không còn khớp: chuyển sang phòng đích còn thiếu, thừa → khong_ap_dung (phanBoDiagnostic.ts).
 //   - row đã duyệt/từ chối bị DB khóa → giữ nguyên, chỉ báo lại id.
 async function syncDiagnostics(
   supabase: SupabaseClient,
@@ -223,7 +238,7 @@ async function syncDiagnostics(
   const ids = new Set<string>();
   let ghiChu: string | null = null;
 
-  const capNhat = async (d: DiagnosticRow) => {
+  const capNhat = async (d: DiagnosticRow, departmentId = d.department_id) => {
     ids.add(d.id);
     if (d.trang_thai_duyet !== "cho_duyet") return;
     const { error } = await supabase
@@ -232,6 +247,7 @@ async function syncDiagnostics(
         trang_thai_ap_dung: danhGia.trang_thai_ap_dung,
         thuoc_tinh_thieu: danhGia.thuoc_tinh_thieu,
         filter_run_id: ctx.runId,
+        ...(departmentId !== d.department_id ? { department_id: departmentId } : {}),
       })
       .eq("id", d.id)
       .eq("trang_thai_duyet", "cho_duyet");
@@ -251,23 +267,20 @@ async function syncDiagnostics(
       : "Không có phòng ban khớp và không có Ban Giám đốc → không tạo diagnostic";
   }
 
-  const moi = [];
-  for (const dept of targets) {
-    const d = existing.find((x) => x.department_id === dept.id);
-    if (d) await capNhat(d);
-    else
-      moi.push({
-        customer_id: ctx.customerId,
-        entity_id: ctx.hanhVi.id,
-        department_id: dept.id,
-        trang_thai_ap_dung: danhGia.trang_thai_ap_dung,
-        thuoc_tinh_thieu: danhGia.thuoc_tinh_thieu,
-        filter_run_id: ctx.runId,
-      });
-  }
-  // Row cũ của phòng không còn khớp (khách hàng đổi slug phòng) vẫn được cập nhật trạng thái
-  for (const d of existing) if (!targets.some((t) => t.id === d.department_id)) await capNhat(d);
+  const keHoach = phanBoDiagnostic(existing, targets.map((t) => t.id));
+  for (const { id, department_id } of keHoach.capNhat) await capNhat(existing.find((d) => d.id === id)!, department_id);
+  // Dòng cũ thừa (phòng không còn nhận việc) → khong_ap_dung; dòng đã khóa giữ nguyên, chỉ báo id
+  await datKhongApDung(supabase, ctx.runId, keHoach.thua);
+  for (const d of existing) if (!keHoach.capNhat.some((c) => c.id === d.id) && !keHoach.thua.includes(d.id)) ids.add(d.id);
 
+  const moi = keHoach.taoMoi.map((departmentId) => ({
+    customer_id: ctx.customerId,
+    entity_id: ctx.hanhVi.id,
+    department_id: departmentId,
+    trang_thai_ap_dung: danhGia.trang_thai_ap_dung,
+    thuoc_tinh_thieu: danhGia.thuoc_tinh_thieu,
+    filter_run_id: ctx.runId,
+  }));
   if (moi.length) {
     const { data, error } = await supabase.from("diagnostics").insert(moi).select("id");
     if (error) throw fromDb(error);

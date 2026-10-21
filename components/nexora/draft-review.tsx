@@ -16,7 +16,7 @@ import { updateEntity } from "@/lib/data/mutations";
 import { getChunks, getEntities, getEntityGraph, getNerExtractionSummary, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
 import { rpc } from "@/lib/data/rpc";
 import { useQuery } from "@/lib/data/use-query";
-import { thieuDieuKienMayDoc } from "@/lib/entity-rules";
+import { chuTheChuaDieuKien, thieuDieuKienMayDoc } from "@/lib/entity-rules";
 import { formatDieuKien } from "@/lib/thuoc-tinh-format";
 import type { DieuKienMayDoc, Entity, EntityGraphRow, NerExtractionSummary, ThuocTinhHoSo } from "@/lib/types";
 
@@ -112,13 +112,14 @@ function ChunkHeader({
   const handleError = useErrorHandler();
   const [forbidden, setForbidden] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
-  const blocked = s.so_dieu_kien_chua_may_doc > 0;
+  // Duyệt tất cả bỏ qua entity cần điều kiện mà chưa có (dieu_kien/nguong/chu_the) — curator xử lý riêng từng cái
+  const boQua = s.so_can_dieu_kien;
 
   async function approveChunk() {
     setBusy(true);
     const { data, error } = await rpc("approve_chunk", { p_chunk_id: s.chunk_id });
     setBusy(false);
-    setMsg(error ? { ok: false, text: handleError(error, { onReload: onApproved, onForbidden: () => setForbidden(true) })! } : { ok: true, text: `Đã duyệt ${data} entity.` });
+    setMsg(error ? { ok: false, text: handleError(error, { onReload: onApproved, onForbidden: () => setForbidden(true) })! } : { ok: true, text: `Đã duyệt ${data} entity.${boQua ? ` Bỏ qua ${boQua} entity cần điều kiện — duyệt riêng từng cái.` : ""}` });
     onApproved();
   }
 
@@ -136,14 +137,15 @@ function ChunkHeader({
           </p>
         </div>
         {!forbidden && (
-          <Button onClick={approveChunk} disabled={busy || blocked || s.so_cho_duyet === 0}>
-            <CheckCheck /> Duyệt tất cả còn lại ({s.so_cho_duyet})
+          <Button onClick={approveChunk} disabled={busy || s.so_cho_duyet - boQua <= 0}>
+            <CheckCheck /> Duyệt tất cả còn lại ({s.so_cho_duyet - boQua})
           </Button>
         )}
       </div>
-      {blocked && (
+      {boQua > 0 && (
         <p className="flex items-center gap-1.5 text-xs text-status-ap-dung">
-          <TriangleAlert className="size-3.5" aria-hidden /> Còn {s.so_dieu_kien_chua_may_doc} điều kiện/ngưỡng chưa có điều kiện máy đọc — điền xong mới duyệt cả chunk được.
+          <TriangleAlert className="size-3.5" aria-hidden /> {boQua} chủ thể/điều kiện/ngưỡng chưa có điều kiện máy đọc — &quot;Duyệt tất cả&quot; sẽ bỏ qua,
+          cần điền điều kiện (hoặc xác nhận chủ thể chung) rồi duyệt riêng.
         </p>
       )}
       {msg && (
@@ -186,10 +188,17 @@ function EntityReviewCard({
 
   const locked = e.trang_thai_duyet !== "cho_duyet";
   const missingDk = thieuDieuKienMayDoc(e);
+  const chuTheChung = chuTheChuaDieuKien(e);
+  const [xacNhanChung, setXacNhanChung] = useState(false);
 
   async function decide(quyet_dinh: "da_duyet" | "tu_choi") {
     setBusy(true);
-    const { error } = await rpc("approve_entity", { p_entity_id: e.id, p_quyet_dinh: quyet_dinh, p_ghi_chu: ghiChu.trim() || undefined });
+    const { error } = await rpc("approve_entity", {
+      p_entity_id: e.id,
+      p_quyet_dinh: quyet_dinh,
+      p_ghi_chu: ghiChu.trim() || undefined,
+      p_ap_dung_moi_doanh_nghiep: quyet_dinh === "da_duyet" && chuTheChung ? true : undefined,
+    });
     setBusy(false);
     setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
     if (!error) setRejecting(false);
@@ -206,7 +215,7 @@ function EntityReviewCard({
   }
 
   return (
-    <Card className={missingDk && !locked ? "ring-2 ring-status-ap-dung/40" : undefined}>
+    <Card className={(missingDk || chuTheChung) && !locked ? "ring-2 ring-status-ap-dung/40" : undefined}>
       <CardHeader>
         <CardTitle className="text-base">{e.ten_entity}</CardTitle>
         <CardDescription className="flex flex-wrap items-center gap-2">
@@ -262,7 +271,7 @@ function EntityReviewCard({
           <div className="space-y-2 rounded-lg border p-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-xs font-medium text-muted-foreground">
-                Điều kiện máy đọc {e.loai_entity === "chu_the" ? "(không bắt buộc)" : "(bắt buộc khi duyệt)"}
+                Điều kiện máy đọc {e.loai_entity === "chu_the" ? "(điền, hoặc xác nhận chủ thể chung)" : "(bắt buộc khi duyệt)"}
               </p>
               {!locked && !forbidden && !editingDk && (
                 <Button size="xs" variant="outline" onClick={() => setEditingDk(true)}>
@@ -278,8 +287,12 @@ function EntityReviewCard({
                 <code className="mt-1 block text-xs break-all text-muted-foreground">{JSON.stringify(e.dieu_kien_may_doc)}</code>
               </p>
             ) : (
-              <p className={missingDk ? "text-sm text-status-ap-dung" : "text-sm text-muted-foreground"}>
-                {missingDk ? "Chưa có — cần điền trước khi duyệt." : "Chưa có."}
+              <p className={missingDk || chuTheChung ? "text-sm text-status-ap-dung" : "text-sm text-muted-foreground"}>
+                {missingDk
+                  ? "Chưa có — cần điền trước khi duyệt."
+                  : chuTheChung
+                    ? "Chưa có — mọi hành vi nối tới chủ thể này sẽ áp dụng cho MỌI doanh nghiệp."
+                    : "Chưa có."}
               </p>
             )}
           </div>
@@ -318,7 +331,13 @@ function EntityReviewCard({
               </>
             ) : (
               <>
-                <Button size="sm" disabled={busy || missingDk} onClick={() => decide("da_duyet")}>
+                {chuTheChung && (
+                  <label className="flex w-full items-center gap-2 text-sm">
+                    <input type="checkbox" checked={xacNhanChung} onChange={(ev) => setXacNhanChung(ev.target.checked)} />
+                    Chủ thể chung — áp dụng cho mọi doanh nghiệp (không cần điều kiện)
+                  </label>
+                )}
+                <Button size="sm" disabled={busy || missingDk || (chuTheChung && !xacNhanChung)} onClick={() => decide("da_duyet")}>
                   Duyệt
                 </Button>
                 <Button size="sm" variant="destructive" disabled={busy} onClick={() => setRejecting(true)}>

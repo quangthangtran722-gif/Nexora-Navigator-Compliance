@@ -26,6 +26,7 @@ import { onboardingSchema, onboardingStep1, onboardingStep2, onboardingStep3, on
 import type { GiaTriThuocTinh } from "@/lib/thuoc-tinh-format";
 import type { QuyMo, TrangThaiApDung } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { THUOC_TINH_TU_COT } from "@/lib/pipeline/ruleEngine";
 
 /*
  * Onboarding 4 bước — ghi customers (CONTRACT §3.1) của khách hàng đang đăng nhập + departments (§3.3), rồi chạy rule engine ở backend
@@ -85,8 +86,8 @@ export function OnboardingForm() {
   const setDept = (i: number, patch: Partial<DeptState>) => update({ departments: data.departments.map((d, j) => (j === i ? { ...d, ...patch } : d)) });
 
   // Câu hỏi: dùng chung (domain null) + theo lĩnh vực đã chọn
-  // "nganh" đã có field riêng ở bước 1 (cột customers.nganh) → không hỏi lại
-  const questions = dict.filter((t) => t.ma !== "nganh" && (t.domain === null || data.domains.includes(t.domain)));
+  // nganh, quy_mo đã có field riêng ở bước 1 (cột customers) → không hỏi lại
+  const questions = dict.filter((t) => !THUOC_TINH_TU_COT.includes(t.ma) && (t.domain === null || data.domains.includes(t.domain)));
 
   // State form → payload đúng shape CONTRACT
   function toPayload() {

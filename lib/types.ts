@@ -28,7 +28,7 @@ export type LoaiEntity =
 
 export type LoaiRelationship = "bao_ham" | "tham_chieu" | "thay_the" | "dieu_kien" | "che_tai_cua" | "ap_dung_cho";
 
-export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "khac";
+export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "huong_dan" | "khac";
 
 export type TrangThaiVanBan = "draft" | "active" | "replaced";
 
@@ -272,7 +272,8 @@ export type NerExtractionSummary = {
   so_cho_duyet: number;
   so_da_duyet: number;
   so_tu_choi: number;
-  so_dieu_kien_chua_may_doc: number; // > 0 thì approve_chunk sẽ bị từ chối
+  so_dieu_kien_chua_may_doc: number; // dieu_kien/nguong cho_duyet chưa có dieu_kien_may_doc
+  so_can_dieu_kien: number; // dieu_kien/nguong/chu_the cho_duyet chưa có dieu_kien_may_doc — approve_chunk bỏ qua (migration 005)
   theo_loai: Partial<Record<LoaiEntity, number>>;
   so_relationship: number;
   so_pending_link: number;

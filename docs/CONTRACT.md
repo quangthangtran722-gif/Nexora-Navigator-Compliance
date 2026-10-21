@@ -392,7 +392,8 @@ export type NerExtractionSummary = {
   chunk_id: string; van_ban_id: string; so_hieu: string; thu_tu: number;
   dieu_khoan_range: string | null; trang_thai_chunk: TrangThaiChunk;
   so_entity: number; so_cho_duyet: number; so_da_duyet: number; so_tu_choi: number;
-  so_dieu_kien_chua_may_doc: number;          // > 0 thì approve_chunk sẽ bị từ chối
+  so_dieu_kien_chua_may_doc: number;          // dieu_kien/nguong cho_duyet chưa có dieu_kien_may_doc
+  so_can_dieu_kien: number;                   // + chu_the — approve_chunk bỏ qua các entity này (migration 005)
   theo_loai: Partial<Record<LoaiEntity, number>>;
   so_relationship: number; so_pending_link: number;
 };
@@ -434,6 +435,8 @@ Enum Postgres `public.loai_van_ban`, **bắt buộc** khi tạo văn bản (khô
 | `huong_dan` | Hướng dẫn | Công văn/văn bản hướng dẫn nghiệp vụ của cơ quan nhà nước (vd công văn của Tổng cục Thuế) — không phải văn bản quy phạm pháp luật nhưng doanh nghiệp vẫn cần theo. |
 | `khac` | Khác | Loại chưa có ở trên, hoặc dữ liệu demo. |
 
+Form tải văn bản điền sẵn `so_hieu` / `ten_van_ban` / `loai_van_ban` bằng `parseVanBanHeader(noiDung, tenFile)` (`lib/van-ban-parse.ts`): đọc "Luật số: …", "Số: …" và dòng tên in hoa ở phần đầu nội dung trước, tên file chỉ là fallback.
+
 Dữ liệu demo: chỉ dùng văn bản thật do curator tải lên (vd `77/2025/TT-BTC`, `108/2025/QH15`). Văn bản mẫu tự viết `DEMO-01/2026` / `TT-DEMO-01/2026` đã bỏ khỏi seed. Cross-reference: extract ra cạnh `tham_chieu` pending (`target_ref_text`), curator nối sang entity của văn bản khác bằng cách cập nhật `target_entity_id`.
 
 ---
@@ -468,7 +471,8 @@ Gọi bằng supabase-js với session người dùng (không dùng service role
 
 ```ts
 // Curator duyệt 1 entity
-supabase.rpc("approve_entity", { p_entity_id: string, p_quyet_dinh: "da_duyet" | "tu_choi", p_ghi_chu?: string }) // → Entity
+supabase.rpc("approve_entity", { p_entity_id: string, p_quyet_dinh: "da_duyet" | "tu_choi", p_ghi_chu?: string,
+                                 p_ap_dung_moi_doanh_nghiep?: boolean }) // → Entity
 
 // Curator duyệt TẤT CẢ entity còn cho_duyet trong 1 chunk (từ chối lẻ trước, rồi duyệt phần còn lại)
 supabase.rpc("approve_chunk", { p_chunk_id: string, p_ghi_chu?: string }) // → number (số entity vừa duyệt)
@@ -478,6 +482,11 @@ supabase.rpc("approve_diagnostic", { p_diagnostic_id: string, p_quyet_dinh: "da_
 ```
 
 Chunk tự chuyển `hoan_tat` khi không còn entity `cho_duyet`.
+
+Điều kiện máy đọc khi duyệt (migration 005):
+- `dieu_kien` / `nguong` chưa có `dieu_kien_may_doc` → `approve_entity` trả `PT400`.
+- `chu_the` chưa có `dieu_kien_may_doc` → `PT400`, trừ khi `p_ap_dung_moi_doanh_nghiep: true` (curator xác nhận "chủ thể chung — áp dụng mọi doanh nghiệp"; ghi vào `approvals.ghi_chu`). Mọi hanh_vi nối tới chủ thể không điều kiện áp dụng cho mọi doanh nghiệp đăng ký lĩnh vực đó.
+- `approve_chunk` **bỏ qua** (để `cho_duyet`) mọi entity 3 loại trên chưa có điều kiện, không báo lỗi; số bị bỏ qua = `ner_extraction_summary.so_can_dieu_kien`.
 
 ---
 
@@ -552,5 +561,7 @@ Với mỗi entity `hanh_vi` đã duyệt, thuộc văn bản `active`:
 3. Có điều kiện sai → `khong_ap_dung`. Không sai nhưng thiếu dữ liệu (key thiếu/null) → `chua_du_thong_tin` + `thuoc_tinh_thieu`. Tất cả đúng (hoặc không có điều kiện) → bước 4.
 4. Ngày hiệu lực = `entity.ngay_co_hieu_luc ?? van_ban.ngay_hieu_luc`; > hôm nay → `sap_ap_dung`, ngược lại `ap_dung`.
 
-   _Thuộc tính rule engine thấy_ = `customers.thuoc_tinh` + key ảo `nganh` lấy từ cột `customers.nganh` (`thuocTinhRuleEngine`). Curator viết được `{ "thuoc_tinh": "nganh", "toan_tu": "eq", "gia_tri": "chung_khoan" }` (từ điển có row `nganh`); form onboarding / Tổng quan **không** render row `nganh` vì đã có field Ngành riêng.
-5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban).
+   _Thuộc tính rule engine thấy_ = `customers.thuoc_tinh` + key `nganh`, `quy_mo` lấy từ **cột** `customers.nganh` / `customers.quy_mo` (`thuocTinhRuleEngine`; cột thắng bản sao trong JSONB nếu có — không cần, và không nên, chép cột vào `thuoc_tinh`). Curator viết được `{ "thuoc_tinh": "nganh", "toan_tu": "eq", "gia_tri": "chung_khoan" }` hay `{ "thuoc_tinh": "quy_mo", "toan_tu": "in", "gia_tri": ["nho", "vua"] }` (từ điển có row `nganh`, `quy_mo`); form onboarding / Tổng quan **không** render 2 row này vì đã có field riêng (`THUOC_TINH_TU_COT`).
+   _Kế thừa điều kiện_: hanh_vi nhận điều kiện của chủ thể qua cạnh `ap_dung_cho` (cố ý — test ở `tests/ruleEngine.test.ts`). hanh_vi không có cạnh nào tới entity mang điều kiện → áp dụng mọi doanh nghiệp; vì vậy duyệt chủ thể không điều kiện phải xác nhận rõ (§5).
+5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban). Dòng `cho_duyet` cũ của phòng không còn khớp (khách hàng thêm/đổi phòng) được **chuyển** `department_id` sang phòng đích còn thiếu; còn thừa → `khong_ap_dung` (không thành 2 task trùng).
+6. Quét toàn bộ (không truyền `entity_id`): diagnostic `cho_duyet` của entity không còn là hanh_vi đã duyệt thuộc văn bản `active` → `khong_ap_dung` (liệt kê ở `pipeline_runs.output.diagnostic_mo_coi`).
