@@ -55,6 +55,7 @@ export type Json = string | number | boolean | null | Json[] | { [k: string]: Js
 export type Customer = {
   id: string;
   ten_cong_ty: string;
+  ma_so_thue?: string | null; // migration 006; optional để không vỡ mock/seed cũ
   nganh: string | null; // slug tự do, vd "thuong_mai_dien_tu"
   quy_mo: QuyMo | null;
   domains: string[]; // lĩnh vực đăng ký theo dõi; [] = chưa chọn

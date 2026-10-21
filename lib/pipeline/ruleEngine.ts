@@ -132,6 +132,36 @@ export function ghepDieuKien(canh: readonly CanhDieuKien[], entities: readonly E
   return result;
 }
 
+// Lõi quét DUY NHẤT — mọi điểm kích hoạt đều đi qua đây (filterDomain.ts):
+//   chiều thuận  — văn bản mới được duyệt → nút "Quét lại khách hàng hiện có" (/api/pipeline/rescan), từng khách hàng;
+//   chiều ngược  — doanh nghiệp mới onboard (/api/onboard) → toàn bộ văn bản active cho 1 khách hàng;
+//   hỏi bổ sung — 1 entity (/api/pipeline/filter với entity_id).
+// Kết quả của 1 hanh_vi chỉ phụ thuộc chính nó + điều kiện nối với nó + hồ sơ, không phụ thuộc tập đang quét
+// → 2 chiều ra cùng một tập (tests/doiXung.test.ts).
+export type HanhViQuet = { id: string; domain: string; ngayHieuLuc: string };
+
+export function quetKhachHang(input: {
+  hanhVi: readonly HanhViQuet[];
+  dieuKienTheoHanhVi: ReadonlyMap<string, readonly DieuKien[]>;
+  customerDomains: readonly string[];
+  thuocTinh: ThuocTinhKhachHang;
+  homNay: string;
+}): Map<string, DanhGia> {
+  return new Map(
+    input.hanhVi.map((h) => [
+      h.id,
+      evaluateEntity({
+        domain: h.domain,
+        customerDomains: input.customerDomains,
+        thuocTinh: input.thuocTinh,
+        dieuKien: input.dieuKienTheoHanhVi.get(h.id) ?? [],
+        ngayHieuLuc: h.ngayHieuLuc,
+        homNay: input.homNay,
+      }),
+    ]),
+  );
+}
+
 export function todayInVietnam(now = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh" }).format(now);
 }

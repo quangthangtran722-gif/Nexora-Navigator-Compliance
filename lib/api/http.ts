@@ -7,6 +7,7 @@ export class ApiError extends Error {
     readonly status: number,
     message: string,
     readonly code?: string,
+    readonly chiTiet?: unknown, // lỗi theo từng trường (vd /api/onboard) → { error, code, chi_tiet }
   ) {
     super(message);
   }
@@ -34,7 +35,10 @@ export function fromDb(error: PostgrestLikeError): ApiError {
 
 export function errorResponse(err: unknown): Response {
   if (err instanceof ApiError) {
-    return Response.json({ error: err.message, ...(err.code ? { code: err.code } : {}) }, { status: err.status });
+    return Response.json(
+      { error: err.message, ...(err.code ? { code: err.code } : {}), ...(err.chiTiet !== undefined ? { chi_tiet: err.chiTiet } : {}) },
+      { status: err.status },
+    );
   }
   console.error(err);
   return Response.json({ error: "Lỗi máy chủ" }, { status: 500 });

@@ -119,6 +119,7 @@ export type GiaiDoanThongBao = "cho_duyet" | "hoi_bo_sung" | "da_giao";
 export type Customer = {
   id: string;
   ten_cong_ty: string;
+  ma_so_thue: string | null;     // migration 006: 10 số hoặc 10 số-3 số, unique
   nganh: string | null;          // slug tự do, vd "thuong_mai_dien_tu" — tên hiển thị tra bảng `nganh` (§3.10)
   quy_mo: QuyMo | null;
   domains: string[];             // lĩnh vực đăng ký theo dõi; [] = chưa chọn
@@ -531,7 +532,7 @@ Lỗi: `{ error: string; code?: string }` với status như mục 6.
 
 **Ghi chú triển khai** (bổ sung 18/10/2026; shape request/response ở trên giữ nguyên):
 
-- **Xác thực:** gửi header `Authorization: Bearer <session.access_token>`. Lấy token qua `(await supabase.auth.getSession()).data.session.access_token`. Thiếu token hoặc token hết hạn → `401 PT401`. Route chạy bằng chính JWT người gọi nên RLS áp dụng y như khi gọi Supabase trực tiếp; route không dùng service role.
+- **Xác thực:** gửi header `Authorization: Bearer <session.access_token>`. Lấy token qua `(await supabase.auth.getSession()).data.session.access_token`. Thiếu token hoặc token hết hạn → `401 PT401`. Route chạy bằng chính JWT người gọi nên RLS áp dụng y như khi gọi Supabase trực tiếp; route không dùng service role (ngoại lệ duy nhất: bước quét của `POST /api/onboard` cho tài khoản vừa đăng ký, xem §8 và `lib/api/admin.ts`).
 - **Quyền:**
   - `extract`, `rescan`: chỉ curator (`403 PT403`).
   - `filter`, `generate`: curator, hoặc khách hàng có `customer_id` trùng với `customer_id` trong body.
@@ -565,3 +566,52 @@ Với mỗi entity `hanh_vi` đã duyệt, thuộc văn bản `active`:
    _Kế thừa điều kiện_: hanh_vi nhận điều kiện của chủ thể qua cạnh `ap_dung_cho` (cố ý — test ở `tests/ruleEngine.test.ts`). hanh_vi không có cạnh nào tới entity mang điều kiện → áp dụng mọi doanh nghiệp; vì vậy duyệt chủ thể không điều kiện phải xác nhận rõ (§5).
 5. Tạo/cập nhật 1 diagnostic cho mỗi `department` có `slug_phong_ban ∈ entity.primary_departments`. Doanh nghiệp không có phòng nào khớp → giao phòng `ban_giam_doc`; không có cả phòng đó → không tạo, `diagnostic_ids: []` (UI nhắc khách hàng thêm phòng ban). Dòng `cho_duyet` cũ của phòng không còn khớp (khách hàng thêm/đổi phòng) được **chuyển** `department_id` sang phòng đích còn thiếu; còn thừa → `khong_ap_dung` (không thành 2 task trùng).
 6. Quét toàn bộ (không truyền `entity_id`): diagnostic `cho_duyet` của entity không còn là hanh_vi đã duyệt thuộc văn bản `active` → `khong_ap_dung` (liệt kê ở `pipeline_runs.output.diagnostic_mo_coi`).
+
+**Một hàm lọc, nhiều điểm kích hoạt.** `filter`, `rescan` (chiều thuận: văn bản mới → doanh nghiệp đang có) và `/api/onboard` (chiều ngược: doanh nghiệp mới → mọi văn bản active) đều gọi `filterDomain` → `quetKhachHang` (`lib/pipeline/ruleEngine.ts`). Logic không rẽ nhánh theo điểm kích hoạt; `pipeline_runs.input.kich_hoat` (`filter` | `rescan` | `onboard`) chỉ để audit. Phép thử đối xứng: `tests/doiXung.test.ts` — 2 chiều ra **cùng tập entity** (so cả 4 trạng thái từng entity, không chỉ số lượng).
+
+---
+
+## 8. API onboarding doanh nghiệp (BE-7) — cần migration `006_onboard.sql`
+
+```ts
+// Đăng ký doanh nghiệp + quét ngược ngay. Người gọi: tài khoản mới (chưa gắn doanh nghiệp) hoặc curator (tạo hộ).
+POST /api/onboard
+  body {
+    ten_cong_ty: string;
+    ma_so_thue?: string | null;            // "0312345678" | "0312345678-001"
+    nganh?: string | null;                 // slug, cột riêng
+    quy_mo?: "nho" | "vua" | "lon" | null; // cột riêng
+    domains: string[];                     // ≥ 1
+    thuoc_tinh?: Record<string, boolean | number | string | string[] | null>; // key ∈ thuoc_tinh_ho_so, KHÔNG gửi nganh/quy_mo ở đây
+    phong_ban: { ten_phong_ban: string; slug_phong_ban?: SlugPhongBan; email_head?: string | null }[]; // ≥ 1
+  }
+  → 201 OnboardKetQua                                    // quét xong trong ~8 giây
+  → 202 { khach_hang_id; trang_thai: "dang_quet" }        // quét lâu hơn → chạy tiếp ở nền, hỏi GET bên dưới
+  → 202 { khach_hang_id; trang_thai: "loi_quet"; error }  // doanh nghiệp ĐÃ tạo, quét lỗi → POST /api/onboard/{id}
+  → 202 { khach_hang_id; trang_thai: "can_lam_moi_phien" } // server thiếu service role key → refresh session rồi POST /api/onboard/{id}
+
+GET  /api/onboard/{id}   → 200 OnboardKetQua | 202 { khach_hang_id; trang_thai: "dang_quet" | "chua_quet" }  // đọc lần quét gần nhất, không chạy lại
+POST /api/onboard/{id}   → 200 OnboardKetQua                                                           // quét ngược lại
+
+type OnboardKetQua = {
+  khach_hang_id: string;
+  run_id: string;                     // pipeline_runs filter_domain, input.kich_hoat = "onboard"
+  tong_nghia_vu: number;              // số NGHĨA VỤ (hanh_vi) ap_dung + sap_ap_dung
+  thong_ke: Record<TrangThaiApDung, number>; // đếm theo nghĩa vụ, đủ 4 trạng thái
+  theo_phong_ban: { ten_phong_ban: string; so_nghia_vu: number }[]; // MỌI phòng đã khai (kể cả 0), giảm dần
+  ket_qua: {
+    entity_id: string;
+    ten_entity: string;
+    trang_thai_ap_dung: TrangThaiApDung;
+    ten_phong_ban: string | null;     // 1 dòng / (nghĩa vụ, phòng nhận); null = không áp dụng / chưa đủ thông tin
+    thuoc_tinh_thieu: string[];       // chua_du_thong_tin → hiện câu hỏi bổ sung
+    van_ban: { so_hieu: string; ten_van_ban: string; so_dieu: number | null };
+  }[];                                // sắp: ap_dung → sap_ap_dung → chua_du_thong_tin → khong_ap_dung, rồi số hiệu, số điều
+};
+```
+
+- **Lỗi kiểm tra:** `400 PT400` kèm `chi_tiet: { truong: string; loi: string }[]` — đủ mọi trường sai trong 1 lần (khóa lạ, sai kiểu, ngoài `lua_chon`, MST sai dạng, phòng trùng tên, không đoán được mã phòng). `409` khi mã số thuế đã đăng ký (`chi_tiet` trỏ `ma_so_thue`) hoặc tài khoản đã gắn doanh nghiệp (`PT409` — sửa hồ sơ ở trang Onboarding).
+- **`slug_phong_ban`** không bắt buộc: backend đoán từ tên ("Phòng Tài chính - Kế toán" → `ke_toan`, "Phòng IT" → `cong_nghe`…). Không đoán được → lỗi ở `phong_ban[i].slug_phong_ban`, frontend cho chọn 1 trong 8 mã.
+- **Sau 201 với tài khoản mới:** gọi `supabase.auth.refreshSession()` — JWT mới mới có `customer_id`, các trang khác (RLS) mới thấy doanh nghiệp.
+- **Không có AI trong route này.** Nội dung checklist vẫn do `POST /api/pipeline/generate` viết sau (draft chờ người đầu mối duyệt), như luồng onboarding cũ.
+- **Transaction:** `onboard_customer` tạo `customers` + `departments` + gắn tài khoản trong 1 transaction; lỗi giữa chừng không để lại doanh nghiệp thiếu phòng ban.

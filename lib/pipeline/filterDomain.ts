@@ -4,8 +4,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ApiError, fromDb } from "@/lib/api/http";
 import {
-  evaluateEntity,
   ghepDieuKien,
+  quetKhachHang,
   thuocTinhRuleEngine,
   todayInVietnam,
   type DanhGia,
@@ -24,15 +24,23 @@ export type FilterKetQua = {
   diagnostic_ids: string[];
 };
 
-export type FilterResult = { run_id: string; ket_qua: FilterKetQua[] };
+// ten_entity / dieu_khoan / van_ban: thêm cho /api/onboard hiển thị, frontend cũ bỏ qua được
+export type FilterKetQuaDayDu = FilterKetQua & {
+  ten_entity: string;
+  dieu_khoan: string;
+  van_ban: { so_hieu: string; ten_van_ban: string };
+};
+
+export type FilterResult = { run_id: string; ket_qua: FilterKetQuaDayDu[] };
 
 type HanhViRow = {
   id: string;
   ten_entity: string;
+  dieu_khoan: string;
   domain: string;
   primary_departments: string[];
   ngay_co_hieu_luc: string | null;
-  chunk: { van_ban: { so_hieu: string; ngay_hieu_luc: string; trang_thai: string } };
+  chunk: { van_ban: { so_hieu: string; ten_van_ban: string; ngay_hieu_luc: string; trang_thai: string } };
 };
 
 type DiagnosticRow = {
@@ -47,7 +55,8 @@ type DiagnosticRow = {
 export async function filterDomain(
   supabase: SupabaseClient,
   customerId: string,
-  options: { entityId?: string; parentRunId?: string | null } = {},
+  // kichHoat: điểm kích hoạt, chỉ để ghi log — logic không rẽ nhánh theo nó (BE-8: 2 chiều dùng chung 1 hàm)
+  options: { entityId?: string; parentRunId?: string | null; kichHoat?: "filter" | "rescan" | "onboard"; nguoiKichHoat?: string } = {},
 ): Promise<FilterResult> {
   const { data: customer, error } = await supabase
     .from("customers")
@@ -65,6 +74,8 @@ export async function filterDomain(
     {
       customer_id: customerId,
       entity_id: options.entityId ?? null,
+      kich_hoat: options.kichHoat ?? "filter",
+      ...(options.nguoiKichHoat ? { nguoi_kich_hoat: options.nguoiKichHoat } : {}),
       hom_nay: homNay,
       customer_domains: customer.domains,
       thuoc_tinh: thuocTinh,
@@ -78,16 +89,17 @@ export async function filterDomain(
     const departments = await loadDepartments(supabase, customerId);
     const existing = await loadDiagnostics(supabase, customerId, options.entityId ? [options.entityId] : null);
 
-    const ketQua: FilterKetQua[] = [];
+    const danhGiaTheoHanhVi = quetKhachHang({
+      hanhVi: hanhVi.map((h) => ({ id: h.id, domain: h.domain, ngayHieuLuc: h.ngay_co_hieu_luc ?? h.chunk.van_ban.ngay_hieu_luc })),
+      dieuKienTheoHanhVi,
+      customerDomains: customer.domains,
+      thuocTinh,
+      homNay,
+    });
+
+    const ketQua: FilterKetQuaDayDu[] = [];
     for (const h of hanhVi) {
-      const danhGia = evaluateEntity({
-        domain: h.domain,
-        customerDomains: customer.domains,
-        thuocTinh,
-        dieuKien: dieuKienTheoHanhVi.get(h.id) ?? [],
-        ngayHieuLuc: h.ngay_co_hieu_luc ?? h.chunk.van_ban.ngay_hieu_luc,
-        homNay,
-      });
+      const danhGia = danhGiaTheoHanhVi.get(h.id)!;
       const { ids, ghiChu } = await syncDiagnostics(supabase, {
         customerId,
         runId,
@@ -101,8 +113,20 @@ export async function filterDomain(
         trang_thai_ap_dung: danhGia.trang_thai_ap_dung,
         thuoc_tinh_thieu: danhGia.thuoc_tinh_thieu,
         diagnostic_ids: ids,
+        ten_entity: h.ten_entity,
+        dieu_khoan: h.dieu_khoan,
+        van_ban: { so_hieu: h.chunk.van_ban.so_hieu, ten_van_ban: h.chunk.van_ban.ten_van_ban },
       });
-      trace.push({ entity_id: h.id, ten_entity: h.ten_entity, so_hieu: h.chunk.van_ban.so_hieu, ...danhGia, diagnostic_ids: ids, ghi_chu: ghiChu });
+      trace.push({
+        entity_id: h.id,
+        ten_entity: h.ten_entity,
+        dieu_khoan: h.dieu_khoan,
+        so_hieu: h.chunk.van_ban.so_hieu,
+        ten_van_ban: h.chunk.van_ban.ten_van_ban,
+        ...danhGia,
+        diagnostic_ids: ids,
+        ghi_chu: ghiChu,
+      });
     }
 
     // Quét toàn bộ: diagnostic của entity không còn là hanh_vi đã duyệt thuộc văn bản active (văn bản bị gỡ /
@@ -122,8 +146,8 @@ async function loadHanhVi(supabase: SupabaseClient, entityId?: string): Promise<
   let query = supabase
     .from("entities")
     .select(
-      "id, ten_entity, domain, primary_departments, ngay_co_hieu_luc, " +
-        "chunk:chunk_id!inner (van_ban:van_ban_id!inner (so_hieu, ngay_hieu_luc, trang_thai))",
+      "id, ten_entity, dieu_khoan, domain, primary_departments, ngay_co_hieu_luc, " +
+        "chunk:chunk_id!inner (van_ban:van_ban_id!inner (so_hieu, ten_van_ban, ngay_hieu_luc, trang_thai))",
     )
     .eq("loai_entity", "hanh_vi")
     .eq("trang_thai_duyet", "da_duyet")
