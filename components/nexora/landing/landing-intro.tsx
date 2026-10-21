@@ -6,21 +6,25 @@ import { LogoLockup } from "@/components/nexora/landing/logo-lockup";
 import { LANDING } from "@/lib/copy-landing";
 
 /*
- * Chuyển động mở đầu landing — tổng 2,0s cho cụm logo, rồi nội dung phần đầu hiện dần (0,4s) = 2,4s.
+ * Chuyển động mở đầu landing — 3,5s cho cụm logo, rồi nội dung phần đầu hiện dần (~0,9s).
  * CSS/SVG + Web Animations API (element.animate), KHÔNG thêm thư viện chuyển động.
- *  0–0,3s   nền khối nổi bật phủ kín; logo mark 96px ở giữa hiện dần (scale 0,96 → 1)
- *  0,3–1,1s khung vuông vàng ánh kim tự vẽ quanh logo (SVG stroke-dashoffset)
- *  1,1–1,5s logo thu nhỏ, chữ "NEXORA / COMPLIANCE NAVIGATOR" hiện ra; khung giãn ôm cả cụm
- *  1,5–2,0s khung mờ đi; cả cụm trượt về ĐÚNG vị trí logo trên thanh menu (không biến mất); lớp phủ mờ dần
+ * Các đoạn gối lên nhau và dùng đường cong ease-in-out để chuyển động liền mạch, không dừng-giật:
+ *  0–0,6s     nền khối nổi bật phủ kín; logo mark ~160px ở giữa hiện dần (phóng nhẹ 0,9 → 1)
+ *  0,4–1,7s   khung vuông vàng ánh kim tự vẽ quanh logo (SVG stroke-dashoffset); logo "thở" rất nhẹ
+ *  1,7–2,4s   logo thu nhỏ, khung giãn ôm cả cụm; 2,3–2,75s chữ "NEXORA / COMPLIANCE NAVIGATOR" hiện ra
+ *  2,6–3,5s   khung mờ đi; cả cụm trượt về ĐÚNG vị trí logo trên thanh menu (không biến mất); lớp phủ mờ dần
  * Bấm chuột / nhấn phím bất kỳ → nhảy ngay tới trạng thái cuối. Ai quyết định có chạy hay không: LandingPage
  * (1 lần mỗi phiên qua sessionStorage, bỏ qua hẳn khi prefers-reduced-motion).
  */
 
 export const INTRO_KEY = "nexora-landing-intro"; // sessionStorage: chỉ chạy 1 lần mỗi phiên
-const TONG_MS = 2000;
-const EASE = "cubic-bezier(0.2, 0.8, 0.2, 1)";
+const TONG_MS = 3500;
+const RA = "cubic-bezier(0.16, 1, 0.3, 1)"; // expo-out: hiện ra, dừng êm
+const VAO_RA = "cubic-bezier(0.65, 0, 0.35, 1)"; // ease-in-out: đổi trạng thái giữa chừng
+const BAY = "cubic-bezier(0.76, 0, 0.24, 1)"; // ease-in-out mạnh hơn: trượt về menu
 const MARK = 32; // logo mark trên menu (px)
-const FRAME = 144; // cạnh khung vuông quanh logo 96px
+const FRAME = 232; // cạnh khung vuông quanh logo ~160px
+const t = (ms: number) => ms / TONG_MS; // mốc thời gian → offset keyframe
 
 export function LandingIntro({
   target,
@@ -57,38 +61,32 @@ export function LandingIntro({
       width: `${r.width}px`,
       height: `${r.height}px`,
     });
-    const cx = window.innerWidth / 2;
+    const vw = window.innerWidth;
+    const cx = vw / 2;
     const cy = window.innerHeight / 2;
     // transform-origin 0 0: điểm q trong cụm (toạ độ cục bộ) tới điểm Q trên màn hình với tỉ lệ s
     const dat = (q: { x: number; y: number }, s: number) =>
       `translate(${cx - r.left - s * q.x}px, ${cy - r.top - s * q.y}px) scale(${s})`;
     const tamMark = { x: MARK / 2, y: r.height / 2 };
     const tamCum = { x: r.width / 2, y: r.height / 2 };
-    const S1 = 1.6; // cỡ cụm khi chữ đã hiện, trước khi trượt về menu
+    // Logo ~160px ở giữa; điện thoại thì không quá 40% bề ngang. Cụm có chữ + lề khung 56px phải vừa màn hình (chừa 16px mỗi bên).
+    const S0 = Math.min(5, (vw * 0.4) / MARK);
+    const S1 = Math.min(2.4, (vw - 56 - 32) / r.width);
+    const khung = FRAME * (S0 / 5); // khung co theo logo trên màn nhỏ
+    const sx = (r.width * S1 + 56) / khung;
+    const sy = (r.height * S1 + 56) / khung;
+    frame.style.width = `${khung}px`;
+    frame.style.height = `${khung}px`;
 
     const text = cum.querySelector<HTMLElement>("[data-logo-text]");
     const anims: Animation[] = [
       cum.animate(
         [
-          { offset: 0, transform: dat(tamMark, 3 * 0.96), opacity: 0 },
-          {
-            offset: 0.15,
-            transform: dat(tamMark, 3),
-            opacity: 1,
-            easing: EASE,
-          },
-          {
-            offset: 0.55,
-            transform: dat(tamMark, 3),
-            opacity: 1,
-            easing: EASE,
-          },
-          {
-            offset: 0.75,
-            transform: dat(tamCum, S1),
-            opacity: 1,
-            easing: EASE,
-          },
+          { offset: 0, transform: dat(tamMark, S0 * 0.9), opacity: 0, easing: RA },
+          { offset: t(600), transform: dat(tamMark, S0), opacity: 1, easing: "ease-in-out" },
+          { offset: t(1700), transform: dat(tamMark, S0 * 1.03), opacity: 1, easing: VAO_RA },
+          { offset: t(2400), transform: dat(tamCum, S1), opacity: 1, easing: "linear" },
+          { offset: t(2600), transform: dat(tamCum, S1 * 1.01), opacity: 1, easing: BAY },
           { offset: 1, transform: "translate(0px, 0px) scale(1)", opacity: 1 },
         ],
         { duration: TONG_MS, fill: "forwards" },
@@ -97,10 +95,11 @@ export function LandingIntro({
         ? [
             text.animate(
               [
-                { offset: 0, opacity: 0 },
-                { offset: 0.55, opacity: 0 },
-                { offset: 0.75, opacity: 1 },
-                { offset: 1, opacity: 1 },
+                { offset: 0, opacity: 0, transform: "translateX(-6px)" },
+                // Chữ hiện khi cụm đã gần đúng cỡ (cuối đoạn thu nhỏ) — hiện sớm hơn thì chữ còn to, tràn mép màn hình
+                { offset: t(2300), opacity: 0, transform: "translateX(-6px)", easing: RA },
+                { offset: t(2750), opacity: 1, transform: "translateX(0)" },
+                { offset: 1, opacity: 1, transform: "translateX(0)" },
               ],
               { duration: TONG_MS, fill: "forwards" },
             ),
@@ -110,44 +109,28 @@ export function LandingIntro({
       frame.querySelector("rect")!.animate(
         [
           { offset: 0, strokeDashoffset: 1 },
-          { offset: 0.15, strokeDashoffset: 1 },
-          { offset: 0.55, strokeDashoffset: 0 },
+          { offset: t(400), strokeDashoffset: 1, easing: VAO_RA },
+          { offset: t(1700), strokeDashoffset: 0 },
           { offset: 1, strokeDashoffset: 0 },
         ],
         { duration: TONG_MS, fill: "forwards" },
       ),
       frame.animate(
         [
-          {
-            offset: 0,
-            transform: "translate(-50%, -50%) scale(1, 1)",
-            opacity: 1,
-          },
-          {
-            offset: 0.55,
-            transform: "translate(-50%, -50%) scale(1, 1)",
-            opacity: 1,
-            easing: EASE,
-          },
-          {
-            offset: 0.75,
-            transform: `translate(-50%, -50%) scale(${(r.width * S1 + 48) / FRAME}, ${(r.height * S1 + 48) / FRAME})`,
-            opacity: 1,
-          },
-          {
-            offset: 0.95,
-            transform: `translate(-50%, -50%) scale(${(r.width * S1 + 48) / FRAME}, ${(r.height * S1 + 48) / FRAME})`,
-            opacity: 0,
-          },
+          { offset: 0, transform: "translate(-50%, -50%) scale(1, 1)", opacity: 1 },
+          { offset: t(1700), transform: "translate(-50%, -50%) scale(1, 1)", opacity: 1, easing: VAO_RA },
+          { offset: t(2400), transform: `translate(-50%, -50%) scale(${sx}, ${sy})`, opacity: 1 },
+          { offset: t(2600), transform: `translate(-50%, -50%) scale(${sx}, ${sy})`, opacity: 1, easing: "ease-out" },
+          { offset: t(3000), transform: `translate(-50%, -50%) scale(${sx * 1.04}, ${sy * 1.04})`, opacity: 0 },
           { offset: 1, opacity: 0 },
         ],
         { duration: TONG_MS, fill: "forwards" },
       ),
-      // Lớp phủ: giữ kín tới 1,5s rồi mờ dần — phần đầu trang cùng nền nên không bị giật
+      // Lớp phủ: giữ kín tới 2,7s rồi mờ dần cùng lúc cụm trượt về menu — phần đầu trang cùng nền nên không giật
       overlay.animate(
         [
           { offset: 0, opacity: 1 },
-          { offset: 0.75, opacity: 1, easing: "ease-out" }, // easing theo từng đoạn — đặt ở options sẽ bẻ cả dòng thời gian
+          { offset: t(2700), opacity: 1, easing: "ease-in-out" }, // easing theo từng đoạn — đặt ở options sẽ bẻ cả dòng thời gian
           { offset: 1, opacity: 0 },
         ],
         { duration: TONG_MS, fill: "forwards" },
@@ -159,14 +142,18 @@ export function LandingIntro({
       if (xong) return;
       xong = true;
       anims.forEach((a) => a.cancel());
+      window.clearTimeout(chot);
       window.removeEventListener("keydown", ketThuc);
       window.removeEventListener("pointerdown", ketThuc);
       doneRef.current();
     };
     anims[0].finished.then(ketThuc).catch(() => undefined);
+    // Chốt an toàn: animation không báo xong (trình duyệt lạ, tab bị treo khung hình) → vẫn hiện trang sau 3,5s + 2s
+    const chot = window.setTimeout(ketThuc, TONG_MS + 2000);
     window.addEventListener("keydown", ketThuc);
     window.addEventListener("pointerdown", ketThuc);
     return () => {
+      window.clearTimeout(chot);
       window.removeEventListener("keydown", ketThuc);
       window.removeEventListener("pointerdown", ketThuc);
       anims.forEach((a) => a.cancel());
@@ -188,6 +175,7 @@ export function LandingIntro({
           width={FRAME}
           height={FRAME}
           viewBox={`0 0 ${FRAME} ${FRAME}`}
+          preserveAspectRatio="none"
           className="pointer-events-none fixed top-1/2 left-1/2 overflow-visible"
           style={{
             transform: "translate(-50%, -50%)",

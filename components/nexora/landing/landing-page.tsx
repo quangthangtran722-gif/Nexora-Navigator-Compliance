@@ -155,10 +155,10 @@ export function LandingPage() {
               <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-bold text-balance text-group-title sm:text-4xl lg:text-[44px]">
                 {L.hero.tieuDe}
               </h1>
-              <p data-hero style={tre(60)} className="max-w-2xl text-base text-group-sub sm:text-lg">
+              <p data-hero style={tre(100)} className="max-w-2xl text-base text-group-sub sm:text-lg">
                 {L.hero.phu}
               </p>
-              <div data-hero style={tre(120)} className="flex flex-wrap gap-3 pt-1">
+              <div data-hero style={tre(200)} className="flex flex-wrap gap-3 pt-1">
                 <Link href="/dang-ky" className={cn(buttonVariants({ size: "lg" }), "h-11 px-5 text-[15px]")}>
                   {L.hero.nutChinh} <ArrowRight />
                 </Link>
@@ -166,12 +166,12 @@ export function LandingPage() {
                   {L.hero.nutPhu}
                 </a>
               </div>
-              <p data-hero style={tre(120)} className="flex items-start gap-2 text-xs text-group-sub">
+              <p data-hero style={tre(250)} className="flex items-start gap-2 text-xs text-group-sub">
                 <ShieldCheck className="mt-px size-4 shrink-0 text-group-edge" aria-hidden />
                 {L.hero.vanBan}
               </p>
             </div>
-            <div data-hero style={tre(180)} className="relative z-10 mt-10 -mb-16 sm:-mb-20 lg:mt-14 lg:-mb-24">
+            <div data-hero style={tre(320)} className="relative z-10 mt-10 -mb-16 sm:-mb-20 lg:mt-14 lg:-mb-24">
               <LandingShot name="tong-quan" alt={L.hero.anh} priority sizes="(min-width: 1200px) 1136px, 100vw" />
             </div>
           </div>
