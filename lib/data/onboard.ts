@@ -79,7 +79,8 @@ export async function quetLaiDoanhNghiep(id: string): Promise<OnboardKetQua> {
 }
 
 // 202 "dang_quet": hỏi lại tới khi xong; quá lâu thì tự quét lại 1 lần
-async function choQuetXong(id: string): Promise<OnboardKetQua> {
+async function choQuetXong(id: string, onDangQuet?: () => void): Promise<OnboardKetQua> {
+  onDangQuet?.();
   for (let i = 0; i < POLL_TOI_DA; i++) {
     await new Promise((r) => setTimeout(r, POLL_MS));
     const { status, json } = await goi("GET", `/api/onboard/${id}`);
@@ -88,13 +89,14 @@ async function choQuetXong(id: string): Promise<OnboardKetQua> {
   return quetLaiDoanhNghiep(id);
 }
 
-export async function dangKyDoanhNghiep(body: OnboardBody): Promise<OnboardKetQua> {
+// onDangQuet: gọi khi API trả 202 "dang_quet" — để giao diện hiện "Đang đối chiếu hồ sơ…" trong lúc hỏi lại
+export async function dangKyDoanhNghiep(body: OnboardBody, onDangQuet?: () => void): Promise<OnboardKetQua> {
   const { status, json } = await goi("POST", "/api/onboard", body);
   // Doanh nghiệp đã tạo (201 hoặc 202) → làm mới phiên trước khi đọc / quét tiếp dưới RLS
   await lamMoiPhien();
   if (status === 201 && laKetQua(json)) return json;
   const cho = json as Cho;
-  if (cho.trang_thai === "dang_quet") return choQuetXong(cho.khach_hang_id);
+  if (cho.trang_thai === "dang_quet") return choQuetXong(cho.khach_hang_id, onDangQuet);
   // "can_lam_moi_phien" (server thiếu service role key) hoặc "loi_quet" → quét lại bằng phiên vừa làm mới
   return quetLaiDoanhNghiep(cho.khach_hang_id);
 }

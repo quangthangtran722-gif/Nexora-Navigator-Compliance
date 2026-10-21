@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ChevronDown, CircleCheck, CircleHelp, Plus, RotateCw, Trash2 } from "lucide-react";
+import { ArrowRight, ChevronDown, CircleCheck, CircleHelp, LoaderCircle, Plus, RotateCw, Trash2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,7 +17,7 @@ import { PageHeader } from "@/components/nexora/page-header";
 import { Stepper } from "@/components/nexora/progress";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
-import { COPY, HO_SO } from "@/lib/copy";
+import { AUTH, COPY, HO_SO } from "@/lib/copy";
 import { PHONG_BAN, PHONG_BAN_LABEL } from "@/lib/department-codes";
 import { domainLabel, KNOWN_DOMAINS, QUY_MO_LABEL } from "@/lib/labels";
 import { useAuth } from "@/lib/auth/auth-provider";
@@ -114,6 +114,15 @@ function loiTuApi(e: OnboardError): Record<string, string> {
   return out;
 }
 
+// Mã số thuế: 10 số, chi nhánh thêm "-" + 3 số; để trống được (không bắt buộc)
+const MST_RE = /^([0-9]{10}(-[0-9]{3})?)?$/;
+function ganLoiMst(errors: Record<string, string>, v: string): Record<string, string> {
+  const out = { ...errors };
+  if (MST_RE.test(v.trim())) delete out.ma_so_thue;
+  else out.ma_so_thue = HO_SO.loi.mstSai;
+  return out;
+}
+
 // Bước chứa ô lỗi — để đưa người dùng về đúng bước
 function buocCuaLoi(key: string): number {
   if (["ten_cong_ty", "ma_so_thue", "nganh", "quy_mo"].includes(key)) return 0;
@@ -127,6 +136,7 @@ export function OnboardingForm() {
   const [data, setData] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
+  const [dangDoiChieu, setDangDoiChieu] = useState(false); // API trả 202 "dang_quet" → đang hỏi lại
   const [done, setDone] = useState<Done | null>(null);
   const router = useRouter();
   const { customerId } = useAuth();
@@ -202,6 +212,7 @@ export function OnboardingForm() {
   }
 
   async function doiChieuLai(id: string) {
+    setDangDoiChieu(false);
     setBusy(true);
     try {
       const kq = await quetLaiDoanhNghiep(id);
@@ -228,10 +239,11 @@ export function OnboardingForm() {
         domains: p.domains,
         thuoc_tinh: p.thuoc_tinh,
         phong_ban: p.departments.map((d) => ({ ten_phong_ban: d.ten_phong_ban, slug_phong_ban: d.slug_phong_ban, email_head: d.email_head })),
-      });
+      }, () => setDangDoiChieu(true));
       await taoViec(kq.khach_hang_id, kq);
       setDone({ id: kq.khach_hang_id, kq });
     } catch (e) {
+      setDangDoiChieu(false);
       if (!(e instanceof OnboardError)) throw e;
       if ((e.status === 400 || e.status === 409) && e.chiTiet.length) {
         const loi = loiTuApi(e);
@@ -266,6 +278,28 @@ export function OnboardingForm() {
       return setErrors({ _form: handleError(error)! });
     }
     await doiChieuLai(customerId!);
+  }
+
+  // 202 "dang_quet": doanh nghiệp đã tạo, đang hỏi lại GET /api/onboard/{id} tới khi có kết quả
+  if (dangDoiChieu && !done) {
+    return (
+      <>
+        {header}
+        <Card className="max-w-2xl" aria-busy="true">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg" role="status">
+              <LoaderCircle className="size-5 animate-spin text-gold-text" aria-hidden /> {AUTH.dangDoiChieu.title}
+            </CardTitle>
+            <CardDescription className="text-sm">{AUTH.dangDoiChieu.body}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-1.5 overflow-hidden bg-border">
+              <div className="h-full w-1/3 animate-pulse bg-gold-metal-flat" />
+            </div>
+          </CardContent>
+        </Card>
+      </>
+    );
   }
 
   if (done) {
@@ -310,7 +344,11 @@ export function OnboardingForm() {
                     inputMode="numeric"
                     className="sm:w-56"
                     value={data.ma_so_thue}
-                    onChange={(e) => update({ ma_so_thue: e.target.value })}
+                    onChange={(e) => {
+                      update({ ma_so_thue: e.target.value });
+                      if (errors.ma_so_thue) setErrors((er) => ganLoiMst(er, e.target.value));
+                    }}
+                    onBlur={(e) => setErrors((er) => ganLoiMst(er, e.target.value))}
                     placeholder="0312345678"
                     aria-invalid={!!errors.ma_so_thue}
                   />

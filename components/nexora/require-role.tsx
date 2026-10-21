@@ -19,11 +19,15 @@ export function RequireRole({ role, children }: { role: Role; children: React.Re
   const router = useRouter();
   const pathname = usePathname();
 
+  // Chưa gắn doanh nghiệp (vừa đăng ký) mà mở trang doanh nghiệp khác → về bước thiết lập hồ sơ
+  const chuaGan = !loading && !!session && current === null && role === "customer";
+
   useEffect(() => {
     if (!loading && !session) router.replace(`/login?next=${encodeURIComponent(pathname)}`);
-  }, [loading, session, router, pathname]);
+    else if (chuaGan && pathname !== "/onboarding") router.replace("/onboarding");
+  }, [loading, session, router, pathname, chuaGan]);
 
-  if (loading || !session) {
+  if (loading || !session || (chuaGan && pathname !== "/onboarding")) {
     return (
       <div className="space-y-3" aria-busy="true">
         <Skeleton className="h-8 w-1/3" />
@@ -33,7 +37,7 @@ export function RequireRole({ role, children }: { role: Role; children: React.Re
   }
 
   // Tài khoản đã đăng nhập nhưng chưa gắn doanh nghiệp → chỉ được vào trang Hồ sơ doanh nghiệp để đăng ký (CONTRACT §8)
-  if (current === null && role === "customer" && pathname === "/onboarding") return <>{children}</>;
+  if (chuaGan) return <>{children}</>;
 
   if (current !== role) {
     return (

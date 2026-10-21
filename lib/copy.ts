@@ -43,6 +43,7 @@ export const COPY = {
     capNhat: { title: "Cập nhật khách hàng", description: "Đối chiếu lại hồ sơ khách hàng sau khi thư viện có văn bản mới." },
     lichSu: { title: "Lịch sử xử lý", description: "Các lần trích xuất và cập nhật đã chạy." },
     login: { title: "Đăng nhập" },
+    dangKy: { title: "Đăng ký doanh nghiệp" },
   },
 
   /* ---------- Trạng thái (bảng thuật ngữ mục 2) ---------- */
@@ -232,5 +233,49 @@ export const HO_SO = {
     canTraLoi: "Cần trả lời:",
     traLoiNgay: "Trả lời ngay",
     suaHoSo: "Sửa hồ sơ",
+  },
+} as const;
+
+/* ---------- Đăng nhập / đăng ký (brief mục 5.10) ---------- */
+export const AUTH = {
+  tagline: "Biết kịp văn bản pháp luật mới ảnh hưởng tới doanh nghiệp bạn",
+  email: "Email",
+  matKhau: "Mật khẩu",
+  login: {
+    title: "Đăng nhập",
+    moTa: "Dùng tài khoản Nexora của bạn.",
+    nut: "Đăng nhập",
+    dangGui: "Đang đăng nhập…",
+    sai: "Email hoặc mật khẩu không đúng.",
+    loi: "Chưa đăng nhập được. Vui lòng thử lại.",
+    chuaCoTk: "Doanh nghiệp chưa dùng Nexora?",
+    linkDangKy: "Đăng ký doanh nghiệp",
+  },
+  dangKy: {
+    title: "Đăng ký doanh nghiệp",
+    moTa: "Tạo tài khoản cho người phụ trách tuân thủ. Bước sau bạn thiết lập hồ sơ doanh nghiệp.",
+    nhapLai: "Nhập lại mật khẩu",
+    matKhauHint: "Ít nhất 8 ký tự",
+    nut: "Tạo tài khoản",
+    dangGui: "Đang tạo tài khoản…",
+    daCoTk: "Đã có tài khoản?",
+    linkDangNhap: "Đăng nhập",
+    loi: {
+      email: "Email không hợp lệ",
+      matKhauNgan: "Mật khẩu cần ít nhất 8 ký tự",
+      khongKhop: "Hai mật khẩu chưa khớp",
+      daTonTai: "Email này đã có tài khoản. Hãy đăng nhập.",
+      dongDangKy: "Nexora chưa mở đăng ký tự do. Vui lòng liên hệ Nexora để được cấp tài khoản.",
+      matKhauYeu: "Mật khẩu chưa đủ mạnh — dùng ít nhất 8 ký tự, có cả chữ và số.",
+      chung: "Chưa tạo được tài khoản. Vui lòng thử lại.",
+    },
+    xacNhanEmail: {
+      title: "Kiểm tra hộp thư của bạn",
+      body: (email: string) => `Nexora đã gửi email xác nhận tới ${email}. Mở email và bấm liên kết xác nhận, sau đó đăng nhập để thiết lập hồ sơ doanh nghiệp.`,
+    },
+  },
+  dangDoiChieu: {
+    title: "Đang đối chiếu hồ sơ…",
+    body: "Nexora đang so hồ sơ của bạn với các văn bản đang có hiệu lực. Việc này có thể mất tới 1 phút — vui lòng không đóng trang.",
   },
 } as const;

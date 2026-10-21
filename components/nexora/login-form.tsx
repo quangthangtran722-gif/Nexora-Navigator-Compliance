@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { LogIn } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/nexora/form-field";
 import { HOME_BY_ROLE, useAuth } from "@/lib/auth/auth-provider";
-import { COPY } from "@/lib/copy";
+import { AUTH, COPY } from "@/lib/copy";
 import { getSupabase } from "@/lib/supabase/client";
 
 // Đăng nhập email + mật khẩu (Supabase Auth). Tài khoản + vai trò do quản trị Nexora tạo.
@@ -69,10 +70,16 @@ export function LoginForm() {
             </p>
           )}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex-col gap-3">
           <Button type="submit" className="w-full" disabled={busy}>
             <LogIn /> {busy ? "Đang đăng nhập…" : "Đăng nhập"}
           </Button>
+          <p className="text-sm">
+            <span className="text-muted-foreground">{AUTH.login.chuaCoTk} </span>
+            <Link href="/dang-ky" className="font-medium text-gold-text underline-offset-4 hover:underline">
+              {AUTH.login.linkDangKy}
+            </Link>
+          </p>
         </CardFooter>
       </Card>
     </form>

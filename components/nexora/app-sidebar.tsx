@@ -36,7 +36,10 @@ export function AppSidebar({ role }: { role: Role }) {
   const pathname = usePathname();
   const nav = navByRole[role];
   const router = useRouter();
-  const { email, signOut } = useAuth();
+  const { email, signOut, role: vaiTro, loading } = useAuth();
+  // Tài khoản chưa gắn doanh nghiệp (vừa đăng ký): chỉ có bước thiết lập hồ sơ, chưa có badge vai trò
+  const chuaGan = !loading && vaiTro === null && role === "khach-hang";
+  const items = chuaGan ? nav.items.filter((i) => i.href === "/onboarding") : nav.items;
 
   return (
     <Sidebar collapsible="icon">
@@ -58,7 +61,7 @@ export function AppSidebar({ role }: { role: Role }) {
           {nav.groupLabel && <SidebarGroupLabel>{nav.groupLabel}</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
-              {nav.items.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     isActive={pathname === item.href || pathname.startsWith(`${item.href}/`)}
@@ -88,7 +91,7 @@ export function AppSidebar({ role }: { role: Role }) {
               </Avatar>
               <span className="min-w-0 flex-1 whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">
                 <span className="block truncate text-xs font-medium text-sidebar-foreground">{email}</span>
-                <span className="mt-0.5 inline-block bg-accent px-1.5 py-px text-[11px] font-medium text-accent-foreground">{nav.badge}</span>
+                {!chuaGan && <span className="mt-0.5 inline-block bg-accent px-1.5 py-px text-[11px] font-medium text-accent-foreground">{nav.badge}</span>}
               </span>
             </div>
           </SidebarMenuItem>
