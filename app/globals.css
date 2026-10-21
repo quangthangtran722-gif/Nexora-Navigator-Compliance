@@ -311,6 +311,17 @@
     line-height: 1.55;
   }
 }
+/* Phần đầu landing: nền khối nổi bật (= bg-group-solid) + MỘT lớp radial-gradient vàng rất mờ ở góc trên bên phải.
+   Ngoại lệ có chủ đích so với palette v4 (theo góp ý team) — chỉ phần đầu, không noise/grain, không lớp nào khác. */
+.landing-hero {
+  --hero-glow: rgb(207 174 104 / 0.12);
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse at 85% 0%, var(--hero-glow), transparent 60%), linear-gradient(var(--group-bg), var(--group-bg));
+}
+.dark .landing-hero {
+  --hero-glow: rgb(207 174 104 / 0.08);
+}
+
 /* ---------- Landing page ("/" khi chưa đăng nhập) ----------
    Hiện dần khi cuộn tới: mờ → rõ + trượt lên 16px, 400ms, chỉ 1 lần (data-shown do IntersectionObserver gắn).
    Phần đầu trang: chờ chuyển động mở đầu xong (data-intro) rồi hiện lần lượt 60ms. Không có chuyển động lặp. */

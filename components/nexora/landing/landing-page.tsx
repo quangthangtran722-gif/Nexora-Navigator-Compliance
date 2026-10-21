@@ -148,8 +148,9 @@ export function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* 2. Phần đầu — nền khối nổi bật; ảnh nằm trọn trong phần đầu để mọi mục cùng một khoảng cách */}
-        <section className="border-b border-group-border bg-group-solid" aria-labelledby="hero-title">
+        {/* 2. Phần đầu — nền khối nổi bật + 1 lớp radial-gradient vàng rất mờ góc trên phải (ngoại lệ có chủ đích, chỉ phần đầu);
+            ảnh nằm trọn trong phần đầu để mọi mục cùng một khoảng cách */}
+        <section className="landing-hero border-b border-group-border" aria-labelledby="hero-title">
           <div className={cn(KHUNG, MUC)}>
             <div className="max-w-3xl space-y-5">
               <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-extrabold text-balance text-group-title sm:text-4xl lg:text-[44px]">
@@ -224,7 +225,8 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* 6. Chạy thử — tiêu đề + câu dẫn → hàng thẻ số riêng (không đè ảnh) → ảnh trọn bề ngang nội dung */}
+        {/* 6. Chạy thử — tiêu đề + câu dẫn → MỘT hàng chia đôi: khối số (trái) | ảnh Cập nhật khách hàng (phải), căn trên.
+            Dưới 1280px: khối số trên (thẻ 25 trên cùng, hai thẻ 18 cạnh nhau), ảnh dưới. */}
         <section id="chay-thu" className={cn("scroll-mt-20 border-y bg-card", MUC)} aria-labelledby="chay-thu-title">
           <div className={cn(KHUNG, "space-y-8 lg:space-y-10")}>
             <div className="max-w-2xl space-y-3" data-reveal>
@@ -235,25 +237,28 @@ export function LandingPage() {
               <p className="text-base text-muted-foreground">{L.bangChung.than}</p>
               <p className="text-xs text-muted-foreground">{L.bangChung.ghiChu}</p>
             </div>
-            {/* Thẻ 25 lớn nhất (~1/2 bề ngang, bg-gold-metal, số 96px/800); hai thẻ 18 xếp dọc bên phải, tổng cao bằng thẻ 25.
-                Điện thoại: thẻ 25 trên cùng, hai thẻ 18 cạnh nhau bên dưới. Nhãn dưới số 18px. */}
-            <ul className="grid grid-cols-2 gap-3 lg:grid-rows-2" aria-label={L.bangChung.tieuDe}>
-              {L.bangChung.the.map((t, i) =>
-                i === 0 ? (
-                  <li key={t.mo} data-reveal className="col-span-2 flex flex-col justify-end bg-gold-metal p-6 text-[#2A2112] sm:p-8 lg:col-span-1 lg:row-span-2">
-                    <span className="block text-[72px] leading-none font-extrabold tabular-nums sm:text-[96px]">{t.so}</span>
-                    <span className="mt-3 block text-lg font-medium">{t.mo}</span>
-                  </li>
-                ) : (
-                  <li key={t.mo} data-reveal style={tre(i * 80)} className="flex flex-col justify-end border bg-card p-5 sm:p-6">
-                    <span className="block text-[44px] leading-none font-bold tabular-nums sm:text-[56px]">{t.so}</span>
-                    <span className="mt-2 block text-lg text-muted-foreground">{t.mo}</span>
-                  </li>
-                ),
-              )}
-            </ul>
-            <div data-reveal>
-              <LandingShot name="cap-nhat-khach-hang" alt={L.bangChung.anh} sizes="(min-width: 1200px) 1136px, 100vw" />
+            {/* Chia đôi từ 1280px (dưới đó ảnh quá hẹp, khối số và ảnh lệch chiều cao) — nhỏ hơn thì xếp dọc */}
+            <div className="grid items-stretch gap-6 xl:grid-cols-2">
+              {/* Khối số: thẻ 25 (~55% bề ngang, bg-gold-metal, số 72px/800) bên trái; hai thẻ 18 (số 44px/700) xếp dọc bên phải,
+                  tổng cao bằng thẻ 25. Cả khối cao bằng ảnh bên cạnh (hàng lưới kéo giãn), số căn đáy thẻ. */}
+              <ul className="grid grid-cols-2 gap-3 xl:grid-cols-[11fr_9fr] xl:grid-rows-2" aria-label={L.bangChung.tieuDe}>
+                {L.bangChung.the.map((t, i) =>
+                  i === 0 ? (
+                    <li key={t.mo} data-reveal className="col-span-2 flex flex-col justify-end bg-gold-metal p-5 text-[#2A2112] sm:p-6 xl:col-span-1 xl:row-span-2">
+                      <span className="block text-[64px] leading-none font-extrabold tabular-nums sm:text-[72px]">{t.so}</span>
+                      <span className="mt-2 block text-base font-medium">{t.mo}</span>
+                    </li>
+                  ) : (
+                    <li key={t.mo} data-reveal style={tre(i * 80)} className="flex flex-col justify-end border bg-card px-4 py-3">
+                      <span className="block text-[40px] leading-none font-bold tabular-nums sm:text-[44px]">{t.so}</span>
+                      <span className="mt-1.5 block text-base text-muted-foreground">{t.mo}</span>
+                    </li>
+                  ),
+                )}
+              </ul>
+              <div className="self-start" data-reveal style={tre(120)}>
+                <LandingShot name="cap-nhat-khach-hang" alt={L.bangChung.anh} sizes="(min-width: 1280px) 568px, 100vw" />
+              </div>
             </div>
           </div>
         </section>

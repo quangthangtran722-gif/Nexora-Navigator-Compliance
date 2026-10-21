@@ -14,7 +14,7 @@ export const SHOT = {
   "tong-quan": 1440 / 760, // tới hết hàng "Phòng Nhân sự" của bảng Theo phòng ban
   "xac-nhan-nghia-vu": 1440 / 760, // nghĩa vụ đang mở + Việc cần làm + hàng nút xác nhận
   "thong-bao": 1440 / 760,
-  "cap-nhat-khach-hang": 1440 / 500, // trọn bảng khách hàng + "Xem lịch sử xử lý"
+  "cap-nhat-khach-hang": 1440 / 700, // trọn bảng + đầu "Kết quả đối chiếu"; đứng cạnh khối số ở mục Chạy thử
 } as const;
 
 export function LandingShot({

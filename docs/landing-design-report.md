@@ -11,10 +11,10 @@ Tài liệu gốc: `nexora-palette-v4.md` (màu, font, góc, icon), `nexora-word
 | # | Mục | Làm gì |
 |---|---|---|
 | 1 | **Thanh menu** | Logo + 5 mục (Sản phẩm · Cách hoạt động · Chạy thử · Gói dịch vụ · Đối tác), "Đăng nhập", nút "Đăng ký doanh nghiệp". Dính trên cùng khi cuộn. Dưới 1280px, 5 mục gom vào nút mở ngăn kéo. |
-| 2 | **Phần đầu** | Câu hỏi chính ("Văn bản pháp luật mới ảnh hưởng gì đến riêng doanh nghiệp bạn, và ai phải làm gì?"), 1 câu dẫn về tình huống công ty nhỏ, nút "Quét miễn phí" và "Xem cách hoạt động", dòng văn bản đã kiểm duyệt, ảnh trang Tổng quan. |
+| 2 | **Phần đầu** | Nền espresso + ánh vàng rất mờ góc trên phải. Câu hỏi chính ("Văn bản pháp luật mới ảnh hưởng gì đến riêng doanh nghiệp bạn, và ai phải làm gì?"), 1 câu dẫn về tình huống công ty nhỏ, nút "Quét miễn phí" và "Xem cách hoạt động", dòng văn bản đã kiểm duyệt, ảnh trang Tổng quan. |
 | 3 | **Sản phẩm** | Tiêu đề "Khai hồ sơ một lần, nhận đúng nghĩa vụ của công ty bạn", 3 nhãn có icon, ảnh trang Xác nhận nghĩa vụ. |
 | 4 | **Cách hoạt động** | 5 bước (Nạp văn bản → AI bóc tách → Người duyệt → Đối chiếu → Giao việc), bước "Người duyệt" viền vàng; khối nhấn mạnh "AI không bao giờ tự quyết." |
-| 5 | **Chạy thử** | Tiêu đề "Cùng ngành, cùng kết quả.", câu dẫn 18/7, hàng thẻ số (25 lớn, hai thẻ 18), ảnh bảng Cập nhật khách hàng trọn bề ngang. |
+| 5 | **Chạy thử** | Nhãn "Kết quả chạy thử", tiêu đề "Cùng ngành, cùng kết quả.", câu dẫn 18/7. Bên dưới là **một hàng chia đôi** (từ 1280px): nửa trái là khối số (thẻ 25 to ~55% bề ngang, hai thẻ 18 xếp dọc bên phải, tổng cao bằng thẻ 25), nửa phải là ảnh bảng Cập nhật khách hàng; khối số và ảnh cao bằng nhau, căn trên. Dưới 1280px: khối số trên (thẻ 25 trên cùng, hai thẻ 18 cạnh nhau), ảnh dưới. |
 | 6 | **Gói dịch vụ** | Hai thẻ: Quét miễn phí (nút chính) và Theo dõi liên tục (nút viền). Không ghi giá. |
 | 7 | **Dùng lâu dài** | Tiêu đề + 3 nhãn ngắn, ảnh trang Thông báo. |
 | 8 | **Chương trình đối tác** | 1 câu cho đại lý thuế / công ty dịch vụ kế toán + nút "Đăng ký làm đối tác". |
@@ -44,11 +44,13 @@ Tất cả lấy qua biến (token), không viết mã màu thẳng trong trang 
 | `--gold-metal` | gradient `#A8843F → #D9BE7E → #F1E4C0 → #CFAE68 → #B08C45` | gradient `#9C7A3A → … → #A8843F` | Nút chính, thẻ 25, vạch 2px | palette v4 |
 | `--topbar` / `--topbar-foreground` | `#2A1D14` / `#FFF5E6` | `#151413` / `#E9DCBA` | Thanh menu | palette v4 |
 | `--group-bg` | `#2A1D14` (espresso đặc) | `rgb(210 182 121 / 0.10)` (ánh vàng) | Phần đầu, khối Đối tác, nền chuyển động mở đầu | palette v4 mục 3.3 |
+| `--hero-glow` (chỉ phần đầu) | `rgb(207 174 104 / 0.12)` | `rgb(207 174 104 / 0.08)` | Lớp `radial-gradient(ellipse at 85% 0%, --hero-glow, transparent 60%)` phủ lên nền phần đầu | **thêm riêng cho landing** — ngoại lệ có chủ đích (mục 5) |
 | `--group-border` | trong suốt | `rgb(210 182 121 / 0.35)` | Viền khối nổi bật bản tối | palette v4 |
 | `--group-edge` | `#CFAE68` | `#D2B679` | Chữ "NEXORA", icon trên nền tối | palette v4 |
 | `--group-title` / `--group-sub` | `#FFF5E6` / `#BFA88E` | `#E9DCBA` / `#B8A98C` | Chữ chính / phụ trên khối nổi bật | palette v4 |
 
 **Thêm riêng (không có trong palette v4):**
+- `.landing-hero` (CSS, chỉ phần đầu): nền `--background` + `--group-bg` như `bg-group-solid`, thêm đúng một lớp radial-gradient vàng rất mờ ở góc trên bên phải. Không noise/grain, không áp cho mục khác. Tương phản đo được trên nền này: tiêu đề 12,2–15,2:1, câu dẫn 5,8–8,2:1 (cả sáng và tối, đạt chuẩn 4,5:1).
 - `bg-group-solid` (tiện ích CSS): nền `--background` + lớp `--group-bg` phía trên. Bản tối `--group-bg` trong suốt nên cần nền đặc phía dưới để không lộ nội dung.
 - `--status-khong-ap-dung-bar` (`#A39A90`): màu mảng "Không áp dụng" trên biểu đồ Tổng quan (dùng trong app, ảnh chụp có hiện).
 
@@ -60,9 +62,9 @@ Một họ duy nhất **Lexend** (có chữ tiếng Việt) — palette v4 mục
 |---|---|---|
 | Tiêu đề trang (h1) | 28px → 36px → 44px | 800 |
 | Tiêu đề mục (h2) | 24px → 30px | 700 |
-| Số thẻ 25 | 72px → 96px | 800 |
-| Số thẻ 18 | 44px → 56px | 700 |
-| Nhãn dưới số thẻ | 18px | 500 (thẻ 25) / 400 |
+| Số thẻ 25 | 64px → 72px | 800 |
+| Số thẻ 18 | 40px → 44px | 700 |
+| Nhãn dưới số thẻ | 16px | 500 (thẻ 25) / 400 |
 | Câu dẫn phần đầu | 16px → 18px | 400 |
 | Thân bài, mô tả bước | 14–16px | 400 |
 | Tên bước, nhãn có icon | 16px | 600 |
@@ -74,7 +76,7 @@ Một họ duy nhất **Lexend** (có chữ tiếng Việt) — palette v4 mục
 - Mọi mục cách trên/dưới **64px** (điện thoại) / **96px** (màn rộng) — thêm riêng cho landing.
 - Khung nội dung rộng tối đa **1200px**, lề 16 / 24 / 32px.
 - **Góc vuông** hoàn toàn (`--radius: 0`, palette v4). Không bóng đổ, không bo tròn, không sóng, không kính mờ.
-- Ảnh chụp app: khung phẳng viền 1px + vạch vàng 2px trên đầu; cắt bằng CSS (tỉ lệ cố định, `object-fit: cover`, `object-position: top`) để che email tài khoản ở chân sidebar. Tỉ lệ: Tổng quan / Xác nhận / Thông báo 1440:760, Cập nhật khách hàng 1440:500.
+- Ảnh chụp app: khung phẳng viền 1px + vạch vàng 2px trên đầu; cắt bằng CSS (tỉ lệ cố định, `object-fit: cover`, `object-position: top`) để che email tài khoản ở chân sidebar. Tỉ lệ: Tổng quan / Xác nhận / Thông báo 1440:760, Cập nhật khách hàng 1440:700 (đứng cạnh khối số ở mục Chạy thử).
 
 ### Icon
 
@@ -121,7 +123,7 @@ Không có chuyển động lặp vô hạn, không parallax, không thư viện
 
 | Góp ý | Kết quả | Lý do |
 |---|---|---|
-| Thêm gradient cho nền phần đầu | **Không làm** | Palette v4 chỉ cho gradient qua `bg-gold-metal` ở vài chỗ cố định; nền khối nổi bật là espresso đặc (sáng) / ánh vàng (tối). |
+| Thêm gradient cho nền phần đầu | **Đã làm, ở mức nhẹ** | Theo góp ý team, ngoại lệ có chủ đích so với palette v4: giữ nền espresso `#2A1D14`, phủ **một** lớp `radial-gradient(ellipse at 85% 0%, rgb(207 174 104 / 0.12), transparent 60%)` (bản tối độ mờ 0.08). Chỉ phần đầu; không noise/grain; chữ và nút giữ đủ tương phản (mục 2). |
 | Dùng font serif cho tiêu đề | **Không làm** | Palette v4: một họ Lexend duy nhất, đồng bộ với app. |
 | Giảm thân bài xuống độ đậm 300 | **Không làm** | Lexend 300 làm dấu tiếng Việt mảnh, khó đọc; giữ 400. |
 | Menu dùng backdrop-blur (kính mờ) | **Không làm** | Palette v4 không dùng kính mờ; menu nền `bg-topbar` đặc. Ngăn kéo menu cũng đã tắt làm mờ nền. |
@@ -133,7 +135,8 @@ Không có chuyển động lặp vô hạn, không parallax, không thư viện
 | Gộp "Kinh doanh ×2" | Không cần | Khối 4 ô người đã bỏ khi rút gọn landing (phần "Vấn đề" gộp vào phần đầu) |
 | Chân trang tối giản, không link chính sách | Đã làm | |
 | Kiểm tra hiệu ứng cuộn ở chế độ chuyển động bình thường | Đã làm | Chạy đúng (mục 4) |
-| Mục "Bằng chứng" → "Chạy thử", thẻ số xếp hàng riêng, ảnh trọn bề ngang | Đã làm | |
+| Mục "Bằng chứng" → "Chạy thử", thẻ số xếp hàng riêng | Đã làm | |
+| Mục Chạy thử quá to → một hàng chia đôi (khối số trái, ảnh phải), thu nhỏ thẻ | Đã làm | Chia đôi từ 1280px; ở 1024–1279px ảnh quá hẹp nên xếp dọc như điện thoại |
 
 ---
 
