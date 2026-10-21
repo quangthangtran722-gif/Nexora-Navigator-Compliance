@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/nexora/theme-toggle";
 import { useAuth } from "@/lib/auth/auth-provider";
+import { COPY } from "@/lib/copy";
 import { navByRole, type Role } from "@/lib/navigation";
 
 /*
@@ -42,8 +43,8 @@ export function AppSidebar({ role }: { role: Role }) {
       {/* Khối logo cao đúng 56px = top bar. Logo mark 28px + tên gõ bằng chữ (không dùng ảnh logo đầy đủ ở đây).
           Thu gọn: padding ngang 16px → 10px để mark 28px nằm giữa dải 48px; khối chữ mờ dần, không bật/tắt bằng hidden. */}
       <SidebarHeader className="h-14 shrink-0 justify-center gap-0 border-b border-sidebar-border px-4 py-0 transition-[padding] duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-data-[collapsible=icon]:px-[10px]">
-        <Link href="/" aria-label="Nexora Compliance Navigator — về trang chủ" className="flex items-center gap-2.5 overflow-hidden outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
-          <Image src="/logo-mark.png" alt="" width={28} height={28} priority className="size-7 shrink-0" />
+        <Link href="/" aria-label={COPY.shell.home} className="flex items-center gap-2.5 overflow-hidden outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+          <Image src="/logo-mark-v2.png" alt="" width={28} height={28} priority className="size-7 shrink-0" />
           <span className="leading-[1.15] whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">
             <span className="block text-[15px] font-bold tracking-[0.06em] text-gold-text">NEXORA</span>
             <span className="block text-[10.5px] font-semibold tracking-[0.08em] text-logo-sub">COMPLIANCE NAVIGATOR</span>
@@ -53,7 +54,8 @@ export function AppSidebar({ role }: { role: Role }) {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{nav.label}</SidebarGroupLabel>
+          {/* Phía doanh nghiệp không có nhãn nhóm (wording mục 3.1) */}
+          {nav.groupLabel && <SidebarGroupLabel>{nav.groupLabel}</SidebarGroupLabel>}
           <SidebarGroupContent>
             <SidebarMenu>
               {nav.items.map((item) => (
@@ -86,7 +88,7 @@ export function AppSidebar({ role }: { role: Role }) {
               </Avatar>
               <span className="min-w-0 flex-1 whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">
                 <span className="block truncate text-xs font-medium text-sidebar-foreground">{email}</span>
-                <span className="mt-0.5 inline-block bg-accent px-1.5 py-px text-[11px] font-medium text-accent-foreground">{nav.label}</span>
+                <span className="mt-0.5 inline-block bg-accent px-1.5 py-px text-[11px] font-medium text-accent-foreground">{nav.badge}</span>
               </span>
             </div>
           </SidebarMenuItem>
@@ -95,14 +97,14 @@ export function AppSidebar({ role }: { role: Role }) {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
-              tooltip="Đăng xuất"
+              tooltip={COPY.shell.signOut}
               onClick={async () => {
                 await signOut();
                 router.replace("/login");
               }}
             >
               <LogOut />
-              <span className="whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">Đăng xuất</span>
+              <span className="whitespace-nowrap transition-opacity duration-150 group-data-[collapsible=icon]:opacity-0">{COPY.shell.signOut}</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -33,7 +33,7 @@ export function DraftVanBanList() {
                   {v.ten_van_ban} <VanBanBadge status={v.trang_thai} />
                 </span>
                 <span className="block text-xs text-muted-foreground tabular-nums">
-                  {v.so_hieu} · {tong === 0 ? "chưa trích xuất entity" : cho > 0 ? `còn ${cho}/${tong} entity chờ duyệt` : `đã duyệt hết ${tong} entity`}
+                  {v.so_hieu} · {tong === 0 ? "chưa trích xuất" : cho > 0 ? `còn ${cho}/${tong} mục chờ kiểm duyệt` : `đã kiểm duyệt hết ${tong} mục`}
                 </span>
               </span>
               <ActivateVanBanButton size="sm" vanBan={v} onActivated={res.reload} />

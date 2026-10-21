@@ -8,6 +8,7 @@ import { ShieldOff } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HOME_BY_ROLE, useAuth, type Role } from "@/lib/auth/auth-provider";
+import { COPY } from "@/lib/copy";
 
 /*
  * Chặn ở tầng giao diện: chưa đăng nhập → /login; sai vai trò → thông báo, không render màn.
@@ -31,17 +32,20 @@ export function RequireRole({ role, children }: { role: Role; children: React.Re
     );
   }
 
+  // Tài khoản đã đăng nhập nhưng chưa gắn doanh nghiệp → chỉ được vào trang Hồ sơ doanh nghiệp để đăng ký (CONTRACT §8)
+  if (current === null && role === "customer" && pathname === "/onboarding") return <>{children}</>;
+
   if (current !== role) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed p-10 text-center">
+      <div className="flex flex-col items-center gap-3 border bg-card p-10 text-center">
         <ShieldOff className="size-6 text-muted-foreground" aria-hidden />
-        <p className="font-medium">Tài khoản này không có quyền xem trang này</p>
+        <p className="font-medium">{COPY.state.noAccessPage}</p>
         <p className="max-w-sm text-sm text-muted-foreground">
-          {current ? "Trang dành cho vai trò khác." : "Tài khoản chưa được gán vai trò (curator / khách hàng) — liên hệ quản trị Nexora."}
+          {current ? "Trang này dành cho loại tài khoản khác." : "Tài khoản chưa được cấp quyền sử dụng. Vui lòng liên hệ Nexora."}
         </p>
         {current && (
           <Link href={HOME_BY_ROLE[current]} className={buttonVariants({ variant: "outline" })}>
-            Về trang của tôi
+            Về trang chính
           </Link>
         )}
       </div>

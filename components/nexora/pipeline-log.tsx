@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, Bot, Cog, TriangleAlert } from "lucide-react";
+import { Activity, Bot, Cog, FileText, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,6 +11,7 @@ import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { KpiCard } from "@/components/nexora/kpi-card";
 import { RUN_LABEL, RunBadge } from "@/components/nexora/status-badges";
 import { TabBar } from "@/components/nexora/tab-bar";
+import { COPY } from "@/lib/copy";
 import { formatDateTime, PIPELINE_NAME_LABEL } from "@/lib/labels";
 import { combine } from "@/lib/data/errors";
 import { getChunks, getCustomers, getPipelineRuns, getVanBanList } from "@/lib/data/queries";
@@ -21,13 +22,13 @@ import type { Json, PipelineName, PipelineRun, TrangThaiRun } from "@/lib/types"
  * Nhật ký pipeline_runs (CONTRACT §3.7) — màn "minh bạch" khi trình bày với mentor.
  * model = null ⇔ filter_domain (rule engine thuần code, không gọi AI).
  * Palette v3 mục 9.10: TabBar lọc trạng thái lần chạy; bảng; chi tiết + lỗi trong ngăn bên phải.
- * ID và JSON thô chỉ nằm trong mục "Dữ liệu kỹ thuật" (thu gọn mặc định).
+ * ID, bộ xử lý và JSON thô chỉ nằm trong mục "Chi tiết kỹ thuật" (thu gọn mặc định) — chỗ DUY NHẤT được hiện mã kỹ thuật (wording mục 4).
  */
 
 const ALL = "all";
 const NAMES: PipelineName[] = ["extract_entities", "filter_domain", "generate_diagnostic"];
 const RUN_STATUSES: TrangThaiRun[] = ["hoan_tat", "loi", "dang_xu_ly", "cho_xu_ly"];
-const NAME_ITEMS = [{ value: ALL, label: "Mọi bước" }, ...NAMES.map((n) => ({ value: n, label: PIPELINE_NAME_LABEL[n] }))];
+const NAME_ITEMS = [{ value: ALL, label: "Mọi loại xử lý" }, ...NAMES.map((n) => ({ value: n, label: PIPELINE_NAME_LABEL[n] }))];
 
 export function PipelineLog() {
   const [name, setName] = useState<string>(ALL);
@@ -46,24 +47,24 @@ export function PipelineLog() {
   function chunkLabel(id: string | null) {
     const c = chunks.find((x) => x.id === id);
     if (!c) return "—";
-    return `${vanBan.find((v) => v.id === c.van_ban_id)?.so_hieu ?? ""} · chunk ${c.thu_tu}`;
+    return `${vanBan.find((v) => v.id === c.van_ban_id)?.so_hieu ?? ""} · ${COPY.term.phan} ${c.thu_tu}`;
   }
-  // "Chạy cho": chunk (extract) · công ty (filter / generate)
+  // "Đối tượng": phần văn bản (trích xuất) · khách hàng (đối chiếu / tạo việc cần làm)
   const target = (r: PipelineRun) => (r.pipeline_name === "extract_entities" ? chunkLabel(r.chunk_id) : customerName(r.customer_id));
 
-  const aiRuns = runs.filter((r) => r.model !== null).length;
+  const trichXuat = runs.filter((r) => r.pipeline_name === "extract_entities").length;
   const failed = runs.filter((r) => r.trang_thai === "loi").length;
 
   return (
     <div className="space-y-4">
       <div className="grid gap-3 sm:grid-cols-3">
-        <KpiCard label="Tổng số lần chạy" value={runs.length} icon={Activity} />
-        <KpiCard label="Gọi AI / Rule engine thuần code" value={`${aiRuns} / ${runs.length - aiRuns}`} icon={Bot} />
-        <KpiCard label="Lần chạy lỗi" value={failed} icon={TriangleAlert} attention={failed > 0} />
+        <KpiCard label="Tổng số lần xử lý" value={runs.length} icon={Activity} />
+        <KpiCard label="Lần trích xuất văn bản" value={trichXuat} icon={FileText} />
+        <KpiCard label="Lần xử lý lỗi" value={failed} icon={TriangleAlert} attention={failed > 0} />
       </div>
 
       <TabBar
-        label="Lọc theo trạng thái lần chạy"
+        label="Lọc theo trạng thái"
         value={status}
         onValueChange={setStatus}
         items={[
@@ -77,7 +78,7 @@ export function PipelineLog() {
         ]}
         extra={
           <Select items={NAME_ITEMS} value={name} onValueChange={(v) => setName((v as string | null) ?? ALL)}>
-            <SelectTrigger size="sm" className="w-48" aria-label="Lọc theo bước">
+            <SelectTrigger size="sm" className="w-48" aria-label="Lọc theo loại xử lý">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -95,9 +96,8 @@ export function PipelineLog() {
             <TableHeader>
               <TableRow>
                 <TableHead>Bắt đầu</TableHead>
-                <TableHead>Bước</TableHead>
-                <TableHead>Chạy cho</TableHead>
-                <TableHead>Bộ xử lý</TableHead>
+                <TableHead>Loại xử lý</TableHead>
+                <TableHead>Đối tượng</TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead className="text-right">Thời gian</TableHead>
               </TableRow>
@@ -120,9 +120,6 @@ export function PipelineLog() {
                   <TableCell className="min-w-36 whitespace-normal">{PIPELINE_NAME_LABEL[r.pipeline_name]}</TableCell>
                   <TableCell className="min-w-44 whitespace-normal">{target(r)}</TableCell>
                   <TableCell>
-                    <ModelCell model={r.model} />
-                  </TableCell>
-                  <TableCell>
                     <RunBadge status={r.trang_thai} />
                   </TableCell>
                   <TableCell className="text-right tabular-nums">{duration(r)}</TableCell>
@@ -130,8 +127,8 @@ export function PipelineLog() {
               ))}
               {shown.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
-                    Không có lần chạy nào khớp bộ lọc.
+                  <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                    Không có lần xử lý nào khớp bộ lọc.
                   </TableCell>
                 </TableRow>
               )}
@@ -152,21 +149,16 @@ export function PipelineLog() {
                 </SheetDescription>
               </SheetHeader>
               <div className="space-y-4 px-4 pb-6 text-sm">
-                <div className="flex flex-wrap items-center gap-2">
-                  <RunBadge status={selected.trang_thai} />
-                  <ModelCell model={selected.model} />
-                </div>
+                <RunBadge status={selected.trang_thai} />
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
-                  <dt className="text-muted-foreground">Chạy cho</dt>
+                  <dt className="text-muted-foreground">Đối tượng</dt>
                   <dd>{target(selected)}</dd>
-                  <dt className="text-muted-foreground">Prompt</dt>
-                  <dd>{selected.prompt_version ?? "— (không dùng AI)"}</dd>
                   {selected.parent_run_id && (
                     <>
-                      <dt className="text-muted-foreground">Kích hoạt bởi</dt>
+                      <dt className="text-muted-foreground">Bắt nguồn từ</dt>
                       <dd>
                         <Button variant="link" size="sm" className="h-auto p-0" onClick={() => setSelectedId(selected.parent_run_id)}>
-                          Xem lần chạy trước đó
+                          Xem lần xử lý trước đó
                         </Button>
                       </dd>
                     </>
@@ -180,11 +172,20 @@ export function PipelineLog() {
                 )}
                 {/* Minh bạch cho mentor: input/output đầy đủ, nhưng thu gọn để không lộ JSON thô mặc định */}
                 <details className="border">
-                  <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-muted-foreground">Dữ liệu kỹ thuật (mã lần chạy, input, output)</summary>
+                  <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-muted-foreground">Chi tiết kỹ thuật</summary>
                   <div className="space-y-3 border-t p-3">
-                    <p className="text-xs text-muted-foreground">
-                      Mã lần chạy: <code>{selected.id}</code>
-                    </p>
+                    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
+                      <dt className="text-muted-foreground">Mã lần chạy</dt>
+                      <dd>
+                        <code>{selected.id}</code>
+                      </dd>
+                      <dt className="text-muted-foreground">Bộ xử lý</dt>
+                      <dd>
+                        <ModelCell model={selected.model} />
+                      </dd>
+                      <dt className="text-muted-foreground">Prompt</dt>
+                      <dd>{selected.prompt_version ?? "—"}</dd>
+                    </dl>
                     <JsonBlock label="Input" value={selected.input} />
                     <JsonBlock label="Output" value={selected.output} />
                   </div>
@@ -198,7 +199,7 @@ export function PipelineLog() {
   );
 }
 
-// model = null ⇔ filter_domain — điểm cần thấy rõ khi trình bày minh bạch
+// model = null ⇔ filter_domain. Chỉ hiện trong "Chi tiết kỹ thuật" (ngoại lệ duy nhất được nói tên kỹ thuật)
 export function ModelCell({ model }: { model: string | null }) {
   return model ? (
     <span className="inline-flex items-center gap-1.5">

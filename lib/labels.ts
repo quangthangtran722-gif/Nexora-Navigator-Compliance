@@ -1,8 +1,9 @@
 /*
- * Nhãn tiếng Việt cho enum — CHÉP NGUYÊN các bảng *_LABEL ở docs/CONTRACT.md §2.
+ * Nhãn tiếng Việt cho enum. Chữ trạng thái lấy từ lib/copy.ts (nexora-wording-v1) — sửa chữ ở đó.
  * Chỉ dùng hiển thị UI, không gửi lên DB. Nhãn phòng ban: PHONG_BAN_LABEL (lib/department-codes.ts).
  */
 
+import { COPY } from "@/lib/copy";
 import { PHONG_BAN_LABEL, type SlugPhongBan } from "@/lib/department-codes";
 import type {
   LoaiEntity,
@@ -16,13 +17,11 @@ import type {
   TrangThaiVanBan,
 } from "@/lib/types";
 
-export const TRANG_THAI_DUYET_LABEL: Record<TrangThaiDuyet, string> = {
-  cho_duyet: "Chờ duyệt", da_duyet: "Đã duyệt", tu_choi: "Từ chối",
-};
+// Phía doanh nghiệp (xác nhận nghĩa vụ). Phía chuyên viên kiểm duyệt: TRANG_THAI_KIEM_DUYET_LABEL
+export const TRANG_THAI_DUYET_LABEL: Record<TrangThaiDuyet, string> = COPY.status.xacNhan;
+export const TRANG_THAI_KIEM_DUYET_LABEL: Record<TrangThaiDuyet, string> = COPY.status.kiemDuyet;
 
-export const TRANG_THAI_AP_DUNG_LABEL: Record<TrangThaiApDung, string> = {
-  ap_dung: "Áp dụng", sap_ap_dung: "Sắp áp dụng", khong_ap_dung: "Không áp dụng", chua_du_thong_tin: "Chưa đủ thông tin",
-};
+export const TRANG_THAI_AP_DUNG_LABEL: Record<TrangThaiApDung, string> = COPY.status.apDung;
 
 export const LOAI_ENTITY_LABEL: Record<LoaiEntity, string> = {
   chu_the: "Chủ thể", doi_tuong: "Đối tượng", hanh_vi: "Hành vi", che_tai: "Chế tài", dieu_kien: "Điều kiện",
@@ -38,23 +37,18 @@ export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {
   luat: "Luật", nghi_dinh: "Nghị định", thong_tu: "Thông tư", nghi_quyet: "Nghị quyết", quyet_dinh: "Quyết định", huong_dan: "Hướng dẫn", khac: "Khác",
 };
 
-export const TRANG_THAI_VAN_BAN_LABEL: Record<TrangThaiVanBan, string> = {
-  draft: "Bản nháp", active: "Đang hiệu lực", replaced: "Đã bị thay thế",
-};
+export const TRANG_THAI_VAN_BAN_LABEL: Record<TrangThaiVanBan, string> = COPY.status.vanBan;
 
-export const TRANG_THAI_CHUNK_LABEL: Record<TrangThaiChunk, string> = {
-  cho_xu_ly: "Chờ xử lý", dang_xu_ly: "Đang trích xuất", da_trich_xuat: "Chờ curator duyệt", hoan_tat: "Hoàn tất", loi: "Lỗi",
-};
+export const TRANG_THAI_CHUNK_LABEL: Record<TrangThaiChunk, string> = COPY.status.phan;
 
 export const QUY_MO_LABEL: Record<QuyMo, string> = { nho: "Nhỏ", vua: "Vừa", lon: "Lớn" };
 
-export const PIPELINE_NAME_LABEL: Record<PipelineName, string> = {
-  extract_entities: "AI trích xuất entity", filter_domain: "Rule engine lọc áp dụng (không AI)", generate_diagnostic: "AI viết checklist",
-};
+export const PIPELINE_NAME_LABEL: Record<PipelineName, string> = COPY.status.buocXuLy;
 
 /* ---------- Bổ sung phía UI (không có trong CONTRACT) ---------- */
 
 // domain là text slug tự do (CONTRACT §2). Nhãn cho các giá trị đang dùng; slug lạ hiển thị nguyên văn.
+// Lĩnh vực có nhãn sẵn; onboarding còn lấy thêm từ danh mục thuoc_tinh_ho_so.domain
 export const KNOWN_DOMAINS = ["thue", "ke_toan", "chung_khoan"] as const;
 const DOMAIN_LABEL: Record<string, string> = { thue: "Thuế", ke_toan: "Kế toán", chung_khoan: "Chứng khoán" };
 export function domainLabel(slug: string) {

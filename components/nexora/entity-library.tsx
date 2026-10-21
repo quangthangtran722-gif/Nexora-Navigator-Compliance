@@ -13,9 +13,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DieuKienEditor } from "@/components/nexora/dieu-kien-editor";
 import { EdgeLine } from "@/components/nexora/edge-line";
+import { InsetBlock } from "@/components/nexora/inset-block";
 import { TabBar } from "@/components/nexora/tab-bar";
 import { AnhHuongBadge, LoaiEntityBadge } from "@/components/nexora/status-badges";
 import { deptLabel, domainLabel, formatDate, KNOWN_DOMAINS, LOAI_ENTITY_LABEL } from "@/lib/labels";
+import { COPY } from "@/lib/copy";
 import { combine, useErrorHandler } from "@/lib/data/errors";
 import { updateEntity } from "@/lib/data/mutations";
 import { getChunks, getEntities, getEntityGraph, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
@@ -79,7 +81,7 @@ export function EntityLibrary() {
     setDkBusy(false);
     if (error) return setDkMsg({ ok: false, text: handleError(error) ?? error.message });
     setEditingDk(false);
-    setDkMsg({ ok: true, text: "Đã lưu. Chạy \"Quét lại khách hàng\" để áp điều kiện mới cho khách hàng hiện có." });
+    setDkMsg({ ok: true, text: "Đã lưu. Chạy Cập nhật khách hàng để áp điều kiện mới cho khách hàng hiện có." });
     res.reload();
   }
 
@@ -87,7 +89,7 @@ export function EntityLibrary() {
     <div className="space-y-4">
       {/* Bộ lọc: TabBar theo loại entity (v3 mục 9.10) + tìm kiếm + lĩnh vực */}
       <TabBar
-        label="Lọc theo loại entity"
+        label="Lọc theo loại mục"
         value={loai}
         onValueChange={setLoai}
         items={[
@@ -100,7 +102,7 @@ export function EntityLibrary() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative sm:max-w-xs sm:flex-1">
           <Search className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Tìm theo tên, điều khoản, nội dung…" className="pl-8" aria-label="Tìm entity" />
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Tìm theo tên, điều khoản, nội dung…" className="pl-8" aria-label="Tìm mục" />
         </div>
         <Select items={DOMAIN_ITEMS} value={domain} onValueChange={(v) => setDomain((v as string | null) ?? ALL)}>
           <SelectTrigger className="w-full sm:w-44" aria-label="Lọc theo lĩnh vực">
@@ -115,7 +117,7 @@ export function EntityLibrary() {
           </SelectContent>
         </Select>
         <span className="text-xs font-medium text-muted-foreground tabular-nums sm:ml-auto">
-          {filtered.length}/{entities.length} entity
+          {filtered.length}/{entities.length} mục
         </span>
       </div>
 
@@ -124,7 +126,7 @@ export function EntityLibrary() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Entity</TableHead>
+              <TableHead>Mục</TableHead>
               <TableHead>Loại</TableHead>
               <TableHead>Văn bản · điều khoản</TableHead>
               <TableHead>Lĩnh vực</TableHead>
@@ -164,7 +166,7 @@ export function EntityLibrary() {
             {filtered.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-muted-foreground">
-                  Không có entity nào khớp bộ lọc.
+                  Không có mục nào khớp bộ lọc.
                 </TableCell>
               </TableRow>
             )}
@@ -190,11 +192,11 @@ export function EntityLibrary() {
               </SheetHeader>
               <div className="space-y-5 px-4 pb-6 text-sm">
                 <figure className="space-y-1">
-                  <figcaption className="text-xs font-medium text-muted-foreground">Trích nguyên văn · {selected.dieu_khoan}</figcaption>
-                  <blockquote className="border-l-4 border-primary/40 bg-muted/50 px-3 py-2">{selected.noi_dung_goc}</blockquote>
+                  <figcaption className="text-xs font-medium text-muted-foreground">{COPY.term.trichNguyenVan} · {selected.dieu_khoan}</figcaption>
+                  <InsetBlock as="blockquote">{selected.noi_dung_goc}</InsetBlock>
                 </figure>
                 <p>
-                  <span className="text-muted-foreground">Mô tả: </span>
+                  <span className="text-muted-foreground">{COPY.term.tomTat}: </span>
                   {selected.mo_ta}
                 </p>
                 <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
@@ -222,7 +224,7 @@ export function EntityLibrary() {
                   )}
                   {(selected.dieu_kien_may_doc || LOAI_CO_DIEU_KIEN.includes(selected.loai_entity)) && (
                     <>
-                      <dt className="text-muted-foreground">Điều kiện máy đọc</dt>
+                      <dt className="text-muted-foreground">{COPY.term.dieuKien}</dt>
                       <dd className="space-y-2">
                         {editingDk ? (
                           <DieuKienEditor dict={dict} value={selected.dieu_kien_may_doc} onSave={saveDk} onCancel={() => setEditingDk(false)} saving={dkBusy} />
@@ -231,7 +233,7 @@ export function EntityLibrary() {
                             {selected.dieu_kien_may_doc ? (
                               formatDieuKien(selected.dieu_kien_may_doc, dict)
                             ) : (
-                              <span className="text-muted-foreground">Chưa có — rule engine bỏ qua entity này khi đối chiếu</span>
+                              <span className="text-muted-foreground">Chưa có. Dùng để xác định khách hàng nào phải tuân thủ mục này.</span>
                             )}
                             <Button size="xs" variant="outline" onClick={() => { setDkMsg(null); setEditingDk(true); }}>
                               <Pencil /> {selected.dieu_kien_may_doc ? "Sửa" : "Điền"}
@@ -242,8 +244,8 @@ export function EntityLibrary() {
                           <p className={cn("text-xs", dkMsg.ok ? "text-muted-foreground" : "text-destructive")} role="status">
                             {dkMsg.text}{" "}
                             {dkMsg.ok && (
-                              <Link href="/quet-lai" className="underline">
-                                Mở Quét lại
+                              <Link href="/quet-lai" className="text-gold-text underline-offset-4 hover:underline">
+                                Mở {COPY.page.capNhat.title}
                               </Link>
                             )}
                           </p>
@@ -253,7 +255,7 @@ export function EntityLibrary() {
                   )}
                   {selected.ghi_chu_curator && (
                     <>
-                      <dt className="text-muted-foreground">Ghi chú curator</dt>
+                      <dt className="text-muted-foreground">Ghi chú kiểm duyệt</dt>
                       <dd>{selected.ghi_chu_curator}</dd>
                     </>
                   )}

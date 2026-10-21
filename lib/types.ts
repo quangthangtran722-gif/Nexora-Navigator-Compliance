@@ -46,7 +46,7 @@ export type TrangThaiRun = "cho_xu_ly" | "dang_xu_ly" | "hoan_tat" | "loi";
 
 export type GiaiDoanThongBao = "cho_duyet" | "hoi_bo_sung" | "da_giao";
 
-// domain / domains là text slug (không phải enum) — chỉ a-z và "_". Giá trị đang dùng: thue, ke_toan.
+// domain / domains là text slug (không phải enum) — chỉ a-z và "_". Giá trị đang dùng: thue, ke_toan, chung_khoan.
 
 export type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 

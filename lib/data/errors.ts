@@ -3,6 +3,8 @@
 import { useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { COPY } from "@/lib/copy";
+
 /*
  * Lỗi chuẩn hoá cho mọi lệnh đọc/ghi/RPC/route — mã theo CONTRACT §6.
  * Mọi hàm trong lib/data trả { data, error } với error dạng AppError (giống supabase-js).
@@ -37,34 +39,28 @@ export async function combine<T extends Record<string, Promise<Result<unknown>>>
 
 /*
  * Map mã lỗi CONTRACT §6–7 ra hành vi UI. Trả về câu hiển thị (null = không có lỗi).
- *  PT400 → hiện message tiếng Việt từ DB · PT401 → về trang đăng nhập · PT403 → ẩn nút
- *  PT404 → không tìm thấy · PT409 → tải lại bản ghi · 42501 / 23514 → lỗi lập trình, ghi log
- *  AI_RATE_LIMIT (429) → Groq hết quota, thử lại sau · AI_ERROR (502) → lỗi AI
+ * Wording mục 5: KHÔNG BAO GIỜ hiện lỗi gốc của hệ thống (tiếng Anh, mã lỗi, câu kỹ thuật từ DB/route) —
+ * chỉ hiện câu chuẩn trong lib/copy.ts, chi tiết ghi vào console.
+ *  PT401 → về trang đăng nhập · PT403 → ẩn nút · PT409 → tải lại bản ghi · 42501 / 23514 → lỗi lập trình
+ *  AI_RATE_LIMIT (429) / AI_ERROR (502) → hệ thống bận, thử lại sau
  */
 // Câu hiển thị cho từng mã (thuần, không side effect)
 export function describeError(err: AppError): string {
+  const S = COPY.state;
   switch (err.code) {
-    case "PT400":
-    case "23505":
-      return err.message;
     case "PT401":
-      return "Phiên đăng nhập đã hết hạn — đang chuyển sang trang đăng nhập.";
+      return S.sessionExpired;
     case "PT403":
-      return "Tài khoản của bạn không có quyền thực hiện thao tác này.";
+      return S.forbidden;
     case "PT404":
-      return "Không tìm thấy bản ghi (có thể đã bị thay đổi hoặc không thuộc quyền xem của bạn).";
+      return S.notFound;
     case "PT409":
-      // Route/DB gửi lý do cụ thể (vd "Chunk đã có 11 entity, không trích xuất lại") — ưu tiên hiện lý do đó
-      return err.message ? `${err.message} — đã tải lại dữ liệu mới nhất.` : "Bản ghi đã được xử lý trước đó — đã tải lại dữ liệu mới nhất.";
+      return S.conflict;
     case "AI_RATE_LIMIT":
-      return "AI đang tạm hết lượt (giới hạn 8K token/phút). Đợi khoảng 1 phút rồi thử lại.";
     case "AI_ERROR":
-      return `Gọi AI thất bại — thử lại sau. ${err.message ? `(${err.message})` : ""}`.trim();
-    case "42501":
-    case "23514":
-      return "Lỗi hệ thống (đã ghi log để sửa).";
+      return S.busy;
     default:
-      return err.message || "Đã có lỗi xảy ra.";
+      return S.saveError;
   }
 }
 
@@ -80,6 +76,8 @@ export function useErrorHandler() {
       if (err.code === "PT409") opts.onReload?.();
       // Lỗi lập trình (RLS/GRANT chặn, vi phạm CHECK) — không nên xảy ra, cần sửa code
       if (err.code === "42501" || err.code === "23514") console.error("[Nexora] Lỗi lập trình", err);
+      // Mọi lỗi khác: giữ chi tiết gốc ở console cho dev, giao diện chỉ hiện câu chuẩn
+      else console.warn("[Nexora] Lỗi thao tác", err);
       return describeError(err);
     },
     [router, pathname],

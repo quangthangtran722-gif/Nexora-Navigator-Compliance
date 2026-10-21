@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ThuocTinhField } from "@/components/nexora/thuoc-tinh-field";
 import { ApDungBadge } from "@/components/nexora/status-badges";
 import { TRANG_THAI_AP_DUNG_LABEL } from "@/lib/labels";
+import { COPY } from "@/lib/copy";
 import { useErrorHandler } from "@/lib/data/errors";
 import { updateCustomerThuocTinh } from "@/lib/data/mutations";
 import { filterThenGenerate, PipelineError, toAppError } from "@/lib/data/pipeline";
@@ -61,7 +62,7 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
       status = filter.ket_qua[0]?.trang_thai_ap_dung ?? null;
       setResult(status);
     } catch (e) {
-      failMsg = (e instanceof PipelineError ? handleError(toAppError(e)) : null) ?? "Không chạy lại được rule engine.";
+      failMsg = (e instanceof PipelineError ? handleError(toAppError(e)) : null) ?? COPY.state.saveError;
       setError(failMsg);
     }
     setBusy(false);
@@ -75,7 +76,7 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
           <MessageCircleQuestion className="size-4 text-status-chua-du-tt" aria-hidden /> {entity.ten_entity}
         </CardTitle>
         <CardDescription>
-          Hệ thống chưa đủ thông tin để xác định nghĩa vụ này có áp dụng cho doanh nghiệp không. Trả lời {questions.length} câu dưới đây — chọn
+          Nexora cần thêm thông tin để xác định nghĩa vụ này có áp dụng cho công ty hay không. Trả lời {questions.length} câu dưới đây, chọn
           &quot;Chưa chắc&quot; nếu chưa có số liệu.
         </CardDescription>
       </CardHeader>
@@ -85,21 +86,21 @@ export function HoiBoSungCard({ customer, entity, thuocTinhThieu, dict, onDone }
         ))}
         {result && (
           <p className="flex flex-wrap items-center gap-2 text-sm" role="status">
-            Kết quả sau khi chạy lại rule engine: <ApDungBadge status={result} />
-            {result === "chua_du_thong_tin" && <span className="text-muted-foreground">— vẫn còn thiếu dữ liệu.</span>}
-            {(result === "ap_dung" || result === "sap_ap_dung") && <span className="text-muted-foreground">— AI đã viết checklist, chờ duyệt bên dưới.</span>}
-            {result === "khong_ap_dung" && <span className="text-muted-foreground">— {TRANG_THAI_AP_DUNG_LABEL.khong_ap_dung.toLowerCase()} với doanh nghiệp.</span>}
+            Kết quả mới: <ApDungBadge status={result} />
+            {result === "chua_du_thong_tin" && <span className="text-muted-foreground">— vẫn còn thiếu thông tin.</span>}
+            {(result === "ap_dung" || result === "sap_ap_dung") && <span className="text-muted-foreground">— nghĩa vụ đã có trong danh sách chờ xác nhận bên dưới.</span>}
+            {result === "khong_ap_dung" && <span className="text-muted-foreground">— {TRANG_THAI_AP_DUNG_LABEL.khong_ap_dung.toLowerCase()} với công ty.</span>}
           </p>
         )}
         {error && (
-          <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
+          <p className="bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
             {error}
           </p>
         )}
       </CardContent>
       <CardFooter className="flex-wrap gap-2">
         <Button onClick={submit} disabled={busy || unanswered.length === questions.length}>
-          <Send /> Gửi câu trả lời
+          <Send /> Lưu câu trả lời
         </Button>
         {unanswered.length > 0 && <span className="text-xs text-muted-foreground">Còn {unanswered.length} câu chưa trả lời</span>}
       </CardFooter>

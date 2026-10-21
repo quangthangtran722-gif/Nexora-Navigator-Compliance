@@ -11,9 +11,12 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+import { COPY } from "@/lib/copy";
+
 /*
- * Menu sidebar cho 2 vai trò.
+ * Menu sidebar cho 2 vai trò. Chữ lấy từ lib/copy.ts (nexora-wording-v1 mục 3.1, 4).
  * Route group (curator) / (khach-hang) KHÔNG tạo đoạn URL — nên tên route 2 bên phải khác nhau.
+ * URL giữ nguyên (vd /duyet-diagnostic) để không hỏng link; chỉ đổi chữ hiển thị.
  * Khi thêm trang mới: tạo thư mục trong đúng route group + thêm 1 dòng ở đây.
  */
 
@@ -23,33 +26,36 @@ export type NavItem = { title: string; href: string; icon: LucideIcon };
 
 export type RoleNav = {
   role: Role;
-  label: string; // tên vai trò hiển thị
-  description: string;
+  badge: string; // badge vai trò dưới tên người dùng
+  groupLabel?: string; // nhãn nhóm menu (phía doanh nghiệp không có)
+  crumb?: string; // đoạn đầu breadcrumb; phía doanh nghiệp dùng tên công ty
   items: NavItem[];
 };
 
+const P = COPY.page;
+
 export const curatorNav: RoleNav = {
   role: "curator",
-  label: "Curator",
-  description: "Xây và duyệt kho văn bản luật",
+  badge: COPY.role.curatorBadge,
+  groupLabel: COPY.role.curatorCrumb,
+  crumb: COPY.role.curatorCrumb,
   items: [
-    { title: "Nhập văn bản luật", href: "/nhap-van-ban", icon: FileInput },
-    { title: "Duyệt bản nháp", href: "/duyet-ban-nhap", icon: FileSearch },
-    { title: "Kho entity", href: "/kho-entity", icon: Library },
-    { title: "Quét lại khách hàng", href: "/quet-lai", icon: RefreshCw },
-    { title: "Nhật ký pipeline", href: "/nhat-ky", icon: History },
+    { title: P.nhapVanBan.title, href: "/nhap-van-ban", icon: FileInput },
+    { title: P.kiemDuyet.title, href: "/duyet-ban-nhap", icon: FileSearch },
+    { title: P.thuVien.title, href: "/kho-entity", icon: Library },
+    { title: P.capNhat.title, href: "/quet-lai", icon: RefreshCw },
+    { title: P.lichSu.title, href: "/nhat-ky", icon: History },
   ],
 };
 
 export const khachHangNav: RoleNav = {
   role: "khach-hang",
-  label: "Khách hàng",
-  description: "Người đầu mối tuân thủ của doanh nghiệp",
+  badge: COPY.role.customerBadge,
   items: [
-    { title: "Tổng quan", href: "/tong-quan", icon: LayoutDashboard },
-    { title: "Onboarding", href: "/onboarding", icon: Building2 },
-    { title: "Duyệt diagnostic", href: "/duyet-diagnostic", icon: ClipboardCheck },
-    { title: "Hộp thư phòng ban", href: "/hop-thu", icon: Inbox },
+    { title: P.tongQuan.title, href: "/tong-quan", icon: LayoutDashboard },
+    { title: P.xacNhan.title, href: "/duyet-diagnostic", icon: ClipboardCheck },
+    { title: P.thongBao.title, href: "/hop-thu", icon: Inbox },
+    { title: P.hoSo.title, href: "/onboarding", icon: Building2 },
   ],
 };
 

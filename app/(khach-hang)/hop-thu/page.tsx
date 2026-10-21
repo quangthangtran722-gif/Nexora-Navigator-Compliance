@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 
 import { DepartmentInbox } from "@/components/nexora/department-inbox";
 import { PageHeader } from "@/components/nexora/page-header";
+import { COPY } from "@/lib/copy";
 
-export const metadata: Metadata = { title: "Hộp thư phòng ban" };
+// Chữ trang lấy từ lib/copy.ts (nexora-wording-v1). URL giữ nguyên, chỉ đổi chữ hiển thị.
+const P = COPY.page.thongBao;
+
+export const metadata: Metadata = { title: P.title };
 
 export default function Page() {
   return (
     <>
-      <PageHeader
-        title="Hộp thư phòng ban"
-        description="Người đầu mối nhận câu hỏi bổ sung và checklist chờ duyệt; sau khi duyệt, phòng ban nhận việc được thông báo."
-      />
+      <PageHeader title={P.title} description={P.description} />
       <DepartmentInbox />
     </>
   );

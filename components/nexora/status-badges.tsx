@@ -20,11 +20,13 @@ import {
   TriangleAlert,
   XCircle,
 } from "lucide-react";
+import { COPY } from "@/lib/copy";
 import {
   LOAI_ENTITY_LABEL,
   TRANG_THAI_AP_DUNG_LABEL,
   TRANG_THAI_CHUNK_LABEL,
   TRANG_THAI_DUYET_LABEL,
+  TRANG_THAI_KIEM_DUYET_LABEL,
   TRANG_THAI_VAN_BAN_LABEL,
 } from "@/lib/labels";
 import type { LoaiEntity, TrangThaiApDung, TrangThaiChunk, TrangThaiDuyet, TrangThaiRun, TrangThaiVanBan } from "@/lib/types";
@@ -71,8 +73,11 @@ const duyetStyle: Record<TrangThaiDuyet, Style> = {
   tu_choi: { className: "bg-duyet-tu-choi-bg text-duyet-tu-choi", Icon: XCircle },
 };
 
-export function DuyetBadge({ status, className }: { status: TrangThaiDuyet; className?: string }) {
-  return <Pill label={TRANG_THAI_DUYET_LABEL[status]} style={duyetStyle[status]} className={className} />;
+// context "kiem-duyet" = chuyên viên kiểm duyệt mục trích xuất (Chờ duyệt / Đã duyệt / Từ chối);
+// mặc định = doanh nghiệp xác nhận nghĩa vụ (Chờ xác nhận / Đã giao việc / Không liên quan)
+export function DuyetBadge({ status, context, className }: { status: TrangThaiDuyet; context?: "kiem-duyet"; className?: string }) {
+  const label = (context === "kiem-duyet" ? TRANG_THAI_KIEM_DUYET_LABEL : TRANG_THAI_DUYET_LABEL)[status];
+  return <Pill label={label} style={duyetStyle[status]} className={className} />;
 }
 
 /* ---------- 3. Trạng thái chunk / lần chạy pipeline ---------- */
@@ -89,8 +94,7 @@ export function ChunkBadge({ status, className }: { status: TrangThaiChunk; clas
   return <Pill label={TRANG_THAI_CHUNK_LABEL[status]} style={chunkStyle[status]} className={className} />;
 }
 
-// CONTRACT không có *_LABEL cho TrangThaiRun → nhãn phía UI
-export const RUN_LABEL: Record<TrangThaiRun, string> = { cho_xu_ly: "Chờ xử lý", dang_xu_ly: "Đang chạy", hoan_tat: "Hoàn tất", loi: "Lỗi" };
+export const RUN_LABEL: Record<TrangThaiRun, string> = COPY.status.lanChay;
 
 const runStyle: Record<TrangThaiRun, Style> = {
   cho_xu_ly: chunkStyle.cho_xu_ly,

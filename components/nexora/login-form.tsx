@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/nexora/form-field";
 import { HOME_BY_ROLE, useAuth } from "@/lib/auth/auth-provider";
+import { COPY } from "@/lib/copy";
 import { getSupabase } from "@/lib/supabase/client";
 
 // Đăng nhập email + mật khẩu (Supabase Auth). Tài khoản + vai trò do quản trị Nexora tạo.
@@ -24,7 +25,7 @@ export function LoginForm() {
 
   // Đã có session → chuyển về trang được yêu cầu hoặc trang đầu của vai trò
   useEffect(() => {
-    if (!loading && session && role) router.replace(next && next.startsWith("/") ? next : HOME_BY_ROLE[role]);
+    if (!loading && session) router.replace(next && next.startsWith("/") ? next : role ? HOME_BY_ROLE[role] : "/onboarding"); // chưa gắn doanh nghiệp → đăng ký
   }, [loading, session, role, next, router]);
 
   async function submit(e: React.FormEvent) {
@@ -33,7 +34,11 @@ export function LoginForm() {
     setError(null);
     const { error: err } = await getSupabase().auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
-    if (err) setError(err.message === "Invalid login credentials" ? "Email hoặc mật khẩu không đúng." : err.message);
+    if (err) {
+      // Không hiện lỗi gốc (tiếng Anh) — wording mục 5; chi tiết ở console
+      console.warn("[Nexora] Đăng nhập thất bại", err);
+      setError(err.message === "Invalid login credentials" ? "Email hoặc mật khẩu không đúng." : "Chưa đăng nhập được. Vui lòng thử lại.");
+    }
   }
 
   return (
@@ -43,8 +48,8 @@ export function LoginForm() {
           {/* Logo đã cắt sát (public/logo-nexora.png, 900×360) */}
           <Image src="/logo-nexora.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="240px" className="mx-auto h-auto w-60" />
           <p className="text-center text-sm text-muted-foreground">Theo dõi liên tục nghĩa vụ thuế &amp; kế toán cho doanh nghiệp</p>
-          <CardTitle className="pt-4 text-xl font-bold">Đăng nhập</CardTitle>
-          <CardDescription>Dùng tài khoản được cấp cho curator hoặc người đầu mối tuân thủ.</CardDescription>
+          <CardTitle className="pt-4 text-xl font-bold">{COPY.page.login.title}</CardTitle>
+          <CardDescription>Dùng tài khoản Nexora đã cấp cho bạn.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <FormField id="email" label="Email">
@@ -60,7 +65,7 @@ export function LoginForm() {
           )}
           {session && !role && !loading && (
             <p className="text-sm text-status-ap-dung" role="status">
-              Đã đăng nhập nhưng tài khoản chưa được gán vai trò — liên hệ quản trị Nexora.
+              Tài khoản chưa được cấp quyền sử dụng. Vui lòng liên hệ Nexora.
             </p>
           )}
         </CardContent>

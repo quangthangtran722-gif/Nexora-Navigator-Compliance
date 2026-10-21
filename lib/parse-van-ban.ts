@@ -25,6 +25,7 @@ const LOAI_THEO_TU_KHOA: [RegExp, LoaiVanBan][] = [
   [/^THÔNG TƯ(?: LIÊN TỊCH)?$/u, "thong_tu"],
   [/^NGHỊ QUYẾT$/u, "nghi_quyet"],
   [/^QUYẾT ĐỊNH$/u, "quyet_dinh"],
+  [/^HƯỚNG DẪN$/u, "huong_dan"],
   [/^LUẬT$/u, "luat"],
   [/^CÔNG VĂN$/u, "khac"],
 ];
@@ -36,7 +37,10 @@ const LOAI_CHU: Record<LoaiVanBan, string> = {
 function cleanLines(text: string): string[] {
   return text
     .replace(/\r\n?/g, "\n")
-    // Markdown xuất từ Word/Pandoc escape ký tự: "**Điều 1\. …**", "1\.", "\_", "\*" → bỏ "\" (trừ "\|" giữ để không tách nhầm ô bảng)
+    // Word: ngắt dòng mềm (Shift+Enter) xuất thành \x0b; khoảng trắng không ngắt \xa0
+    .replace(/\x0b/g, "\n")
+    .replace(/\xa0/g, " ")
+    // Markdown xuất từ Word/Pandoc escape ký tự: "**Điều 1\. …**", "1\.", "\-", "\_", "\*" → bỏ "\" (trừ "\|" giữ để không tách nhầm ô bảng)
     .replace(/\\([\\.*_[\]()#+\-!>`{}~])/g, "$1")
     .split("\n")
     .flatMap((l) => (/(?<!\\)\|/.test(l) ? l.split(/(?<!\\)\|/) : [l]))
@@ -71,24 +75,37 @@ function tenCoQuan(s: string): string {
   return words.map((w, i) => (i === 0 || (i === 1 && words[0] === "bộ") ? cap(w) : w)).join(" ");
 }
 
+// "QUẢN LÝ THUẾ" → "Quản lý thuế"
+function vietHoaChuDau(s: string): string {
+  const lower = s.toLocaleLowerCase("vi").replace(/\s+/g, " ").trim();
+  return lower.charAt(0).toLocaleUpperCase("vi") + lower.slice(1);
+}
+
 export function parseVanBan(raw: string, fileName = ""): ParsedVanBan {
   const lines = cleanLines(raw);
   const firstDieu = lines.findIndex((l) => DIEU_RE.test(l.trim()));
   const header = (firstDieu === -1 ? lines : lines.slice(0, firstDieu)).map((l) => l.trim()).filter(Boolean);
   const headerText = header.join("\n");
 
-  // Số hiệu: "Số: 77/2025/TT-BTC"; không có thì thử tên file "77-2025-TT-BTC.md"
-  let so_hieu = headerText.match(/Số\s*[:：]\s*([0-9]+\/[0-9]{4}\/[A-Za-zĐđ0-9\-]+)/u)?.[1] ?? "";
+  // Số hiệu: ưu tiên NỘI DUNG — "Số: 77/2025/TT-BTC" hoặc "Luật số: 108/2025/QH15" (không phân biệt hoa thường).
+  // Chỉ khi nội dung không có mới thử tên file "77-2025-TT-BTC.md"; phần ký hiệu chỉ nhận chữ IN HOA
+  // để hậu tố như "-demo", "-ban-sua" trong tên file không lọt vào số hiệu.
+  let so_hieu = headerText.match(/(?:^|[\s|])(?:Luật\s+)?số\s*[:：]\s*([0-9]+\/[0-9]{4}\/[A-Za-zĐđ0-9]+(?:-[A-Za-zĐđ0-9]+)*)/imu)?.[1] ?? "";
   if (!so_hieu) {
-    const f = fileName.replace(/\.[^.]+$/, "").match(/(\d+)[-_ ](\d{4})[-_ ]([A-Za-zĐđ][A-Za-zĐđ0-9\-]*)/u);
-    if (f) so_hieu = `${f[1]}/${f[2]}/${f[3].toUpperCase()}`;
+    const f = fileName.replace(/\.[^.]+$/, "").match(/(\d+)[-_ ](\d{4})[-_ ]([A-ZĐ][A-ZĐ0-9]*(?:-[A-ZĐ][A-ZĐ0-9]*)*)/u);
+    if (f) so_hieu = `${f[1]}/${f[2]}/${f[3]}`;
   }
 
-  // Loại + tên: dòng in hoa "THÔNG TƯ", tên = các dòng ngay sau cho tới dòng "Căn cứ…"
+  // Loại + tên: dòng in hoa "THÔNG TƯ", tên = các dòng ngay sau cho tới dòng "Căn cứ…".
+  // Luật thường ghi tên cùng dòng: "LUẬT QUẢN LÝ THUẾ" → loại luat, tên "Luật Quản lý thuế".
   let loai_van_ban: LoaiVanBan | "" = "";
   let ten_van_ban = "";
-  const iLoai = header.findIndex((l) => LOAI_THEO_TU_KHOA.some(([re]) => re.test(l)));
-  if (iLoai !== -1) {
+  const laTenLuat = (l: string) => /^LUẬT\s+\S/u.test(l) && l === l.toLocaleUpperCase("vi");
+  const iLoai = header.findIndex((l) => laTenLuat(l) || LOAI_THEO_TU_KHOA.some(([re]) => re.test(l)));
+  if (iLoai !== -1 && laTenLuat(header[iLoai])) {
+    loai_van_ban = "luat";
+    ten_van_ban = `Luật ${vietHoaChuDau(header[iLoai].replace(/^LUẬT\s+/u, ""))}`;
+  } else if (iLoai !== -1) {
     loai_van_ban = LOAI_THEO_TU_KHOA.find(([re]) => re.test(header[iLoai]))![1];
     const tenLines: string[] = [];
     for (const l of header.slice(iLoai + 1)) {
@@ -96,8 +113,10 @@ export function parseVanBan(raw: string, fileName = ""): ParsedVanBan {
       if (/^(Căn cứ|Theo đề nghị|Xét đề nghị|Chương|Mục)(\s|$)/u.test(l) || tenLines.length >= 3) break;
       tenLines.push(l);
     }
-    const ten = tenLines.join(" ").replace(/\s+/g, " ").trim();
-    if (ten) ten_van_ban = `${LOAI_CHU[loai_van_ban]} ${ten.charAt(0).toLocaleLowerCase("vi")}${ten.slice(1)}`;
+    let ten = tenLines.join(" ").replace(/\s+/g, " ").trim();
+    if (ten === ten.toLocaleUpperCase("vi")) ten = ten.toLocaleLowerCase("vi"); // tên viết IN HOA toàn bộ
+    // Tên luật viết hoa chữ đầu ("Luật Quản lý thuế"); văn bản khác viết thường ("Thông tư quy định…")
+    if (ten) ten_van_ban = `${LOAI_CHU[loai_van_ban]} ${loai_van_ban === "luat" ? vietHoaChuDau(ten) : ten.charAt(0).toLocaleLowerCase("vi") + ten.slice(1)}`;
   }
 
   // Cơ quan ban hành: dòng in hoa đầu văn bản bắt đầu bằng tên cơ quan

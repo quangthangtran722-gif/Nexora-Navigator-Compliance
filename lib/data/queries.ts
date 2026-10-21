@@ -95,3 +95,33 @@ export const getNotifications = (customerId: string) =>
 
 export const getPipelineRuns = () => rows<PipelineRun>(db().from("pipeline_runs").select("*").order("created_at", { ascending: false }).limit(500));
 export const getRunsByIds = (ids: string[]) => rows<PipelineRun>(db().from("pipeline_runs").select("*").in("id", ids));
+
+/* ---------- Lý do đối chiếu ("Vì sao áp dụng cho công ty bạn") ---------- */
+// Mỗi lần lọc ghi ket_qua (lý do + điều kiện đã xét) vào pipeline_runs.output (CONTRACT §7).
+// RLS pipeline_runs_select: tài khoản doanh nghiệp đọc được lần chạy của chính công ty mình.
+export type LyDoDoiChieu = {
+  entity_id: string;
+  trang_thai_ap_dung: string;
+  ly_do?: string; // ngoai_linh_vuc | dieu_kien_khong_thoa | thieu_thong_tin | chua_den_ngay_hieu_luc | da_hieu_luc
+  ngay_hieu_luc?: string | null;
+  dieu_kien?: { ten_entity: string; dieu_kien_may_doc: { thuoc_tinh: string }; gia_tri_khach_hang?: unknown; ket_qua: boolean | null }[];
+};
+
+// Lấy lý do MỚI NHẤT cho từng nghĩa vụ (lần lọc riêng 1 mục cũng tính) — map entity_id → lý do
+export async function getLyDoDoiChieu(customerId: string): Promise<Result<Record<string, LyDoDoiChieu>>> {
+  const { data, error, status } = await db()
+    .from("pipeline_runs")
+    .select("output, created_at")
+    .eq("customer_id", customerId)
+    .eq("pipeline_name", "filter_domain")
+    .eq("trang_thai", "hoan_tat")
+    .order("created_at", { ascending: false })
+    .limit(30);
+  if (error) return { data: null, error: fromPostgrest(error, status)! };
+  const map: Record<string, LyDoDoiChieu> = {};
+  for (const run of data ?? []) {
+    const ketQua = ((run.output as { ket_qua?: LyDoDoiChieu[] } | null)?.ket_qua ?? []) as LyDoDoiChieu[];
+    for (const k of ketQua) if (!map[k.entity_id]) map[k.entity_id] = k; // run mới nhất đứng trước
+  }
+  return ok(map);
+}

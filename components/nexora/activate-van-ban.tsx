@@ -49,8 +49,8 @@ export function ActivateVanBanButton({
           <DialogHeader>
             <DialogTitle>Kích hoạt văn bản?</DialogTitle>
             <DialogDescription>
-              <b>{vanBan.ten_van_ban}</b> ({vanBan.so_hieu}) sẽ chuyển từ Bản nháp sang Đang hiệu lực. Từ lúc đó rule engine đọc các entity đã duyệt của văn
-              bản này khi đối chiếu cho mọi khách hàng. Sau khi kích hoạt, chạy &quot;Quét lại khách hàng&quot; để áp cho khách hàng hiện có.
+              <b>{vanBan.ten_van_ban}</b> ({vanBan.so_hieu}) sẽ chuyển từ Bản nháp sang Đang hiệu lực. Từ lúc đó các mục đã kiểm duyệt của văn bản này
+              được dùng để xác định nghĩa vụ cho mọi khách hàng. Sau khi kích hoạt, chạy &quot;Cập nhật khách hàng&quot; để áp cho khách hàng hiện có.
             </DialogDescription>
           </DialogHeader>
           {error && (

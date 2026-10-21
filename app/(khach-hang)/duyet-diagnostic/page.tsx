@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 
 import { DiagnosticReview } from "@/components/nexora/diagnostic-review";
 import { PageHeader } from "@/components/nexora/page-header";
+import { COPY } from "@/lib/copy";
 
-export const metadata: Metadata = { title: "Duyệt diagnostic" };
+// Chữ trang lấy từ lib/copy.ts (nexora-wording-v1). URL giữ nguyên, chỉ đổi chữ hiển thị.
+const P = COPY.page.xacNhan;
+
+export const metadata: Metadata = { title: P.title };
 
 export default function Page() {
   return (
     <>
-      <PageHeader
-        title="Duyệt diagnostic"
-        description="Trả lời câu hỏi bổ sung, xem checklist từng phòng ban, rồi duyệt để giao việc. Mục đã hết áp dụng được gạch đi."
-      />
+      <PageHeader title={P.title} description={P.description} />
       <DiagnosticReview />
     </>
   );

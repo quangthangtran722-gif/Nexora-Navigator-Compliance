@@ -98,3 +98,33 @@ test("Điều quá dài được chia, phần sau vẫn bắt đầu bằng Đi�
     assert.match(c.noi_dung, /^Điều 7\./);
   }
 });
+
+// File Luat-Quan-ly-thue-108-2025-QH15-demo.md: số hiệu + tên phải lấy từ NỘI DUNG, không lấy tên file
+const LUAT = `QUỐC HỘI\x0b
+Luật số: 108/2025/QH15
+
+LUẬT QUẢN LÝ THUẾ
+
+Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam;
+
+**Điều 1\\. Phạm vi điều chỉnh**
+
+Luật này quy định việc quản lý các loại thuế\xa0và khoản thu khác \\- kể cả phí, lệ phí ${dai}
+`;
+
+test("Luật: đọc số hiệu và tên từ nội dung, ưu tiên hơn tên file", () => {
+  const p = parseVanBan(LUAT, "Luat-Quan-ly-thue-108-2025-QH15-demo.md");
+  assert.equal(p.so_hieu, "108/2025/QH15");
+  assert.equal(p.ten_van_ban, "Luật Quản lý thuế");
+  assert.equal(p.loai_van_ban, "luat");
+  assert.equal(p.co_quan_ban_hanh, "Quốc hội");
+  const nd = p.chunks[0].noi_dung;
+  assert.match(LUAT, /\\-/); // chắc chắn mẫu có "\-"
+  assert.ok(!/[\\\x0b\xa0]/.test(nd), "không còn \\-, \\x0b, \\xa0");
+  assert.match(nd, /thuế và khoản thu khác - kể cả/);
+});
+
+test("tên file chỉ là dự phòng, bỏ hậu tố viết thường như -demo", () => {
+  assert.equal(parseVanBan("Nội dung không có số hiệu", "Luat-Quan-ly-thue-108-2025-QH15-demo.md").so_hieu, "108/2025/QH15");
+  assert.equal(parseVanBan("x", "77-2025-TT-BTC.md").so_hieu, "77/2025/TT-BTC");
+});

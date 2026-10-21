@@ -3,16 +3,17 @@ import type { Metadata } from "next";
 import { DraftVanBanList } from "@/components/nexora/draft-van-ban-list";
 import { LawInputForm } from "@/components/nexora/law-input-form";
 import { PageHeader } from "@/components/nexora/page-header";
+import { COPY } from "@/lib/copy";
 
-export const metadata: Metadata = { title: "Nhập văn bản luật" };
+// Chữ trang lấy từ lib/copy.ts (nexora-wording-v1). URL giữ nguyên, chỉ đổi chữ hiển thị.
+const P = COPY.page.nhapVanBan;
+
+export const metadata: Metadata = { title: P.title };
 
 export default function Page() {
   return (
     <>
-      <PageHeader
-        title="Nhập văn bản luật"
-        description="Lưu văn bản và chia nội dung thành các chunk (1–2 điều) để AI trích xuất entity và quan hệ. Kết quả là bản nháp chờ curator duyệt."
-      />
+      <PageHeader title={P.title} description={P.description} />
       <DraftVanBanList />
       <LawInputForm />
     </>

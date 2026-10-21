@@ -2,16 +2,17 @@ import type { Metadata } from "next";
 
 import { DraftReview } from "@/components/nexora/draft-review";
 import { PageHeader } from "@/components/nexora/page-header";
+import { COPY } from "@/lib/copy";
 
-export const metadata: Metadata = { title: "Duyệt bản nháp" };
+// Chữ trang lấy từ lib/copy.ts (nexora-wording-v1). URL giữ nguyên, chỉ đổi chữ hiển thị.
+const P = COPY.page.kiemDuyet;
+
+export const metadata: Metadata = { title: P.title };
 
 export default function Page() {
   return (
     <>
-      <PageHeader
-        title="Duyệt bản nháp"
-        description="So câu luật gốc với kết quả AI trích xuất theo từng chunk; điền điều kiện máy đọc cho điều kiện/ngưỡng, rồi duyệt hoặc từ chối."
-      />
+      <PageHeader title={P.title} description={P.description} />
       <DraftReview />
     </>
   );

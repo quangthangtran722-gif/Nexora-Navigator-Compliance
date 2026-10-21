@@ -16,6 +16,7 @@ import { ProgressBar } from "@/components/nexora/progress";
 import { ActivateVanBanButton } from "@/components/nexora/activate-van-ban";
 import { ChunkBadge, VanBanBadge } from "@/components/nexora/status-badges";
 import { domainLabel, KNOWN_DOMAINS, LOAI_VAN_BAN_LABEL } from "@/lib/labels";
+import { COPY } from "@/lib/copy";
 import { describeError, useErrorHandler } from "@/lib/data/errors";
 import { createVanBanWithChunks } from "@/lib/data/mutations";
 import { PipelineError, pipelineErrorCode, postPipeline, toAppError, type PipelineRoutes } from "@/lib/data/pipeline";
@@ -83,7 +84,7 @@ export function LawInputForm() {
     setDaKichHoat(false);
     const list: Progress[] = data.chunks.map((c) => ({
       chunk_id: c.id,
-      label: `Chunk ${c.thu_tu}${c.dieu_khoan_range ? ` · ${c.dieu_khoan_range}` : ""}`,
+      label: `${COPY.term.phan} ${c.thu_tu}${c.dieu_khoan_range ? ` · ${c.dieu_khoan_range}` : ""}`,
       trang_thai: "cho_xu_ly",
     }));
     setProgress(list);
@@ -107,7 +108,7 @@ export function LawInputForm() {
         setChunkProgress(id, { trang_thai: res.so_entity === 0 ? "hoan_tat" : "da_trich_xuat", res });
       } catch (err) {
         if (!(err instanceof PipelineError)) {
-          setChunkProgress(id, { trang_thai: "loi", loi: "Lỗi không xác định" });
+          setChunkProgress(id, { trang_thai: "loi", loi: COPY.state.saveError });
           continue;
         }
         const code = pipelineErrorCode(err);
@@ -118,7 +119,7 @@ export function LawInputForm() {
         }
         if (code === "PT409") {
           // Chunk đang chạy hoặc đã có entity → không cho trích lại (hiện đúng lý do từ route)
-          setChunkProgress(id, { trang_thai: "loi", loi: err.error, khoa: true });
+          setChunkProgress(id, { trang_thai: "loi", loi: "Phần này đã được trích xuất hoặc đang được xử lý.", khoa: true });
           continue;
         }
         setChunkProgress(id, { trang_thai: "loi", loi: handleError(toAppError(err)) ?? err.error });
@@ -135,16 +136,16 @@ export function LawInputForm() {
     return (
       <Card className="max-w-3xl">
         <CardHeader>
-          <CardTitle>{running ? "Đang trích xuất…" : "Đã gửi trích xuất"}</CardTitle>
+          <CardTitle>{running ? "Đang trích xuất…" : "Đã trích xuất"}</CardTitle>
           <CardDescription>
             <span className="flex flex-wrap items-center gap-2">
               <strong>{vb.ten_van_ban}</strong> <VanBanBadge status={daKichHoat ? "active" : "draft"} />
             </span>
-            Mỗi chunk gọi AI 1 lần, lần lượt. Kết quả là bản nháp chờ curator duyệt.
+            Nội dung trích xuất cần được kiểm duyệt trước khi đưa vào thư viện.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ProgressBar label={`Đã trích xuất ${xong}/${progress.length} chunk`} value={xong} max={progress.length} />
+          <ProgressBar label={`Đã trích xuất ${xong}/${progress.length} phần`} value={xong} max={progress.length} />
           <ul className="divide-y border">
             {progress.map((p) => (
               <li key={p.chunk_id} className="flex min-h-11 flex-col gap-1 px-4 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between">
@@ -163,12 +164,12 @@ export function LawInputForm() {
           </ul>
           {rateLimited && (
             <p className="bg-status-sap-ap-dung-bg px-3 py-2 text-sm text-status-sap-ap-dung" role="status">
-              Đã dừng vì AI tạm hết lượt (8K token/phút). Đợi khoảng 1 phút rồi bấm &quot;Thử lại&quot;.
+              {COPY.state.busy} Bấm &quot;Thử lại&quot; để trích xuất các phần còn lại.
             </p>
           )}
           {daKichHoat && (
             <p className="text-sm text-duyet-da" role="status">
-              Đã kích hoạt — rule engine sẽ đọc các entity đã duyệt của văn bản này. Chạy Quét lại để áp cho khách hàng.
+              Đã kích hoạt văn bản. Chạy Cập nhật khách hàng để áp cho khách hàng hiện có.
             </p>
           )}
         </CardContent>
@@ -179,11 +180,11 @@ export function LawInputForm() {
           </Link>
           {!running && retryIds.length > 0 && (
             <Button variant="outline" onClick={() => extractChunks(retryIds)}>
-              <RotateCcw /> Thử lại {retryIds.length} chunk
+              <RotateCcw /> Thử lại {retryIds.length} phần
             </Button>
           )}
           <Link href="/duyet-ban-nhap" className={buttonVariants({ variant: "outline" })} aria-disabled={running}>
-            Sang Duyệt bản nháp
+            Sang {COPY.page.kiemDuyet.title}
           </Link>
           {vanBanMoi && !daKichHoat && <ActivateVanBanButton vanBan={vanBanMoi} disabled={running} onActivated={() => setDaKichHoat(true)} />}
         </CardFooter>
@@ -221,9 +222,9 @@ export function LawInputForm() {
         p.chunks.length
           ? {
               ok: true,
-              text: `Đã điền tự động từ ${file.name}: ${p.chunks.length} chunk. Kiểm tra lại trước khi lưu${thieu.length ? ` — chưa tìm thấy ${thieu.join(", ")}` : ""}.`,
+              text: `Đã điền tự động từ ${file.name}: ${p.chunks.length} phần. Kiểm tra lại trước khi lưu${thieu.length ? ` — chưa tìm thấy ${thieu.join(", ")}` : ""}.`,
             }
-          : { ok: false, text: `Không tìm thấy "Điều N." ở đầu dòng trong ${file.name} — chưa tách được chunk, hãy dán nội dung thủ công.` },
+          : { ok: false, text: `Không tìm thấy "Điều N." ở đầu dòng trong ${file.name} — chưa tách được phần nào, hãy dán nội dung thủ công.` },
       );
     };
     reader.onerror = () => setUploadMsg({ ok: false, text: "Không đọc được file." });
@@ -254,7 +255,7 @@ export function LawInputForm() {
         >
           <Upload className="size-5 text-gold-text" aria-hidden />
           <span className="text-sm font-medium">Tải file văn bản</span>
-          <span className="text-xs text-muted-foreground">Kéo thả hoặc chọn file .txt / .md — tự điền thông tin và tách chunk theo Điều</span>
+          <span className="text-xs text-muted-foreground">Kéo thả hoặc chọn file .txt / .md — tự điền thông tin và tách nội dung theo Điều</span>
           <input
             id="file-van-ban"
             type="file"
@@ -309,7 +310,7 @@ export function LawInputForm() {
             <FormField id="ngay_ban_hanh" label="Ngày ban hành" hint="Không bắt buộc">
               <Input id="ngay_ban_hanh" type="date" value={vb.ngay_ban_hanh} onChange={(e) => updateVb({ ngay_ban_hanh: e.target.value })} />
             </FormField>
-            <FormField id="ngay_hieu_luc" label="Ngày có hiệu lực" hint="Mặc định cho mọi entity của văn bản" error={errors["van_ban.ngay_hieu_luc"]}>
+            <FormField id="ngay_hieu_luc" label="Ngày có hiệu lực" hint="Áp dụng cho mọi mục của văn bản nếu không ghi riêng" error={errors["van_ban.ngay_hieu_luc"]}>
               <Input id="ngay_hieu_luc" type="date" value={vb.ngay_hieu_luc} onChange={(e) => updateVb({ ngay_hieu_luc: e.target.value })} aria-invalid={!!errors["van_ban.ngay_hieu_luc"]} />
             </FormField>
           </div>
@@ -331,15 +332,15 @@ export function LawInputForm() {
 
       <Card className="max-w-3xl">
         <CardHeader>
-          <CardTitle>Nội dung — chia thành chunk</CardTitle>
-          <CardDescription>Mỗi chunk 1–2 điều, dán nguyên văn. Mỗi chunk là 1 lần gọi AI trích xuất.</CardDescription>
+          <CardTitle>Nội dung văn bản</CardTitle>
+          <CardDescription>Chia thành từng phần, mỗi phần 1–2 điều, dán nguyên văn.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {chunks.map((c, i) => (
             <div key={i} className="space-y-3 rounded-lg border p-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Chunk {i + 1}</span>
-                <Button type="button" variant="ghost" size="icon-sm" aria-label={`Xoá chunk ${i + 1}`} disabled={chunks.length === 1} onClick={() => setChunks(chunks.filter((_, j) => j !== i))}>
+                <span className="text-sm font-medium">{COPY.term.phan} {i + 1}</span>
+                <Button type="button" variant="ghost" size="icon-sm" aria-label={`Xoá phần ${i + 1}`} disabled={chunks.length === 1} onClick={() => setChunks(chunks.filter((_, j) => j !== i))}>
                   <Trash2 />
                 </Button>
               </div>
@@ -370,7 +371,7 @@ export function LawInputForm() {
             </div>
           ))}
           <Button type="button" variant="outline" size="sm" onClick={() => setChunks([...chunks, EMPTY_CHUNK])}>
-            <Plus /> Thêm chunk
+            <Plus /> Thêm phần
           </Button>
           <p className="flex items-start gap-2 text-xs text-muted-foreground">
             <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
@@ -384,7 +385,7 @@ export function LawInputForm() {
         </CardContent>
         <CardFooter className="justify-end">
           <Button type="submit" disabled={running}>
-            <Sparkles /> Lưu & trích xuất {chunks.length} chunk
+            <Sparkles /> Lưu & trích xuất {chunks.length} phần
           </Button>
         </CardFooter>
       </Card>

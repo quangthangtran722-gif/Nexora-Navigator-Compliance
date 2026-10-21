@@ -43,6 +43,30 @@ export const onboardingStep4 = z.object({
     ),
 });
 
+/* ---------- Đăng ký doanh nghiệp mới (POST /api/onboard, CONTRACT §8) ---------- */
+// Khác form sửa hồ sơ: có mã số thuế (tuỳ chọn); mã phòng ban tuỳ chọn — backend đoán từ tên, đoán không ra mới bắt chọn.
+
+export const onboardingStep1DangKy = onboardingStep1.extend({
+  ma_so_thue: z
+    .string()
+    .trim()
+    .regex(/^([0-9]{10}(-[0-9]{3})?)?$/, "Mã số thuế gồm 10 số, chi nhánh thêm -3 số (vd 0312345678-001)")
+    .transform((v) => v || null),
+});
+
+export const departmentInputDangKy = departmentInput.extend({
+  slug_phong_ban: z.union([z.enum(PHONG_BAN), z.literal("")]).transform((v) => v || undefined),
+});
+
+export const onboardingStep4DangKy = z.object({
+  departments: z
+    .array(departmentInputDangKy)
+    .min(1, "Thêm ít nhất 1 phòng ban")
+    .refine((ds) => new Set(ds.map((d) => d.ten_phong_ban.trim().toLowerCase())).size === ds.length, "Tên phòng ban bị trùng"),
+});
+
+export const onboardingSchemaDangKy = onboardingStep1DangKy.extend(onboardingStep2.shape).extend(onboardingStep3.shape).extend(onboardingStep4DangKy.shape);
+
 export const onboardingSchema = onboardingStep1.extend(onboardingStep2.shape).extend(onboardingStep3.shape).extend(onboardingStep4.shape);
 export type OnboardingPayload = z.infer<typeof onboardingSchema>;
 const _onboardingCheck = (p: OnboardingPayload): OnboardingInput => p;
@@ -53,7 +77,7 @@ void _onboardingCheck;
 export const vanBanSchema = z.object({
   ten_van_ban: z.string().trim().min(5, "Nhập tên văn bản"),
   so_hieu: z.string().trim().min(3, "Nhập số hiệu, vd 109/2025/QH15"),
-  loai_van_ban: z.enum(["luat", "nghi_dinh", "thong_tu", "nghi_quyet", "quyet_dinh", "khac"], "Chọn loại văn bản"),
+  loai_van_ban: z.enum(["luat", "nghi_dinh", "thong_tu", "nghi_quyet", "quyet_dinh", "huong_dan", "khac"], "Chọn loại văn bản"), // enum van_ban.loai_van_ban (migration 004)
   co_quan_ban_hanh: z.string().trim().nullable(),
   ngay_ban_hanh: z.string().nullable(),
   ngay_hieu_luc: z.string().min(1, "Nhập ngày hiệu lực — mặc định cho mọi entity của văn bản"),
