@@ -4,17 +4,17 @@ import { cn } from "@/lib/utils";
 
 /*
  * Ảnh chụp app trên landing: khung phẳng (viền 1px, vạch kim loại 2px trên đầu, góc vuông, không bóng đổ).
- * Ảnh gốc 1283×553 có email demo ở góc trái dưới (y ≈ 437) và biểu tượng tiện ích trình duyệt ở góc phải dưới
- * (y ≈ 505) → cắt bằng CSS, KHÔNG tạo file mới: khung tỉ lệ cố định + object-fit: cover + object-position: top,
- * chiều cao khung dừng trước y ≈ 430 nên mất cả hai mà vẫn giữ phần nội dung chính.
+ * Ảnh gốc chụp bằng Playwright 1440×900 @2x (2880×1800). Email tài khoản ở chân sidebar (góc trái dưới, y ≈ 770
+ * trên 900) → cắt bằng CSS, KHÔNG tạo file mới: khung tỉ lệ cố định + object-fit: cover + object-position: top,
+ * chiều cao khung dừng trước y ≈ 765 nên mất email mà vẫn hiện nhiều nội dung theo chiều dọc hơn bản cũ (3:1).
  */
 
-// Tỉ lệ khung theo từng ảnh (rộng / cao phần giữ lại, tính trên ảnh gốc 1283px)
+// Tỉ lệ khung theo từng ảnh (rộng / cao phần giữ lại, tính theo px CSS trên khung 1440×900)
 export const SHOT = {
-  "tong-quan": 1283 / 428, // giữ tới hết hàng thẻ số (y ≈ 410)
-  "xac-nhan-nghia-vu": 1283 / 428, // giữ tới hết "Việc cần làm" (y ≈ 400)
-  "thong-bao": 1283 / 428,
-  "cap-nhat-khach-hang": 1283 / 405, // giữ tới hết bảng 5 doanh nghiệp (y ≈ 395)
+  "tong-quan": 1440 / 760, // tới hết hàng "Phòng Nhân sự" của bảng Theo phòng ban
+  "xac-nhan-nghia-vu": 1440 / 760, // nghĩa vụ đang mở + Việc cần làm + hàng nút xác nhận
+  "thong-bao": 1440 / 760,
+  "cap-nhat-khach-hang": 1440 / 500, // trọn bảng khách hàng + "Xem lịch sử xử lý"
 } as const;
 
 export function LandingShot({
