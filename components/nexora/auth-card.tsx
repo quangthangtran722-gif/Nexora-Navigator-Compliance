@@ -14,8 +14,8 @@ export function AuthCard({ title, description, children, footer }: { title: stri
         <div className="h-0.5 bg-gold-metal-flat" aria-hidden />
         <div className="space-y-6 px-6 pt-8 pb-6 sm:px-8">
           <div className="space-y-3 text-center">
-            {/* Logo đầy đủ đã cắt sát (public/logo-nexora.png, 900×360) */}
-            <Image src="/logo-nexora.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="240px" className="mx-auto h-auto w-60" />
+            {/* Logo đầy đủ nền trong suốt (public/logo-nexora-v2.png, 900×360) — đọc được cả bản sáng và tối */}
+            <Image src="/logo-nexora-v2.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="240px" className="mx-auto h-auto w-60" />
             <p className="mx-auto max-w-[30ch] text-sm text-muted-foreground">{AUTH.tagline}</p>
           </div>
           <div className="space-y-1 border-t border-border pt-6">

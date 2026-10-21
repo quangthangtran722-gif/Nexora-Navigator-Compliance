@@ -1,20 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LogIn } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { AuthCard } from "@/components/nexora/auth-card";
 import { FormField } from "@/components/nexora/form-field";
 import { HOME_BY_ROLE, useAuth } from "@/lib/auth/auth-provider";
-import { AUTH, COPY } from "@/lib/copy";
+import { AUTH } from "@/lib/copy";
 import { getSupabase } from "@/lib/supabase/client";
 
-// Đăng nhập email + mật khẩu (Supabase Auth). Tài khoản + vai trò do quản trị Nexora tạo.
+/*
+ * Đăng nhập email + mật khẩu (Supabase Auth) — brief mục 5.10, palette v4 mục 9: thẻ vuông giữa nền background,
+ * logo đầy đủ ~240px + câu giới thiệu, nút "Đăng nhập" bg-gold-metal (variant mặc định). Bản tối dùng token card/border.
+ * Tài khoản chưa gắn doanh nghiệp (vừa đăng ký) → /onboarding để thiết lập hồ sơ.
+ */
+const L = AUTH.login;
+
 export function LoginForm() {
   const router = useRouter();
   const next = useSearchParams().get("next");
@@ -38,50 +43,40 @@ export function LoginForm() {
     if (err) {
       // Không hiện lỗi gốc (tiếng Anh) — wording mục 5; chi tiết ở console
       console.warn("[Nexora] Đăng nhập thất bại", err);
-      setError(err.message === "Invalid login credentials" ? "Email hoặc mật khẩu không đúng." : "Chưa đăng nhập được. Vui lòng thử lại.");
+      setError(err.message === "Invalid login credentials" ? L.sai : L.loi);
     }
   }
 
   return (
-    <form onSubmit={submit} className="w-full max-w-sm">
-      <Card>
-        <CardHeader>
-          {/* Logo đã cắt sát (public/logo-nexora.png, 900×360) */}
-          <Image src="/logo-nexora.png" alt="Nexora Compliance Navigator" width={900} height={360} priority sizes="240px" className="mx-auto h-auto w-60" />
-          <p className="text-center text-sm text-muted-foreground">Theo dõi liên tục nghĩa vụ thuế &amp; kế toán cho doanh nghiệp</p>
-          <CardTitle className="pt-4 text-xl font-bold">{COPY.page.login.title}</CardTitle>
-          <CardDescription>Dùng tài khoản Nexora đã cấp cho bạn.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <FormField id="email" label="Email">
-            <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          </FormField>
-          <FormField id="password" label="Mật khẩu">
-            <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </FormField>
-          {error && (
-            <p className="bg-brand-red-bg px-3 py-2 text-sm text-destructive" role="alert">
-              {error}
-            </p>
-          )}
-          {session && !role && !loading && (
-            <p className="text-sm text-status-ap-dung" role="status">
-              Tài khoản chưa được cấp quyền sử dụng. Vui lòng liên hệ Nexora.
-            </p>
-          )}
-        </CardContent>
-        <CardFooter className="flex-col gap-3">
-          <Button type="submit" className="w-full" disabled={busy}>
-            <LogIn /> {busy ? "Đang đăng nhập…" : "Đăng nhập"}
-          </Button>
-          <p className="text-sm">
-            <span className="text-muted-foreground">{AUTH.login.chuaCoTk} </span>
-            <Link href="/dang-ky" className="font-medium text-gold-text underline-offset-4 hover:underline">
-              {AUTH.login.linkDangKy}
-            </Link>
+    <AuthCard
+      title={L.title}
+      description={L.moTa}
+      footer={
+        <>
+          <span className="text-muted-foreground">{L.chuaCoTk} </span>
+          <Link href="/dang-ky" className="font-medium whitespace-nowrap text-gold-text underline-offset-4 hover:underline">
+            {L.linkDangKy}
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={submit} className="space-y-4">
+        <FormField id="email" label={AUTH.email}>
+          <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </FormField>
+        <FormField id="password" label={AUTH.matKhau}>
+          <Input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </FormField>
+        {error && (
+          <p className="bg-brand-red-bg px-3 py-2 text-sm text-destructive" role="alert">
+            {error}
           </p>
-        </CardFooter>
-      </Card>
-    </form>
+        )}
+        {/* Nút chính: bg-gold-metal (variant mặc định của Button) */}
+        <Button type="submit" size="lg" className="w-full" disabled={busy}>
+          <LogIn /> {busy ? L.dangGui : L.nut}
+        </Button>
+      </form>
+    </AuthCard>
   );
 }
