@@ -283,6 +283,12 @@
 @utility bg-gold-metal-flat {
   background-image: var(--gold-metal);
 }
+/* Khối nổi bật (dải đầu nhóm, phần đầu landing, khối Đối tác): bản sáng = espresso đặc; bản tối = nền ánh vàng
+   trong suốt (--group-bg) ĐẶT TRÊN background để không lộ nội dung phía sau (palette v4 mục 3.3) */
+@utility bg-group-solid {
+  background-color: var(--background);
+  background-image: linear-gradient(var(--group-bg), var(--group-bg));
+}
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -303,5 +309,38 @@
   /* v3 mục 5: body 14px, line-height 1.55 */
   body {
     line-height: 1.55;
+  }
+}
+/* ---------- Landing page ("/" khi chưa đăng nhập) ----------
+   Hiện dần khi cuộn tới: mờ → rõ + trượt lên 16px, 400ms, chỉ 1 lần (data-shown do IntersectionObserver gắn).
+   Phần đầu trang: chờ chuyển động mở đầu xong (data-intro) rồi hiện lần lượt 60ms. Không có chuyển động lặp. */
+@keyframes landing-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.landing [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 400ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--d, 0ms);
+}
+.landing [data-reveal][data-shown] {
+  opacity: 1;
+  transform: none;
+}
+.landing[data-intro="playing"] [data-hero] {
+  opacity: 0;
+}
+.landing[data-intro="entering"] [data-hero] {
+  animation: landing-rise 400ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing [data-reveal],
+  .landing [data-hero] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
