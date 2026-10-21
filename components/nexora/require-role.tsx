@@ -1,17 +1,17 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShieldOff } from "lucide-react";
 
-import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { HOME_BY_ROLE, useAuth, type Role } from "@/lib/auth/auth-provider";
-import { COPY } from "@/lib/copy";
 
 /*
- * Chặn ở tầng giao diện: chưa đăng nhập → /login; sai vai trò → thông báo, không render màn.
+ * Chặn ở tầng giao diện — bọc NGOÀI AppShell để khung (menu, badge vai trò) chỉ vẽ khi đúng vai trò:
+ *  - chưa đăng nhập → /login?next=…
+ *  - đăng nhập nhưng là vai trò khác (chuyên viên mở trang doanh nghiệp và ngược lại) → về thẳng trang chính
+ *    của vai trò đang có, không hiện menu / badge của vai trò kia
+ *  - chưa gắn doanh nghiệp (vừa đăng ký) → chỉ được ở /onboarding để thiết lập hồ sơ
  * Đây chỉ là ẩn/hiện — dữ liệu vẫn được RLS bảo vệ ở DB dù có vào được trang.
  */
 export function RequireRole({ role, children }: { role: Role; children: React.ReactNode }) {
@@ -19,39 +19,26 @@ export function RequireRole({ role, children }: { role: Role; children: React.Re
   const router = useRouter();
   const pathname = usePathname();
 
-  // Chưa gắn doanh nghiệp (vừa đăng ký) mà mở trang doanh nghiệp khác → về bước thiết lập hồ sơ
-  const chuaGan = !loading && !!session && current === null && role === "customer";
-
-  useEffect(() => {
-    if (!loading && !session) router.replace(`/login?next=${encodeURIComponent(pathname)}`);
-    else if (chuaGan && pathname !== "/onboarding") router.replace("/onboarding");
-  }, [loading, session, router, pathname, chuaGan]);
-
-  if (loading || !session || (chuaGan && pathname !== "/onboarding")) {
-    return (
-      <div className="space-y-3" aria-busy="true">
-        <Skeleton className="h-8 w-1/3" />
-        <Skeleton className="h-24 w-full" />
-      </div>
-    );
+  // Đích chuyển hướng khi không được ở trang này; null = được ở lại
+  let dich: string | null = null;
+  if (!loading) {
+    if (!session) dich = `/login?next=${encodeURIComponent(pathname)}`;
+    else if (current === null) dich = role === "customer" && pathname === "/onboarding" ? null : "/onboarding";
+    else if (current !== role) dich = HOME_BY_ROLE[current];
   }
 
-  // Tài khoản đã đăng nhập nhưng chưa gắn doanh nghiệp → chỉ được vào trang Hồ sơ doanh nghiệp để đăng ký (CONTRACT §8)
-  if (chuaGan) return <>{children}</>;
+  useEffect(() => {
+    if (dich) router.replace(dich);
+  }, [dich, router]);
 
-  if (current !== role) {
+  if (loading || dich) {
+    // Chưa biết vai trò / đang chuyển trang: không vẽ khung của vai trò nào
     return (
-      <div className="flex flex-col items-center gap-3 border bg-card p-10 text-center">
-        <ShieldOff className="size-6 text-muted-foreground" aria-hidden />
-        <p className="font-medium">{COPY.state.noAccessPage}</p>
-        <p className="max-w-sm text-sm text-muted-foreground">
-          {current ? "Trang này dành cho loại tài khoản khác." : "Tài khoản chưa được cấp quyền sử dụng. Vui lòng liên hệ Nexora."}
-        </p>
-        {current && (
-          <Link href={HOME_BY_ROLE[current]} className={buttonVariants({ variant: "outline" })}>
-            Về trang chính
-          </Link>
-        )}
+      <div className="flex min-h-svh flex-1 items-center justify-center bg-background p-6" aria-busy="true">
+        <div className="w-full max-w-md space-y-3">
+          <Skeleton className="h-8 w-1/2" />
+          <Skeleton className="h-24 w-full" />
+        </div>
       </div>
     );
   }

@@ -71,6 +71,9 @@ export const COPY = {
     tomTat: "Tóm tắt",
     trichNguyenVan: "Trích nguyên văn",
     hetHieuLuc: "Đã hết hiệu lực",
+    lienKet: "Liên kết", // quan hệ giữa các mục trích xuất (vd chế tài của, áp dụng cho)
+    chuaCoLienKet: "Chưa có liên kết nào.",
+    ketQuaTrichXuat: (soMuc: number, soLienKet: number, soCanhBao: number) => `${soMuc} mục trích xuất · ${soLienKet} liên kết · ${soCanhBao} cảnh báo`,
   },
 
   /* ---------- Nút dùng chung ---------- */

@@ -153,7 +153,7 @@ export function LawInputForm() {
                 <span className="flex flex-wrap items-center gap-2 text-muted-foreground">
                   {p.res && (
                     <span className="tabular-nums">
-                      {p.res.so_entity} entity · {p.res.so_relationship} quan hệ · {p.res.so_canh_bao} cảnh báo
+                      {COPY.term.ketQuaTrichXuat(p.res.so_entity, p.res.so_relationship, p.res.so_canh_bao)}
                     </span>
                   )}
                   {p.loi && <span className={p.khoa ? "text-muted-foreground" : "text-destructive"}>{p.loi}</span>}

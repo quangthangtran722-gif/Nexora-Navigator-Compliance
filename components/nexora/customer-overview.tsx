@@ -36,7 +36,7 @@ const BAR_COLOR: Record<TrangThaiApDung, string> = {
   ap_dung: "bg-status-ap-dung-bar", // đỏ rượu vang nhạt: mảng lớn không dùng đỏ đậm
   sap_ap_dung: "bg-status-sap-ap-dung",
   chua_du_thong_tin: "bg-status-chua-du-tt",
-  khong_ap_dung: "bg-status-khong-ap-dung",
+  khong_ap_dung: "bg-status-khong-ap-dung-bar", // xám ấm, không dùng xám xanh của badge bản sáng
 };
 const BAY_NGAY = 7 * 24 * 60 * 60 * 1000;
 

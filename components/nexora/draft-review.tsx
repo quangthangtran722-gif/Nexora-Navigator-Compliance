@@ -351,7 +351,7 @@ function EntityRow({
 
       {edges.length > 0 && (
         <div className="space-y-1.5">
-          <p className="text-xs font-medium text-muted-foreground">Quan hệ ({edges.length})</p>
+          <p className="text-xs font-medium text-muted-foreground">{COPY.term.lienKet} ({edges.length})</p>
           <ul className="space-y-2">
             {edges.map((g) => (
               <li key={g.relationship_id}>

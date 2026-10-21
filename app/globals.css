@@ -87,6 +87,7 @@
   --color-logo-sub: var(--logo-sub);
   --color-duyet-cho-border: var(--duyet-cho-border);
   --color-status-ap-dung-bar: var(--status-ap-dung-bar);
+  --color-status-khong-ap-dung-bar: var(--status-khong-ap-dung-bar);
 }
 
 /*
@@ -181,6 +182,7 @@
   --ink-faint: #98A2B3;             /* dấu "–" thay số 0 trong bảng */
   --logo-sub: #8F713C;              /* dòng "COMPLIANCE NAVIGATOR" cạnh logo mark (gold-700) */
   --status-ap-dung-bar: #C4665A;    /* mảng "Áp dụng" của thanh phân bổ (red-400, không tô đỏ đậm mảng lớn) */
+  --status-khong-ap-dung-bar: #A39A90; /* mảng "Không áp dụng": xám ấm (= status-khong-ap-dung bản tối), không dùng xám xanh #475467 */
 }
 
 /* Hướng C "Viền vàng": khối quan trọng sáng hơn nền; nền đen ấm; dải đầu nhóm trong suốt viền vàng */
@@ -265,6 +267,7 @@
   --ink-faint: #5C5650;
   --logo-sub: #B8A98C;
   --status-ap-dung-bar: #A8392F;
+  --status-khong-ap-dung-bar: var(--status-khong-ap-dung);
 }
 
 /* Ánh kim sâm panh — v3 mục 2, ĐÚNG 5 chỗ: (1) nút chính <Button> mặc định, (2) thẻ KPI đầu /tong-quan,

@@ -262,10 +262,10 @@ export function EntityLibrary() {
                 </dl>
                 <div className="space-y-2">
                   <p className="font-medium">
-                    Quan hệ <Badge variant="secondary">{edges.length}</Badge>
+                    {COPY.term.lienKet} <Badge variant="secondary">{edges.length}</Badge>
                   </p>
                   {edges.length === 0 ? (
-                    <p className="text-muted-foreground">Chưa có quan hệ nào.</p>
+                    <p className="text-muted-foreground">{COPY.term.chuaCoLienKet}</p>
                   ) : (
                     <ul className="space-y-2">
                       {edges.map((g) => (
