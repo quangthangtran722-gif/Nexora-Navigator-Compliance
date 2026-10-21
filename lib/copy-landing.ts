@@ -13,7 +13,7 @@ export const LANDING = {
     items: [
       { href: "#san-pham", label: "Sản phẩm" },
       { href: "#cach-hoat-dong", label: "Cách hoạt động" },
-      { href: "#bang-chung", label: "Bằng chứng" },
+      { href: "#chay-thu", label: "Chạy thử" },
       { href: "#goi-dich-vu", label: "Gói dịch vụ" },
       { href: "#doi-tac", label: "Đối tác" },
     ],
@@ -55,6 +55,7 @@ export const LANDING = {
     },
   },
   bangChung: {
+    nhan: "Kết quả chạy thử",
     tieuDe: "Cùng ngành, cùng kết quả.",
     than: "18 nghĩa vụ chung từ Luật Quản lý thuế; 7 nghĩa vụ riêng chỉ ngành chứng khoán nhận.",
     the: [
@@ -63,7 +64,7 @@ export const LANDING = {
       { so: 18, mo: "nghĩa vụ · phòng khám nha khoa" },
     ],
     ghiChu: "Doanh nghiệp mẫu, kiểm ngày 21/10/2026.",
-    anh: "Trang Cập nhật khách hàng: 5 doanh nghiệp mẫu, công ty chứng khoán 25 nghĩa vụ, các doanh nghiệp còn lại 18",
+    anh: "Trang Cập nhật khách hàng: các công ty chứng khoán 25 nghĩa vụ, công ty công nghệ và phòng khám nha khoa 18",
   },
   goi: {
     tieuDe: "Quét miễn phí, trả phí để theo dõi liên tục",
@@ -85,8 +86,9 @@ export const LANDING = {
     nut: "Quét miễn phí",
   },
   chan: {
-    banQuyen: "© 2026 Nexora Compliance Navigator · Team THE TANK",
+    ten: "Nexora Compliance Navigator",
+    team: "Team THE TANK",
     dangNhap: "Đăng nhập",
-    dangKy: "Đăng ký doanh nghiệp",
+    dangKy: "Đăng ký",
   },
 } as const;

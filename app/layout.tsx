@@ -9,7 +9,7 @@ import "./globals.css";
 const lexend = Lexend({
   variable: "--font-sans",
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"], // 800: h1 landing, số thẻ 25
 });
 
 const geistMono = Geist_Mono({

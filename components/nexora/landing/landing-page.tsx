@@ -32,6 +32,8 @@ import { cn } from "@/lib/utils";
 
 const L = LANDING;
 const KHUNG = "mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8";
+// Khoảng cách trên/dưới MỌI mục: một giá trị cố định — 64px điện thoại, 96px màn rộng
+const MUC = "py-16 lg:py-24";
 const NUT_PHU_TOI = "border-group-edge/60 bg-transparent text-group-title hover:bg-white/5 hover:text-group-title";
 
 type Intro = "playing" | "entering" | "static";
@@ -94,7 +96,8 @@ export function LandingPage() {
       {intro === "playing" && <LandingIntro target={logoEl} onDone={xongIntro} />}
 
       {/* 1. Thanh menu */}
-      <header className="sticky top-0 z-40 bg-group-solid">
+      {/* position: sticky; top: 0 — nền bg-topbar đặc, KHÔNG backdrop-blur; vạch vàng 2px dưới khi đã cuộn */}
+      <header className="sticky top-0 z-40 bg-topbar">
         <div className={cn(KHUNG, "flex h-16 items-center justify-between gap-4")}>
           <Link
             ref={setLogoEl}
@@ -124,7 +127,7 @@ export function LandingPage() {
               <SheetTrigger render={<Button variant="ghost" size="icon-lg" className="text-group-title hover:bg-white/5 hover:text-group-title xl:hidden" aria-label={L.nav.moMenu} />}>
                 <Menu />
               </SheetTrigger>
-              <SheetContent side="right" className="gap-0 p-0">
+              <SheetContent side="right" className="gap-0 p-0" overlayClassName="supports-backdrop-filter:backdrop-blur-none">
                 <SheetTitle className="border-b px-5 py-4 text-base">{L.brand.tenDayDu}</SheetTitle>
                 <nav aria-label="Các phần của trang" className="flex flex-col py-2">
                   {/* Bấm mục → cuộn tới phần đó và đóng ngăn kéo */}
@@ -145,11 +148,11 @@ export function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* 2. Phần đầu — nền khối nổi bật, ảnh lấn xuống phần sau */}
+        {/* 2. Phần đầu — nền khối nổi bật; ảnh nằm trọn trong phần đầu để mọi mục cùng một khoảng cách */}
         <section className="border-b border-group-border bg-group-solid" aria-labelledby="hero-title">
-          <div className={cn(KHUNG, "pt-10 sm:pt-14 lg:pt-20")}>
+          <div className={cn(KHUNG, MUC)}>
             <div className="max-w-3xl space-y-5">
-              <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-bold text-balance text-group-title sm:text-4xl lg:text-[44px]">
+              <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-extrabold text-balance text-group-title sm:text-4xl lg:text-[44px]">
                 {L.hero.tieuDe}
               </h1>
               {/* Phần "Vấn đề" gộp vào đây thành 1 câu dẫn */}
@@ -169,14 +172,14 @@ export function LandingPage() {
                 {L.hero.vanBan}
               </p>
             </div>
-            <div data-hero style={tre(320)} className="relative z-10 mt-10 -mb-16 sm:-mb-20 lg:mt-14 lg:-mb-24">
+            <div data-hero style={tre(320)} className="mt-10 lg:mt-14">
               <LandingShot name="tong-quan" alt={L.hero.anh} priority sizes="(min-width: 1200px) 1136px, 100vw" />
             </div>
           </div>
         </section>
 
         {/* 4. Sản phẩm làm gì — chữ trái, ảnh phải */}
-        <section id="san-pham" className="scroll-mt-20 border-b bg-card pt-28 pb-16 sm:pt-32 lg:pt-40 lg:pb-24" aria-labelledby="san-pham-title">
+        <section id="san-pham" className={cn("scroll-mt-20 border-b bg-card", MUC)} aria-labelledby="san-pham-title">
           <div className={cn(KHUNG, "grid items-center gap-10 lg:grid-cols-12")}>
             <div className="space-y-5 lg:col-span-5" data-reveal>
               <h2 id="san-pham-title" className="text-2xl font-bold text-balance sm:text-3xl">
@@ -195,7 +198,7 @@ export function LandingPage() {
         </section>
 
         {/* 5. Cách hoạt động — 5 bước nối bằng đường 1px, bước Người duyệt viền vàng */}
-        <section id="cach-hoat-dong" className="scroll-mt-20 py-16 lg:py-24" aria-labelledby="cach-title">
+        <section id="cach-hoat-dong" className={cn("scroll-mt-20", MUC)} aria-labelledby="cach-title">
           <div className={cn(KHUNG, "space-y-10")}>
             <div className="max-w-2xl space-y-4" data-reveal>
               <h2 id="cach-title" className="text-2xl font-bold text-balance sm:text-3xl">
@@ -221,38 +224,42 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* 6. Bằng chứng — ảnh trái + 3 thẻ số nổi đè mép dưới phải ảnh, chữ phải */}
-        <section id="bang-chung" className="scroll-mt-20 border-y bg-card py-16 lg:py-24" aria-labelledby="bang-chung-title">
-          <div className={cn(KHUNG, "grid items-center gap-10 lg:grid-cols-12")}>
-            {/* Thẻ số chỉ đè ~20px lên mép dưới ảnh (không che cột "Nghĩa vụ" trong bảng) */}
-            <div className="relative lg:col-span-7 lg:pb-16" data-reveal>
-              <LandingShot name="cap-nhat-khach-hang" alt={L.bangChung.anh} />
-              <ul className="mt-3 grid grid-cols-3 gap-2 sm:gap-3 lg:absolute lg:right-6 lg:bottom-0 lg:mt-0 lg:w-[80%]">
-                {L.bangChung.the.map((t, i) => (
-                  <li
-                    key={t.mo}
-                    data-reveal
-                    style={tre(200 + i * 80)}
-                    className={cn("p-3 sm:p-4", i === 0 ? "bg-gold-metal text-primary-foreground" : "border bg-card", i === 1 && "lg:translate-y-3", i === 2 && "lg:translate-y-6")}
-                  >
-                    <span className="block text-2xl leading-none font-bold tabular-nums sm:text-[32px]">{t.so}</span>
-                    <span className={cn("mt-1.5 block text-xs", i === 0 ? "text-primary-foreground/80" : "text-muted-foreground")}>{t.mo}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="space-y-4 lg:col-span-5" data-reveal style={tre(80)}>
-              <h2 id="bang-chung-title" className="text-2xl font-bold text-balance sm:text-3xl">
+        {/* 6. Chạy thử — tiêu đề + câu dẫn → hàng thẻ số riêng (không đè ảnh) → ảnh trọn bề ngang nội dung */}
+        <section id="chay-thu" className={cn("scroll-mt-20 border-y bg-card", MUC)} aria-labelledby="chay-thu-title">
+          <div className={cn(KHUNG, "space-y-8 lg:space-y-10")}>
+            <div className="max-w-2xl space-y-3" data-reveal>
+              <p className="text-sm font-semibold text-gold-text">{L.bangChung.nhan}</p>
+              <h2 id="chay-thu-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.bangChung.tieuDe}
               </h2>
               <p className="text-base text-muted-foreground">{L.bangChung.than}</p>
               <p className="text-xs text-muted-foreground">{L.bangChung.ghiChu}</p>
             </div>
+            {/* Thẻ 25 lớn nhất (~1/2 bề ngang, bg-gold-metal, số 96px/800); hai thẻ 18 xếp dọc bên phải, tổng cao bằng thẻ 25.
+                Điện thoại: thẻ 25 trên cùng, hai thẻ 18 cạnh nhau bên dưới. Nhãn dưới số 18px. */}
+            <ul className="grid grid-cols-2 gap-3 lg:grid-rows-2" aria-label={L.bangChung.tieuDe}>
+              {L.bangChung.the.map((t, i) =>
+                i === 0 ? (
+                  <li key={t.mo} data-reveal className="col-span-2 flex flex-col justify-end bg-gold-metal p-6 text-[#2A2112] sm:p-8 lg:col-span-1 lg:row-span-2">
+                    <span className="block text-[72px] leading-none font-extrabold tabular-nums sm:text-[96px]">{t.so}</span>
+                    <span className="mt-3 block text-lg font-medium">{t.mo}</span>
+                  </li>
+                ) : (
+                  <li key={t.mo} data-reveal style={tre(i * 80)} className="flex flex-col justify-end border bg-card p-5 sm:p-6">
+                    <span className="block text-[44px] leading-none font-bold tabular-nums sm:text-[56px]">{t.so}</span>
+                    <span className="mt-2 block text-lg text-muted-foreground">{t.mo}</span>
+                  </li>
+                ),
+              )}
+            </ul>
+            <div data-reveal>
+              <LandingShot name="cap-nhat-khach-hang" alt={L.bangChung.anh} sizes="(min-width: 1200px) 1136px, 100vw" />
+            </div>
           </div>
         </section>
 
         {/* 7. Gói dịch vụ */}
-        <section id="goi-dich-vu" className="scroll-mt-20 py-16 lg:py-24" aria-labelledby="goi-title">
+        <section id="goi-dich-vu" className={cn("scroll-mt-20", MUC)} aria-labelledby="goi-title">
           <div className={cn(KHUNG, "space-y-10")}>
             <div className="max-w-2xl space-y-4" data-reveal>
               <h2 id="goi-title" className="text-2xl font-bold text-balance sm:text-3xl">
@@ -282,7 +289,7 @@ export function LandingPage() {
         </section>
 
         {/* 8. Vì sao khách ở lại — ảnh trái, 3 lý do phải */}
-        <section className="border-y bg-card py-16 lg:py-24" aria-labelledby="o-lai-title">
+        <section className={cn("border-y bg-card", MUC)} aria-labelledby="o-lai-title">
           <div className={cn(KHUNG, "grid items-center gap-10 lg:grid-cols-12")}>
             <div className="order-2 lg:order-1 lg:col-span-7" data-reveal>
               <LandingShot name="thong-bao" alt={L.oLai.anh} />
@@ -301,7 +308,7 @@ export function LandingPage() {
         </section>
 
         {/* 9. Chương trình đối tác — khối nổi bật */}
-        <section id="doi-tac" className="scroll-mt-20 py-16 lg:py-24" aria-labelledby="doi-tac-title">
+        <section id="doi-tac" className={cn("scroll-mt-20", MUC)} aria-labelledby="doi-tac-title">
           <div className={KHUNG}>
             <div className="relative border border-group-border bg-group-solid p-6 sm:p-10" data-reveal>
               <div className="absolute inset-x-0 top-0 h-0.5 bg-gold-metal-flat" aria-hidden />
@@ -321,7 +328,7 @@ export function LandingPage() {
         </section>
 
         {/* 10. Kêu gọi cuối trang */}
-        <section className="border-t bg-card py-16 lg:py-20" aria-labelledby="cuoi-title">
+        <section className={cn("border-t bg-card", MUC)} aria-labelledby="cuoi-title">
           <div className={cn(KHUNG, "flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between")} data-reveal>
             <h2 id="cuoi-title" className="max-w-2xl text-2xl font-bold text-balance sm:text-3xl">
               {L.cuoi.tieuDe}
@@ -333,17 +340,24 @@ export function LandingPage() {
         </section>
       </main>
 
-      {/* 11. Chân trang */}
+      {/* 11. Chân trang — tối giản; email liên hệ chỉ hiện khi team đã có (TODO trong lib/copy-landing.ts) */}
       <footer className="border-t bg-background">
         <div className={cn(KHUNG, "flex flex-col gap-4 py-8 text-sm sm:flex-row sm:items-center sm:justify-between")}>
-          <p className="text-muted-foreground">{L.chan.banQuyen}</p>
-          <nav aria-label="Tài khoản" className="flex gap-5">
+          <p className="text-muted-foreground">
+            <span className="font-medium text-foreground">{L.chan.ten}</span> · {L.chan.team}
+          </p>
+          <nav aria-label="Tài khoản và liên hệ" className="flex flex-wrap gap-x-5 gap-y-2">
             <Link href="/login" className="hover:underline">
               {L.chan.dangNhap}
             </Link>
             <Link href="/dang-ky" className="font-medium text-gold-text hover:underline">
               {L.chan.dangKy}
             </Link>
+            {LIEN_HE_DOI_TAC && (
+              <a href={`mailto:${LIEN_HE_DOI_TAC}`} className="hover:underline">
+                {LIEN_HE_DOI_TAC}
+              </a>
+            )}
           </nav>
         </div>
       </footer>
