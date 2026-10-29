@@ -41,11 +41,11 @@ export function ViSaoApDung({
             ].join("");
 
   return (
-    <section className="space-y-1.5" aria-label={COPY.term.viSao}>
-      <h3 className="text-xs font-semibold text-muted-foreground">{COPY.term.viSao}</h3>
-      <p className="text-sm">{cau}</p>
+    <section className="max-w-[70ch] space-y-3" aria-label={COPY.term.viSao}>
+      <h3 className="eyebrow">{COPY.term.viSao}</h3>
+      <p className="text-[15px]">{cau}</p>
       {dieuKien.length > 0 && (
-        <ul className="space-y-1 text-sm">
+        <ul className="space-y-2 text-sm">
           {dieuKien.map((dk, i) => {
             const tt = dict.find((t) => t.ma === dk.dieu_kien_may_doc.thuoc_tinh);
             const Icon = dk.ket_qua === true ? Check : dk.ket_qua === false ? X : CircleHelp;

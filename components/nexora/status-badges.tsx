@@ -15,6 +15,7 @@ import {
   Loader,
   Package,
   Percent,
+  Scale,
   ShieldAlert,
   TicketPercent,
   TriangleAlert,
@@ -55,7 +56,7 @@ function Pill({ label, style, className }: { label: string; style: Style; classN
 /* ---------- 1. Trạng thái áp dụng — 4 trạng thái rule engine ---------- */
 
 const apDungStyle: Record<TrangThaiApDung, Style> = {
-  ap_dung: { className: "bg-status-ap-dung-bg text-status-ap-dung", Icon: ShieldAlert },
+  ap_dung: { className: "bg-status-ap-dung-bg text-status-ap-dung", Icon: Scale },
   sap_ap_dung: { className: "bg-status-sap-ap-dung-bg text-status-sap-ap-dung", Icon: Clock },
   khong_ap_dung: { className: "bg-status-khong-ap-dung-bg text-status-khong-ap-dung", Icon: CircleMinus },
   chua_du_thong_tin: { className: "bg-status-chua-du-tt-bg text-status-chua-du-tt", Icon: CircleHelp },

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ChevronDown, CircleCheck, CircleHelp, LoaderCircle, Plus, RotateCw, Trash2 } from "lucide-react";
+import { ArrowRight, ChevronDown, CircleCheck, CircleHelp, Plus, RotateCw, Trash2 } from "lucide-react";
 
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
+import { DoiChieuTrucQuan } from "@/components/nexora/doi-chieu-truc-quan";
 import { FormField } from "@/components/nexora/form-field";
 import { PageHeader } from "@/components/nexora/page-header";
 import { Stepper } from "@/components/nexora/progress";
@@ -138,6 +139,8 @@ export function OnboardingForm() {
   const [busy, setBusy] = useState(false);
   const [dangDoiChieu, setDangDoiChieu] = useState(false); // API trả 202 "dang_quet" → đang hỏi lại
   const [done, setDone] = useState<Done | null>(null);
+  const [moKetQua, setMoKetQua] = useState(false); // màn đối chiếu động đã diễn xong → hiện màn kết quả
+  const xemKetQua = useCallback(() => setMoKetQua(true), []);
   const router = useRouter();
   const { customerId } = useAuth();
   // Chưa gắn doanh nghiệp → đăng ký mới. Chốt theo lúc mở form: sau khi đăng ký, refreshSession làm customerId có giá trị
@@ -280,24 +283,25 @@ export function OnboardingForm() {
     await doiChieuLai(customerId!);
   }
 
-  // 202 "dang_quet": doanh nghiệp đã tạo, đang hỏi lại GET /api/onboard/{id} tới khi có kết quả
-  if (dangDoiChieu && !done) {
+  // Đang gửi hồ sơ / quét (kể cả 202 "dang_quet" đang hỏi lại) → màn đối chiếu động thay spinner; có kết quả thì
+  // màn đó giữ thêm ~2 giây cho bộ đếm chạy tới số thật rồi mới sang màn kết quả (moKetQua)
+  const dangGui = dangDoiChieu || (busy && step === HO_SO.buoc.length - 1);
+  if ((!done && dangGui) || (done?.kq && !moKetQua)) {
+    const tenNganh = nganhItems.find((n) => n.value === data.nganh)?.label;
     return (
       <>
         {header}
-        <Card className="max-w-2xl" aria-busy="true">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg" role="status">
-              <LoaderCircle className="size-5 animate-spin text-gold-text" aria-hidden /> {AUTH.dangDoiChieu.title}
-            </CardTitle>
-            <CardDescription className="text-sm">{AUTH.dangDoiChieu.body}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="h-1.5 overflow-hidden bg-border">
-              <div className="h-full w-1/3 animate-pulse bg-gold-metal-flat" />
-            </div>
-          </CardContent>
-        </Card>
+        <DoiChieuTrucQuan
+          hoSo={[
+            ...(tenNganh ? [tenNganh] : []),
+            ...(data.quy_mo !== CHUA_CHON ? [`Quy mô ${QUY_MO_LABEL[data.quy_mo as QuyMo].toLowerCase()}`] : []),
+            ...data.domains.map(domainLabel),
+            HO_SO.doiChieu.traLoi(Object.values(data.thuoc_tinh).filter((v) => v !== undefined).length),
+          ]}
+          phongBan={data.departments.map((d) => d.ten_phong_ban.trim()).filter(Boolean)}
+          kq={done?.kq ?? null}
+          onFinish={xemKetQua}
+        />
       </>
     );
   }
@@ -315,6 +319,7 @@ export function OnboardingForm() {
             // Vừa đăng ký xong → tải lại để form vào chế độ sửa (đọc hồ sơ đã lưu); gọi lại POST /api/onboard sẽ bị 409
             if (laDangKy) return window.location.reload();
             setDone(null);
+            setMoKetQua(false);
             setStep(0);
           }}
         />
@@ -354,7 +359,7 @@ export function OnboardingForm() {
                   />
                 </FormField>
               )}
-              <FormField label={HO_SO.nganh} hint={HO_SO.nganhHint} error={errors.nganh}>
+              <FormField label={HO_SO.nganh} error={errors.nganh}>
                 <Select items={nganhItems} value={data.nganh || null} onValueChange={(v) => update({ nganh: (v as string | null) ?? "" })}>
                   <SelectTrigger className="w-full sm:w-80" aria-invalid={!!errors.nganh}>
                     <SelectValue placeholder={HO_SO.nganhPh} />
@@ -579,7 +584,7 @@ function KetQuaHoSo({
                 );
               })}
             </ul>
-            {thieuPhong > 0 && <p className="text-sm text-status-ap-dung">{R.thieuPhong(thieuPhong)}</p>}
+            {thieuPhong > 0 && <p className="text-sm text-attention">{R.thieuPhong(thieuPhong)}</p>}
           </section>
 
           {/* Đủ 4 trạng thái, đếm theo nghĩa vụ */}
@@ -602,7 +607,7 @@ function KetQuaHoSo({
             <section aria-labelledby="bo-sung-title" className="space-y-2">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 id="bo-sung-title" className="flex items-center gap-1.5 text-sm font-semibold">
-                  <CircleHelp className="size-4 text-status-ap-dung" aria-hidden /> {COPY.status.apDung.chua_du_thong_tin}
+                  <CircleHelp className="size-4 text-attention" aria-hidden /> {COPY.status.apDung.chua_du_thong_tin}
                 </h3>
                 <Link href="/duyet-diagnostic#hoi-bo-sung" className={buttonVariants({ variant: "outline", size: "sm" })}>
                   {R.traLoiNgay} <ArrowRight />

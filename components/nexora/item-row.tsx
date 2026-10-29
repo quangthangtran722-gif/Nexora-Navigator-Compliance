@@ -23,6 +23,7 @@ type Common = {
   right?: React.ReactNode; // badge trạng thái
   unread?: boolean; // chấm đỏ vuông (hộp thư)
   muted?: boolean; // mục hết hiệu lực: mờ + gạch
+  prominent?: boolean; // màn phía doanh nghiệp: tiêu đề khi mở 17px/700, các phần cách nhau 24px (curator giữ 15px/600)
   className?: string;
 };
 
@@ -32,6 +33,7 @@ export function ItemRow({
   right,
   unread,
   muted,
+  prominent,
   className,
   open,
   onToggle,
@@ -55,10 +57,10 @@ export function ItemRow({
       ) : (
         <ChevronDown className={cn("size-4 shrink-0 text-muted-foreground transition-transform", !open && "-rotate-90")} aria-hidden />
       )}
-      {unread && <span className="size-1.5 shrink-0 bg-brand-red" aria-label="Chưa đọc" />}
+      {unread && <span className="size-2 shrink-0 bg-brand-red" aria-label="Chưa đọc" />}
       <span className="min-w-40 flex-1 basis-40">
-        {/* Hộp thư (unread được truyền): chưa đọc 600, đã đọc 400 — phân biệt bằng độ đậm + chấm đỏ 6px */}
-        <span className={cn("block", open ? "text-[15px] font-semibold" : unread === undefined ? "text-sm font-medium" : unread ? "text-sm font-semibold" : "text-sm font-normal", muted && "line-through")}>
+        {/* Hộp thư (unread được truyền): chưa đọc 600, đã đọc 400 — phân biệt bằng độ đậm + chấm đỏ 8px */}
+        <span className={cn("block", open ? (prominent ? "text-[17px] leading-snug font-bold" : "text-[15px] font-semibold") : unread === undefined ? "text-sm font-medium" : unread ? "text-sm font-semibold" : "text-sm font-normal", muted && "line-through")}>
           {title}
         </span>
         {hint && !open && <span className="block truncate text-xs text-muted-foreground">{hint}</span>}
@@ -81,7 +83,7 @@ export function ItemRow({
         </button>
       )}
       {open && children && (
-        <div id={panelId} className="space-y-3 px-4 pb-4 pl-11">
+        <div id={panelId} className={cn("px-4 pb-4 pl-11", prominent ? "space-y-6 pt-1 pb-5" : "space-y-3")}>
           {children}
         </div>
       )}
@@ -96,5 +98,5 @@ export function ItemMeta({ children }: { children: React.ReactNode }) {
 
 // Hàng hành động: đặt nút phụ trước, nút chính sau cùng (sát phải)
 export function ItemActions({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn("flex flex-wrap items-end justify-end gap-2 border-t pt-3", className)}>{children}</div>;
+  return <div className={cn("flex flex-wrap items-end justify-end gap-2 border-t pt-4", className)}>{children}</div>;
 }

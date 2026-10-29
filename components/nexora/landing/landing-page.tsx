@@ -21,6 +21,7 @@ import { INTRO_KEY, LandingIntro } from "@/components/nexora/landing/landing-int
 import { LandingShot } from "@/components/nexora/landing/landing-shot";
 import { LogoLockup } from "@/components/nexora/landing/logo-lockup";
 import { LANDING, LIEN_HE_DOI_TAC } from "@/lib/copy-landing";
+import { useCountUp } from "@/lib/use-count-up";
 import { cn } from "@/lib/utils";
 
 /*
@@ -73,6 +74,39 @@ function useReveal(root: React.RefObject<HTMLElement | null>) {
 // Độ trễ hiện dần lần lượt (ms)
 const tre = (ms: number) => ({ "--d": `${ms}ms` }) as React.CSSProperties;
 
+// Mục Chạy thử: khi vào khung nhìn (1 lần) số đếm từ 0 lên và thanh bên dưới mọc theo số / số lớn nhất —
+// để thấy ngay chứng khoán nhiều hơn công nghệ. Giảm chuyển động: số và thanh hiện sẵn (useCountUp + animate-grow-x tự tắt).
+function SoChayThu({ so, max, className, thanh, ray }: { so: number; max: number; className: string; thanh: string; ray: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [thay, setThay] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        setThay(true);
+        io.disconnect();
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const n = useCountUp(so, { start: thay, duration: 1100 });
+  return (
+    <>
+      <span ref={ref} className={cn("block leading-none tabular-nums", className)} aria-hidden>
+        {n}
+      </span>
+      <span className="sr-only">{so}</span>
+      <span className={cn("mt-3 block h-1.5", ray)} aria-hidden>
+        <span className={cn("block h-full", thanh, thay ? "animate-grow-x" : "scale-x-0")} style={{ width: `${(so / max) * 100}%` }} />
+      </span>
+    </>
+  );
+}
+
 export function LandingPage() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [logoEl, setLogoEl] = useState<HTMLAnchorElement | null>(null);
@@ -89,6 +123,7 @@ export function LandingPage() {
   }, []);
 
   const xongIntro = useCallback(() => setIntro("entering"), []);
+  const soMax = Math.max(...L.bangChung.the.map((t) => t.so));
   const lienHe = LIEN_HE_DOI_TAC ? `mailto:${LIEN_HE_DOI_TAC}` : "/dang-ky"; // TODO(team): email đối tác
 
   return (
@@ -158,7 +193,7 @@ export function LandingPage() {
               </h1>
               {/* Phần "Vấn đề" gộp vào đây thành 1 câu dẫn */}
               <p data-hero style={tre(100)} className="max-w-2xl text-base text-group-sub sm:text-lg">
-                {L.hero.dan} <span className="text-group-title">{L.hero.phu}</span>
+                {L.hero.dan} {L.hero.phu}
               </p>
               <div data-hero style={tre(200)} className="flex flex-wrap gap-3 pt-1">
                 <Link href="/dang-ky" className={cn(buttonVariants({ size: "lg" }), "h-11 px-5 text-[15px]")}>
@@ -230,7 +265,7 @@ export function LandingPage() {
         <section id="chay-thu" className={cn("scroll-mt-20 border-y bg-card", MUC)} aria-labelledby="chay-thu-title">
           <div className={cn(KHUNG, "space-y-8 lg:space-y-10")}>
             <div className="max-w-2xl space-y-3" data-reveal>
-              <p className="text-sm font-semibold text-gold-text">{L.bangChung.nhan}</p>
+              <p className="eyebrow">{L.bangChung.nhan}</p>
               <h2 id="chay-thu-title" className="text-2xl font-bold text-balance sm:text-3xl">
                 {L.bangChung.tieuDe}
               </h2>
@@ -245,12 +280,12 @@ export function LandingPage() {
                 {L.bangChung.the.map((t, i) =>
                   i === 0 ? (
                     <li key={t.mo} data-reveal className="col-span-2 flex flex-col justify-end bg-gold-metal p-5 text-[#2A2112] sm:p-6 xl:col-span-1 xl:row-span-2">
-                      <span className="block text-[64px] leading-none font-extrabold tabular-nums sm:text-[72px]">{t.so}</span>
+                      <SoChayThu so={t.so} max={soMax} className="text-[64px] font-extrabold sm:text-[72px]" thanh="bg-[#2A2112]/80" ray="bg-[#2A2112]/15" />
                       <span className="mt-2 block text-base font-medium">{t.mo}</span>
                     </li>
                   ) : (
                     <li key={t.mo} data-reveal style={tre(i * 80)} className="flex flex-col justify-end border bg-card px-4 py-3">
-                      <span className="block text-[40px] leading-none font-bold tabular-nums sm:text-[44px]">{t.so}</span>
+                      <SoChayThu so={t.so} max={soMax} className="text-[40px] font-bold sm:text-[44px]" thanh="bg-primary" ray="bg-muted" />
                       <span className="mt-1.5 block text-base text-muted-foreground">{t.mo}</span>
                     </li>
                   ),

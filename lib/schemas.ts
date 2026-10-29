@@ -14,7 +14,8 @@ const slug = z.string().regex(/^[a-z_]+$/, "Chỉ dùng chữ thường không d
 
 export const onboardingStep1 = z.object({
   ten_cong_ty: z.string().trim().min(2, "Nhập tên công ty"),
-  nganh: slug.nullable(), // null = chưa khai
+  // Bắt buộc: ngành quyết định nghĩa vụ riêng của ngành (vd chứng khoán). DB vẫn cho null với hồ sơ cũ
+  nganh: z.string({ error: "Chọn ngành kinh doanh" }).regex(/^[a-z_]+$/, "Chọn ngành kinh doanh"),
   quy_mo: z.enum(["nho", "vua", "lon"]).nullable(),
 });
 

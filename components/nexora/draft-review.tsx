@@ -212,7 +212,7 @@ function ChunkActions({ summary: s, onApproved }: { summary: NerExtractionSummar
         )}
       </div>
       {boQua > 0 && (
-        <p className="flex items-center gap-1.5 text-xs text-status-ap-dung">
+        <p className="flex items-center gap-1.5 text-xs text-attention">
           <TriangleAlert className="size-3.5" aria-hidden /> {boQua} mục chủ thể/điều kiện/ngưỡng chưa có điều kiện áp dụng — &quot;Duyệt tất cả&quot; sẽ bỏ qua; điền điều kiện (hoặc xác nhận chủ thể chung) rồi duyệt riêng.
         </p>
       )}
@@ -338,7 +338,7 @@ function EntityRow({
           ) : e.dieu_kien_may_doc ? (
             <p className="text-sm">{formatDieuKien(e.dieu_kien_may_doc, dict)}</p>
           ) : (
-            <p className={cn("text-sm", missingDk ? "text-destructive" : chuTheChung ? "text-status-ap-dung" : "text-muted-foreground")}>
+            <p className={cn("text-sm", missingDk ? "text-destructive" : chuTheChung ? "text-attention" : "text-muted-foreground")}>
               {missingDk
                 ? "Cần điền điều kiện áp dụng trước khi duyệt."
                 : chuTheChung

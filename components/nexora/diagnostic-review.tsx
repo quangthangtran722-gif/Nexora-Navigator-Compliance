@@ -312,8 +312,10 @@ function DiagnosticRow({
     <ItemRow
       id={`diag-${d.id}`}
       title={entity?.ten_entity ?? COPY.page.xacNhan.title}
-      hint={hetHieuLuc ? COPY.term.hetHieuLuc : undefined}
+      // Thu gọn: tên + 1 dòng tinh gọn (điều khoản — văn bản) để quét nhanh
+      hint={hetHieuLuc ? COPY.term.hetHieuLuc : entity ? [entity.dieu_khoan, tenVanBan].filter(Boolean).join(" — ") : undefined}
       muted={hetHieuLuc}
+      prominent
       open={open}
       onToggle={onToggle}
       // Thu gọn: chỉ 1 badge (trạng thái xác nhận); trạng thái áp dụng nằm ở dòng meta khi mở
@@ -339,7 +341,7 @@ function DiagnosticRow({
           </a>
         </p>
       ) : (
-        <DiagnosticBody noiDung={d.noi_dung_diagnostic} entity={entity} nguon={tenVanBan} context={context} entities={entities} />
+        <DiagnosticBody noiDung={d.noi_dung_diagnostic} entity={entity} nguon={tenVanBan} context={context} entities={entities} prominent />
       )}
       {hetHieuLuc && <p className="text-xs text-muted-foreground">{XAC_NHAN.hetHieuLuc}</p>}
       {d.ghi_chu_duyet && <p className="text-xs text-muted-foreground">{XAC_NHAN.ghiChuDaXacNhan(d.ghi_chu_duyet)}</p>}

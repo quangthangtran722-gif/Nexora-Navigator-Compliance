@@ -153,6 +153,7 @@ export function DepartmentInbox() {
                     unread={!n.da_doc}
                     muted={d?.trang_thai_ap_dung === "khong_ap_dung"}
                     right={right}
+                    prominent
                     open={openId === n.id}
                     onToggle={() => {
                       setOpenId((cur) => (cur === n.id ? null : n.id));
@@ -176,6 +177,7 @@ export function DepartmentInbox() {
                         nguon={tenVanBan}
                         context={graph.filter((x) => x.target_id === d.entity_id && x.source_trang_thai_duyet === "da_duyet")}
                         entities={entities}
+                        prominent
                       />
                     )}
                   </ItemRow>

@@ -168,6 +168,9 @@ export const TONG_QUAN = {
     hoSo: "Mức hoàn thiện hồ sơ",
     hoSoPhu: (da: number, tong: number) => `${da}/${tong} thông tin đã điền`,
   },
+  // Dòng phụ dưới con số chính (thay 3 thẻ KPI cũ hay hiện 0)
+  phu: { sap: "sắp có hiệu lực", canBoSung: "cần bổ sung thông tin" },
+  dem: { apDung: "áp dụng", cho: "chờ xác nhận", da: "đã giao" },
   bieuDo: "Phân bổ nghĩa vụ theo trạng thái",
   bieuDoRong: "Chưa có nghĩa vụ nào được xác định cho công ty.",
   theoPhong: "Theo phòng ban",
@@ -185,7 +188,6 @@ export const HO_SO = {
   tenCongTyPh: "Tên đầy đủ theo giấy chứng nhận đăng ký doanh nghiệp",
   nganh: "Ngành kinh doanh",
   nganhPh: "Chọn ngành",
-  nganhHint: "Không bắt buộc",
   quyMo: "Quy mô doanh nghiệp",
   chuaChon: "Chưa chọn",
   linhVucHoi: "Công ty cần theo dõi quy định thuộc lĩnh vực nào?",
@@ -217,6 +219,19 @@ export const HO_SO = {
     email: "Email không hợp lệ",
     phongBan: "Thêm ít nhất 1 phòng ban",
     khac: "Thông tin chưa hợp lệ",
+  },
+  // Màn đang đối chiếu (thay spinner): văn bản → bộ lọc → phòng ban
+  doiChieu: {
+    dang: "Đang đối chiếu hồ sơ",
+    xong: "Đối chiếu xong",
+    moTa: "Mỗi điều khoản được so với hồ sơ của công ty. Khớp thì giao về phòng ban phụ trách, không khớp thì bỏ qua. Có thể mất tới 1 phút, đừng đóng trang.",
+    vanBan: "Văn bản",
+    vanBanMacDinh: ["108/2025/QH15", "77/2025/TT-BTC"],
+    hoSo: "Hồ sơ công ty",
+    boLoc: "Điều kiện",
+    phongBan: "Phòng ban",
+    dem: "nghĩa vụ áp dụng cho công ty",
+    traLoi: (n: number) => `${n} câu trả lời`,
   },
   ketQua: {
     title: "Hồ sơ đã sẵn sàng",
@@ -282,4 +297,11 @@ export const AUTH = {
     title: "Đang đối chiếu hồ sơ…",
     body: "Nexora đang so hồ sơ của bạn với các văn bản đang có hiệu lực. Việc này có thể mất tới 1 phút — vui lòng không đóng trang.",
   },
+} as const;
+
+/* ---------- Trang lỗi chung (app/error.tsx) ---------- */
+export const LOI_TRANG = {
+  title: "Trang này đang gặp lỗi",
+  body: "Bấm Thử lại. Nếu vẫn lỗi, quay về trang chủ.",
+  veTrangChu: "Về trang chủ",
 } as const;

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 /*
  * Tab / bộ lọc (palette v3 mục 9.3). Nền trắng, viền dưới; tab chọn chữ đậm + gạch chân 3px ánh kim.
- * Số đếm: "action" = có việc cần làm (nền brand-red-bg, chữ status-ap-dung — v4 mục 9.3), "neutral" = nền muted.
+ * Số đếm: "action" = có việc cần làm (nền brand-red-bg, chữ attention — v4 mục 9.3), "neutral" = nền muted.
  * Khi tab là bộ lọc, luôn đặt mục "Tất cả" đầu tiên (caller truyền vào items).
  */
 
@@ -74,7 +74,7 @@ export function TabBar({
                   <span
                     className={cn(
                       "px-1.5 py-px text-xs font-semibold tabular-nums",
-                      t.countTone === "action" ? "bg-brand-red-bg text-status-ap-dung" : "bg-muted text-muted-foreground",
+                      t.countTone === "action" ? "bg-brand-red-bg text-attention" : "bg-muted text-muted-foreground",
                     )}
                   >
                     {t.count}

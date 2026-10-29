@@ -88,6 +88,8 @@
   --color-duyet-cho-border: var(--duyet-cho-border);
   --color-status-ap-dung-bar: var(--status-ap-dung-bar);
   --color-status-khong-ap-dung-bar: var(--status-khong-ap-dung-bar);
+  --color-status-sap-ap-dung-bar: var(--status-sap-ap-dung-bar);
+  --color-attention: var(--attention);
 }
 
 /*
@@ -96,24 +98,24 @@
  * Không xanh dương ở bất kỳ đâu. Gradient chỉ dùng qua bg-gold-metal / bg-gold-metal-flat (5 chỗ, mục 2).
  */
 :root {
-  --background: #F6F7F9;
-  --foreground: #101828;
+  --background: #F7F4EF;              /* kem ấm (trước: xám lạnh #F6F7F9) */
+  --foreground: #1E1914;
   --card: #FFFFFF;
-  --card-foreground: #101828;
+  --card-foreground: #1E1914;
   --popover: #FFFFFF;
-  --popover-foreground: #101828;
+  --popover-foreground: #1E1914;
 
   --primary: #C6A462;               /* gold-500 sâm panh */
   --primary-foreground: #2A2112;    /* chữ trên gold */
-  --secondary: #F2F4F7;
-  --secondary-foreground: #344054;
-  --muted: #F2F4F7;
-  --muted-foreground: #667085;
+  --secondary: #F0EBE3;
+  --secondary-foreground: #4A4037;
+  --muted: #F0EBE3;
+  --muted-foreground: #6F6458;
   --accent: #FAF7F0;                /* gold-50: hover, mục đang chọn */
   --accent-foreground: #6E5730;     /* gold-800 */
   --destructive: #8F2A22;
-  --border: #EAECF0;
-  --input: #D0D5DD;
+  --border: #E7E0D5;
+  --input: #D5CCBF;
   --ring: #AE8C4C;
 
   --gold-metal: linear-gradient(100deg, #A8843F 0%, #D9BE7E 35%, #F1E4C0 50%, #CFAE68 68%, #B08C45 100%);
@@ -137,52 +139,54 @@
   --group-title: #FFF5E6;
   --group-sub: #BFA88E;
   --group-chip-bg: rgb(255 255 255 / 0.08);
-  --group-chip-fg: #D0D5DD;
+  --group-chip-fg: #D9CFC2;
 
   /* Trạng thái áp dụng (4) */
-  --status-ap-dung: #8F2A22;
-  --status-ap-dung-bg: #F5DEDA;
+  --status-ap-dung: #F3E7CF;
+  --status-ap-dung-bg: #2A1D14;
   --status-sap-ap-dung: #6E5730;
   --status-sap-ap-dung-bg: #F3ECDA;
   --status-chua-du-tt: #6941C6;
   --status-chua-du-tt-bg: #F4F3FF;
-  --status-khong-ap-dung: #475467;
-  --status-khong-ap-dung-bg: #F2F4F7;
+  --status-khong-ap-dung: #5C5248;
+  --status-khong-ap-dung-bg: #F0EBE3;
 
   /* Trạng thái duyệt (3) */
-  --duyet-cho: #667085;              /* trung tính: viền nét đứt #D0D5DD, nền trong suốt */
+  --duyet-cho: #6F6458;              /* trung tính: viền nét đứt, nền trong suốt */
   --duyet-cho-bg: transparent;
-  --duyet-cho-border: #D0D5DD;
+  --duyet-cho-border: #D5CCBF;
   --duyet-da: #067647;
   --duyet-da-bg: #ECFDF3;
-  --duyet-tu-choi: #475467;
-  --duyet-tu-choi-bg: #F2F4F7;
+  --duyet-tu-choi: #5C5248;
+  --duyet-tu-choi-bg: #F0EBE3;
 
   --chart-1: #C6A462;
   --chart-2: #A8392F;
   --chart-3: #6E5730;
   --chart-4: #DDC894;
-  --chart-5: #98A2B3;
+  --chart-5: #A89E92;
 
   --radius: 0rem;
 
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #344054;
+  --sidebar-foreground: #4A4037;
   --sidebar-primary: #C6A462;
   --sidebar-primary-foreground: #2A2112;
   --sidebar-accent: #FAF7F0;
   --sidebar-accent-foreground: #6E5730;
-  --sidebar-border: #EAECF0;
+  --sidebar-border: #E7E0D5;
   --sidebar-ring: #AE8C4C;
 
   /* Biến phụ Nexora (giá trị lấy từ dải màu mục 1) */
   --gold-edge: #CFAE68;             /* viền trái InsetBlock, gạch nhấn */
   --gold-metal-border: #9C7A3A;     /* viền nút ánh kim (= utility bg-gold-metal) */
-  --ink-soft: #475467;              /* chữ nút phụ (mục 9.4) */
-  --ink-faint: #98A2B3;             /* dấu "–" thay số 0 trong bảng */
+  --ink-soft: #5C5248;              /* chữ nút phụ (mục 9.4) */
+  --ink-faint: #B0A699;             /* dấu "–" thay số 0 trong bảng */
   --logo-sub: #8F713C;              /* dòng "COMPLIANCE NAVIGATOR" cạnh logo mark (gold-700) */
-  --status-ap-dung-bar: #C4665A;    /* mảng "Áp dụng" của thanh phân bổ (red-400, không tô đỏ đậm mảng lớn) */
-  --status-khong-ap-dung-bar: #A39A90; /* mảng "Không áp dụng": xám ấm (= status-khong-ap-dung bản tối), không dùng xám xanh #475467 */
+  --status-ap-dung-bar: #3D2A1D;    /* mảng "Áp dụng" của thanh phân bổ: espresso */
+  --status-sap-ap-dung-bar: #C6A462; /* mảng "Sắp áp dụng": vàng */
+  --attention: #8F2A22;             /* đỏ CHỈ cho việc cần chú ý thật (chờ xác nhận, thiếu thông tin) */
+  --status-khong-ap-dung-bar: #C9BFB2; /* mảng "Không áp dụng": xám ấm */
 }
 
 /* Hướng C "Viền vàng": khối quan trọng sáng hơn nền; nền đen ấm; dải đầu nhóm trong suốt viền vàng */
@@ -229,8 +233,8 @@
   --group-chip-bg: rgb(255 255 255 / 0.06);
   --group-chip-fg: #C9C2B8;
 
-  --status-ap-dung: #D98C82;
-  --status-ap-dung-bg: #3A1F1C;
+  --status-ap-dung: #2A2112;
+  --status-ap-dung-bg: #D2B679;
   --status-sap-ap-dung: #E9DCBA;
   --status-sap-ap-dung-bg: #2A2620;
   --status-chua-du-tt: #C4B5FD;
@@ -266,7 +270,9 @@
   --ink-soft: #C9C2B8;
   --ink-faint: #5C5650;
   --logo-sub: #B8A98C;
-  --status-ap-dung-bar: #A8392F;
+  --status-ap-dung-bar: #E9DCBA;
+  --status-sap-ap-dung-bar: #8A7350;
+  --attention: #D98C82;
   --status-khong-ap-dung-bar: var(--status-khong-ap-dung);
 }
 
@@ -311,6 +317,53 @@
     line-height: 1.55;
   }
 }
+/* Nhãn mục (eyebrow) — motif thương hiệu DUY NHẤT trong app: vạch vàng mảnh 16px + chữ 12px/600 vàng, giãn cách, in hoa.
+   Dùng cho đầu mỗi khối nội dung (như "KẾT QUẢ CHẠY THỬ" ở landing). Trên nền espresso thêm text-group-edge! */
+@utility eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-text);
+  &::before {
+    content: "";
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1px;
+    background: var(--gold-edge);
+  }
+}
+
+/* Chuyển động trong app: chỉ transform/opacity, chạy 1 lần, tắt hẳn khi prefers-reduced-motion.
+   --d = độ trễ (stagger 60–80ms do component đặt). */
+@keyframes nx-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes nx-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@utility animate-rise {
+  animation: nx-rise 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+@utility animate-grow-x {
+  transform-origin: left;
+  animation: nx-grow-x 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* Phần đầu landing: nền khối nổi bật (= bg-group-solid) + MỘT lớp radial-gradient vàng rất mờ ở góc trên bên phải.
    Ngoại lệ có chủ đích so với palette v4 (theo góp ý team) — chỉ phần đầu, không noise/grain, không lớp nào khác. */
 .landing-hero {
