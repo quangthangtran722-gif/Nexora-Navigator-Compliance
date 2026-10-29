@@ -3,7 +3,8 @@
 import { errorResponse, fromDb, getCaller, requireCurator } from "@/lib/api/http";
 import { filterDomain } from "@/lib/pipeline/filterDomain";
 
-export const maxDuration = 60;
+// Mỗi khách hàng ~7–18 giây (đo 20–28/10), chạy tuần tự → 60 giây chỉ đủ ~4 khách hàng. 300 = trần Hobby (Fluid Compute)
+export const maxDuration = 300;
 
 export async function POST(request: Request) {
   try {
