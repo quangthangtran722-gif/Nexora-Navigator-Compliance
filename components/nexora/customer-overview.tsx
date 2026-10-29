@@ -221,7 +221,7 @@ export function CustomerOverview() {
       {/* Hai danh sách ngắn đặt cạnh nhau ở màn rộng — bớt chiều dài trang */}
       <div className="grid gap-8 xl:grid-cols-2">
         <section className="space-y-3" aria-labelledby="moi-7-ngay">
-          <h2 id="moi-7-ngay" className="eyebrow">
+          <h2 id="moi-7-ngay" className="eyebrow min-h-7">
             {TONG_QUAN.moi7Ngay}
           </h2>
           {moi7Ngay.length === 0 ? (
@@ -246,7 +246,7 @@ export function CustomerOverview() {
         </section>
 
         <section className="space-y-3" aria-labelledby="moi-cap-nhat">
-          <div className="flex items-baseline justify-between gap-2">
+          <div className="flex min-h-7 items-center justify-between gap-2">
             <h2 id="moi-cap-nhat" className="eyebrow">
               {TONG_QUAN.moiCapNhat}
             </h2>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DiagnosticBody } from "@/components/nexora/diagnostic-body";
@@ -25,6 +25,13 @@ import type { GiaiDoanThongBao, Notification } from "@/lib/types";
  */
 
 const ALL = "tat-ca";
+
+// Gom thông báo theo khoá (tên văn bản), giữ thứ tự xuất hiện
+function nhomTheoVanBan(items: Notification[], khoa: (n: Notification) => string): [string, Notification[]][] {
+  const m = new Map<string, Notification[]>();
+  for (const n of items) m.set(khoa(n), [...(m.get(khoa(n)) ?? []), n]);
+  return [...m];
+}
 const GROUPS: GiaiDoanThongBao[] = ["cho_duyet", "hoi_bo_sung", "da_giao"];
 
 export function DepartmentInbox() {
@@ -109,8 +116,16 @@ export function DepartmentInbox() {
                 { label: THONG_BAO.thongBao, n: items.length },
               ]}
             />
+            {/* Nhiều văn bản trong 1 nhóm → chia nhóm con có nhãn theo văn bản, không lặp tên văn bản ở từng dòng */}
+            {nhomTheoVanBan(items, (n) => (vbChung ? "" : (tenVanBanOf(n) ?? ""))).map(([vb, ds]) => (
+              <Fragment key={vb}>
+                {vb && (
+                  <p className="eyebrow border-x border-b bg-muted/50 px-4 py-2" title={vb}>
+                    <span className="min-w-0 truncate">{vb}</span>
+                  </p>
+                )}
             <ItemList className="border-t-0">
-              {items.map((n) => {
+              {ds.map((n) => {
                 const d = diagnostics.find((x) => x.id === n.diagnostic_id);
                 const entity = entities.find((e) => e.id === d?.entity_id);
                 const tenVanBan = tenVanBanOf(n);
@@ -135,9 +150,7 @@ export function DepartmentInbox() {
                       hint={
                         g.giaiDoan === "hoi_bo_sung" && n.noi_dung
                           ? THONG_BAO.cauHoi(n.noi_dung.split(",").map((ma) => dict.find((t) => t.ma === ma.trim())?.cau_hoi).filter(Boolean).join(" · "))
-                          : vbChung
-                            ? undefined
-                            : tenVanBan
+                          : undefined
                       }
                       href={g.giaiDoan === "hoi_bo_sung" ? "/duyet-diagnostic#hoi-bo-sung" : `/duyet-diagnostic#diag-${n.diagnostic_id}`}
                       onNavigate={() => markRead(n)}
@@ -184,6 +197,8 @@ export function DepartmentInbox() {
                 );
               })}
             </ItemList>
+              </Fragment>
+            ))}
           </section>
         );
       })}

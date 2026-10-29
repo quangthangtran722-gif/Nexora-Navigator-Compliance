@@ -27,9 +27,11 @@ type Props = {
 const chuan = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
 export function DiagnosticBody({ noiDung, entity, nguon, context, entities, prominent }: Props) {
-  const tatCa = noiDung?.split("\n").filter(Boolean) ?? [];
-  // Cắt lặp: bỏ dòng trùng tên nghĩa vụ (tiêu đề đã nói rồi), trừ khi đó là dòng duy nhất
-  const loc = tatCa.filter((l) => !entity || chuan(l) !== chuan(entity.ten_entity));
+  // Bỏ số thứ tự đầu dòng ("1. ") — đã có ô tick
+  const tatCa = noiDung?.split("\n").map((l) => l.replace(/^\s*\d+[.)]\s+/, "").trim()).filter(Boolean) ?? [];
+  // Cắt lặp: bỏ dòng trùng tên nghĩa vụ (tiêu đề đã nói) và dòng "Căn cứ: …" (điều khoản đã ở dòng meta + mục Căn cứ pháp lý),
+  // trừ khi lọc xong không còn dòng nào
+  const loc = tatCa.filter((l) => !/^căn cứ\s*:/i.test(l) && (!entity || chuan(l) !== chuan(entity.ten_entity)));
   const viecCanLam = loc.length ? loc : tatCa;
   const nhan = prominent ? "eyebrow" : "text-xs font-semibold text-muted-foreground";
 
@@ -54,7 +56,7 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities, prom
       </section>
 
       {entity && (
-        <Accordion>
+        <Accordion className={cn(prominent && "max-w-[70ch]")}>
           <AccordionItem value="ctx">
             <AccordionTrigger className={prominent ? "eyebrow py-1 hover:no-underline" : "text-sm"}>
               {COPY.term.canCu} ({context.length + 1})
