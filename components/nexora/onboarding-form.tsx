@@ -412,7 +412,7 @@ export function OnboardingForm() {
           {step === 2 && (
             <div className="space-y-6">
               <p className="text-sm text-muted-foreground">{HO_SO.dacDiemMoTa}</p>
-              {dictQuery.loading && <LoadingBlock />}
+              {dictQuery.loading && <LoadingBlock kieu="form" />}
               {dictQuery.error && <ErrorBlock error={dictQuery.error} onRetry={dictQuery.reload} />}
               {!dictQuery.loading && !dictQuery.error && questions.length === 0 && (
                 <p className="border bg-muted px-4 py-3 text-sm text-muted-foreground">{HO_SO.dacDiemRong}</p>
@@ -558,7 +558,7 @@ function KetQuaHoSo({
                 return (
                   <li key={p.ten_phong_ban}>
                     <details className="group">
-                      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-muted/50 [&::-webkit-details-marker]:hidden">
+                      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-3 py-2 text-sm transition-[background-color,box-shadow] hover:bg-accent hover:shadow-[inset_2px_0_0_var(--gold-edge)] [&::-webkit-details-marker]:hidden">
                         <span className="font-medium">{p.ten_phong_ban}</span>
                         <span className="flex items-center gap-2 text-muted-foreground tabular-nums">
                           {R.soViec(p.so_nghia_vu)}

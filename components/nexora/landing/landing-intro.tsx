@@ -213,7 +213,7 @@ export function LandingIntro({
         className="pointer-events-none fixed z-[51] origin-top-left opacity-0"
         aria-hidden
       >
-        <LogoLockup className="h-full" />
+        <LogoLockup className="h-full" nguyenBan />
       </div>
     </>
   );

@@ -33,6 +33,21 @@ export const LANDING = {
     nutPhu: "Xem cách hoạt động",
     vanBan: "Đã kiểm duyệt: 108/2025/QH15 · 77/2025/TT-BTC",
     anh: "Trang Tổng quan của một công ty công nghệ: 18 nghĩa vụ đang áp dụng, 18 chờ xác nhận",
+    // Nửa phải phần đầu: trạng thái cuối của màn đối chiếu, dựng bằng HTML (to, đọc được) thay ảnh dashboard nhỏ.
+    // TODO(01/11, sau khi khoá dữ liệu): cập nhật số + tên phòng + thẻ mẫu theo doanh nghiệp mẫu cuối cùng.
+    minhHoa: {
+      nhan: "Kết quả đối chiếu",
+      congTy: "Công ty chứng khoán mẫu",
+      tong: 25,
+      donVi: "nghĩa vụ áp dụng",
+      phong: [
+        { ten: "Phòng Kế toán", so: 10 },
+        { ten: "Ban Giám đốc", so: 9 },
+        { ten: "Phòng Kinh doanh", so: 6 },
+      ],
+      the: { nhan: "Ví dụ một nghĩa vụ", ten: "Lập hoá đơn đầy đủ khi bán hàng", nguon: "Điều 8, khoản 4 · Luật Quản lý thuế", giaoCho: "Ban Giám đốc" },
+      moTa: "Kết quả đối chiếu của một công ty chứng khoán mẫu: 25 nghĩa vụ áp dụng, chia cho Phòng Kế toán 10, Ban Giám đốc 9, Phòng Kinh doanh 6",
+    },
   },
   sanPham: {
     tieuDe: "Khai hồ sơ một lần, nhận đúng nghĩa vụ của công ty bạn",

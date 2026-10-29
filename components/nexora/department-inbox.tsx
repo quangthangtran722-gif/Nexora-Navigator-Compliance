@@ -53,7 +53,7 @@ export function DepartmentInbox() {
     [customerId],
   );
   const refresh = res.reload;
-  if (res.loading) return <LoadingBlock />;
+  if (res.loading) return <LoadingBlock kieu="danhSach" />;
   if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
   const { departments, notifications, diagnostics, entities, graph, dict, chunks, vanBan } = res.data!;
 

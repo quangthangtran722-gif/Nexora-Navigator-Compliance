@@ -69,7 +69,7 @@ export function ItemRow({
     </>
   );
   // flex-wrap: cột hẹp thì badge xuống dòng dưới tên thay vì bóp tên
-  const rowClass = "flex min-h-11 w-full flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2.5 text-left transition-colors outline-none hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50";
+  const rowClass = "flex min-h-11 w-full flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2.5 text-left transition-[background-color,box-shadow] outline-none hover:bg-accent hover:shadow-[inset_2px_0_0_var(--gold-edge)] focus-visible:ring-3 focus-visible:ring-ring/50";
 
   return (
     <li id={id} className={cn("scroll-mt-20", muted && "opacity-60", className)}>

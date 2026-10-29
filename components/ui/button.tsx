@@ -9,13 +9,13 @@ const buttonVariants = cva(
       variant: {
         // Nexora v3 mục 9.4 — Chính: ánh kim (không dùng gold phẳng cho nút)
         default: "bg-gold-metal border-gold-metal-border hover:brightness-105",
-        // Phụ: Từ chối, Huỷ, Sửa, Quay lại — nền trắng, viền input, chữ #475467
+        // Phụ: Từ chối, Huỷ, Sửa, Quay lại — nền trắng, viền input, chữ ink-soft; hover: nền accent + viền vàng
         outline:
-          "border-input bg-card text-ink-soft hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
+          "border-input bg-card text-ink-soft hover:border-gold-edge hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
+          "hover:bg-accent hover:text-accent-foreground aria-expanded:bg-accent aria-expanded:text-accent-foreground",
         // Nguy hiểm: xoá / không hoàn tác — chữ + viền destructive, nền trắng (không nút nền đỏ)
         destructive:
           "border-destructive bg-card text-destructive hover:bg-brand-red-bg focus-visible:border-destructive/40 focus-visible:ring-destructive/20",

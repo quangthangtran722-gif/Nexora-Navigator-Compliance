@@ -19,6 +19,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { INTRO_KEY, LandingIntro } from "@/components/nexora/landing/landing-intro";
 import { LandingShot } from "@/components/nexora/landing/landing-shot";
+import { HeroMinhHoa } from "@/components/nexora/landing/hero-minh-hoa";
 import { LogoLockup } from "@/components/nexora/landing/logo-lockup";
 import { LANDING, LIEN_HE_DOI_TAC } from "@/lib/copy-landing";
 import { useCountUp } from "@/lib/use-count-up";
@@ -183,10 +184,10 @@ export function LandingPage() {
       </header>
 
       <main className="flex-1">
-        {/* 2. Phần đầu — nền khối nổi bật + 1 lớp radial-gradient vàng rất mờ góc trên phải (ngoại lệ có chủ đích, chỉ phần đầu);
-            ảnh nằm trọn trong phần đầu để mọi mục cùng một khoảng cách */}
+        {/* 2. Phần đầu — nền khối nổi bật + 1 lớp radial-gradient vàng rất mờ góc trên phải (ngoại lệ có chủ đích, chỉ phần đầu).
+            Chữ trái | kết quả đối chiếu theo phòng ban (HTML, đọc được) phải; dưới 1024px xếp dọc */}
         <section className="landing-hero border-b border-group-border" aria-labelledby="hero-title">
-          <div className={cn(KHUNG, MUC)}>
+          <div className={cn(KHUNG, MUC, "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] xl:gap-16")}>
             <div className="max-w-3xl space-y-5">
               <h1 id="hero-title" data-hero style={tre(0)} className="text-[28px] leading-tight font-extrabold text-balance text-group-title sm:text-4xl lg:text-[44px]">
                 {L.hero.tieuDe}
@@ -208,8 +209,8 @@ export function LandingPage() {
                 {L.hero.vanBan}
               </p>
             </div>
-            <div data-hero style={tre(320)} className="mt-10 lg:mt-14">
-              <LandingShot name="tong-quan" alt={L.hero.anh} priority sizes="(min-width: 1200px) 1136px, 100vw" />
+            <div data-hero style={tre(320)}>
+              <HeroMinhHoa start={intro !== "playing"} />
             </div>
           </div>
         </section>

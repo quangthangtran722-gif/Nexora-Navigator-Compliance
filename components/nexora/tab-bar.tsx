@@ -64,7 +64,7 @@ export function TabBar({
                 value={t.value}
                 aria-label={t.count ? `${t.label}, ${t.count}` : t.label}
                 className={cn(
-                  "h-11 flex-none gap-2 rounded-none border-0 px-4 text-[13px] font-normal text-muted-foreground",
+                  "h-11 flex-none gap-2 rounded-none border-0 px-4 text-[13px] font-normal text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
                   "data-active:font-semibold data-active:text-foreground",
                   "group-data-horizontal/tabs:after:bottom-0 group-data-horizontal/tabs:after:h-[3px] after:bg-gold-metal-flat",
                 )}

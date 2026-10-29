@@ -53,7 +53,7 @@ export function CustomerOverview() {
       }),
     [customerId],
   );
-  if (res.loading) return <LoadingBlock />;
+  if (res.loading) return <LoadingBlock kieu="tongQuan" />;
   if (res.error) return <ErrorBlock error={res.error} onRetry={res.reload} />;
   const { customer, departments, diagnostics, nganh, entities } = res.data!;
   // Tên ngành tiếng Việt từ bảng nganh; mã không có trong bảng thì không hiện mã (wording: không lộ mã nội bộ)
@@ -98,7 +98,7 @@ export function CustomerOverview() {
         />
         {/* Mức hoàn thiện hồ sơ: vòng nhỏ cạnh link xem hồ sơ — nhẹ, không thành thẻ số riêng */}
         <details className="border-x border-b bg-card px-4 py-3 text-sm">
-          <summary className="flex cursor-pointer items-center gap-2.5 text-muted-foreground">
+          <summary className="flex cursor-pointer items-center gap-2.5 text-muted-foreground transition-colors hover:text-gold-text">
             <VongHoanThien pct={hoanThien} label={K.hoSo} />
             {TONG_QUAN.xemHoSo(daDien, dict.length)}
           </summary>
@@ -185,7 +185,7 @@ export function CustomerOverview() {
               <li key={dept.id} className="animate-rise" style={{ "--d": `${i * 60}ms` } as React.CSSProperties}>
                 <Link
                   href={`/duyet-diagnostic#${dept.id}`}
-                  className="grid gap-x-6 gap-y-2 px-4 py-3 transition-colors outline-none hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 sm:grid-cols-[minmax(8rem,13rem)_minmax(0,1fr)_auto] sm:items-center"
+                  className="grid gap-x-6 gap-y-2 px-4 py-3 transition-[background-color,box-shadow] outline-none hover:bg-accent hover:shadow-[inset_2px_0_0_var(--gold-edge)] focus-visible:ring-3 focus-visible:ring-ring/50 sm:grid-cols-[minmax(8rem,13rem)_minmax(0,1fr)_auto] sm:items-center"
                 >
                   <span className="font-medium">{dept.ten_phong_ban}</span>
                   {/* Thanh dài theo số nghĩa vụ của phòng so với phòng nhiều nhất */}

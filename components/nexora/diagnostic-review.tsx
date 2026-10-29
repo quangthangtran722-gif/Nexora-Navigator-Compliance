@@ -94,7 +94,7 @@ export function DiagnosticReview() {
     if (!res.loading && openId && window.location.hash === `#diag-${openId}`) document.getElementById(`diag-${openId}`)?.scrollIntoView({ block: "start" });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- chỉ cuộn 1 lần khi vừa tải xong
   }, [res.loading]);
-  if (res.loading) return <LoadingBlock />;
+  if (res.loading) return <LoadingBlock kieu="danhSach" />;
   if (res.error) return <ErrorBlock error={res.error} onRetry={refresh} />;
   const { customer, departments, diagnostics, entities, graph, dict, chunks, vanBan, lyDo } = res.data!;
 

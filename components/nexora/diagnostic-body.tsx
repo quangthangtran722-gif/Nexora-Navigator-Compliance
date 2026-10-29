@@ -23,6 +23,9 @@ type Props = {
   prominent?: boolean; // phân cấp rõ: nhãn eyebrow, thân 15px, các phần cách 24px
 };
 
+// Nhánh ngang nối vạch dọc với từng trích dẫn (chỉ khi prominent)
+const NHANH = "relative before:absolute before:top-2.5 before:-left-4 before:h-px before:w-3 before:bg-gold-edge/70";
+
 // So sánh bỏ dấu câu / hoa thường — để bỏ việc cần làm lặp y nguyên tên nghĩa vụ
 const chuan = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
@@ -58,12 +61,12 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities, prom
       {entity && (
         <Accordion className={cn(prominent && "max-w-[70ch]")}>
           <AccordionItem value="ctx">
-            <AccordionTrigger className={prominent ? "eyebrow py-1 hover:no-underline" : "text-sm"}>
+            <AccordionTrigger className={prominent ? "eyebrow items-center py-1 hover:no-underline" : "text-sm"}>
               {COPY.term.canCu} ({context.length + 1})
             </AccordionTrigger>
             <AccordionContent>
-              <ul className={cn("space-y-4", prominent && "max-w-[70ch] pt-2")}>
-                <li className="space-y-1.5">
+              <ul className={cn("space-y-4", prominent && "ml-2 max-w-[70ch] border-l border-gold-edge/70 pt-2 pl-4")}>
+                <li className={cn("space-y-1.5", prominent && NHANH)}>
                   <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                     {entity.ten_entity}
                     <span className="font-normal text-muted-foreground">
@@ -78,7 +81,7 @@ export function DiagnosticBody({ noiDung, entity, nguon, context, entities, prom
                 {context.map((g) => {
                   const src = entities.find((e) => e.id === g.source_id);
                   return (
-                    <li key={g.relationship_id} className="space-y-1.5">
+                    <li key={g.relationship_id} className={cn("space-y-1.5", prominent && NHANH)}>
                       <div className="flex flex-wrap items-center gap-2 text-sm font-medium">
                         {g.source_ten}
                         {src && <span className="font-normal text-muted-foreground">{src.dieu_khoan}</span>}
