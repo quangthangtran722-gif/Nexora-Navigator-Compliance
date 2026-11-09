@@ -1,3 +1,6 @@
+> **LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md**
+> - Kiểu dữ liệu cho mô hình cards/tasks đã bỏ; API thật nằm ở app/api/pipeline/{extract,filter,rescan,generate} và app/api/onboard.
+
 # API contract — Nexora Compliance Navigator
 
 > Bước 4 trong `docs/BUILD_PROCESS.md`. Hợp đồng giữa 2 track: cả 2 build UI bằng mock data

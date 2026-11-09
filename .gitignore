@@ -155,3 +155,6 @@ vite.config.ts.timestamp-*
 .vercel
 next-env.d.ts
 *.pem
+
+# Đồ án MIS — dữ liệu thô chụp từ DB (có dữ liệu doanh nghiệp), không commit
+research/baseline/raw/

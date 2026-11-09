@@ -1,3 +1,8 @@
+> **LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md**
+> - Bảng/cột khớp migration 002–006, nhưng §5 và §7 "Quy tắc rule engine" ghi "không có điều kiện → áp dụng mọi doanh nghiệp" — đã bỏ (HE_THONG_DA_CHOT §8): null ≠ áp dụng, chỉ pham_vi = chung mới áp dụng mọi DN.
+> - Chưa có cột pham_vi, ma_dieu_kien, khong_hinh_thuc_hoa, ngay_het_hieu_luc, diagnostics.ly_do và hai loại cạnh ngoại lệ (HE_THONG_DA_CHOT §12, migration 007+).
+> - Định tuyến "cần bổ sung" theo phòng ban (rơi khi không có phòng khớp) đã đổi: luôn tạo bản ghi, gửi người đầu mối.
+
 # CONTRACT.md — Hợp đồng dữ liệu backend ↔ frontend (schema v3, chính thức)
 
 > Nguồn sự thật: `supabase/migrations/002_ner_graph.sql` (đã chạy trên Supabase thật ngày 18/10/2026).

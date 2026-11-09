@@ -1,3 +1,7 @@
+-- LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md
+--   - Ghi vào bảng cards (đã bị 002 DROP) — chạy sau 002 sẽ lỗi.
+--   - Chèn thẻ ở trạng thái 'Đã duyệt' bằng SQL — trái ranh giới duyệt qua approve_* của đồ án MIS.
+--
 -- =====================================================================
 -- Nexora Compliance Navigator — seed.sql
 --

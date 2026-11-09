@@ -1,3 +1,7 @@
+-- LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md
+--   - Ghi vào customer_profiles (nhom_a..nhom_d, đã bị 002 DROP); hồ sơ thật là customers.thuoc_tinh + departments.
+--   - Từ điển thuộc tính và DN demo hiện nạp bằng scripts/seed-demo.mjs.
+--
 -- =====================================================================
 -- Nexora Compliance Navigator — seed_customers.sql
 --

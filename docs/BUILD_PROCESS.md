@@ -1,3 +1,7 @@
+> **LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md**
+> - Lộ trình 10 bước của MVP SpawnX (hạn 24/10) dựa trên cards / extractCard.ts / rewriteTask.ts — các file và bảng này không còn.
+> - Thứ tự việc của đồ án MIS: docs/mis/PLAN.md và HE_THONG_DA_CHOT §14.
+
 # Quy trình build Nexora Compliance Navigator — thứ tự 10 bước
 
 > File này là **lộ trình thi công** cho MVP Vòng 3 (deadline 24/10). Nó bổ sung cho `CLAUDE.md`:

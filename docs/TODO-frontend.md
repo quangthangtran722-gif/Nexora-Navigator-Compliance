@@ -1,3 +1,6 @@
+> **LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md**
+> - Việc giao diện sau SpawnX; đồ án MIS không chỉnh giao diện ngoài phần P0 cần (CLAUDE.md §11).
+
 # Frontend — việc làm sau MVP (sau 24/10/2026)
 
 ## Chữ giao diện

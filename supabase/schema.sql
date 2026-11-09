@@ -1,3 +1,7 @@
+-- LỖI THỜI từ 09/11/2026 — xem CLAUDE.md và docs/mis/HE_THONG_DA_CHOT.md
+--   - Mô hình cards / customer_profiles / tasks; migration 002_ner_graph.sql đã DROP các bảng này. Schema thật: 002–006 (van_ban, entities, entity_relationships, customers, departments, diagnostics).
+--   - Không dùng làm gốc dựng DB mới — gốc sẽ là supabase/migrations/000_baseline_prod.sql (schema-only dump của production).
+--
 -- =====================================================================
 -- Nexora Compliance Navigator — schema.sql (Bước 2: Data modeling)
 --
