@@ -194,6 +194,13 @@ nếu cần dùng ngay trong cùng migration.
   quả khác nhau theo người bấm quét. View giữ S9 tất định; RLS của nội dung giữ nguyên.
 - **Dữ liệu cũ:** entity đã duyệt có `pham_vi` null = chưa xác nhận (S9 trả `thu_vien_chua_du`). Trên project mới mọi entity
   ở `cho_duyet` (H2) nên không có dòng cũ; quy tắc vẫn ghi trong migration để dùng được cho prod.
+- **Kết quả 09/11:** áp lên MIS (hai lần, idempotent); `supabase/tests/007_kiem_thu.sql` 31/31 ca qua (transaction, rollback,
+  vai `authenticated` + JWT giả lập). Quyết định khi viết: (a) `approve_entity` **kiểm**, không tự suy `pham_vi` / cờ từ mã —
+  chọn C0 vẫn phải xác nhận `pham_vi = chung`; (b) bộ mã thêm cột `can_van_ban_dan_chieu` (C4, C5) thay cho viết cứng tên mã;
+  (c) mã nhóm `chung` chỉ dùng cho `chu_the`; (d) một hàm `entity_du_dieu_kien_duyet` dùng chung cho `approve_entity` /
+  `approve_chunk`; (e) CHECK mới: cờ không hình thức hóa và điều kiện máy đọc loại trừ nhau; (f) view chưa có cạnh
+  `ngoai_le_*` — 008 dựng lại. **Hệ quả:** giao diện duyệt hiện tại (gọi `p_ap_dung_moi_doanh_nghiep`, chưa có ô phạm vi / mã)
+  không duyệt được trên MIS cho tới U1.
 
 ### M8 — `008_ngoai_le_hieu_luc.sql` (§12 #3, #4)
 
