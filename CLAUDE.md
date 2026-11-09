@@ -25,12 +25,13 @@ Không viết chữ nào trong giao diện, prompt hay nội dung việc mang t�
 | Luật Doanh nghiệp 59/2020/QH14, sửa đổi 03/2022/QH15, 76/2025/QH15 | Điều kiện theo loại hình; nghĩa vụ đăng ký, thông báo thay đổi có thời hạn |
 | Luật Thuế TNDN 67/2025/QH15 + các luật sửa đổi (có 09/2026/QH16) | Ngưỡng doanh thu, loại trừ, ưu đãi |
 | Luật Quản lý thuế 108/2025/QH15 (hiệu lực 01/7/2026) | Thủ tục khai, nộp, thời hạn. **Nạp toàn văn** |
-| NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC | **Chưa quyết có nạp.** Không nạp → nghĩa vụ 108 dẫn chiếu sang đó là C5, `thu_vien_chua_du` |
+| NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC | **Không nạp trong MVP.** Nghĩa vụ 108 dẫn chiếu sang đó là C5, `thu_vien_chua_du` |
 | TT 77/2025/TT-BTC, Luật 109/2025/QH15 | **Chỉ là dữ liệu trước can thiệp.** Không nạp sang CSDL mới, không viết logic riêng |
 
 - Văn bản nạp **phải là bản hợp nhất** (§2.3). S2 làm thủ công: ghi khoản nào bị sửa, bởi văn bản nào, từ ngày nào.
 - LDN, TNDN: không nạp toàn văn, 25–40 quy định chọn theo §2.2. Quy định C0 chỉ giữ vài mục làm đối chứng.
-- Luật 108 trên CSDL mới: 9 điều cũ nạp lại **đúng đề xuất cũ của LLM** ở `cho_duyet` (không chạy lại extract); các điều còn lại trích xuất mới.
+- Luật 108 trên CSDL mới: 9 điều cũ nạp lại **đúng đề xuất cũ của LLM** ở `cho_duyet` (không chạy lại extract); các điều còn
+  lại trích xuất mới **theo thứ tự cố định** `docs/mis/UU_TIEN_LUAT_108.md` — không đổi thứ tự, không thêm tham số đổi thứ tự.
 
 ## 3. Hai vòng S1–S10 và file code (§4, §5)
 
@@ -136,7 +137,7 @@ trường điều kiện có "Không chắc" và "Không muốn trả lời" →
 
 | Phần | Trường |
 |---|---|
-| 1 — khi đăng ký | Loại hình (T0); niêm yết (chỉ CTCP, chỉ nếu LDN Đ31 k1 được chọn); chi nhánh / VPĐD / địa điểm KD (ứng viên); phương pháp nộp thuế TNDN; kỳ tính thuế TNDN; khai thuế tháng / quý (ứng viên); phòng ban + người đầu mối |
+| 1 — khi đăng ký | Loại hình (T0); niêm yết (chỉ CTCP, chỉ nếu LDN Đ31 k1 được chọn); phương pháp nộp thuế TNDN; kỳ tính thuế TNDN; phòng ban + người đầu mối. "Khai thuế tháng / quý" và "chi nhánh / VPĐD / địa điểm KD" **không** có trong P0 trừ khi một điều Luật 108 đã duyệt dùng tới |
 | 2 — chỉ qua hỏi bổ sung khi S9 cần | Doanh thu kỳ trước: ≤3 tỷ / >3–50 tỷ / >50 tỷ / chưa có kỳ trước; nhóm thu nhập TNDN Đ18 k3 a/b/c (chỉ khi ≤50 tỷ; điểm d là C5); đổi ngành nghề / thông tin đăng ký + ngày; đổi cổ đông NĐT nước ngoài + ngày (chỉ CTCP); chuyển nhượng vốn / dự án (ứng viên) |
 | Không hỏi (T4) | Quan hệ liên kết (TNDN Đ18 k4), chủ sở hữu hưởng lợi → `can_chuyen_mon`. Bỏ `co_giao_dich_lien_ket`, bỏ VSIC |
 
@@ -147,6 +148,8 @@ Trường "ứng viên" chỉ chốt sau khi nạp toàn văn Luật 108 và gá
 - **LLM không bao giờ ghi thẳng vào thư viện.** Mọi entity và cạnh LLM đề xuất ở `cho_duyet`; chỉ sang `da_duyet`
   qua `approve_*` với một người dùng thật (`auth.uid()`). Không viết code, script, seed hay migration nào đi vòng qua
   bước này — kể cả "cho tiện demo", kể cả bật cờ `nexora.seed`. Nạp lại dữ liệu sang DB mới cũng chỉ nạp ở `cho_duyet`.
+  **Cạnh cũng vậy** (từ migration 008): cạnh tạo ra ở `cho_duyet`; cạnh LLM duyệt cùng entity nguồn; cạnh chuyên viên thêm
+  (ngoại lệ) duyệt qua `approve_relationship`. Script thêm cạnh chỉ INSERT, không duyệt. S9 chỉ dùng cạnh đã duyệt.
 - **S9 (`ruleEngine.ts` + `filterDomain.ts`) là code thuần, không gọi LLM.** `pipeline_runs` của bước filter có
   `model = null` (CSDL ép bằng CHECK `pipeline_runs_rule_engine_khong_ai`).
 - **LLM ở `generateDiagnostic` chỉ nêu**: nghĩa vụ, điều khoản căn cứ, thời hạn, phòng ban nhận. Không đề xuất cách

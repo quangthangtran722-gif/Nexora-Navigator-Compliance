@@ -79,12 +79,12 @@ Với mỗi cặp *doanh nghiệp × quy định trong thư viện*: một trong
 | Luật Doanh nghiệp 59/2020/QH14, sửa đổi bởi 03/2022/QH15 và 76/2025/QH15 | Điều kiện theo loại hình doanh nghiệp; nghĩa vụ đăng ký, thông báo thay đổi có thời hạn | ❌ Chưa nạp |
 | Luật Thuế TNDN 67/2025/QH15 và các luật sửa đổi (trong đó có 09/2026/QH16) | Quy định thuế có ngưỡng doanh thu, điều kiện loại trừ, điều kiện ưu đãi | ❌ Chưa nạp |
 | Luật Quản lý thuế 108/2025/QH15 (hiệu lực 01/7/2026, thay Luật Quản lý thuế 38/2019/QH14) | Thủ tục khai, nộp, thời hạn. **Nạp toàn văn** (§2.2) | 🟡 9 chunk (Điều 2, 3, 8, 10, 11, 27, 48, 52, 53); 18 nghĩa vụ đã duyệt; 0 điều kiện máy đọc. Đề xuất cũ của 9 điều này được nạp lại ở `cho_duyet` để duyệt lại; các điều còn lại trích xuất mới |
-| Nghị định 252/2026/NĐ-CP, Thông tư 90/2026/TT-BTC (hướng dẫn Luật 108) | Luật 108 giao nhiều nội dung cho hai văn bản này | ❓ **Câu hỏi mở: chưa quyết có nạp.** Không nạp → nghĩa vụ của Luật 108 dẫn chiếu sang đó mang mã C5 → "cần bổ sung", lý do `thu_vien_chua_du` |
+| Nghị định 252/2026/NĐ-CP, Thông tư 90/2026/TT-BTC (hướng dẫn Luật 108) | Luật 108 giao nhiều nội dung cho hai văn bản này | **Không nạp trong MVP** (chốt 09/11). Nghĩa vụ của Luật 108 dẫn chiếu sang đó mang mã C5 → "cần bổ sung", lý do `thu_vien_chua_du` (§14.3) |
 | Thông tư 77/2025/TT-BTC | Rút khỏi thư viện đang chạy. Giữ làm dữ liệu "trước can thiệp" (đã chứng minh hệ loại đúng nghĩa vụ chứng khoán khỏi doanh nghiệp không kinh doanh chứng khoán). Không nạp sang CSDL mới | ✅ Đã nạp, 7 nghĩa vụ |
 
 ### 2.2 Tập quy định chọn để nạp
 
-**Luật Quản lý thuế 108/2025/QH15: nạp toàn văn** (mọi điều qua S1–S3; trích xuất S5 và duyệt theo PLAN.md). Lý do: thủ tục khai, nộp có nhiều dẫn chiếu nội bộ giữa các điều; nạp rời từng điều làm S4 không nối được.
+**Luật Quản lý thuế 108/2025/QH15: nạp toàn văn** (mọi điều qua S1–S3). Lý do: thủ tục khai, nộp có nhiều dẫn chiếu nội bộ giữa các điều; nạp rời từng điều làm S4 không nối được. Trích xuất (S5) và duyệt theo **thứ tự ưu tiên cố định** ở `docs/mis/UU_TIEN_LUAT_108.md`, xếp theo tiêu chí dưới đây, lập và commit trước khi trích xuất; không đổi theo độ dễ duyệt. Điều chưa duyệt đến hết 14/11 nằm ngoài thư viện đo; báo cáo ghi số điều đã nạp / đã trích xuất / đã duyệt.
 
 **Luật Doanh nghiệp và Luật Thuế TNDN: không nạp toàn văn.** Chọn 25–40 quy định từ hai luật này, mỗi quy định thỏa ít nhất một tiêu chí:
 1. Có điều kiện theo loại hình, ngưỡng hoặc sự kiện, làm kết luận khác nhau giữa các doanh nghiệp.
@@ -581,10 +581,8 @@ Ghi chú về bộ mã:
 |---|---|---|---|---|
 | T0 | Loại hình | DNTN / TNHH một thành viên / TNHH hai thành viên trở lên / công ty cổ phần / hợp danh | LDN Chương III, V, VI, VII; Đ31 k3 | Luôn |
 | T0 | Niêm yết hoặc đăng ký giao dịch chứng khoán | Có / không | LDN Đ31 k1 (sửa đổi 2025) — **chỉ giữ nếu quy định này nằm trong tập được chọn** | Loại hình = công ty cổ phần |
-| T0 | Có chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh | Có / không | QLT 108 Đ10 (ứng viên) | Luôn |
 | T2 | Phương pháp nộp thuế TNDN | Kê khai / tỷ lệ trên doanh thu | TNDN Đ11 k2; Đ18 k1 | Luôn |
 | T2 | Kỳ tính thuế TNDN | Năm dương lịch / năm tài chính khác | TNDN Đ5 k1 | Luôn |
-| T2 | Kỳ khai thuế | Theo tháng / theo quý | QLT 108 + NĐ 252/2026/NĐ-CP (ứng viên) | Luôn |
 | — | Phòng ban và người đầu mối | Tên, mã phòng ban, email | Định tuyến (§6.2) | Luôn |
 
 **Phần 2 — không hỏi lúc đăng ký; chỉ hỏi qua cơ chế "hỏi bổ sung" khi S9 cần**
@@ -603,8 +601,10 @@ Khi đăng ký, các trường này để trống → quy định dùng chúng n
 
 **Ghi chú**
 - Trường đánh dấu "ứng viên" chỉ chốt khi đã nạp toàn văn Luật 108 và gán mã xong; không có quy định C1–C3 đã duyệt nào dùng thì không hiện (nguyên tắc 1).
+- Bỏ khỏi P0 (chốt 09/11): "Có chi nhánh, văn phòng đại diện hoặc địa điểm kinh doanh" (QLT 108 Đ10) và "Kỳ khai thuế theo tháng / quý" (QLT 108 + NĐ 252/2026, không nạp). Chỉ đưa lại khi một điều Luật 108 **đã duyệt** có điều kiện C1–C3 dùng tới (§14.3).
 - Bỏ khỏi P0: mã ngành VSIC (LDN Đ8 k1 là C4; Đ18 k3 đã có câu hỏi theo nhóm thu nhập).
 - Lựa chọn "chưa có kỳ trước": chuyên viên viết điều kiện máy đọc theo văn bản; văn bản chưa nạp có quy định cho doanh nghiệp mới thành lập → C5, `thu_vien_chua_du`.
+- Quy ước gán mã (chốt 09/11): điều kiện của X3 (TNDN Đ18 k3) gồm cả ngưỡng doanh thu ≤ 50 tỷ, khớp với điều kiện hiện câu hỏi nhóm thu nhập. Không có ngưỡng này thì doanh nghiệp > 50 tỷ nhận `ho_so_thieu` cho X3 thay vì "không áp dụng".
 - Hệ quả đo lường: ngay sau đăng ký, tỉ lệ "cần bổ sung" cao theo thiết kế (phần 2 chưa hỏi). Đo ở hai thời điểm: sau đăng ký và sau khi trả lời hỏi bổ sung (§14.4).
 
 ---
@@ -832,7 +832,7 @@ Cách mô hình hiện tại biểu diễn một nghĩa vụ: một dòng `entit
 |---|---|---|
 | 1 | `entities.pham_vi` (`chung` / `co_dieu_kien`), bắt buộc khi duyệt chủ thể; dữ liệu cũ null được coi là chưa xác nhận | Bỏ cách hiểu "không điều kiện = áp dụng tất cả" |
 | 2 | `entities.ma_dieu_kien` (C0–C7), `entities.khong_hinh_thuc_hoa`, văn bản được dẫn chiếu | Lưu kết quả S6; S9 đọc được để trả "cần bổ sung" |
-| 3 | Hai loại cạnh mới: `ngoai_le_bac_bo`, `ngoai_le_thay_the`; cờ `chi_mot_phan` trên cạnh ngoại lệ | Xử lý Đ18 k3 (một phần), Đ18 k4 và quan hệ thay thế giữa Đ10 k1, k2, k3 |
+| 3 | Hai loại cạnh mới: `ngoai_le_bac_bo`, `ngoai_le_thay_the`; cờ `chi_mot_phan` trên cạnh ngoại lệ. **Cạnh có trạng thái duyệt riêng** (`entity_relationships.trang_thai_duyet`): mọi cạnh tạo ra ở `cho_duyet`; cạnh LLM đề xuất được duyệt cùng entity nguồn qua `approve_entity` / `approve_chunk`; cạnh chuyên viên thêm (ngoại lệ) duyệt qua `approve_relationship` với tài khoản thật. S9 chỉ dùng cạnh `da_duyet`; cạnh `cho_duyet` nối với nghĩa vụ = chưa xác nhận → `thu_vien_chua_du` | Xử lý Đ18 k3 (một phần), Đ18 k4 và quan hệ thay thế giữa Đ10 k1, k2, k3. Bản 1 không có trạng thái duyệt cho cạnh: cạnh thêm sau khi hai đầu đã duyệt có hiệu lực ngay, không qua người duyệt |
 | 4 | `entities.ngay_het_hieu_luc`; S9 nhận `ngay_danh_gia`; S9 đọc `van_ban_thay_the` | Chọn đúng quy định có hiệu lực tại ngày đánh giá |
 | 5 | `diagnostics.ly_do`; cho phép dòng diagnostic **chưa gắn phòng ban** ("cần bổ sung" luôn vậy; "áp dụng" khi không có phòng khớp và không có Ban giám đốc), người đầu mối chọn phòng khi duyệt | Không làm rơi kết luận; tách ba lý do |
 | 6 | S10 ghi định danh phiên bản thư viện và bản chụp giá trị hồ sơ đã dùng | Kết luận cũ vẫn giải thích được sau khi luật hoặc hồ sơ đổi |
@@ -915,7 +915,7 @@ Cách mô hình hiện tại biểu diễn một nghĩa vụ: một dòng `entit
 
 ### 14.3 Không làm trước 21/11 (ghi vào Chương XIII)
 
-Tự phát hiện văn bản mới · hợp nhất tự động · giải dẫn chiếu ngoại bộ trên toàn bộ văn bản liên quan · lịch hạn và nhắc việc tự động · ghi nhận bằng chứng hoàn thành nghĩa vụ.
+Tự phát hiện văn bản mới · hợp nhất tự động · giải dẫn chiếu ngoại bộ trên toàn bộ văn bản liên quan · lịch hạn và nhắc việc tự động · ghi nhận bằng chứng hoàn thành nghĩa vụ · nạp Nghị định 252/2026/NĐ-CP và Thông tư 90/2026/TT-BTC (nghĩa vụ Luật 108 dẫn chiếu sang đó nhận C5, `thu_vien_chua_du`) · hai trường hồ sơ ứng viên "kỳ khai thuế tháng / quý" và "có chi nhánh, văn phòng đại diện, địa điểm kinh doanh" (trừ khi một điều Luật 108 đã duyệt dùng tới) · điều Luật 108 chưa duyệt đến hết 14/11.
 
 ### 14.4 Bảng chỉ số trước / sau
 
@@ -953,7 +953,7 @@ Gợi ý để nhóm tự chốt dự đoán: Δ có cơ sở để tăng vì c�
 
 | Mục trong sườn | Đang ghi | Sửa thành |
 |---|---|---|
-| I.5 Phạm vi | Nguồn: Luật 108/2025/QH15 và TT 77/2025/TT-BTC | Luật Doanh nghiệp (bản hợp nhất, 25–40 quy định chọn), Luật Thuế TNDN (bản hợp nhất, chọn cùng tập), Luật Quản lý thuế 108/2025/QH15 (toàn văn). NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC: chưa quyết. TT 77 chỉ là dữ liệu trước can thiệp |
+| I.5 Phạm vi | Nguồn: Luật 108/2025/QH15 và TT 77/2025/TT-BTC | Luật Doanh nghiệp (bản hợp nhất, 25–40 quy định chọn), Luật Thuế TNDN (bản hợp nhất, chọn cùng tập), Luật Quản lý thuế 108/2025/QH15 (toàn văn; trích xuất và duyệt theo thứ tự ưu tiên cố định). NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC: không nạp trong MVP. TT 77 chỉ là dữ liệu trước can thiệp |
 | I.7 Đóng góp mới | (1) HTTT tất định ở tầng xác định nghĩa vụ, đặt đầu | Đặt bộ mã C0–C7 cùng phép đo lên đầu; giữ thiết kế ba trạng thái; artifact ở tầng xác định nghĩa vụ trình bày như một thiết kế được thử nghiệm, không tuyên bố mới so với phần mềm thuế thương mại — đưa các phần mềm này vào bảng VI.2 |
 | VII, dòng "Ch.6 CSDL" | Mô hình văn bản → điều → nghĩa vụ → điều kiện → phòng ban | Dùng mô hình thật §12: `van_ban` → `van_ban_chunks` → `entities` + `entity_relationships`; `customers` + `departments` → `diagnostics` |
 | VIII.1 bảng hai vòng | Vòng 2: "Không dùng AI"; con người: "Không cần" | Quyết định khả áp dụng không dùng LLM (CSDL ép `model IS NULL`). Sau quyết định, LLM soạn nội dung việc; người đầu mối duyệt nội dung và trả lời câu hỏi bổ sung |
@@ -1041,3 +1041,7 @@ Từ 09/11/2026, `docs/mis/HE_THONG_DA_CHOT.md` trong repo là bản chuẩn duy
 | 7 | **Số liệu trước can thiệp:** báo cáo dùng Δ = 2 (tính lại trên thư viện ngày chụp), ghi chú Δ = 4 trong kết quả đã lưu và lý do (Luật 109). "20 + 5" sửa thành "18 + 5". Thêm rủi ro Luật 109 ở `draft` nhưng có nghĩa vụ đã duyệt | §5 (dòng Hồ sơ), §13.1, §13.3 | Chụp lại bằng script ngày 09/11 (`research/baseline/SUMMARY.md`) |
 | 8 | **Phạm vi Luật Quản lý thuế** (thay đổi 1): nạp **toàn văn** Luật 108/2025/QH15 (hiệu lực 01/7/2026, thay Luật 38/2019/QH14), không chỉ 9 điều. **Câu hỏi mở:** có nạp NĐ 252/2026/NĐ-CP và TT 90/2026/TT-BTC không; nếu không, nghĩa vụ dẫn chiếu sang đó là C5 → cần bổ sung, `thu_vien_chua_du` | §2.1, §2.2, §14.1 #2, Phụ lục A (I.5) | Thủ tục khai, nộp có nhiều dẫn chiếu nội bộ; nạp rời từng điều làm S4 không nối được |
 | 9 | **Hồ sơ doanh nghiệp** (thay đổi 2): thay §9.2 — bảy nguyên tắc (chỉ hỏi trường quy định C1–C3 đã duyệt dùng; hỏi dữ kiện không hỏi kết luận; không hỏi T4; hỏi khoảng tại ngưỡng; hỏi có/không về sự kiện; hiện điều khoản; "Không chắc" và "Không muốn trả lời" → null, lưu riêng lý do). Phần 1 hỏi khi đăng ký; phần 2 chỉ hỏi qua hỏi bổ sung khi S9 cần. Trường "ứng viên" chốt sau khi nạp toàn văn Luật 108 và gán mã | §5 (dòng Hồ sơ), §9.2, §10.1, §12 #7, §14.1 #7, §14.4 (đo hai thời điểm, tỉ lệ từ chối theo câu), Phụ lục A (VIII.5), Phụ lục B | Giảm câu hỏi nhạy cảm lúc đăng ký; đo được hồ sơ nào thiếu vì doanh nghiệp không biết hay không muốn trả lời |
+| 10 | **NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC** (Q-C): không nạp trong MVP. Nghĩa vụ Luật 108 dẫn chiếu sang đó → C5, `thu_vien_chua_du`. Bỏ khỏi P0 hai trường hồ sơ ứng viên "kỳ khai thuế tháng / quý" và "có chi nhánh, văn phòng đại diện, địa điểm kinh doanh", trừ khi một điều Luật 108 đã duyệt dùng tới | §2.1, §9.2 (phần 1 + ghi chú), §14.3, Phụ lục A (I.5) | Không kịp hạn; trường hồ sơ chỉ có khi quy định C1–C3 đã duyệt dùng (§9.2 nguyên tắc 1) |
+| 11 | **Thứ tự trích xuất và duyệt Luật 108** (Q-B): cố định trong `docs/mis/UU_TIEN_LUAT_108.md`, xếp theo tiêu chí §2.2, commit trước khi trích xuất, không đổi theo độ dễ duyệt. Điều chưa duyệt đến hết 14/11 nằm ngoài thư viện đo | §2.2, §14.3 | Luật 108 toàn văn ước khoảng 53 điều; không kịp duyệt hết. Thứ tự cố định để phần được đo không bị chọn theo độ dễ |
+| 12 | **Cạnh có trạng thái duyệt riêng**: mọi cạnh tạo ra ở `cho_duyet`; cạnh LLM đề xuất duyệt cùng entity nguồn; cạnh ngoại lệ chuyên viên thêm duyệt qua `approve_relationship` với tài khoản thật. S9 chỉ dùng cạnh đã duyệt; cạnh chờ duyệt = chưa xác nhận | §12 #3 | Bản 1 không có trạng thái duyệt cho cạnh: cạnh thêm tay sau khi hai đầu đã duyệt có hiệu lực ngay, trái ranh giới "mọi mục vào thư viện qua người duyệt" (§4 điểm 2) |
+| 13 | **Quy ước gán mã và đo** (chốt cùng Q-A): điều kiện của X3 (TNDN Đ18 k3) gồm ngưỡng doanh thu ≤ 50 tỷ; tỉ lệ "cần bổ sung" đo ở hai thời điểm (sau đăng ký, sau hỏi bổ sung) | §9.2 ghi chú, §14.4 | Câu hỏi nhóm thu nhập không hiện khi doanh thu > 50 tỷ; thiếu ngưỡng thì X3 ra `ho_so_thieu` thay vì "không áp dụng" |
