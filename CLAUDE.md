@@ -149,7 +149,8 @@ Trường "ứng viên" chỉ chốt sau khi nạp toàn văn Luật 108 và gá
   qua `approve_*` với một người dùng thật (`auth.uid()`). Không viết code, script, seed hay migration nào đi vòng qua
   bước này — kể cả "cho tiện demo", kể cả bật cờ `nexora.seed`. Nạp lại dữ liệu sang DB mới cũng chỉ nạp ở `cho_duyet`.
   **Cạnh cũng vậy** (từ migration 008): cạnh tạo ra ở `cho_duyet`; cạnh LLM duyệt cùng entity nguồn; cạnh chuyên viên thêm
-  (ngoại lệ) duyệt qua `approve_relationship`. Script thêm cạnh chỉ INSERT, không duyệt. S9 chỉ dùng cạnh đã duyệt.
+  (ngoại lệ) duyệt qua `approve_relationship`, **người duyệt khác người tạo** (ép ở DB). Script thêm cạnh chỉ INSERT, không
+  duyệt. S9 chỉ dùng cạnh đã duyệt.
 - **S9 (`ruleEngine.ts` + `filterDomain.ts`) là code thuần, không gọi LLM.** `pipeline_runs` của bước filter có
   `model = null` (CSDL ép bằng CHECK `pipeline_runs_rule_engine_khong_ai`).
 - **LLM ở `generateDiagnostic` chỉ nêu**: nghĩa vụ, điều khoản căn cứ, thời hạn, phòng ban nhận. Không đề xuất cách

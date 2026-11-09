@@ -19,22 +19,23 @@
 | T1 | Nạp toàn văn Luật 108: thêm chunk các điều còn lại vào cùng văn bản; đối chiếu 9 chunk cũ với toàn văn | 2 · thay đổi 1 | H2, N1′ | 3 | có |
 | X1 | Trích xuất hàng loạt chunk Luật 108 theo thứ tự cố định `UU_TIEN_LUAT_108.md` (script chạy bằng phiên chuyên viên, giãn nhịp theo quota Groq) | 2 | T1, danh sách ưu tiên `chot` | 2 | có |
 | M7 | Migration 007 — `pham_vi`, bộ mã C0–C7, cờ không hình thức hóa, hàm duyệt mới, view cạnh điều kiện | 4 · §12 #1, #2 | H1 | 4 | có |
-| M8 | Migration 008 — cạnh ngoại lệ bác bỏ / thay thế + cờ `chi_mot_phan`, `ngay_het_hieu_luc`, **trạng thái duyệt của cạnh + `approve_relationship`** | 4 · §12 #3, #4 | M7 | 4 | có |
+| M8 | Migration 008 — cạnh ngoại lệ bác bỏ / thay thế + cờ `chi_mot_phan`, `ngay_het_hieu_luc`, **trạng thái duyệt của cạnh + `approve_relationship` (người duyệt ≠ người tạo)** | 4 · §12 #3, #4 | M7 | 4,5 | có |
 | M9 | Migration 009 — `diagnostics.ly_do`, dòng chưa gắn phòng ban, `ngay_danh_gia` | 4 · §12 #5, #6 | H1 | 2 | có |
 | HS0 | Migration 010 — từ điển hồ sơ hai phần, điều kiện hiện câu hỏi, kiểu ngày, lý do để trống | 7 · §12 #7 | H1 | 3 | có |
 | U1 | Màn chuyên viên: gán mã, xác nhận phạm vi, gắn cờ, cạnh ngoại lệ (+ cờ một phần), danh sách cạnh chờ duyệt + nút duyệt / từ chối | 8 · §4 | M7, M8 | 7,5 | có |
 | S9 | Viết lại S9 + bộ hồi quy A/B/C | 5 | M7, M8, M9 | 9 | có |
 | L10 | S10: ghi ngày đánh giá, phiên bản thư viện, bản chụp hồ sơ | §12 #6 | M9, S9 | 2 | có |
+| NĐ | Script đo thời gian duyệt mỗi entity từ `approvals` (§14.4) — dùng sáng 13/11 và trong D9 | Q-E | — | 0,5 | có |
 | D9 | Script đo trước / sau (hai lát cắt, hai thời điểm, tỉ lệ từ chối theo câu) | 9 | S9, HS0, H2 | 5 | — |
 | R1 | Định tuyến: "cần bổ sung" và "áp dụng không có phòng" → dòng chưa gắn phòng; UI hiện lý do | 6 · §12 #5 | M9 | 4 | logic: có; UI: không |
 | HS1 | Form đăng ký — phần 1 | 7 | HS0 | 4 | không (D9 đọc hồ sơ JSON) |
 | HS2 | Hỏi bổ sung — phần 2 (gom theo trường, các kiểu câu, hai lý do để trống, chạy lại S9 cho nghĩa vụ dùng trường) | 7 | HS0, S9, R1 | 6 | không |
 | G1 | Prompt `generate-v2`: bỏ "các bước", chỉ nêu nghĩa vụ / căn cứ / thời hạn / phòng ban | Ranh giới | — | 2 | không, nhưng **giữ trong 10–15/11** (Q-A) |
-| | **Tổng trước cắt** | | | **62,5 giờ** | |
+| | **Tổng trước cắt** | | | **63,5 giờ** | |
 
 ### 0.2 Vượt lịch — đã chốt (Q-A, 09/11)
 
-Tổng trước cắt 62,5 giờ (thêm trạng thái duyệt cho cạnh: M8 +2, U1 +1,5) vượt sức chứa 10–15/11 (~48 giờ: sáu ngày × ~8 giờ,
+Tổng trước cắt 63,5 giờ (thêm trạng thái duyệt cho cạnh: M8 +2, U1 +1,5; người duyệt ≠ người tạo: M8 +0,5; NĐ 0,5) vượt sức chứa 10–15/11 (~48 giờ: sáu ngày × ~8 giờ,
 ngày 15/11 dành cho đo). Đã chốt:
 
 1. **Lùi việc chỉ là giao diện sang 16–18/11**, trước code freeze 19/11: HS1, HS2, phần UI của R1. Việc 7 §14.1 lùi khỏi 13/11.
@@ -50,7 +51,7 @@ ngày 15/11 dành cho đo). Đã chốt:
 3. **Luật 108 (Q-B):** nạp toàn văn ở S1–S3; trích xuất và duyệt theo thứ tự cố định `docs/mis/UU_TIEN_LUAT_108.md`; điều
    chưa duyệt đến hết 14/11 nằm ngoài thư viện đo.
 
-**Sau khi cắt: 56 giờ — 10–15/11: 47,5 giờ; 16–18/11: 8,5 giờ.** 47,5 giờ là sát trần ~48 giờ, **không còn dư cho sửa lỗi**.
+**Sau khi cắt: 57 giờ — 10–15/11: 48,5 giờ; 16–18/11: 8,5 giờ.** 48,5 giờ **vượt trần ~48 giờ khoảng 0,5 giờ**, không còn dư cho sửa lỗi.
 Phương án dự phòng, theo thứ tự, nếu tối 14/11 còn chậm:
 - D9 chỉ chạy lát cắt (i) (9 điều cũ Luật 108, cùng bộ đề xuất, engine cũ vs mới) — đủ điều kiện "có số đo sau" của điểm cắt;
   lát cắt (ii) chạy 16/11 và ghi rõ trong báo cáo là đo sau điểm cắt.
@@ -62,10 +63,10 @@ Phương án dự phòng, theo thứ tự, nếu tối 14/11 còn chậm:
 | Ngày | Việc (giờ) | Tổng | Điều kiện để bắt đầu |
 |---|---|---|---|
 | 10/11 | H1 (2), H2 (3), T1 (3) | 8 | H0 xong; T1 cần file toàn văn (chưa có → đổi chỗ với M7) |
-| 11/11 | M7 (4), M8 (4) | 8 | H1 |
+| 11/11 | M7 (4), M8 (4,5) | 8,5 | H1 |
 | 12/11 | U1 (5,5), X1 (2) | 7,5 | U1: M7, M8. X1: T1 + danh sách ưu tiên `chot` (N0, 11/11) → đề xuất Luật 108 mới có từ sáng 13/11 |
-| 13/11 | M9 (2), HS0 (3), S9 (3) | 8 | Người bắt đầu duyệt từ 13/11 (U1 xong) |
-| 14/11 | S9 (6), R1 logic (2,5) | 8,5 | Bộ A/B/C phải xanh cuối ngày |
+| 13/11 | NĐ (0,5) đầu giờ, M9 (2), HS0 (3), S9 (2,5) | 8 | Người bắt đầu duyệt từ 13/11 (U1 xong); NĐ phải sẵn trước khi bấm giờ |
+| 14/11 | S9 (6,5), R1 logic (2,5) | 9 | Bộ A/B/C phải xanh cuối ngày |
 | **15/11** | L10 (1), G1 (1,5), **D9 (5) — chạy đo** | 7,5 | Điểm cắt §14.1 |
 | 16–18/11 | HS1 (4), HS2 (4), R1 UI (0,5) | 8,5 | Code freeze 19/11 |
 
@@ -206,6 +207,10 @@ nếu cần dùng ngay trong cùng migration.
     trong ba (entity / diagnostic / relationship).
   - `approve_relationship(p_relationship_id, p_quyet_dinh, p_ghi_chu)`: `auth.uid()` + `is_curator()`; chỉ duyệt khi hai đầu
     cạnh không còn `cho_duyet` (đầu `tu_choi` → chỉ được từ chối); ghi `approvals`.
+  - **Người duyệt ≠ người tạo** (Q-D): với cạnh chuyên viên thêm (`pipeline_run_id` null), `approve_relationship` từ chối
+    (`PT403`) khi `nguoi_tao_id = auth.uid()`, và từ chối khi `nguoi_tao_id` null (không kiểm được). Áp cho cả quyết định
+    duyệt lẫn từ chối. Trigger BEFORE INSERT ép `new.nguoi_tao_id := auth.uid()` — cột này hiện chỉ có `default auth.uid()`,
+    client ghi đè được khi INSERT. Người tạo muốn rút cạnh `cho_duyet` của mình thì xóa (RLS `rel_delete`), không qua hàm duyệt.
   - `approve_entity` / `approve_chunk`: khi duyệt / từ chối entity, cạnh **do LLM đề xuất** (`pipeline_run_id` not null) có
     nguồn là entity đó chuyển theo, mỗi cạnh một dòng `approvals` cùng người duyệt. Cạnh chuyên viên thêm (`pipeline_run_id`
     null) **không** đi theo — phải duyệt riêng.
@@ -304,7 +309,7 @@ nếu cần dùng ngay trong cùng migration.
 | 10 | Khoảng doanh thu với `in`; kiểu `date` | §9.2 nguyên tắc 4 |
 | 11 | `thoi_han` trả nguyên văn + ngày sự kiện, không có ngày hạn | Q5 |
 | 12 | Cạnh `cho_duyet` nối với nghĩa vụ (điều kiện hoặc ngoại lệ) → `thu_vien_chua_du`; cạnh `tu_choi` → bỏ qua; cạnh `da_duyet` → dùng | Nhật ký #12 |
-| 13 | Smoke DB (`scripts/smoke-pipeline.mjs` mở rộng, chạy trên project mới): INSERT cạnh với `trang_thai_duyet = 'da_duyet'` → bị từ chối; `approve_relationship` bằng service role → bị từ chối; duyệt entity nguồn → cạnh LLM theo, cạnh thêm tay không theo | Nhật ký #12, Q-A |
+| 13 | Smoke DB (`scripts/smoke-pipeline.mjs` mở rộng, chạy trên project mới): INSERT cạnh với `trang_thai_duyet = 'da_duyet'` → bị từ chối; `approve_relationship` bằng service role → bị từ chối; duyệt entity nguồn → cạnh LLM theo, cạnh thêm tay không theo; **cùng tài khoản tạo rồi duyệt → `PT403`; tài khoản chuyên viên thứ hai → duyệt được; INSERT kèm `nguoi_tao_id` của người khác → bị ghi đè thành người đang đăng nhập** | Nhật ký #12, #14 |
 
 Viết lại test cũ mã hóa lỗi: `tests/ruleEngine.test.ts:105` ("chủ thể chung / hanh_vi không cạnh → áp dụng mọi DN") và `:112`
 ("chủ thể chưa duyệt → không thêm điều kiện") theo #1–#3. `tests/doiXung.test.ts` chạy với fixture mới (có ngoại lệ, có
@@ -374,7 +379,8 @@ nếu không, X3 × C ra `ho_so_thieu` vì câu nhóm thu nhập không được
   file JSON `{source, target, loai, chi_mot_phan, can_cu}`; chỉ INSERT, cạnh ra **`cho_duyet`** (DB ép bằng trigger M8); không
   gọi hàm duyệt; RLS `rel_insert` kiểm vai trò.
 - Duyệt cạnh: khối "Cạnh chờ duyệt" trên màn `duyet-ban-nhap` — liệt kê cạnh `cho_duyet` do chuyên viên thêm (nguồn, đích,
-  loại, cờ một phần, trích dẫn `can_cu`), nút Duyệt / Từ chối gọi `approve_relationship` bằng phiên của người đang đăng nhập.
+  loại, cờ một phần, trích dẫn `can_cu`, người tạo), nút Duyệt / Từ chối gọi `approve_relationship` bằng phiên của người đang
+  đăng nhập; cạnh do chính người đó tạo vẫn hiện nhưng khóa nút (DB vẫn là nơi chặn thật).
   Cạnh LLM duyệt cùng entity nguồn (M8), không hiện ở khối này.
 
 ### G1 — `generateDiagnostic.prompt.ts` → `generate-v2` (ranh giới)
@@ -393,6 +399,15 @@ không ảnh hưởng D9 vì D9 không gọi LLM). Test: schema `generate-v2` kh
 - Theo Q-A: **ghi đủ** phiên bản thư viện và bản chụp hồ sơ ở mọi lượt filter; chỉ không làm màn hình xem. Test: hai lượt
   cùng thư viện cùng hồ sơ → cùng `phien_ban`; duyệt thêm một entity → `phien_ban` đổi.
 
+### NĐ — thời gian duyệt mỗi entity (Q-E) — `scripts/research/nhip-duyet.mjs`
+
+- Chỉ đọc `approvals` (+ `entities` để lấy văn bản, mã C0–C7). Theo từng người duyệt, sắp theo thời điểm, lấy khoảng giữa hai
+  lần duyệt **entity** liên tiếp (bỏ dòng duyệt cạnh); bỏ các dòng cùng thời điểm (duyệt cả chunk) và khoảng > 10 phút.
+  Báo trung vị, p90, số khoảng, theo người, theo văn bản, theo mã. Tham số: khoảng thời gian; nguồn (bản chụp `raw/` hoặc DB).
+- Test của script: chạy trên bản chụp trước can thiệp phải ra đúng số §14.4 (Luật 108, 20/10: 55 khoảng, trung vị 8,6 giây,
+  p90 51 giây).
+- Sáng 13/11: chạy ngay sau 20 entity đầu được bấm giờ; ghi cả hai số vào `UU_TIEN_LUAT_108.md` §6.1. D9 gọi lại cùng hàm.
+
 ### D9 — đo trước / sau (việc 9) — `scripts/research/do-truoc-sau.mjs`
 
 - Đầu vào: thư viện (đọc DB, chỉ đọc); hồ sơ `research/ho-so/*.json` — hồ sơ SME thật + bộ tổng hợp phủ mọi khoảng doanh thu,
@@ -401,7 +416,7 @@ không ảnh hưởng D9 vì D9 không gọi LLM). Test: schema `generate-v2` kh
 - Chạy **hai engine trên cùng đầu vào**: engine cũ (bản sao `ruleEngine.ts` tại `spawnx-final` ở `scripts/research/engine-v0/`,
   chỉ để đo) và engine mới. Tính offline, không ghi `diagnostics`.
 - Xuất `research/sau/SUMMARY.md` theo bảng §14.4: Δ; tỉ lệ cần bổ sung (hai thời điểm, ba lý do); tỉ lệ tất định câm; D(S);
-  phân bố C0–C7; tỉ lệ từ chối theo câu (từ hồ sơ SME thật).
+  phân bố C0–C7; tỉ lệ từ chối theo câu (từ hồ sơ SME thật); thời gian duyệt mỗi entity (NĐ).
 - Hai lát cắt: (i) **Luật 108, 9 điều cũ, cùng bộ đề xuất LLM** (H2), engine cũ vs mới → tác động của quy tắc + duyệt;
   (ii) thư viện đầy đủ → kết quả cuối.
 
@@ -418,7 +433,7 @@ không ảnh hưởng D9 vì D9 không gọi LLM). Test: schema `generate-v2` kh
 | N3 | Hai người gán mã C0–C7 **độc lập** 20–30 quy định (cột: id, trích dẫn, mã người 1, mã người 2, ghi chú) — không trao đổi trước khi cả hai xong; Cohen's kappa; sửa sổ tay mã (C4 chỉ gắn khi dẫn chiếu là điều kiện; X3 gồm ngưỡng 50 tỷ; dẫn chiếu NĐ 252 / TT 90 là C5); mã của phần còn lại gán lúc duyệt | 3 | Bảng gán mã, kappa, sổ tay mã v2 | 12/11 | N2 |
 | N4 | Duyệt lại Luật 108 trên project mới: (a) 9 điều cũ — rà 23 chủ thể (xác nhận `pham_vi = chung` hoặc gắn điều kiện / mã), 5 điều kiện từng bị từ chối (nay duyệt được với cờ C4–C7), 13 hành vi từng bị từ chối; (b) điều mới theo đúng thứ tự `UU_TIEN_LUAT_108.md` | 8 | Thư viện 108 đã duyệt có mã | 13–14/11 | H2, X1, M7, M8, U1 |
 | N4′ | Duyệt LDN + TNDN đã trích xuất | 2 | Thư viện LDN + TNDN đã duyệt | 13/11 | N3, U1 |
-| N5 | Điều kiện máy đọc C1–C3, `primary_departments`, cạnh ngoại lệ (Đ10 k1–k3, Đ18 k3 có cờ một phần, Đ18 k4) tạo bằng script rồi duyệt trên màn chuyên viên; chốt trường hồ sơ "ứng viên" | 2–3, 7 | Thư viện đã duyệt; danh sách trường hồ sơ chốt | 14/11 | M8, U1, N3 |
+| N5 | Điều kiện máy đọc C1–C3, `primary_departments`, cạnh ngoại lệ (Đ10 k1–k3, Đ18 k3 có cờ một phần, Đ18 k4) — một chuyên viên tạo bằng script, **chuyên viên khác** duyệt trên màn chuyên viên; chốt trường hồ sơ "ứng viên" | 2–3, 7 | Thư viện đã duyệt; danh sách trường hồ sơ chốt | 14/11 | M8, U1, N3 |
 | N6 | Hồ sơ SME thật (có đồng ý; hồ sơ thật → gitignore) + bộ tổng hợp, mỗi hồ sơ hai trạng thái | 9 | `research/ho-so/*.json` | 14/11 | N5 (danh sách trường) |
 | N7 | Điền cột "Dự đoán sau" §14.4 **trước** khi đo | 9 | Bảng dự đoán có ngày | 14/11 | — |
 | N8 | Chuyên gia ngoài nhóm kiểm tính đúng pháp lý mẫu kết luận | — | Biên bản | 16/11 | D9 |
@@ -428,15 +443,15 @@ không ảnh hưởng D9 vì D9 không gọi LLM). Test: schema `generate-v2` kh
 Định mức: duyệt **2,5 phút / entity** (đọc trích dẫn, chọn mã, xác nhận phạm vi hoặc viết điều kiện hoặc gắn cờ, gán phòng ban);
 viết điều kiện máy đọc C1–C3 hoặc tạo + duyệt một cạnh ngoại lệ **5 phút**; gán mã độc lập **3 phút / quy định**. Số entity:
 Luật 108 thật 7,8 entity / điều (9 điều cũ = 70 entity); LDN + TNDN ước 5 entity / quy định (một quy định thường là một khoản,
-nhỏ hơn một điều Luật 108), 30 quy định ≈ 150 entity. Nhịp duyệt cũ (6 giây / entity) **không** dùng làm định mức (`UU_TIEN_LUAT_108.md` §6).
+nhỏ hơn một điều Luật 108), 30 quy định ≈ 150 entity. Định mức 2,5 phút là **tạm**, đo lại sáng 13/11 (Q-E). Số đo lượt duyệt cũ
+(trung vị 8,6 giây) không dùng làm định mức vì quy trình mới có thêm bước gán mã, xác nhận phạm vi (`UU_TIEN_LUAT_108.md` §6).
 
 | Ngày | Việc | Giờ công | Chia được cho | Ghi chú |
 |---|---|---|---|---|
-| 10/11 | H0 — việc tay trên Supabase / Vercel | 1,5 | 1 (chủ repo) | Chặn mọi việc code |
-| | N1 — hợp nhất LDN | 3 | 1 | |
+| 10/11 | N1 — hợp nhất LDN | 3 | 1 | |
 | | N1 — hợp nhất TNDN | 3 | 1 | |
 | | N1′ — file toàn văn Luật 108 + nguồn | 0,5 | 1 | Chặn T1 và N0 |
-| | **Tổng 10/11** | **8** | | |
+| | **Tổng 10/11** | **6,5** | | Việc tay Supabase / Vercel (H0) chủ repo làm 09/11, không tính |
 | 11/11 | N2 — chọn 25–40 quy định LDN + TNDN | 4 | 2 | Chặn N0 (TC2) và N3 |
 | | N3 — gán mã độc lập 20–30 quy định | 3 | **đúng 2 người, làm riêng** | Hai người này không làm N0 |
 | | N0 — kiểm thứ tự ưu tiên Luật 108, khóa `chot` | 1,5 | 1 (không phải người duyệt 108 nhiều nhất) | Phải xong 11/11 để X1 chạy 12/11 |
@@ -444,21 +459,22 @@ nhỏ hơn một điều Luật 108), 30 quy định ≈ 150 entity. Nhịp duy�
 | 12/11 | Nạp LDN + TNDN qua màn nhập văn bản, chạy trích xuất | 1 | 1 (tài khoản chuyên viên) | |
 | | N3 — tính kappa, họp sửa sổ tay mã | 3,5 | 2 người gán mã + 1 | Chưa duyệt được: U1 xong cuối ngày |
 | | **Tổng 12/11** | **4,5** | | Ngày nhẹ — dùng để đọc trước Luật 108 bậc 1 |
-| 13/11 | N4(a) — duyệt lại 9 điều cũ Luật 108 (70 entity; trong đó rà 23 chủ thể ≈ 1 giờ) | 3 | 1–2 | Làm trước tiên: lát cắt đo (i) cần xong |
+| 13/11 | N4(a) — duyệt lại 9 điều cũ Luật 108 (70 entity; trong đó rà 23 chủ thể ≈ 1 giờ). **20 entity đầu bấm giờ** (giờ bắt đầu, giờ kết thúc từng entity, người duyệt) | 3 | 1–2 | Làm trước tiên: lát cắt đo (i) cần xong |
+| | **Điểm quyết định ~11:00:** chạy NĐ, so với bấm giờ, chốt định mức mới, tính lại giờ Luật 108 → chủ repo quyết duyệt tới bậc nào (`UU_TIEN_LUAT_108.md` §6.1) | 0,5 | chủ repo + 1 | Giờ 13–14/11 tính lại theo định mức mới |
 | | N4′ — duyệt LDN + TNDN (~150 entity) | 6,5 | 2–3 | |
 | | N4(b) — Luật 108 điều mới, theo thứ tự | phần còn lại | 1–3 | ~3 điều / giờ công |
-| | **Tổng 13/11 (chưa tính 108 mới)** | **9,5** | | |
+| | **Tổng 13/11 (chưa tính 108 mới)** | **10** | | |
 | 14/11 | N4(b) — Luật 108 điều mới, tiếp | tới ~14,3 nếu hết 44 điều | 1–3 | Dừng cuối ngày; ghi số điều đã duyệt |
-| | N5 — điều kiện máy đọc (~15) + cạnh ngoại lệ (~8), tạo và duyệt | 2,5 | 1–2 | Cần cho bộ đo |
+| | N5 — điều kiện máy đọc (~15) + cạnh ngoại lệ (~8): một người tạo, **người khác** duyệt cạnh | 2,5 | 2 (người tạo ≠ người duyệt) | Cần cho bộ đo |
 | | N6 — hồ sơ SME thật + bộ tổng hợp | 4 | 1–2 | |
 | | N7 — điền "Dự đoán sau" | 1 | cả nhóm | Trước 15/11 |
 | | **Tổng 14/11 (chưa tính 108 mới)** | **7,5** | | |
 | 15/11 | Đọc kết quả D9, đối chiếu ca bất thường với bộ A/B/C | 2 | 1–2 | |
 | | Chuẩn bị gói gửi chuyên gia (N8) | 1 | 1 | |
 | | **Tổng 15/11** | **3** | | |
-| | **Tổng 10–15/11** | **41 + Luật 108 mới (0–14,3)** | | |
+| | **Tổng 10–15/11** | **40 + Luật 108 mới (0–14,3 theo định mức tạm)** | | |
 
-Luật 108 điều mới: 44 điều (nếu luật có 53 điều) × 7,8 entity × 2,5 phút ≈ **14,3 giờ công**, trừ đi các điều bậc 4 (không trích
+Luật 108 điều mới: 44 điều (nếu luật có 53 điều) × 7,8 entity × 2,5 phút (định mức tạm) ≈ **14,3 giờ công**, trừ đi các điều bậc 4 (không trích
 xuất). Số này tính lại khi `UU_TIEN_LUAT_108.md` chốt. Không dồn được vào 12/11 vì đề xuất của LLM cho các điều mới chỉ có từ
 sáng 13/11 (X1 chạy 12/11) và màn duyệt mới (U1) xong cuối 12/11.
 
@@ -479,7 +495,7 @@ Các mục đã chốt ngày 09/11 (Q1–Q6, Q-A, Q-B, Q-C, số liệu §13.1) 
 | 7 | §8 C4–C7; RLS | CHECK cũ chặn duyệt C4–C7; RLS làm S9 phụ thuộc người gọi | Đã đưa vào M7 |
 | 8 | §6.2 bước 5 | Prompt `generate-v1` hướng dẫn cách làm | G1 |
 | 9 | §14.1 việc 7 hạn 13/11 | Phần giao diện hồ sơ không cần cho đo | Đã chốt Q-A: lùi sang 16–18/11 |
-| 12 | Lịch 10–15/11 | 47,5 giờ code / ~48 giờ sức chứa — không dư | Phương án dự phòng §0.2 |
+| 12 | Lịch 10–15/11 | 48,5 giờ code / ~48 giờ sức chứa — vượt ~0,5 giờ | Phương án dự phòng §0.2 |
 | 10 | T1 — 9 chunk cũ | Nguồn file cũ chưa xác định; có thể lệch toàn văn | Đối chiếu, báo lệch, giữ chunk cũ (§1.4) |
 | 11 | §6.1 bước 9, §13.3 | Kích hoạt / hủy kích hoạt văn bản không ghi `approvals` | P1 (§14.2) |
 
@@ -497,8 +513,5 @@ Các mục đã chốt ngày 09/11 (Q1–Q6, Q-A, Q-B, Q-C, số liệu §13.1) 
 
 ## 7. Câu hỏi cần quyết
 
-- **Q-D** Người tạo cạnh ngoại lệ và người duyệt cạnh đó có bắt buộc khác nhau không? Hiện thiết kế chỉ bắt tài khoản chuyên
-  viên thật; muốn tách người thì thêm một kiểm tra trong `approve_relationship` (`nguoi_tao_id <> auth.uid()`), +0,5 giờ, và nhóm
-  cần ít nhất hai tài khoản chuyên viên.
-- **Q-E** Định mức 2,5 phút / entity cho giờ công người (§4.1) — nhóm thấy sát không? Định mức này quyết định Luật 108 duyệt được
-  bao nhiêu điều trước 14/11.
+Không còn câu hỏi mở (Q-D, Q-E chốt 09/11 — nhật ký #14, #15). Điểm quyết định tiếp theo: **~11:00 ngày 13/11**, chủ repo quyết
+Luật 108 duyệt tới bậc nào theo định mức đo được (§4.1).

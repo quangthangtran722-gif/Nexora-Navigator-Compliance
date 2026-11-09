@@ -64,11 +64,20 @@ Số điều toàn văn: **chưa đếm** (chờ file). Dấu hiệu: Điều 52
 ## 6. Ước lượng giờ duyệt của người
 
 Số liệu nền (bản chụp 09/11, `research/baseline/`): 9 điều cũ → 70 entity, tức **7,8 entity / điều** (3,4 hành vi / điều).
-Lượt duyệt cũ: 70 entity trong 18 phút, trung vị 6 giây / entity, một người, không ghi chú — đó là nhịp đã sinh ra 72% tất
-định câm (§13.1), **không** dùng làm định mức.
+Lượt duyệt cũ (đo từ `approvals`, 20/10/2026): 70 entity trong 18 phút, một người, không ghi chú. Theo cách đo ở
+HE_THONG_DA_CHOT §14.4 (bỏ 14 lần duyệt cùng thời điểm do duyệt cả chunk, bỏ khoảng > 10 phút): 55 khoảng, trung vị 8,6 giây,
+p90 51 giây. Đây là số đo trước, ghi lại để so sánh. Không dùng làm định mức vì quy trình mới có thêm
+bước (chọn mã C0–C7, xác nhận phạm vi hoặc viết điều kiện máy đọc hoặc gắn cờ) mà lượt cũ không có. Tỉ lệ tất định câm 72%
+(§13.1) có nguyên nhân đã truy tới dòng code (§13.2: chủ thể không điều kiện bị bỏ qua → áp dụng mọi doanh nghiệp); chưa có
+bằng chứng tốc độ duyệt là nguyên nhân.
 
-Định mức dùng để lập kế hoạch: **2,5 phút / entity** (đọc trích dẫn, chọn mã C0–C7, xác nhận phạm vi hoặc viết điều kiện
-máy đọc hoặc gắn cờ, gán phòng ban). Cạnh LLM duyệt cùng entity nguồn, không tính thêm. Cạnh ngoại lệ thêm tay: 5 phút / cạnh.
+Định mức **tạm** để lập kế hoạch: **2,5 phút / entity** (đọc trích dẫn, chọn mã, xác nhận phạm vi hoặc viết điều kiện hoặc
+gắn cờ, gán phòng ban). Cạnh LLM duyệt cùng entity nguồn, không tính thêm. Cạnh ngoại lệ thêm tay: 5 phút / cạnh (tạo) + duyệt
+bởi người khác.
+
+**Đo lại sáng 13/11 (Q-E):** khi duyệt lại 9 điều cũ, bấm giờ 20 entity đầu (ghi giờ bắt đầu, giờ kết thúc từng entity, người
+duyệt). Đối chiếu với số đo tự động từ `approvals` (PLAN.md, việc NĐ). Lấy trung vị bấm giờ làm định mức mới → tính lại bảng
+dưới và PLAN.md §4.1 → chủ repo quyết định Luật 108 duyệt tới bậc nào trước 14/11. Ghi kết quả vào §6.1.
 
 | Phần | Số điều | Entity ước | Giờ duyệt |
 |---|---|---|---|
@@ -76,7 +85,18 @@ máy đọc hoặc gắn cờ, gán phòng ban). Cạnh LLM duyệt cùng entity
 | Các điều còn lại nếu luật có 53 điều | 44 | ~343 | ~14,3 |
 | Trong đó bậc 4 (không trích xuất) | chưa biết | — | 0 |
 
-Giờ duyệt thật = (số điều bậc 0–3) × 7,8 × 2,5 phút. Tính lại khi bảng §5 chốt; cập nhật PLAN.md §4.1.
+Giờ duyệt = (số điều bậc 0–3) × 7,8 × định mức. Tính lại khi bảng §5 chốt và khi có số đo 13/11; cập nhật PLAN.md §4.1.
+
+### 6.1 Số đo 13/11 và quyết định bậc
+
+| Mục | Giá trị |
+|---|---|
+| Số entity bấm giờ | (điền 13/11) |
+| Trung vị / p90 bấm giờ (phút / entity) | |
+| Trung vị / p90 từ `approvals` cùng lượt | |
+| Định mức mới | |
+| Giờ công còn lại đến hết 14/11 | |
+| Duyệt tới bậc / tới điều | (chủ repo quyết) |
 
 ## 7. Nhật ký sửa sau khi khóa
 
