@@ -4,7 +4,8 @@
 > (ghi "§n" bên dưới là số mục trong file đó). Hiện trạng code + DB trước can thiệp: `docs/mis/UNDERSTANDING.md`,
 > `research/baseline/SUMMARY.md`. Kế hoạch thi công: `docs/mis/PLAN.md`.
 > Bản SpawnX cũ (cards/tasks, extractCard.ts, rewriteTask.ts) đã chết: `docs/archive/CLAUDE.spawnx.md`, tag `spawnx-final`.
-> Có xung đột giữa file này và HE_THONG_DA_CHOT.md → theo HE_THONG_DA_CHOT.md và báo lại.
+> Có xung đột giữa file này và HE_THONG_DA_CHOT.md → theo HE_THONG_DA_CHOT.md và báo lại. Bản trong repo là bản chuẩn
+> duy nhất (v1.1, 09/11); thay đổi thiết kế ghi ở "Nhật ký thay đổi thiết kế" cuối file đó.
 
 ## 1. Bài toán và ranh giới L3 (§1)
 
@@ -23,11 +24,13 @@ Không viết chữ nào trong giao diện, prompt hay nội dung việc mang t�
 |---|---|
 | Luật Doanh nghiệp 59/2020/QH14, sửa đổi 03/2022/QH15, 76/2025/QH15 | Điều kiện theo loại hình; nghĩa vụ đăng ký, thông báo thay đổi có thời hạn |
 | Luật Thuế TNDN 67/2025/QH15 + các luật sửa đổi (có 09/2026/QH16) | Ngưỡng doanh thu, loại trừ, ưu đãi |
-| Luật Quản lý thuế 108/2025/QH15 | Thủ tục khai, nộp, thời hạn |
-| TT 77/2025/TT-BTC | **Chỉ là dữ liệu trước can thiệp.** Không thuộc thư viện đang chạy, không viết logic riêng cho nó |
+| Luật Quản lý thuế 108/2025/QH15 (hiệu lực 01/7/2026) | Thủ tục khai, nộp, thời hạn. **Nạp toàn văn** |
+| NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC | **Chưa quyết có nạp.** Không nạp → nghĩa vụ 108 dẫn chiếu sang đó là C5, `thu_vien_chua_du` |
+| TT 77/2025/TT-BTC, Luật 109/2025/QH15 | **Chỉ là dữ liệu trước can thiệp.** Không nạp sang CSDL mới, không viết logic riêng |
 
 - Văn bản nạp **phải là bản hợp nhất** (§2.3). S2 làm thủ công: ghi khoản nào bị sửa, bởi văn bản nào, từ ngày nào.
-- Không nạp toàn văn: 25–40 quy định chọn theo §2.2. Quy định C0 chỉ giữ vài mục làm đối chứng.
+- LDN, TNDN: không nạp toàn văn, 25–40 quy định chọn theo §2.2. Quy định C0 chỉ giữ vài mục làm đối chứng.
+- Luật 108 trên CSDL mới: 9 điều cũ nạp lại **đúng đề xuất cũ của LLM** ở `cho_duyet` (không chạy lại extract); các điều còn lại trích xuất mới.
 
 ## 3. Hai vòng S1–S10 và file code (§4, §5)
 
@@ -84,8 +87,13 @@ Mã điều kiện chỉ quyết định **loại thao tác duyệt**, không qu
 6. Ngoại lệ **chỉ xét khi điều kiện gốc thỏa**. Hai loại:
    - **bác bỏ** (`ngoai_le_bac_bo`): điều kiện ngoại lệ thỏa → không áp dụng, không có gì thay;
    - **thay thế** (`ngoai_le_thay_the`): điều kiện ngoại lệ thỏa → nghĩa vụ gốc không áp dụng, **phải xét tiếp** nghĩa vụ thay thế;
-   - điều kiện ngoại lệ chưa xác định → cần bổ sung; không thỏa → áp dụng.
+   - cạnh ngoại lệ có cờ **`chi_mot_phan`** (loại trừ một loại thu nhập, vd TNDN Đ18 k3): **không** bác bỏ gốc, gốc xét
+     tiếp; nghĩa vụ ngoại lệ (X3) có kết luận riêng cho phần đó;
+   - xét hết ngoại lệ: bác bỏ / thay thế đã thỏa thắng ngoại lệ chưa xác định; còn chưa xác định → cần bổ sung; không → áp dụng.
 7. Còn lại → áp dụng (`sap_ap_dung` nếu ngày hiệu lực sau ngày đánh giá).
+
+Mỗi cặp DN × nghĩa vụ **một** kết luận; không chia theo phần thu nhập. Thời hạn (P0): nguyên văn trong luật + ngày sự kiện
+DN đã khai — **không tự tính ngày hạn** (P1).
 
 **`dieu_kien_may_doc = null` KHÔNG có nghĩa là áp dụng cho mọi doanh nghiệp.** Chỉ áp dụng cho mọi DN khi chuyên
 viên đã xác nhận `pham_vi = chung`. Dữ liệu cũ có `pham_vi` null = chưa xác nhận. Không được `continue` bỏ qua một
@@ -99,7 +107,9 @@ Ba lý do của "cần bổ sung":
 | `ho_so_thieu` | Trường hồ sơ của điều kiện C1–C3 trống hoặc "không chắc" | Người đầu mối |
 | `can_chuyen_mon` | C6; dữ kiện T4 | Người đầu mối → chuyên gia ngoài hệ |
 
-Kết luận "cần bổ sung" **luôn tạo bản ghi và gửi người đầu mối**, không phụ thuộc phòng ban (§6.2).
+Kết luận "cần bổ sung" **luôn tạo bản ghi và gửi người đầu mối**, không phụ thuộc phòng ban (§6.2). "Áp dụng" mà DN
+không có phòng khớp và không có Ban giám đốc → dòng **chưa gắn phòng**, người đầu mối chọn khi duyệt. Không thêm mã phòng
+ban ngoài 8 mã `slug_phong_ban` (vd "Hành chính" → `van_hanh`).
 S10 ghi bản ghi mới, không sửa kết luận cũ; lưu ngày đánh giá, phiên bản thư viện, bản chụp giá trị hồ sơ đã dùng (§12 thay đổi 6).
 
 Bộ test hồi quy chính của S9: ba doanh nghiệp A, B, C ở §10 (kết quả mong đợi §10.4).
@@ -119,16 +129,18 @@ Bộ test hồi quy chính của S9: ba doanh nghiệp A, B, C ở §10 (kết q
 
 Bộ mã là **bản nháp v1** — không cứng hóa danh sách mã thành enum không mở rộng được.
 
-Hồ sơ (§9.2): một trường chỉ có mặt khi ít nhất một quy định C1–C3 dùng tới. **Mọi** trường dùng trong điều kiện có
-lựa chọn "không chắc" → null.
+Hồ sơ (§9.2) — nguyên tắc: (1) chỉ hỏi trường có quy định C1–C3 **đã duyệt** dùng (form sinh từ thư viện, không danh
+sách cứng); (2) hỏi dữ kiện, không hỏi kết luận pháp lý; (3) không hỏi T4; (4) hỏi **khoảng** cắt tại ngưỡng trong thư
+viện, không hỏi số; (5) sự kiện hỏi có/không (+ ngày), không hỏi chi tiết; (6) mỗi câu hiện điều khoản cần nó; (7) mọi
+trường điều kiện có "Không chắc" và "Không muốn trả lời" → cả hai null → `ho_so_thieu`, lý do để trống lưu riêng.
 
-| Tầng | Trường |
+| Phần | Trường |
 |---|---|
-| T0 | Loại hình (DNTN / TNHH 1 TV / TNHH 2 TV+ / cổ phần / hợp danh); niêm yết hoặc đăng ký giao dịch CK; ngành nghề (VSIC, nhiều) |
-| T1 | Tổng doanh thu kỳ tính thuế TNDN trước liền kề (VNĐ) |
-| T2 | Phương pháp nộp thuế TNDN (kê khai / tỷ lệ trên doanh thu); kỳ tính thuế (năm dương lịch / năm tài chính khác) |
-| T3 | Thay đổi ngành nghề + ngày; thay đổi cổ đông là NĐT nước ngoài + ngày; có thu nhập trò chơi điện tử trên mạng |
-| T4 | **Không hỏi**: quan hệ liên kết, chủ sở hữu hưởng lợi → quy định phụ thuộc nhận `can_chuyen_mon`. Bỏ `co_giao_dich_lien_ket` khỏi form |
+| 1 — khi đăng ký | Loại hình (T0); niêm yết (chỉ CTCP, chỉ nếu LDN Đ31 k1 được chọn); chi nhánh / VPĐD / địa điểm KD (ứng viên); phương pháp nộp thuế TNDN; kỳ tính thuế TNDN; khai thuế tháng / quý (ứng viên); phòng ban + người đầu mối |
+| 2 — chỉ qua hỏi bổ sung khi S9 cần | Doanh thu kỳ trước: ≤3 tỷ / >3–50 tỷ / >50 tỷ / chưa có kỳ trước; nhóm thu nhập TNDN Đ18 k3 a/b/c (chỉ khi ≤50 tỷ; điểm d là C5); đổi ngành nghề / thông tin đăng ký + ngày; đổi cổ đông NĐT nước ngoài + ngày (chỉ CTCP); chuyển nhượng vốn / dự án (ứng viên) |
+| Không hỏi (T4) | Quan hệ liên kết (TNDN Đ18 k4), chủ sở hữu hưởng lợi → `can_chuyen_mon`. Bỏ `co_giao_dich_lien_ket`, bỏ VSIC |
+
+Trường "ứng viên" chỉ chốt sau khi nạp toàn văn Luật 108 và gán mã.
 
 ## 7. Ranh giới không được vi phạm
 
