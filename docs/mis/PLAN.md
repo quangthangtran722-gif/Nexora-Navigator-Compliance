@@ -115,6 +115,9 @@ Sau H0: `.env.local` đổi sang project mới (tôi làm, sau khi bạn đồng
 - So sánh: `scripts/mis/so-sanh-schema.mjs` chạy cùng bộ truy vấn `pg_catalog` trên hai DB (bảng, cột, kiểu, default,
   nullable; constraint; index; function + chữ ký + `prosecdef`; trigger; policy + biểu thức; enum; view; grant theo cột)
   → `research/schema-diff/BAO_CAO.md`. Mong đợi: không chênh lệch. Có chênh lệch thì báo, không tự sửa.
+- **Kết quả 09/11:** lần áp đầu lệch 31 GRANT (project mới tự cấp ALL cho `anon`, `authenticated` qua quyền mặc định;
+  `pg_dump` không sinh REVOKE) → thêm khối REVOKE trước phần ACL của `000`, dựng lại MIS từ đầu → **0 chênh lệch**.
+  Hệ quả: migration 007–010 phải REVOKE quyền thừa cho mỗi bảng / hàm / view mới (ghi trong `BAO_CAO.md`).
 
 ### 1.3 H2 — nạp lại đề xuất cũ của Luật 108: `scripts/mis/nap-lai-thu-vien.mjs`
 
@@ -125,12 +128,16 @@ Theo Q4: **chỉ Luật 108** (9 điều). Đọc prod (chỉ `select`), ghi pro
 |---|---|
 | `thuoc_tinh_ho_so`, `nganh` | Chép nguyên (để hồ sơ demo cũ hợp lệ; HS0 thêm trường mới) |
 | `van_ban` (chỉ 108/2025/QH15) | Chép, **`trang_thai = 'draft'`**, `nguoi_tao_id = null`. Kích hoạt là thao tác của chuyên viên |
-| `van_ban_chunks` (9 chunk) | Chép nguyên văn, `trang_thai = 'da_trich_xuat'` |
+| `van_ban_chunks` (9 chunk) | Chép nguyên văn; `trang_thai` theo quy tắc của `extractEntities.ts`: có entity → `da_trich_xuat`, không entity nào → `hoan_tat` (Điều 53) |
 | `pipeline_runs` extract của 9 chunk (17 lượt) | Chép nguyên văn (id, input, output, model, prompt_version, thời điểm); `nguoi_chay_id = null`. Là nhật ký gốc của LLM |
 | `entities` (70) | Dựng lại **từ `pipeline_runs.output.entities`**, giữ `id = output.entity_ids[ma_tam]`. Không truyền `trang_thai_duyet` → `cho_duyet`. `dieu_kien_may_doc`, `curator_id`, `ghi_chu_curator` = null. Tên lấy từ đề xuất gốc của LLM (chuyên viên từng sửa tên một số entity ở prod) |
 | `entity_relationships` (44) | Dựng từ `output.relationships` (`ma_tam` → id) |
-| `customers`, `departments` | Chép hồ sơ demo, giữ id (tài khoản demo trỏ `customer_id` `a0000000-…`) |
+| `customers`, `departments` | Chép **chỉ 3 hồ sơ demo** `a0000000-…` (+ 11 phòng ban), giữ id. 7 hồ sơ còn lại (có Nexora Technology — người dùng thật) không chép: gắn tài khoản Auth không có ở project mới; đã có trong `research/baseline/` |
 | TT 77, Luật 109, `diagnostics`, `approvals`, `notifications`, lượt filter/generate | **Không** nạp — dữ liệu trước can thiệp đã chụp ở `research/baseline/` |
+
+**Kết quả 09/11:** đúng 9 chunk, 17 lượt (đều `extract-v2`), 70 entity `cho_duyet`, 44 cạnh (44/44 giữ id cạnh prod), `van_ban`
+`draft`, 0 `approvals`. 9 entity đã bị sửa tên ở prod (7 ở Điều 8: hành vi bị cấm đổi thành nghĩa vụ khẳng định) — nạp
+tên gốc, chênh lệch trong manifest.
 
 Kiểm tra cuối: 0 entity khác `cho_duyet`; 70 entity, 44 cạnh, 9 chunk; ghi `research/reload/manifest.json` (id, số dòng,
 chênh lệch tên đề xuất gốc ↔ prod) — được commit. Script in tên project đích ở dòng đầu và **từ chối chạy nếu đích là
@@ -154,7 +161,7 @@ chênh lệch tên đề xuất gốc ↔ prod) — được commit. Script in t
 - Đăng nhập bằng tài khoản **chuyên viên thật** (mật khẩu đọc từ `.env.demo.local`), gọi `POST /api/pipeline/extract` lần lượt
   theo thứ tự trên, giãn nhịp theo `groqLimit.ts` (8K token/phút), dừng khi gặp lỗi quota, chạy tiếp từ chỗ dừng. Đi qua đúng
   route, đúng `extractEntities.ts`, đúng log `pipeline_runs`; entity và cạnh ra `cho_duyet`.
-- Không đổi prompt `extract-v4`. Báo cáo ghi: 9 điều cũ có đề xuất từ v2/v3/v4, các điều mới từ v4.
+- Không đổi prompt `extract-v4`. Báo cáo ghi: 9 điều cũ có đề xuất từ `extract-v2` (cả 17 lượt — kiểm 09/11), các điều mới từ v4.
 
 ---
 

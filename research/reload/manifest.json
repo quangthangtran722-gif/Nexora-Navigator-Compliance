@@ -1,0 +1,789 @@
+{
+  "tao_luc": "2026-11-09T12:33:40.057Z",
+  "nguon": {
+    "project": "qalexzctwbezrbhasuvp",
+    "van_ban": {
+      "id": "7dca8db7-5281-4261-a173-7ab15ac7e677",
+      "so_hieu": "108/2025/QH15",
+      "trang_thai_prod": "active"
+    }
+  },
+  "dich": {
+    "project": "sttopelrdxvyszfvvcrn",
+    "van_ban_trang_thai": "draft",
+    "entity_trang_thai_duyet": "cho_duyet"
+  },
+  "so_dong": {
+    "chunk": 9,
+    "run": 17,
+    "entity": 70,
+    "canh": 44,
+    "thuoc_tinh_ho_so": 20,
+    "nganh": 21,
+    "customers": 3,
+    "departments": 11
+  },
+  "prompt_version": [
+    "extract-v2"
+  ],
+  "chunk": [
+    {
+      "id": "a2c04dbc-22d0-4bb8-9d69-9806051d3da5",
+      "thu_tu": 1,
+      "dieu": "Điều 2",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "6995ca8c-744b-46bf-8bb9-1849c725a495",
+      "thu_tu": 2,
+      "dieu": "Điều 3",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "8c74ecc3-6763-4b92-85f4-114e07b9d062",
+      "thu_tu": 3,
+      "dieu": "Điều 8",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "a2cd9432-1b31-4b97-b5d2-b628a399249a",
+      "thu_tu": 4,
+      "dieu": "Điều 10",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "thu_tu": 5,
+      "dieu": "Điều 11",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "5edc6bde-8f8e-408a-b428-ca851147f7ba",
+      "thu_tu": 6,
+      "dieu": "Điều 27",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "7d6c84e9-732e-49e8-a6b1-18fd8227c668",
+      "thu_tu": 7,
+      "dieu": "Điều 48",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "2b118ee2-5a1b-42cc-a4b1-70aa15a4f316",
+      "thu_tu": 8,
+      "dieu": "Điều 52",
+      "trang_thai": "da_trich_xuat"
+    },
+    {
+      "id": "f03b0c36-0a9b-4443-b8c9-2dbeb5871a1a",
+      "thu_tu": 9,
+      "dieu": "Điều 53",
+      "trang_thai": "hoan_tat"
+    }
+  ],
+  "run": [
+    {
+      "id": "d67659fd-bca5-4601-90c5-e80ce685b20a",
+      "chunk_id": "a2c04dbc-22d0-4bb8-9d69-9806051d3da5",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "eab0f990-a95e-4e9c-8da3-6f8608d52c64",
+      "chunk_id": "6995ca8c-744b-46bf-8bb9-1849c725a495",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "8833663d-9c24-4f34-929f-b136ec42842f",
+      "chunk_id": "8c74ecc3-6763-4b92-85f4-114e07b9d062",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "58f351e4-98b1-4aab-be62-746c1cf58100",
+      "chunk_id": "a2cd9432-1b31-4b97-b5d2-b628a399249a",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "34650748-d5fc-4dfa-9f11-cc2bfdef7033",
+      "chunk_id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "7b104455-d50e-410c-b0d2-9a9c91618dfc",
+      "chunk_id": "5edc6bde-8f8e-408a-b428-ca851147f7ba",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+      "chunk_id": "7d6c84e9-732e-49e8-a6b1-18fd8227c668",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+      "chunk_id": "2b118ee2-5a1b-42cc-a4b1-70aa15a4f316",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "aa1de739-68a7-4fbb-9b72-e051b07a9d07",
+      "chunk_id": "f03b0c36-0a9b-4443-b8c9-2dbeb5871a1a",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+      "chunk_id": "a2c04dbc-22d0-4bb8-9d69-9806051d3da5",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "406cffcf-18db-45a1-9a6b-cd32b527df2e",
+      "chunk_id": "a2cd9432-1b31-4b97-b5d2-b628a399249a",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "9a1ef489-0ee1-4421-8a50-801953e4e95e",
+      "chunk_id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+      "chunk_id": "5edc6bde-8f8e-408a-b428-ca851147f7ba",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "63705261-c948-4254-8389-7eee8170387b",
+      "chunk_id": "a2cd9432-1b31-4b97-b5d2-b628a399249a",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "df7f5c9c-21a0-4571-ab7d-b831a10466fc",
+      "chunk_id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "7b4d3de8-f919-400d-83fc-7cd968cfff4c",
+      "chunk_id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "trang_thai": "loi",
+      "prompt_version": "extract-v2"
+    },
+    {
+      "id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+      "chunk_id": "b1da2cab-ba42-4147-b098-5f14c14d3302",
+      "trang_thai": "hoan_tat",
+      "prompt_version": "extract-v2"
+    }
+  ],
+  "entity": [
+    {
+      "id": "392bc16c-53e2-4717-a13e-377787dff71f",
+      "so_dieu": 3,
+      "dieu_khoan": "Điều 3, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan thuế"
+    },
+    {
+      "id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+      "so_dieu": 3,
+      "dieu_khoan": "Điều 3, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Thực hiện phân nhóm người nộp thuế"
+    },
+    {
+      "id": "308a7c3f-e5e4-4b1a-81f4-d7702e3e2a06",
+      "so_dieu": 3,
+      "dieu_khoan": "Điều 3, khoản 1",
+      "loai": "doi_tuong",
+      "ten_de_xuat_goc": "Người nộp thuế trong quản lý thuế"
+    },
+    {
+      "id": "2d5976cd-c368-4e1d-9a39-07eb72f32aff",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "người nộp thuế"
+    },
+    {
+      "id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "công chức quản lý thuế"
+    },
+    {
+      "id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin"
+    },
+    {
+      "id": "56731b82-19d3-4164-896a-63fd49acbb54",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Làm sai lệch kết quả kiểm tra"
+    },
+    {
+      "id": "0f725e21-4bda-47f1-9d62-282177334149",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Gây phiền hà, sách nhiễu"
+    },
+    {
+      "id": "3b44c7ed-430d-44a2-91a8-514e04522212",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Chiếm đoạt hoặc sử dụng trái phép tiền thuế"
+    },
+    {
+      "id": "8b1ac774-f500-4677-bfa1-61fb02c4b311",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 2",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Cố tình không kê khai hoặc kê khai không đầy đủ"
+    },
+    {
+      "id": "29350e85-fd62-4fdb-9506-eca512402028",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 2",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Cản trở công chức quản lý thuế thi hành công vụ"
+    },
+    {
+      "id": "5d2e4dc8-40aa-40ad-aa1f-cd171563c52d",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 2",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Chống đối, trì hoãn, không cung cấp thông tin"
+    },
+    {
+      "id": "55b0e904-9925-407e-96d2-cb40745a3cd3",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 3",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Sử dụng mã số thuế của người khác trái quy định"
+    },
+    {
+      "id": "38a099b6-92fa-4427-917a-3bc686aa1d75",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 4",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Bán hàng không lập hóa đơn và sử dụng hóa đơn giả"
+    },
+    {
+      "id": "0c867d31-c0d5-40e3-86fd-0092b03b47c9",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 5",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Truy cập trái phép và phá hủy hệ thống thông tin"
+    },
+    {
+      "id": "df775a14-b1c6-4424-93e0-3968f3241c77",
+      "so_dieu": 8,
+      "dieu_khoan": "Điều 8, khoản 5",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Phát tán thông tin sai lệch"
+    },
+    {
+      "id": "52417810-98a2-4055-baa0-f54fc826f922",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Người nộp thuế"
+    },
+    {
+      "id": "dcd35215-b74d-4819-9b6a-ed0a9502944a",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan thuế"
+    },
+    {
+      "id": "6f513a28-5f12-4365-9cb3-3b99e33bf612",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Thủ trưởng cơ quan quản lý thuế"
+    },
+    {
+      "id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 1",
+      "loai": "dieu_kien",
+      "ten_de_xuat_goc": "Tiền thuế nợ quá 90 ngày kể từ ngày hết thời hạn nộp"
+    },
+    {
+      "id": "49ea7b8f-c668-43e6-937b-67b391681183",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 2",
+      "loai": "dieu_kien",
+      "ten_de_xuat_goc": "Tiền thuế nợ khi hết thời hạn gia hạn nộp tiền thuế"
+    },
+    {
+      "id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 3",
+      "loai": "dieu_kien",
+      "ten_de_xuat_goc": "Tiền thuế nợ nhưng không hoạt động tại địa chỉ đã đăng ký hoặc có hành vi phát tán tài sản"
+    },
+    {
+      "id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 4",
+      "loai": "dieu_kien",
+      "ten_de_xuat_goc": "Không chấp hành quyết định xử phạt vi phạm hành chính về quản lý thuế"
+    },
+    {
+      "id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 5",
+      "loai": "dieu_kien",
+      "ten_de_xuat_goc": "Không chấp hành quyết định kiểm tra thuế sau khi đã bị xử phạt hành chính"
+    },
+    {
+      "id": "232fb499-2927-478f-86d5-8054185fa184",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 6",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Nộp dần tiền thuế nợ"
+    },
+    {
+      "id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 6",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Không thực hiện biện pháp cưỡng chế thuế"
+    },
+    {
+      "id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 7",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Không thực hiện biện pháp cưỡng chế đối với nợ phí hải quan và lệ phí hàng hóa"
+    },
+    {
+      "id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 8",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Không thực hiện biện pháp cưỡng chế đối với số tiền thuế nợ được bù trừ qua hoàn thuế"
+    },
+    {
+      "id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+      "so_dieu": 48,
+      "dieu_khoan": "Điều 48, khoản 9",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Quyết định thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế"
+    },
+    {
+      "id": "9ebbe638-073f-4054-8851-b54cf29b88ae",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Luật này"
+    },
+    {
+      "id": "36ac84e0-3c6e-4a9d-8e07-a1d7696027d9",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 1",
+      "loai": "thoi_han",
+      "ten_de_xuat_goc": "từ ngày 01 tháng 7 năm 2026"
+    },
+    {
+      "id": "affdc331-0aec-41d3-bb73-a69472ec52eb",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 2",
+      "loai": "thoi_han",
+      "ten_de_xuat_goc": "từ ngày 01 tháng 01 năm 2026"
+    },
+    {
+      "id": "a00ea57c-5094-4047-ab53-545be4ec94ee",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 4",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan thuế"
+    },
+    {
+      "id": "a4291c5e-1181-44a0-bf06-49327415f68b",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 4",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "tổ chức xây dựng, nâng cấp và hoàn thiện hệ thống thông tin"
+    },
+    {
+      "id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 4",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Bộ trưởng Bộ Tài chính"
+    },
+    {
+      "id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 4",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "áp dụng toàn bộ các hình thức giao dịch điện tử"
+    },
+    {
+      "id": "7d2bdd28-ca71-4abe-a87a-f7ab254a4e6e",
+      "so_dieu": 52,
+      "dieu_khoan": "Điều 52, khoản 4",
+      "loai": "thoi_han",
+      "ten_de_xuat_goc": "trước ngày 01 tháng 01 năm 2027"
+    },
+    {
+      "id": "1d1329f5-9f03-4ac9-80ea-e2f7f1719766",
+      "so_dieu": 2,
+      "dieu_khoan": "Điều 2, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Người nộp thuế"
+    },
+    {
+      "id": "e392bc09-a22c-4f69-b31b-bf8b212fedfb",
+      "so_dieu": 2,
+      "dieu_khoan": "Điều 2, khoản 2",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan quản lý thuế"
+    },
+    {
+      "id": "ae6eb161-553e-45d1-b447-bedd186bcb2b",
+      "so_dieu": 2,
+      "dieu_khoan": "Điều 2, khoản 3",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Công chức quản lý thuế"
+    },
+    {
+      "id": "817612d2-ff96-4b28-ae0d-8aa6f6bf6918",
+      "so_dieu": 2,
+      "dieu_khoan": "Điều 2, khoản 4",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan nhà nước, tổ chức, cá nhân khác"
+    },
+    {
+      "id": "f025e6ab-1efc-4e0d-b765-c1076e25930a",
+      "so_dieu": 2,
+      "dieu_khoan": "Điều 2, khoản 5",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Chính phủ"
+    },
+    {
+      "id": "45443aaf-1611-4963-a649-c2f66941926d",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 1",
+      "loai": "doi_tuong",
+      "ten_de_xuat_goc": "Chứng từ điện tử"
+    },
+    {
+      "id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan quản lý thuế"
+    },
+    {
+      "id": "802b75f9-6ee0-4d10-8843-d45f998461b2",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Tổ chức có trách nhiệm khấu trừ thuế"
+    },
+    {
+      "id": "38988017-62e2-498e-869b-4f272a74cb10",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 2, điểm a",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Đăng ký, quản lý, sử dụng chứng từ điện tử"
+    },
+    {
+      "id": "e194aae5-3b5b-4341-be68-36e63911e1f1",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 2, điểm b",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Phản ánh đầy đủ, trung thực giao dịch phát sinh"
+    },
+    {
+      "id": "ae2dd348-de3f-4289-8363-04a5d40baa3a",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 2, điểm b",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Tổ chức lập chứng từ điện tử"
+    },
+    {
+      "id": "86c76a72-ffd2-44c6-b51a-c31ae4d25ff7",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 3",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu"
+    },
+    {
+      "id": "16c517f2-5004-496c-95ab-b7c4b3410351",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 3",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Tổ chức cung cấp dịch vụ"
+    },
+    {
+      "id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 4",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Chính phủ"
+    },
+    {
+      "id": "36b86dae-49b3-486c-b4d2-56259e207e95",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 5",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Bộ trưởng Bộ Tài chính"
+    },
+    {
+      "id": "db6d658c-b6f3-40eb-9807-39ac9e8d65b6",
+      "so_dieu": 27,
+      "dieu_khoan": "Điều 27, khoản 5",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Đăng ký sử dụng chứng từ điện tử"
+    },
+    {
+      "id": "a391d688-9a28-4e66-ad56-ecba60ca91ef",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 2",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh"
+    },
+    {
+      "id": "c2d950ca-2b50-4a0a-936a-fe9158e971f7",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Đăng ký thuế lần đầu"
+    },
+    {
+      "id": "b488cfb2-2a7d-4cd5-8c00-ccca57df9a39",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Thông báo thay đổi thông tin đăng ký thuế"
+    },
+    {
+      "id": "60ff1802-3397-47e8-aac5-7dd896cdd025",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Thông báo khi tạm ngừng hoạt động, kinh doanh"
+    },
+    {
+      "id": "0e40a01d-e34f-402e-9304-d4e96f625216",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Chấm dứt hiệu lực mã số thuế"
+    },
+    {
+      "id": "511a8e1a-07a6-4c74-a8f8-b231aa8bdd55",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 1",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Khôi phục mã số thuế"
+    },
+    {
+      "id": "4a230816-b27c-423a-8047-d7cad9b211b8",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 2",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hiệp hợp tác xã, đăng ký tổ hợp tác, đăng ký hộ kinh doanh, đăng ký hoạt động, kinh doanh theo cơ chế một cửa liên thông"
+    },
+    {
+      "id": "dee721ac-4e2e-4958-82c7-4b51f768bbf9",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 3",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Thực hiện đăng ký thuế trực tiếp với cơ quan thuế"
+    },
+    {
+      "id": "aebeef77-102b-45b9-9059-7f56330709b8",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 3",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Cơ quan thuế"
+    },
+    {
+      "id": "761fc5d5-8ba4-43c1-b92b-43d43eaca148",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 4",
+      "loai": "thoi_han",
+      "ten_de_xuat_goc": "Thời hạn đăng ký thuế"
+    },
+    {
+      "id": "ef98e4ad-6dec-4c90-bc39-e4a90171654c",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 5",
+      "loai": "hanh_vi",
+      "ten_de_xuat_goc": "Quy định chi tiết khoản 1 và khoản 3 Điều này"
+    },
+    {
+      "id": "0e90fdaf-e8d2-435b-95be-0269e6b24105",
+      "so_dieu": 10,
+      "dieu_khoan": "Điều 10, khoản 5",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Bộ trưởng Bộ Tài chính"
+    },
+    {
+      "id": "fc043117-1511-4e7a-a556-d87e23a13f20",
+      "so_dieu": 11,
+      "dieu_khoan": "Điều 11, khoản 1",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh"
+    },
+    {
+      "id": "e9558d9c-8777-4d94-9b89-ab9f7aa1575e",
+      "so_dieu": 11,
+      "dieu_khoan": "Điều 11, khoản 2",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác"
+    },
+    {
+      "id": "ecfaaea8-20ba-4457-a91a-15a2c0b92d77",
+      "so_dieu": 11,
+      "dieu_khoan": "Điều 11, khoản 3",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "cơ quan thuế"
+    },
+    {
+      "id": "2087c632-8767-407b-ac7a-8dabba45e7e7",
+      "so_dieu": 11,
+      "dieu_khoan": "Điều 11, khoản 7",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Bộ trưởng Bộ Tài chính"
+    },
+    {
+      "id": "41428799-9deb-4725-8e2d-334a1d5db980",
+      "so_dieu": 11,
+      "dieu_khoan": "Điều 11, khoản 6",
+      "loai": "chu_the",
+      "ten_de_xuat_goc": "Chính phủ"
+    }
+  ],
+  "canh_khong_khop_id_prod": [],
+  "sua_o_prod_so_voi_de_xuat_goc": [
+    {
+      "id": "8b1ac774-f500-4677-bfa1-61fb02c4b311",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Cố tình không kê khai hoặc kê khai không đầy đủ",
+          "prod": "Kê khai thuế đầy đủ, trung thực"
+        }
+      }
+    },
+    {
+      "id": "29350e85-fd62-4fdb-9506-eca512402028",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Cản trở công chức quản lý thuế thi hành công vụ",
+          "prod": "Không cản trở công chức thuế thi hành công vụ"
+        }
+      }
+    },
+    {
+      "id": "5d2e4dc8-40aa-40ad-aa1f-cd171563c52d",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Chống đối, trì hoãn, không cung cấp thông tin",
+          "prod": "Cung cấp thông tin đầy đủ, đúng hạn cho cơ quan thuế"
+        }
+      }
+    },
+    {
+      "id": "55b0e904-9925-407e-96d2-cb40745a3cd3",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Sử dụng mã số thuế của người khác trái quy định",
+          "prod": "Không sử dụng mã số thuế của người khác"
+        }
+      }
+    },
+    {
+      "id": "38a099b6-92fa-4427-917a-3bc686aa1d75",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Bán hàng không lập hóa đơn và sử dụng hóa đơn giả",
+          "prod": "Lập hóa đơn đầy đủ khi bán hàng"
+        }
+      }
+    },
+    {
+      "id": "0c867d31-c0d5-40e3-86fd-0092b03b47c9",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Truy cập trái phép và phá hủy hệ thống thông tin",
+          "prod": "Không truy cập trái phép hệ thống thông tin thuế"
+        }
+      }
+    },
+    {
+      "id": "df775a14-b1c6-4424-93e0-3968f3241c77",
+      "so_dieu": 8,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Phát tán thông tin sai lệch",
+          "prod": "Không phát tán thông tin thuế sai lệch"
+        }
+      }
+    },
+    {
+      "id": "86c76a72-ffd2-44c6-b51a-c31ae4d25ff7",
+      "so_dieu": 27,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu",
+          "prod": "Bảo đảm an toàn, bảo mật dữ liệu điện tử"
+        }
+      }
+    },
+    {
+      "id": "4a230816-b27c-423a-8047-d7cad9b211b8",
+      "so_dieu": 10,
+      "truong": {
+        "ten_entity": {
+          "de_xuat_goc": "Thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hiệp hợp tác xã, đăng ký tổ hợp tác, đăng ký hộ kinh doanh, đăng ký hoạt động, kinh doanh theo cơ chế một cửa liên thông",
+          "prod": "Đăng ký thuế theo cơ chế một cửa liên thông"
+        }
+      }
+    }
+  ],
+  "customers": [
+    {
+      "id": "a0000000-0000-4000-8000-000000000001",
+      "ten_cong_ty": "Công ty TNHH Nexora Technology"
+    },
+    {
+      "id": "a0000000-0000-4000-8000-000000000002",
+      "ten_cong_ty": "Phòng khám Nha khoa Smile Care"
+    },
+    {
+      "id": "a0000000-0000-4000-8000-000000000003",
+      "ten_cong_ty": "Công ty CP Chứng khoán Thiên Phú"
+    }
+  ],
+  "customers_khong_chep": 7
+}
