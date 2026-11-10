@@ -882,7 +882,7 @@ Cách mô hình hiện tại biểu diễn một nghĩa vụ: một dòng `entit
 3. S9 chưa xử lý ngoại lệ, chưa có ngày hết hiệu lực, chưa đọc quan hệ thay thế.
 4. S4 mới ghi lại cụm dẫn chiếu, chưa giải.
 5. Δ = 2 và 0 kết luận "cần bổ sung" được lưu là do ba lỗi ở §13.2, đã truy ra dòng code.
-6. Trước thử nghiệm SME, chỉ có 1 người dùng thật (Nexora Technology).
+6. Trước thử nghiệm SME, hệ chưa có người dùng thật. 10 hồ sơ doanh nghiệp trên CSDL trước can thiệp (kể cả Nexora Technology) đều là hồ sơ ảo nhóm tự tạo để trình diễn hoặc kiểm thử.
 7. Hệ không tự phát hiện văn bản mới.
 
 ---
@@ -1048,3 +1048,9 @@ Từ 09/11/2026, `docs/mis/HE_THONG_DA_CHOT.md` trong repo là bản chuẩn duy
 | 13 | **Quy ước gán mã và đo** (chốt cùng Q-A): điều kiện của X3 (TNDN Đ18 k3) gồm ngưỡng doanh thu ≤ 50 tỷ; tỉ lệ "cần bổ sung" đo ở hai thời điểm (sau đăng ký, sau hỏi bổ sung) | §9.2 ghi chú, §14.4 | Câu hỏi nhóm thu nhập không hiện khi doanh thu > 50 tỷ; thiếu ngưỡng thì X3 ra `ho_so_thieu` thay vì "không áp dụng" |
 | 14 | **Hai người cho cạnh ngoại lệ** (Q-D): người duyệt cạnh do chuyên viên thêm phải khác người tạo cạnh; ép ở CSDL trong `approve_relationship`. Nhóm có ít nhất hai tài khoản chuyên viên | §12 #3 | Cạnh ngoại lệ quyết định nghĩa vụ nào bị bác bỏ / thay thế mà không có trích xuất LLM làm đề xuất ban đầu — người thứ hai là lần kiểm duy nhất |
 | 15 | **Chỉ số "thời gian duyệt mỗi entity"** (Q-E): đo tự động từ `approvals`; bấm giờ tay 20 entity sáng 13/11 để đối chiếu và tính lại định mức giờ công; chủ repo quyết Luật 108 duyệt tới bậc nào theo số đo đó | §14.4 | Định mức 2,5 phút / entity chưa có số đo; quyết định phạm vi duyệt Luật 108 phụ thuộc vào nó |
+
+### 10/11/2026
+
+| # | Thay đổi | Mục sửa | Lý do |
+|---|---|---|---|
+| 16 | **Đính chính dữ liệu trước can thiệp:** Nexora Technology là doanh nghiệp ảo chủ repo tạo để trình diễn, không phải người dùng thật. Trước can thiệp hệ chưa có người dùng thật | §13.4 #6 | Chủ repo đính chính 10/11 |

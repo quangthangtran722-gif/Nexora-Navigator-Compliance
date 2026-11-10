@@ -132,7 +132,7 @@ Theo Q4: **chỉ Luật 108** (9 điều). Đọc prod (chỉ `select`), ghi pro
 | `pipeline_runs` extract của 9 chunk (17 lượt) | Chép nguyên văn (id, input, output, model, prompt_version, thời điểm); `nguoi_chay_id = null`. Là nhật ký gốc của LLM |
 | `entities` (70) | Dựng lại **từ `pipeline_runs.output.entities`**, giữ `id = output.entity_ids[ma_tam]`. Không truyền `trang_thai_duyet` → `cho_duyet`. `dieu_kien_may_doc`, `curator_id`, `ghi_chu_curator` = null. Tên lấy từ đề xuất gốc của LLM (chuyên viên từng sửa tên một số entity ở prod) |
 | `entity_relationships` (44) | Dựng từ `output.relationships` (`ma_tam` → id) |
-| `customers`, `departments` | Chép **chỉ 3 hồ sơ demo** `a0000000-…` (+ 11 phòng ban), giữ id. 7 hồ sơ còn lại (có Nexora Technology — người dùng thật) không chép: gắn tài khoản Auth không có ở project mới; đã có trong `research/baseline/` |
+| `customers`, `departments` | Chép **chỉ 3 hồ sơ demo** `a0000000-…` (+ 11 phòng ban), giữ id. 7 hồ sơ còn lại (đều là hồ sơ ảo, kể cả Nexora Technology) không chép: form hồ sơ đang làm lại sang hai phần / hỏi theo khoảng, dữ liệu theo schema cũ không chuyển sạch; thay bằng bộ hồ sơ fixture (chủ repo duyệt, 10/11); bản cũ vẫn có trong `research/baseline/` |
 | TT 77, Luật 109, `diagnostics`, `approvals`, `notifications`, lượt filter/generate | **Không** nạp — dữ liệu trước can thiệp đã chụp ở `research/baseline/` |
 
 **Kết quả 09/11:** đúng 9 chunk, 17 lượt (đều `extract-v2`), 70 entity `cho_duyet`, 44 cạnh (44/44 giữ id cạnh prod), `van_ban`

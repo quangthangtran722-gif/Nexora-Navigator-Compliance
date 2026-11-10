@@ -8,13 +8,13 @@
 // - Không ghi `trang_thai_duyet` → DB đặt `cho_duyet` (trigger guard_trang_thai_duyet chặn mọi giá trị khác).
 // - Không bật `nexora.seed`, không gọi `approve_*`. `curator_id`, `dieu_kien_may_doc`, `ghi_chu_curator` = null.
 // - `nguoi_chay_id`, `nguoi_tao_id` = null (tài khoản prod không tồn tại trên project mới).
-// - Hồ sơ: chỉ 3 hồ sơ của tài khoản demo (`a0000000-…`). Hồ sơ người dùng thật không chép (đã chụp ở research/baseline/).
+// - Hồ sơ: chỉ 3 hồ sơ của tài khoản demo (`a0000000-…`). 7 hồ sơ ảo còn lại không chép (schema hồ sơ đang làm lại; đã chụp ở research/baseline/).
 //
 // Dùng:
 //   node scripts/mis/nap-lai-thu-vien.mjs          # chạy thử: đọc prod, in số liệu, không ghi
 //   node scripts/mis/nap-lai-thu-vien.mjs --ghi    # ghi vào project MIS
 // Đọc .env.mis.local: PROD_SUPABASE_URL, PROD_SUPABASE_SERVICE_ROLE_KEY (đọc), MIS_DB_URL (ghi).
-// Ghi research/reload/manifest.json (được commit: chỉ id, số dòng, tên entity — không có hồ sơ người dùng thật).
+// Ghi research/reload/manifest.json (được commit: chỉ id, số dòng, tên entity — không có nội dung hồ sơ).
 
 import { createClient } from "@supabase/supabase-js";
 import { spawnSync } from "node:child_process";
