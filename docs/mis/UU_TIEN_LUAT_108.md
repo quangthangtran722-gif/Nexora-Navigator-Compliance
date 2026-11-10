@@ -45,8 +45,12 @@ lệch về điều C0, và các chỉ số Δ, D(S), tỉ lệ cần bổ sung 
 
 ## 5. Danh sách
 
-Số điều toàn văn: **chưa đếm** (chờ file). Dấu hiệu: Điều 52 là "Điều khoản thi hành", Điều 53 là "Điều khoản chuyển tiếp"
-→ luật có khoảng 53 điều. Chốt khi có file.
+Số điều toàn văn: **53 điều, 9 chương** (`research/van-ban/luat-108-2025-QH15.txt`, kiểm 10/11 — `research/van-ban/KIEM_TRA.json`).
+Luật 108 là luật **thay thế** Luật Quản lý thuế 38/2019/QH14 (Điều 52 k3), không phải luật sửa đổi; 38/2019 hết hiệu lực từ 01/7/2026.
+
+**Mốc hiệu lực riêng (Điều 52 k2):** Điều 13 và việc dùng hóa đơn điện tử của hộ kinh doanh, cá nhân kinh doanh ở Điều 26 có
+hiệu lực từ **01/01/2026**; phần còn lại từ 01/7/2026. Khi duyệt entity của hai phần này, chuyên viên ghi
+`ngay_co_hieu_luc = 2026-01-01` (cột có sẵn). Phần còn lại để trống = theo `van_ban.ngay_hieu_luc`.
 
 | Thứ tự | Điều | Tên điều (từ chunk cũ) | Bậc | TC1 | TC2 | TC3 | Căn cứ / lý do |
 |---|---|---|---|---|---|---|---|

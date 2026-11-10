@@ -31,6 +31,7 @@ export const LOAI_ENTITY_LABEL: Record<LoaiEntity, string> = {
 export const LOAI_RELATIONSHIP_LABEL: Record<LoaiRelationship, string> = {
   bao_ham: "Bao hàm", tham_chieu: "Tham chiếu", thay_the: "Thay thế",
   dieu_kien: "Là điều kiện của", che_tai_cua: "Là chế tài của", ap_dung_cho: "Áp dụng cho",
+  ngoai_le_bac_bo: "Là ngoại lệ bác bỏ", ngoai_le_thay_the: "Là ngoại lệ thay thế",
 };
 
 export const LOAI_VAN_BAN_LABEL: Record<LoaiVanBan, string> = {

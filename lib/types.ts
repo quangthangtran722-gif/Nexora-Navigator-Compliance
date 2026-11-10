@@ -26,7 +26,10 @@ export type LoaiEntity =
   | "mien_giam"
   | "nguong";
 
-export type LoaiRelationship = "bao_ham" | "tham_chieu" | "thay_the" | "dieu_kien" | "che_tai_cua" | "ap_dung_cho";
+// ngoai_le_*: chỉ chuyên viên thêm (pipeline_run_id null, CHECK ở DB); source = ngoại lệ, target = nghĩa vụ bị ngoại lệ (008)
+export type LoaiRelationship =
+  | "bao_ham" | "tham_chieu" | "thay_the" | "dieu_kien" | "che_tai_cua" | "ap_dung_cho"
+  | "ngoai_le_bac_bo" | "ngoai_le_thay_the";
 
 export type LoaiVanBan = "luat" | "nghi_dinh" | "thong_tu" | "nghi_quyet" | "quyet_dinh" | "huong_dan" | "khac";
 
@@ -108,6 +111,7 @@ export type Entity = {
   primary_departments: SlugPhongBan[]; // chỉ hanh_vi/thoi_han/che_tai/mien_giam có; loại khác luôn []
   secondary_departments: SlugPhongBan[];
   ngay_co_hieu_luc: string | null; // null = theo van_ban.ngay_hieu_luc
+  ngay_het_hieu_luc: string | null; // null = còn hiệu lực (008, S2 thủ công)
   dieu_kien_may_doc: DieuKienMayDoc | null; // chỉ dieu_kien/nguong/chu_the; bắt buộc khi duyệt dieu_kien/nguong
   trang_thai_duyet: TrangThaiDuyet;
   curator_id: string | null;
@@ -137,7 +141,11 @@ export type EntityRelationship = {
   target_ref_text: string | null; // cụm dẫn chiếu nguyên văn khi target null
   loai_relationship: LoaiRelationship;
   can_cu: string; // đoạn nguyên văn thể hiện quan hệ
-  nguoi_tao_id: string | null;
+  nguoi_tao_id: string | null; // DB ép = auth.uid() khi INSERT (008)
+  chi_mot_phan: boolean; // chỉ cạnh ngoại lệ: loại trừ một phần, không bác bỏ nghĩa vụ gốc (008)
+  trang_thai_duyet: TrangThaiDuyet; // cho_duyet khi tạo; LLM chưa sửa → duyệt cùng entity nguồn; còn lại → approve_relationship
+  nguoi_duyet_id: string | null;
+  nguoi_sua_cuoi_id: string | null; // người sửa nội dung khi còn chờ duyệt — không tự duyệt được
   created_at: string;
 };
 

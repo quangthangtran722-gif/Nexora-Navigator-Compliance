@@ -152,6 +152,11 @@ chênh lệch tên đề xuất gốc ↔ prod) — được commit. Script in t
   ca "tên file -demo"). Lệch → báo, **không** thay chunk cũ (entity cũ trích dẫn đúng chunk cũ; thay chunk làm hỏng
   grounding và so sánh trước / sau). Ghi lệch vào báo cáo như một giới hạn.
 - Ghi số điều, số chunk vào manifest.
+- **Kiểm trước khi nạp — 10/11, đạt cả 4 bước** (`scripts/mis/kiem-toan-van.ts`, kết quả `research/van-ban/KIEM_TRA.json`):
+  file `research/van-ban/luat-108-2025-QH15.txt` (chuyển từ `.docx` chủ repo cung cấp, chép nguyên chữ từng đoạn) có số hiệu
+  108/2025/QH15, ban hành 10/12/2025; Điều 1–53 liên tục, 9 chương; Điều 52 k3 bãi bỏ Luật 38/2019 từ 01/7/2026; 9 điều cũ
+  khớp chunk đã nạp — 8 điều khớp tuyệt đối, Điều 53 khác chỉ ở ký hiệu markdown (chữ nghiêng, dòng `* *` của file cũ). Parser
+  ra 62 chunk (điều dài > 6.000 ký tự tách "(tiếp theo)"). Dòng nguồn + ngày tải ở đầu file: chủ repo điền.
 
 ### 1.5 X1 — trích xuất hàng loạt: `scripts/mis/trich-xuat-hang-loat.mjs`
 
@@ -233,6 +238,25 @@ nếu cần dùng ngay trong cùng migration.
 - Dữ liệu cũ: `ngay_het_hieu_luc` null = còn hiệu lực. Cạnh trên project mới đều do H2 / X1 tạo → `cho_duyet` theo mặc định,
   được duyệt khi chuyên viên duyệt entity nguồn. Áp cho prod (nếu có): cạnh có hai đầu `da_duyet` → coi như đã duyệt cùng entity
   nguồn — chỉ được làm bằng một lần chạy có ghi `approvals` của người thật, **không** ghi trạng thái bằng SQL; ghi chú, không làm trong MVP.
+- **Kết quả 10/11:** áp lên MIS (hai lần, idempotent; không áp prod). `supabase/tests/008_kiem_thu.sql` 49/49 ca qua (47 ca
+  chức năng + 2 ca chứng minh lỗ hổng trước vá); 007 vẫn 31/31; `npm test` 43/43; `tsc` sạch. Sau test: MIS vẫn 70 entity /
+  44 cạnh đều `cho_duyet`, 0 `approvals`, 0 `auth.users`. Quyết định khi viết (ngoài phần đã ghi ở trên):
+  (a) **Thu hẹp quyền** (chủ repo chốt 10/11): gỡ `TRUNCATE`, `TRIGGER`, `REFERENCES`, `MAINTAIN` của `anon` / `authenticated` +
+  khỏi quyền mặc định — `research/quyen/RA_SOAT_QUYEN.md`;
+  (b) cạnh LLM **bị người sửa** (`target`, `can_cu`) khi còn chờ duyệt → ghi `nguoi_sua_cuoi_id`, không còn đi kèm entity, phải
+  qua `approve_relationship` với người khác người sửa — nếu không, một chuyên viên sửa cạnh LLM rồi tự duyệt entity là né được
+  bốn mắt;
+  (c) cạnh gắn `pipeline_run_id` do vai đăng nhập INSERT phải thuộc lượt trích xuất **đang chạy** của chính người đó, cùng chunk,
+  cùng lượt với entity nguồn — không gắn được cạnh tay vào lượt LLM để đi kèm entity;
+  (d) cạnh ngoại lệ chỉ do người thêm (CHECK `pipeline_run_id is null`) và phải có đích;
+  (e) cạnh do người thêm đang chờ duyệt: chỉ người tạo được rút (xóa); người khác phải Từ chối (có vết);
+  (f) cạnh đã xử lý khóa nội dung; ngoại lệ duy nhất là nối pending link của cạnh `tham_chieu` (S9 không dùng);
+  (g) `ngay_het_hieu_luc` khóa sau khi duyệt như các cột khác — ghi hết hiệu lực cho nghĩa vụ đã duyệt (khoản bị bãi bỏ sau
+  này) cần một hàm có vết duyệt, ngoài MVP; (h) `grounding.ts` `DAU_CANH` chưa thêm hai loại cạnh mới — LLM không đề xuất
+  chúng; kiểm cặp loại cho cạnh ngoại lệ làm cùng `them-canh-ngoai-le.mjs` (U1). Kiểu TS (`lib/types.ts`, `lib/labels.ts`) đã
+  thêm hai loại cạnh + cột mới.
+- **Sai lệch có chủ đích so với prod:** từ 008, schema MIS khác `000_baseline_prod.sql`; `so-sanh-schema.mjs` chỉ dùng để so
+  mốc trước 007.
 
 ### M9 — `009_diagnostics_ly_do.sql` (§12 #5, #6; Q3)
 

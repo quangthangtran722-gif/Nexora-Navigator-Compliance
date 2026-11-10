@@ -1,0 +1,91 @@
+{
+ "tep": "research/van-ban/luat-108-2025-QH15.txt",
+ "ngay_kiem": "2026-11-10T14:53:57.040Z",
+ "ket_qua": [
+  {
+   "buoc": "1. Số hiệu, ngày ban hành",
+   "dat": true,
+   "chi_tiet": "so_hieu=108/2025/QH15 ngay_ban_hanh=2025-12-10 ten=Luật Quản lý thuế ngay_hieu_luc(parser)=2026-07-01"
+  },
+  {
+   "buoc": "2. 53 điều liên tục",
+   "dat": true,
+   "chi_tiet": "53 dòng \"Điều N.\" (đầu 1, cuối 53); 9 chương (I, II, III, IV, V, VI, VII, VIII, IX); parser ra 62 chunk"
+  },
+  {
+   "buoc": "3. Điều 52 khoản 3",
+   "dat": true,
+   "chi_tiet": "có câu bãi bỏ Luật 38/2019 từ ngày Luật này có hiệu lực"
+  },
+  {
+   "buoc": "4. 9 điều cũ khớp chunk đã nạp",
+   "dat": true,
+   "chi_tiet": "Điều 2: nguyên văn khớp, sau chuẩn hóa khớp; Điều 3: nguyên văn khớp, sau chuẩn hóa khớp; Điều 8: nguyên văn khớp, sau chuẩn hóa khớp; Điều 10: nguyên văn khớp, sau chuẩn hóa khớp; Điều 11: nguyên văn khớp, sau chuẩn hóa khớp; Điều 27: nguyên văn khớp, sau chuẩn hóa khớp; Điều 48: nguyên văn khớp, sau chuẩn hóa khớp; Điều 52: nguyên văn khớp, sau chuẩn hóa khớp; Điều 53: nguyên văn khác, sau chuẩn hóa khớp"
+  }
+ ],
+ "chi_tiet_9_dieu": [
+  {
+   "dieu": "Điều 2",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1116,
+   "ky_tu_file": 1116
+  },
+  {
+   "dieu": "Điều 3",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 956,
+   "ky_tu_file": 956
+  },
+  {
+   "dieu": "Điều 8",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1635,
+   "ky_tu_file": 1635
+  },
+  {
+   "dieu": "Điều 10",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 938,
+   "ky_tu_file": 938
+  },
+  {
+   "dieu": "Điều 11",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1576,
+   "ky_tu_file": 1576
+  },
+  {
+   "dieu": "Điều 27",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1513,
+   "ky_tu_file": 1513
+  },
+  {
+   "dieu": "Điều 48",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1727,
+   "ky_tu_file": 1727
+  },
+  {
+   "dieu": "Điều 52",
+   "nguyen_van": true,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 1410,
+   "ky_tu_file": 1410
+  },
+  {
+   "dieu": "Điều 53",
+   "nguyen_van": false,
+   "sau_chuan_hoa": true,
+   "ky_tu_cu": 742,
+   "ky_tu_file": 731
+  }
+ ]
+}
