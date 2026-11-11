@@ -259,6 +259,11 @@ nếu cần dùng ngay trong cùng migration.
   thêm hai loại cạnh + cột mới.
 - **Sai lệch có chủ đích so với prod:** từ 008, schema MIS khác `000_baseline_prod.sql`; `so-sanh-schema.mjs` chỉ dùng để so
   mốc trước 007.
+- **008a — `008a_thu_hep_quyen.sql` (11/11, chủ repo chốt):** view chỉ còn SELECT; `van_ban_thay_the` bỏ UPDATE; `anon` không
+  còn quyền nào trong `public` (kể cả EXECUTE đến từ PUBLIC) + gỡ khỏi quyền mặc định của vai `postgres`. Quy ước "mỗi migration
+  tự REVOKE" thay bằng test quét `supabase/tests/quyen_kiem_thu.sql`. **Từ nay sau mỗi migration chạy `npm run test:db`**
+  (mọi file `supabase/tests/*.sql`, chỉ trên MIS). Hàm mới phải `grant execute … to authenticated` tường minh (mặc định không
+  còn cấp cho PUBLIC). Chi tiết + phát hiện "trần do nền tảng": `research/quyen/RA_SOAT_QUYEN.md` §5.
 
 ### M9 — `009_diagnostics_ly_do.sql` (§12 #5, #6; Q3)
 

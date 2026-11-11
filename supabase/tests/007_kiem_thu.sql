@@ -61,7 +61,7 @@ begin
   if not coalesce(p_dk, false) then raise exception 'SAI %', p_ca; end if;
   raise notice 'OK %', p_ca;
 end $$;
-grant execute on function pg_temp.mong_loi(text, text, text), pg_temp.dung(boolean, text) to authenticated;
+grant execute on function pg_temp.mong_loi(text, text, text), pg_temp.dung(boolean, text) to authenticated, anon;  -- hàm hỗ trợ của test (008a thu EXECUTE mặc định của PUBLIC)
 
 -- ------------------------------------------------------------------ cấu trúc (vai postgres)
 select pg_temp.dung((select count(*) = 8 from public.bo_ma_dieu_kien), '01 bộ mã có 8 mã C0–C7');
