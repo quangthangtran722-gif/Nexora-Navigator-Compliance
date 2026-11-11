@@ -1,0 +1,1266 @@
+{
+ "entity_moi_1000_ky_tu": 6.25,
+ "ky_tu_9_dieu_cu": 11193,
+ "dieu": [
+  {
+   "dieu": 1,
+   "ten": "Phạm vi điều chỉnh",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 91,
+   "so_khoan": 0,
+   "entity_uoc": 1,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 2,
+   "ten": "Đối tượng áp dụng",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 1081,
+   "so_khoan": 5,
+   "entity_uoc": 7,
+   "co_san": true,
+   "tc1": [
+    "a) Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh là người nộp thuế theo quy định của pháp luật về thuế;",
+    "c) Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác là người nộp thuế theo quy định của pháp luật về thuế;",
+    "d) Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh nộp các khoản thu khác thuộc ngân sách nhà nước theo quy định của pháp luật;"
+   ],
+   "tc2": [
+    "a) Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh là người nộp thuế theo quy định của pháp luật về thuế;",
+    "b) Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh tại Việt Nam hoặc có thu nhập phát sinh tại Việt Nam là người nộp thuế theo quy định của pháp luật về thuế;",
+    "c) Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác là người nộp thuế theo quy định của pháp luật về thuế;",
+    "đ) Tổ chức, cá nhân thực hiện khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế, pháp luật về quản lý thuế và quy định khác của pháp luật có liên quan."
+   ],
+   "tc3": [
+    "đ) Tổ chức, cá nhân thực hiện khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế, pháp luật về quản lý thuế và quy định khác của pháp luật có liên quan.",
+    "Cơ quan quản lý thuế bao gồm cơ quan thuế và cơ quan hải quan.",
+    "Công chức quản lý thuế bao gồm công chức thuế và công chức hải quan."
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 3,
+   "ten": "Phân nhóm người nộp thuế trong quản lý thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 897,
+   "so_khoan": 3,
+   "entity_uoc": 6,
+   "co_san": true,
+   "tc1": [
+    "Cơ quan thuế thực hiện phân nhóm người nộp thuế theo các tiêu chí quy định tại khoản 2 Điều này để xác định chế độ ưu tiên đối với người nộp thuế trong quản lý thuế, phân bổ nguồn lực quản lý;",
+    "áp dụng biện pháp quản lý thuế, giám sát thực hiện nghĩa vụ thuế, quy trình nghiệp vụ quản lý thuế phù hợp với từng phân nhóm người nộp thuế;",
+    "Tiêu chí phân nhóm người nộp thuế bao gồm:",
+    "c) Quy mô hoạt động, quy mô doanh thu, số nộp ngân sách;"
+   ],
+   "tc2": [
+    "Bộ trưởng Bộ Tài chính quy định chi tiết Điều này."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 4,
+   "ten": "Giải thích từ ngữ",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 5355,
+   "so_khoan": 21,
+   "entity_uoc": 33,
+   "co_san": false,
+   "tc1": [
+    "Thuế là một khoản phải nộp ngân sách nhà nước bắt buộc của tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh theo quy định của các luật thuế.",
+    "Tiền thuế nợ là tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt do cơ quan quản lý thuế quản lý thu mà người nộp thuế chưa nộp ngân sách nhà nước khi hết thời hạn nộp theo quy định.",
+    "Quản lý rủi ro trong quản lý thuế là việc cơ quan quản lý thuế áp dụng hệ thống các biện pháp, quy trình nghiệp vụ và công cụ phân tích dữ liệu để xác định, đánh giá, phân loại mức độ rủi ro về thuế theo tiêu chí do cơ",
+    "Quản lý tuân thủ trong quản lý thuế là việc cơ quan quản lý thuế sử dụng hồ sơ, thông tin, tài liệu, dữ liệu về người nộp thuế để theo dõi, đánh giá mức độ chấp hành pháp luật về thuế và áp dụng biện pháp quản lý phù hợp"
+   ],
+   "tc2": [
+    "Các khoản thu khác thuộc ngân sách nhà nước do cơ quan quản lý thuế quản lý thu (sau đây gọi là khoản thu khác) là các khoản thu được quy định tại điểm b khoản 1 Điều 38 của Luật này.",
+    "Các khoản thu khác thuộc ngân sách nhà nước không do cơ quan quản lý thuế quản lý thu là các khoản thu được quy định tại khoản 6 Điều 39 của Luật này.",
+    "Kỳ tính thuế, kỳ tính khoản thu khác (sau đây gọi là kỳ tính thuế) là khoảng thời gian để xác định số tiền thuế, khoản thu khác phải nộp ngân sách nhà nước theo quy định của pháp luật về thuế, pháp luật về quản lý thuế v",
+    "Cưỡng chế thi hành quyết định hành chính về quản lý thuế là việc áp dụng các biện pháp theo quy định của Luật này và quy định khác của pháp luật có liên quan buộc người nộp thuế phải thực hiện nghĩa vụ thuế."
+   ],
+   "tc3": [
+    "Hồ sơ thuế, hồ sơ khoản thu khác (sau đây gọi là hồ sơ thuế) là hồ sơ đăng ký thuế, hồ sơ khai thuế, hồ sơ khai khoản thu khác, hồ sơ nộp thuế, hồ sơ nộp khoản thu khác, hồ sơ gia hạn nộp hồ sơ khai thuế, hồ sơ gia hạn n"
+   ],
+   "nghia_vu": [
+    "Thuế là một khoản phải nộp ngân sách nhà nước bắt buộc của tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh theo quy định của các luật thuế.",
+    "Tiền thuế nợ là tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt do cơ quan quản lý thuế quản lý thu mà người nộp thuế chưa nộp ngân sách nhà nước khi hết thời hạn nộp theo quy định.",
+    "Kỳ tính thuế, kỳ tính khoản thu khác (sau đây gọi là kỳ tính thuế) là khoảng thời gian để xác định số tiền thuế, khoản thu khác phải nộp ngân sách nhà nước theo quy định của pháp luật về thuế, pháp luật về quản lý thuế v",
+    "Cưỡng chế thi hành quyết định hành chính về quản lý thuế là việc áp dụng các biện pháp theo quy định của Luật này và quy định khác của pháp luật có liên quan buộc người nộp thuế phải thực hiện nghĩa vụ thuế."
+   ]
+  },
+  {
+   "dieu": 5,
+   "ten": "Nội dung quản lý thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 1305,
+   "so_khoan": 3,
+   "entity_uoc": 8,
+   "co_san": false,
+   "tc1": [
+    "Cơ quan thuế thực hiện quản lý thuế theo phân nhóm người nộp thuế."
+   ],
+   "tc2": [
+    "Cơ quan thuế áp dụng các nội dung quản lý thuế quy định tại khoản 2 Điều này để quản lý khoản thu khác theo quy định của Luật này và các quy định khác của pháp luật có liên quan."
+   ],
+   "tc3": [
+    "khai thuế, tính thuế, khấu trừ thuế;",
+    "d) Quản lý hóa đơn, chứng từ;"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 6,
+   "ten": "Nguyên tắc quản lý thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 1992,
+   "so_khoan": 4,
+   "entity_uoc": 12,
+   "co_san": false,
+   "tc1": [
+    "Người nộp thuế tự xác định nghĩa vụ thuế, các khoản thu khác thuộc ngân sách nhà nước phải nộp, tự kê khai thuế, các khoản thu khác thuộc ngân sách nhà nước và tự nộp thuế, các khoản thu khác thuộc ngân sách nhà nước vào"
+   ],
+   "tc2": [
+    "Người nộp thuế tự xác định nghĩa vụ thuế, các khoản thu khác thuộc ngân sách nhà nước phải nộp, tự kê khai thuế, các khoản thu khác thuộc ngân sách nhà nước và tự nộp thuế, các khoản thu khác thuộc ngân sách nhà nước vào",
+    "Cơ quan quản lý thuế, cơ quan nhà nước, tổ chức khác của nhà nước được giao nhiệm vụ quản lý thu ngân sách nhà nước thực hiện việc quản lý thuế, các khoản thu khác thuộc ngân sách nhà nước theo quy định của Luật này và q"
+   ],
+   "tc3": [],
+   "nghia_vu": [
+    "Người nộp thuế tự xác định nghĩa vụ thuế, các khoản thu khác thuộc ngân sách nhà nước phải nộp, tự kê khai thuế, các khoản thu khác thuộc ngân sách nhà nước và tự nộp thuế, các khoản thu khác thuộc ngân sách nhà nước vào"
+   ]
+  },
+  {
+   "dieu": 7,
+   "ten": "Bảo mật, công khai thông tin người nộp thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 2137,
+   "so_khoan": 5,
+   "entity_uoc": 13,
+   "co_san": false,
+   "tc1": [
+    "Cơ quan quản lý thuế, công chức quản lý thuế, người đã từng là công chức quản lý thuế, cơ quan cung cấp, trao đổi thông tin người nộp thuế, tổ chức kinh doanh dịch vụ làm thủ tục về thuế (sau đây gọi là đại lý thuế), tổ ",
+    "Cơ quan quản lý thuế cung cấp thông tin người nộp thuế trong các trường hợp sau:",
+    "a) Cung cấp cho cơ quan điều tra, Viện kiểm sát, Tòa án, cơ quan thanh tra, Kiểm toán nhà nước, cơ quan quản lý khác của nhà nước khi có yêu cầu bằng văn bản để phục vụ hoạt động tố tụng, thanh tra, kiểm tra, kiểm toán t",
+    "b) Cung cấp cho cơ quan nhà nước có thẩm quyền khác khi có yêu cầu bằng văn bản theo quy định của luật;"
+   ],
+   "tc2": [
+    "Cơ quan, tổ chức, cá nhân được cơ quan quản lý thuế cung cấp thông tin theo các trường hợp quy định tại khoản 2 Điều này, cơ quan quản lý thuế, các cơ quan nhà nước khác, tổ chức có liên quan trong nước và ngoài nước khi",
+    "Chính phủ quy định chi tiết điểm c khoản 2 và khoản 3 Điều này."
+   ],
+   "tc3": [
+    "Cơ quan quản lý thuế, công chức quản lý thuế, người đã từng là công chức quản lý thuế, cơ quan cung cấp, trao đổi thông tin người nộp thuế, tổ chức kinh doanh dịch vụ làm thủ tục về thuế (sau đây gọi là đại lý thuế), tổ "
+   ],
+   "nghia_vu": [
+    "Cơ quan, tổ chức, cá nhân được cơ quan quản lý thuế cung cấp thông tin theo các trường hợp quy định tại khoản 2 Điều này, cơ quan quản lý thuế, các cơ quan nhà nước khác, tổ chức có liên quan trong nước và ngoài nước khi"
+   ]
+  },
+  {
+   "dieu": 8,
+   "ten": "Các hành vi bị nghiêm cấm trong quản lý thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 1578,
+   "so_khoan": 5,
+   "entity_uoc": 10,
+   "co_san": true,
+   "tc1": [],
+   "tc2": [],
+   "tc3": [
+    "Bán hàng hóa, cung cấp dịch vụ không lập hóa đơn theo quy định của pháp luật;",
+    "sử dụng hóa đơn, chứng từ không hợp pháp, sử dụng không hợp pháp hóa đơn, chứng từ, làm giả hóa đơn, chứng từ để thực hiện hành vi trái pháp luật.",
+    "Tạo lập hóa đơn, chứng từ điện tử trái phép hoặc phục vụ hành vi vi phạm trong lĩnh vực quản lý thuế."
+   ],
+   "nghia_vu": [
+    "Cố tình không kê khai hoặc kê khai thuế, khoản thu khác không đầy đủ, kịp thời, chính xác về số tiền thuế, khoản thu khác phải nộp, số tiền thuế, khoản thu khác được miễn, giảm, hoàn, không thu."
+   ]
+  },
+  {
+   "dieu": 9,
+   "ten": "Xây dựng lực lượng quản lý thuế",
+   "chuong": "I. QUY ĐỊNH CHUNG",
+   "ky_tu": 1149,
+   "so_khoan": 5,
+   "entity_uoc": 7,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [
+    "Chính phủ quy định chi tiết khoản 2 và khoản 4 Điều này."
+   ],
+   "tc3": [
+    "trong đó ưu tiên bố trí ngân sách nhà nước hằng năm để xây dựng và vận hành hệ thống công nghệ thông tin, chuyển đổi số trong quản lý thuế, hóa đơn điện tử, cơ sở vật chất, trang thiết bị và các nhiệm vụ chuyên môn phục "
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 10,
+   "ten": "Đăng ký thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 912,
+   "so_khoan": 5,
+   "entity_uoc": 6,
+   "co_san": true,
+   "tc1": [
+    "thông báo thay đổi thông tin đăng ký thuế;",
+    "thông báo khi tạm ngừng hoạt động, kinh doanh;",
+    "chấm dứt hiệu lực mã số thuế;",
+    "Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hi"
+   ],
+   "tc2": [
+    "Bộ trưởng Bộ Tài chính quy định chi tiết khoản 1 và khoản 3 Điều này."
+   ],
+   "tc3": [
+    "Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hi"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 11,
+   "ten": "Mã số thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 1547,
+   "so_khoan": 7,
+   "entity_uoc": 10,
+   "co_san": true,
+   "tc1": [
+    "Mã số thuế của cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh là số định danh cá nhân của cá nhân, chủ hộ gia đình, chủ hộ kinh doanh, cá nhân kinh doanh được cấp theo quy định của pháp luật về căn cước.",
+    "Mã số thuế của người nộp thuế không thuộc quy định tại khoản 1 và khoản 2 Điều này là mã số do cơ quan thuế cấp để sử dụng trong suốt quá trình hoạt động từ khi đăng ký thuế lần đầu cho đến khi chấm dứt hiệu lực mã số th"
+   ],
+   "tc2": [
+    "Mã số thuế của cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh là số định danh cá nhân của cá nhân, chủ hộ gia đình, chủ hộ kinh doanh, cá nhân kinh doanh được cấp theo quy định của pháp luật về căn cước.",
+    "Mã số thuế của doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác quy định tại khoản 2 Điều 10 của Luật này là mã số của doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác,",
+    "Chính phủ quy định chi tiết khoản 5 Điều này.",
+    "Bộ trưởng Bộ Tài chính quy định chi tiết các khoản 1, 2, 3 và 4 Điều này."
+   ],
+   "tc3": [
+    "Mã số thuế của tổ chức, cá nhân có trách nhiệm khấu trừ, nộp thay số thuế đã khấu trừ của người nộp thuế khác thực hiện theo quy định của Bộ trưởng Bộ Tài chính.",
+    "a) Được ghi trên hóa đơn, chứng từ, hồ sơ, tài liệu trong thực hiện các giao dịch kinh doanh, thực hiện thủ tục hành chính về thuế và mở tài khoản tại tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứn"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 12,
+   "ten": "Khai thuế, khoản thu khác; tính thuế, khoản thu khác; khấu trừ thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 6088,
+   "so_khoan": 9,
+   "entity_uoc": 38,
+   "co_san": false,
+   "tc1": [
+    "Người nộp thuế phải khai chính xác, trung thực, đầy đủ các nội dung trong hồ sơ khai thuế, khoản thu khác đối với từng loại thuế, khoản thu khác và tự tính số tiền thuế, khoản thu khác phải nộp, trừ trường hợp việc tính ",
+    "Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác và các dịch vụ khác thì trực tiếp hoặc ủy quyền thực hiện việc khai, nộp thuế, khoản thu khác tại Việt Nam",
+    "a) Tổ chức, cá nhân thuộc trường hợp khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế phải thực hiện khấu trừ thuế của người nộp thuế và khai, nộp số thuế đã khấu trừ;",
+    "b) Tổ chức, cá nhân thuộc trường hợp khai thay, nộp thay thuế, khoản thu khác theo quy định của pháp luật về thuế và quy định khác của pháp luật có liên quan phải thực hiện khai thay, nộp thay thuế, khoản thu khác cho n"
+   ],
+   "tc2": [
+    "a) Tổ chức, cá nhân thuộc trường hợp khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế phải thực hiện khấu trừ thuế của người nộp thuế và khai, nộp số thuế đã khấu trừ;",
+    "Người nộp thuế không có khả năng nộp hồ sơ khai thuế, khoản thu khác đúng thời hạn trong trường hợp bất khả kháng quy định tại khoản 21 Điều 4 của Luật này được gia hạn như sau:",
+    "b) Trường hợp phải kéo dài thời gian gia hạn nộp hồ sơ khai thuế, khoản thu khác quy định tại điểm a khoản này, Chính phủ quy định phù hợp với tình hình thực tế.",
+    "Công chức thanh tra, kiểm tra thuế liên quan đến hồ sơ giải trình chịu trách nhiệm về sai, sót chưa được phát hiện đầy đủ qua kiểm tra trong trường hợp tuân thủ chưa đúng quy định tại điểm n khoản 1 Điều 38 của Luật này;"
+   ],
+   "tc3": [
+    "Khấu trừ, khai thay, nộp thay:",
+    "a) Tổ chức, cá nhân thuộc trường hợp khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế phải thực hiện khấu trừ thuế của người nộp thuế và khai, nộp số thuế đã khấu trừ;",
+    "c) Người nộp thuế không phải nộp số tiền thuế, khoản thu khác đã được khấu trừ, khai thay, nộp thay.",
+    "d) Người nộp thuế phát hiện hồ sơ khai thuế đã nộp còn sai, sót liên quan đến phạm vi, thời kỳ đã thanh tra, kiểm tra dẫn đến phát sinh tăng số thuế phải nộp, giảm số thuế đã được miễn, giảm, hoàn, giảm số thuế được khấu"
+   ],
+   "nghia_vu": [
+    "Người nộp thuế phải khai chính xác, trung thực, đầy đủ các nội dung trong hồ sơ khai thuế, khoản thu khác đối với từng loại thuế, khoản thu khác và tự tính số tiền thuế, khoản thu khác phải nộp, trừ trường hợp việc tính ",
+    "c) Người nộp thuế không phải nộp số tiền thuế, khoản thu khác đã được khấu trừ, khai thay, nộp thay.",
+    "a) Đối với trường hợp khai thuế, khoản thu khác theo tháng, quý, năm, từng lần phát sinh nghĩa vụ thuế, khoản thu khác, thời gian gia hạn không quá 30 ngày kể từ ngày hết thời hạn nộp hồ sơ khai thuế, khoản thu khác.",
+    "Đối với trường hợp khai quyết toán thuế, khoản thu khác, thời gian gia hạn không quá 60 ngày kể từ ngày hết thời hạn nộp hồ sơ khai quyết toán thuế, khoản thu khác;"
+   ]
+  },
+  {
+   "dieu": 13,
+   "ten": "Khai thuế, khoản thu khác; tính thuế, khoản thu khác; khấu trừ thuế đối với hộ kinh doanh, cá nhân kinh doanh",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 3426,
+   "so_khoan": 6,
+   "entity_uoc": 21,
+   "co_san": false,
+   "tc1": [
+    "a) Trường hợp hộ kinh doanh, cá nhân kinh doanh tự xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng không chịu thuế, đối tượng không phải nộp thuế theo quy định của p",
+    "b) Trường hợp hộ kinh doanh, cá nhân kinh doanh xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng chịu thuế, đối tượng phải nộp thuế theo quy định của pháp luật về thu",
+    "Trường hợp hộ kinh doanh, cá nhân kinh doanh sử dụng hóa đơn điện tử, hoá đơn điện tử khởi tạo từ máy tính tiền có kết nối dữ liệu với cơ quan thuế, Hệ thống thông tin quản lý thuế tự động tạo lập tờ khai thuế để hỗ trợ ",
+    "Hộ kinh doanh, cá nhân kinh doanh tự xác định số thuế, khoản thu khác phải nộp theo quy định của pháp luật về thuế, quy định khác của pháp luật có liên quan."
+   ],
+   "tc2": [
+    "a) Trường hợp hộ kinh doanh, cá nhân kinh doanh tự xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng không chịu thuế, đối tượng không phải nộp thuế theo quy định của p",
+    "b) Trường hợp hộ kinh doanh, cá nhân kinh doanh xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng chịu thuế, đối tượng phải nộp thuế theo quy định của pháp luật về thu",
+    "Hộ kinh doanh, cá nhân kinh doanh tự xác định số thuế, khoản thu khác phải nộp theo quy định của pháp luật về thuế, quy định khác của pháp luật có liên quan.",
+    "Chính phủ quy định chi tiết Điều này và các nội dung sau:"
+   ],
+   "tc3": [
+    "Đối với thuế giá trị gia tăng, thuế thu nhập cá nhân:",
+    "a) Trường hợp hộ kinh doanh, cá nhân kinh doanh tự xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng không chịu thuế, đối tượng không phải nộp thuế theo quy định của p",
+    "b) Trường hợp hộ kinh doanh, cá nhân kinh doanh xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng chịu thuế, đối tượng phải nộp thuế theo quy định của pháp luật về thu",
+    "Trường hợp hộ kinh doanh, cá nhân kinh doanh sử dụng hóa đơn điện tử, hoá đơn điện tử khởi tạo từ máy tính tiền có kết nối dữ liệu với cơ quan thuế, Hệ thống thông tin quản lý thuế tự động tạo lập tờ khai thuế để hỗ trợ "
+   ],
+   "nghia_vu": [
+    "a) Trường hợp hộ kinh doanh, cá nhân kinh doanh tự xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng không chịu thuế, đối tượng không phải nộp thuế theo quy định của p",
+    "b) Trường hợp hộ kinh doanh, cá nhân kinh doanh xác định có mức doanh thu hằng năm từ hoạt động sản xuất, kinh doanh hàng hóa, dịch vụ thuộc đối tượng chịu thuế, đối tượng phải nộp thuế theo quy định của pháp luật về thu",
+    "Hộ kinh doanh, cá nhân kinh doanh tự xác định số thuế, khoản thu khác phải nộp theo quy định của pháp luật về thuế, quy định khác của pháp luật có liên quan."
+   ]
+  },
+  {
+   "dieu": 14,
+   "ten": "Nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt; gia hạn nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 6046,
+   "so_khoan": 9,
+   "entity_uoc": 38,
+   "co_san": false,
+   "tc1": [
+    "a) Trường hợp người nộp thuế tự tính thuế, khoản thu khác thì thời hạn nộp thuế, khoản thu khác chậm nhất là ngày cuối cùng của thời hạn nộp hồ sơ khai thuế, khoản thu khác.",
+    "Đối với trường hợp khai bổ sung hồ sơ khai thuế, khoản thu khác, thời hạn nộp thuế, khoản thu khác là thời hạn nộp hồ sơ khai thuế, khoản thu khác của kỳ tính thuế có sai, sót.",
+    "Đối với trường hợp tạm nộp theo quý, thời hạn nộp thuế thực hiện theo quy định của Chính phủ;",
+    "b) Đối với trường hợp cơ quan quản lý thuế tính thuế, khoản thu khác, thông báo nộp thuế, khoản thu khác, quyết định xử lý về thuế, khoản thu khác thì thời hạn nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt là thời h"
+   ],
+   "tc2": [
+    "c) Đối với hàng hóa xuất khẩu, nhập khẩu thuộc đối tượng chịu thuế theo quy định của pháp luật về thuế, thời hạn nộp thuế thực hiện theo quy định của Luật Thuế xuất khẩu, thuế nhập khẩu;",
+    "Đồng tiền nộp thuế, khoản thu khác là đồng tiền khai thuế, khoản thu khác theo quy định tại khoản 7 Điều 12 của Luật này.",
+    "Việc nộp tiền phạt đối với hàng hóa xuất khẩu, nhập khẩu thực hiện theo quy định của pháp luật về xử lý vi phạm hành chính.",
+    "Việc gia hạn nộp tiền phạt đối với hàng hóa xuất khẩu, nhập khẩu thực hiện theo quy định của Luật này."
+   ],
+   "tc3": [
+    "Người nộp thuế sau khi nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt được cấp chứng từ nộp tiền.",
+    "Cơ quan, tổ chức thu tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt quy định tại khoản 2 Điều này khi cấp chứng từ nộp tiền cho người nộp thuế thì đồng thời chuyển thông tin cho cơ quan quản lý thuế để hạch toán, th",
+    "a) Trường hợp nộp theo phương thức điện tử thì ngày nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt là ngày cơ quan, tổ chức quy định tại điểm a khoản 2 Điều này trích tiền từ tài khoản của người nộp thuế hoặc người n",
+    "b) Trường hợp nộp trực tiếp thì ngày nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt là ngày cơ quan, tổ chức quy định tại điểm b khoản 2 Điều này thu tiền của người nộp thuế và được ghi nhận trên chứng từ thu tiền."
+   ],
+   "nghia_vu": [
+    "a) Trường hợp người nộp thuế tự tính thuế, khoản thu khác thì thời hạn nộp thuế, khoản thu khác chậm nhất là ngày cuối cùng của thời hạn nộp hồ sơ khai thuế, khoản thu khác.",
+    "Đối với trường hợp khai bổ sung hồ sơ khai thuế, khoản thu khác, thời hạn nộp thuế, khoản thu khác là thời hạn nộp hồ sơ khai thuế, khoản thu khác của kỳ tính thuế có sai, sót.",
+    "Đối với trường hợp tạm nộp theo quý, thời hạn nộp thuế thực hiện theo quy định của Chính phủ;",
+    "b) Đối với trường hợp cơ quan quản lý thuế tính thuế, khoản thu khác, thông báo nộp thuế, khoản thu khác, quyết định xử lý về thuế, khoản thu khác thì thời hạn nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt là thời h"
+   ]
+  },
+  {
+   "dieu": 15,
+   "ten": "Xử lý số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2095,
+   "so_khoan": 5,
+   "entity_uoc": 13,
+   "co_san": false,
+   "tc1": [
+    "Người nộp thuế có số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa được bù trừ số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa với số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt phả",
+    "Trường hợp người nộp thuế có số tiền thuế giá trị gia tăng nộp thừa khi nhập khẩu hàng hóa và đã thực hiện kê khai khấu trừ số tiền thuế nộp thừa với cơ quan thuế thì việc xử lý số tiền thuế đã khấu trừ, nộp thừa thực hi",
+    "Trường hợp người nộp thuế đề nghị hoàn trả số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa thì thực hiện theo quy định tại Điều 18 của Luật này.",
+    "Không hoàn trả số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa trong các trường hợp sau đây:"
+   ],
+   "tc2": [
+    "Trường hợp người nộp thuế đề nghị hoàn trả số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa thì thực hiện theo quy định tại Điều 18 của Luật này.",
+    "Bộ trưởng Bộ Tài chính quy định chi tiết Điều này và các nội dung sau:"
+   ],
+   "tc3": [
+    "Trường hợp người nộp thuế có số tiền thuế giá trị gia tăng nộp thừa khi nhập khẩu hàng hóa và đã thực hiện kê khai khấu trừ số tiền thuế nộp thừa với cơ quan thuế thì việc xử lý số tiền thuế đã khấu trừ, nộp thừa thực hi"
+   ],
+   "nghia_vu": [
+    "Số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa là số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt đã nộp lớn hơn số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt phải nộp.",
+    "Người nộp thuế có số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa được bù trừ số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa với số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt phả"
+   ]
+  },
+  {
+   "dieu": 16,
+   "ten": "Xử lý đối với việc chậm nộp tiền thuế, khoản thu khác",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 3476,
+   "so_khoan": 7,
+   "entity_uoc": 22,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp phải nộp tiền chậm nộp bao gồm:",
+    "d) Trường hợp được nộp dần tiền thuế nợ quy định tại khoản 6 Điều 48 của Luật này;",
+    "đ) Trường hợp quy định tại khoản 8 Điều 44 của Luật này;",
+    "e) Trường hợp không bị xử phạt vi phạm hành chính về quản lý thuế theo quy định tại điểm a khoản 2 Điều 44 đối với hành vi quy định tại khoản 2 Điều 45 của Luật này và trường hợp quy định tại điểm b khoản 2 Điều 44 của L"
+   ],
+   "tc2": [
+    "a) Người nộp thuế chậm nộp tiền thuế, khoản thu khác so với thời hạn nộp, thời hạn gia hạn nộp quy định tại Điều 14 của Luật này;",
+    "d) Trường hợp được nộp dần tiền thuế nợ quy định tại khoản 6 Điều 48 của Luật này;",
+    "đ) Trường hợp quy định tại khoản 8 Điều 44 của Luật này;",
+    "e) Trường hợp không bị xử phạt vi phạm hành chính về quản lý thuế theo quy định tại điểm a khoản 2 Điều 44 đối với hành vi quy định tại khoản 2 Điều 45 của Luật này và trường hợp quy định tại điểm b khoản 2 Điều 44 của L"
+   ],
+   "tc3": [
+    "h) Cơ quan, tổ chức thuộc đối tượng khấu trừ thuế, nộp thuế, khoản thu khác thay cho người nộp thuế theo quy định của pháp luật về thuế và quy định khác của pháp luật có liên quan nộp tiền không đầy đủ, không đúng thời h",
+    "i) Việc nộp tiền chậm nộp đối với hàng hóa xuất khẩu, nhập khẩu thuộc đối tượng chịu thuế được tổ chức tín dụng bảo lãnh số thuế phải nộp thực hiện theo quy định của pháp luật về thuế xuất khẩu, thuế nhập khẩu.",
+    "a) Mức tính tiền chậm nộp bằng 0,03%/ngày tính trên số tiền thuế, khoản thu khác chậm nộp do cơ quan thuế quản lý thu và 0,03%/ngày tính trên số tiền thuế chậm nộp do cơ quan hải quan quản lý thu;"
+   ],
+   "nghia_vu": [
+    "Các trường hợp phải nộp tiền chậm nộp bao gồm:",
+    "a) Người nộp thuế chậm nộp tiền thuế, khoản thu khác so với thời hạn nộp, thời hạn gia hạn nộp quy định tại Điều 14 của Luật này;",
+    "b) Người nộp thuế khai bổ sung hồ sơ khai thuế, khoản thu khác làm tăng số tiền thuế, khoản thu khác phải nộp hoặc giảm số tiền thuế, khoản thu khác đã được miễn, giảm, hoàn, không thu;",
+    "c) Cơ quan quản lý thuế, cơ quan nhà nước có thẩm quyền kiểm tra, thanh tra phát hiện người nộp thuế khai thiếu số tiền thuế, khoản thu khác phải nộp hoặc phát hiện số tiền thuế, khoản thu khác đã hoàn, đã miễn, đã giảm,"
+   ]
+  },
+  {
+   "dieu": 17,
+   "ten": "Hoàn thành nghĩa vụ nộp thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 8054,
+   "so_khoan": 7,
+   "entity_uoc": 50,
+   "co_san": false,
+   "tc1": [
+    "Hoàn thành nghĩa vụ nộp thuế trong trường hợp giải thể, phá sản, chấm dứt hoạt động, không hoạt động tại địa chỉ đã đăng ký:",
+    "a) Việc hoàn thành nghĩa vụ nộp thuế trong trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã giải thể được thực hiện theo quy định của pháp luật về doanh nghiệp, pháp luật về các tổ chức tín dụng, pháp luật về ki",
+    "b) Việc hoàn thành nghĩa vụ nộp thuế trong trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã phá sản được thực hiện theo quy định của pháp luật về phục hồi, phá sản;",
+    "c) Doanh nghiệp tư nhân, công ty trách nhiệm hữu hạn một thành viên, công ty hợp danh chấm dứt hoạt động, không hoạt động tại địa chỉ đã đăng ký chưa hoàn thành nghĩa vụ nộp thuế thì chủ sở hữu doanh nghiệp tư nhân, chủ "
+   ],
+   "tc2": [
+    "a) Việc hoàn thành nghĩa vụ nộp thuế trong trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã giải thể được thực hiện theo quy định của pháp luật về doanh nghiệp, pháp luật về các tổ chức tín dụng, pháp luật về ki",
+    "b) Việc hoàn thành nghĩa vụ nộp thuế trong trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã phá sản được thực hiện theo quy định của pháp luật về phục hồi, phá sản;",
+    "c) Doanh nghiệp tư nhân, công ty trách nhiệm hữu hạn một thành viên, công ty hợp danh chấm dứt hoạt động, không hoạt động tại địa chỉ đã đăng ký chưa hoàn thành nghĩa vụ nộp thuế thì chủ sở hữu doanh nghiệp tư nhân, chủ ",
+    "công ty trách nhiệm hữu hạn hai thành viên trở lên, công ty cổ phần chấm dứt hoạt động, không hoạt động tại địa chỉ đã đăng ký chưa hoàn thành nghĩa vụ nộp thuế thì cổ đông góp vốn, thành viên góp vốn chịu trách nhiệm ho"
+   ],
+   "tc3": [
+    "a) Việc hoàn thành nghĩa vụ nộp thuế trong trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã giải thể được thực hiện theo quy định của pháp luật về doanh nghiệp, pháp luật về các tổ chức tín dụng, pháp luật về ki",
+    "Các trường hợp phải hoàn thành nghĩa vụ nộp thuế trước khi xuất cảnh bao gồm:",
+    "c) Cá nhân là người Việt Nam xuất cảnh để định cư ở nước ngoài, người Việt Nam định cư ở nước ngoài, người nước ngoài chưa hoàn thành nghĩa vụ nộp thuế.",
+    "Chính phủ quy định số tiền thuế nợ và thời gian nợ theo ngưỡng để áp dụng biện pháp tạm hoãn xuất cảnh theo quy định của pháp luật về xuất cảnh, nhập cảnh."
+   ],
+   "nghia_vu": [
+    "d) Việc tổ chức lại doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã không làm thay đổi thời hạn nộp thuế và khoản thu khác của doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã được tổ chức lại.",
+    "Trường hợp doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã được tổ chức lại hoặc các doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã thành lập mới không nộp thuế và khoản thu khác đầy đủ theo thời hạn nộp thuế và khoản thu",
+    "b) Tổ chức được thành lập theo quy định của pháp luật nước ngoài, cá nhân nước ngoài không cư trú tại Việt Nam chuyển nhượng dự án đầu tư, chuyển nhượng vốn trực tiếp hoặc gián tiếp cho tổ chức được thành",
+    "Trường hợp cả bên chuyển nhượng và bên nhận chuyển nhượng đều là tổ chức được thành lập theo quy định của pháp luật nước ngoài, cá nhân nước ngoài không cư trú tại Việt Nam thì tổ chức được thành lập theo quy định c"
+   ]
+  },
+  {
+   "dieu": 18,
+   "ten": "Hoàn thuế, khoản thu khác, tiền chậm nộp, tiền phạt",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2641,
+   "so_khoan": 7,
+   "entity_uoc": 17,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp hoàn thuế, khoản thu khác, tiền chậm nộp, tiền phạt:",
+    "a) Hoàn thuế đối với tổ chức, cá nhân thuộc trường hợp hoàn thuế theo quy định của pháp luật về thuế;",
+    "b) Hoàn trả tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa đối với tổ chức, cá nhân thuộc trường hợp hoàn trả theo quy định tại Điều 15 của Luật này;",
+    "c) Hoàn trả cho cá nhân thuộc trường hợp hoàn thuế, khoản thu khác, tiền chậm nộp, tiền phạt theo quy định tại điểm a và điểm b khoản này là người đã chết, người bị Tòa án tuyên bố là đã chết, mất tích hoặc mất năng lực "
+   ],
+   "tc2": [
+    "a) Hoàn thuế đối với tổ chức, cá nhân thuộc trường hợp hoàn thuế theo quy định của pháp luật về thuế;",
+    "b) Hoàn trả tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt nộp thừa đối với tổ chức, cá nhân thuộc trường hợp hoàn trả theo quy định tại Điều 15 của Luật này;",
+    "c) Hoàn trả cho cá nhân thuộc trường hợp hoàn thuế, khoản thu khác, tiền chậm nộp, tiền phạt theo quy định tại điểm a và điểm b khoản này là người đã chết, người bị Tòa án tuyên bố là đã chết, mất tích hoặc mất năng lực ",
+    "Chính phủ quy định chi tiết khoản 1 Điều này và các nội dung sau:"
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 19,
+   "ten": "Miễn thuế, khoản thu khác; giảm thuế, khoản thu khác; không thu thuế; không chịu thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2385,
+   "so_khoan": 6,
+   "entity_uoc": 15,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp miễn thuế, khoản thu khác;",
+    "Người nộp thuế thuộc trường hợp được miễn thuế, khoản thu khác, giảm thuế, khoản thu khác theo quy định tại khoản 1 Điều này (sau đây gọi là miễn thuế, giảm thuế), không thu thuế, không chịu thuế lập và gửi hồ sơ cho cơ ",
+    "a) Thủ trưởng cơ quan quản lý thuế quyết định việc miễn thuế, giảm thuế, không thu thuế, không chịu thuế, trừ trường hợp quy định tại điểm b khoản này;",
+    "b) Cơ quan thuế quyết định việc miễn thuế, giảm thuế đối với trường hợp miễn thuế, giảm thuế tự động quy định tại khoản 3 Điều này;"
+   ],
+   "tc2": [
+    "không chịu thuế đối với tổ chức, cá nhân theo quy định của pháp luật về thuế, pháp luật về phí và lệ phí;",
+    "Chính phủ quy định chi tiết khoản 1 Điều này và các nội dung sau:",
+    "Bộ trưởng Bộ Tài chính quy định chi tiết các khoản 2, 3, 4 Điều này và các nội dung sau:"
+   ],
+   "tc3": [
+    "miễn thuế thu nhập cá nhân đối với cá nhân có số tiền thuế phát sinh phải nộp sau quyết toán thuế thu nhập cá nhân từ tiền lương, tiền công hằng năm và các loại thuế khác theo mức quy định của Chính phủ."
+   ],
+   "nghia_vu": [
+    "b) Miễn thuế sử dụng đất phi nông nghiệp đối với hộ gia đình, cá nhân có số tiền thuế phải nộp hằng năm theo mức quy định của Chính phủ;",
+    "miễn thuế thu nhập cá nhân đối với cá nhân có số tiền thuế phát sinh phải nộp sau quyết toán thuế thu nhập cá nhân từ tiền lương, tiền công hằng năm và các loại thuế khác theo mức quy định của Chính phủ."
+   ]
+  },
+  {
+   "dieu": 20,
+   "ten": "Khoanh tiền thuế nợ",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2372,
+   "so_khoan": 6,
+   "entity_uoc": 15,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp được khoanh tiền thuế nợ:",
+    "b) Người nộp thuế có quyết định giải thể gửi cơ quan đăng ký kinh doanh để làm thủ tục giải thể, cơ quan đăng ký kinh doanh đã thông báo người nộp thuế đang làm thủ tục giải thể trên hệ thống thông tin quốc gia về đăng k",
+    "c) Người nộp thuế đã được Tòa án thông báo thụ lý đơn yêu cầu áp dụng thủ tục phá sản hoặc được khoanh tiền thuế nợ theo văn bản đề nghị của Tòa án theo quy định của pháp luật về phục hồi, phá sản;",
+    "đ) Người nộp thuế đã bị cơ quan có thẩm quyền thu hồi giấy chứng nhận đăng ký kinh doanh, giấy chứng nhận đăng ký doanh nghiệp, giấy chứng nhận đăng ký hợp tác xã, giấy chứng nhận đăng ký tổ hợp tác, giấy chứng nhận đăng"
+   ],
+   "tc2": [
+    "c) Người nộp thuế đã được Tòa án thông báo thụ lý đơn yêu cầu áp dụng thủ tục phá sản hoặc được khoanh tiền thuế nợ theo văn bản đề nghị của Tòa án theo quy định của pháp luật về phục hồi, phá sản;",
+    "Chính phủ quy định chi tiết Điều này và các nội dung sau:",
+    "Bộ trưởng Bộ Tài chính quy định thủ tục, hồ sơ khoanh tiền thuế nợ."
+   ],
+   "tc3": [
+    "b) Người nộp thuế có quyết định giải thể gửi cơ quan đăng ký kinh doanh để làm thủ tục giải thể, cơ quan đăng ký kinh doanh đã thông báo người nộp thuế đang làm thủ tục giải thể trên hệ thống thông tin quốc gia về đăng k",
+    "d) Người nộp thuế không còn hoạt động tại địa chỉ đã đăng ký kinh doanh với cơ quan đăng ký kinh doanh, cơ quan quản lý thuế;",
+    "đ) Người nộp thuế đã bị cơ quan có thẩm quyền thu hồi giấy chứng nhận đăng ký kinh doanh, giấy chứng nhận đăng ký doanh nghiệp, giấy chứng nhận đăng ký hợp tác xã, giấy chứng nhận đăng ký tổ hợp tác, giấy chứng nhận đăng"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 21,
+   "ten": "Xoá tiền thuế nợ",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2086,
+   "so_khoan": 5,
+   "entity_uoc": 13,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp được xóa tiền thuế nợ:",
+    "b) Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã bị Tòa án tuyên bố phá sản và đã thực hiện thanh toán các khoản nợ theo quy định của pháp luật về phục hồi, phá sản mà không còn tài sản;",
+    "c) Người nộp thuế không thuộc trường hợp quy định tại điểm a và điểm b khoản này mà cơ quan quản lý thuế đã áp dụng biện pháp cưỡng chế quy định tại điểm h khoản 1 Điều 49 của Luật này và khoản tiền thuế nợ này đã quá 10",
+    "d) Các trường hợp bị ảnh hưởng do thiên tai, thảm họa, dịch bệnh có phạm vi rộng đã được xem xét miễn tiền chậm nộp theo quy định tại khoản 5 Điều 16 của Luật này và đã được gia hạn nộp thuế, khoản thu khác, tiền chậm nộ"
+   ],
+   "tc2": [
+    "b) Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã bị Tòa án tuyên bố phá sản và đã thực hiện thanh toán các khoản nợ theo quy định của pháp luật về phục hồi, phá sản mà không còn tài sản;",
+    "c) Người nộp thuế không thuộc trường hợp quy định tại điểm a và điểm b khoản này mà cơ quan quản lý thuế đã áp dụng biện pháp cưỡng chế quy định tại điểm h khoản 1 Điều 49 của Luật này và khoản tiền thuế nợ này đã quá 10",
+    "d) Các trường hợp bị ảnh hưởng do thiên tai, thảm họa, dịch bệnh có phạm vi rộng đã được xem xét miễn tiền chậm nộp theo quy định tại khoản 5 Điều 16 của Luật này và đã được gia hạn nộp thuế, khoản thu khác, tiền chậm nộ",
+    "Chính phủ quy định chi tiết điểm d khoản 1 Điều này và các nội dung sau:"
+   ],
+   "tc3": [],
+   "nghia_vu": [
+    "c) Người nộp thuế không thuộc trường hợp quy định tại điểm a và điểm b khoản này mà cơ quan quản lý thuế đã áp dụng biện pháp cưỡng chế quy định tại điểm h khoản 1 Điều 49 của Luật này và khoản tiền thuế nợ này đã quá 10"
+   ]
+  },
+  {
+   "dieu": 22,
+   "ten": "Kiểm tra thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 8564,
+   "so_khoan": 7,
+   "entity_uoc": 54,
+   "co_san": false,
+   "tc1": [
+    "d) Việc kiểm tra thuế của cơ quan thuế không trùng lặp về nội dung, phạm vi, thời gian giữa cơ quan thanh tra, kiểm tra, Kiểm toán nhà nước, trừ trường hợp có bằng chứng, căn cứ vi phạm cần kiểm tra lại;",
+    "đ) Kiểm tra việc xác định giá giao dịch liên kết của người nộp thuế theo nguyên tắc giao dịch độc lập và bản chất kinh tế của hoạt động, giao dịch phát sinh quyết định nghĩa vụ thuế tương ứng với giá trị tạo ra từ bản ch",
+    "không công nhận các giao dịch liên kết không theo nguyên tắc giao dịch độc lập làm giảm nghĩa vụ thuế của doanh nghiệp.",
+    "cơ quan hải quan kiểm tra thực tế hàng hóa xuất khẩu, hàng hóa nhập khẩu trong trường hợp cần thiết và còn đủ điều kiện;"
+   ],
+   "tc2": [
+    "c) Trường hợp kiểm tra sau thông quan thực hiện theo quy định của pháp luật về hải quan.",
+    "kiểm tra sau thông quan thực hiện theo quy định của pháp luật về hải quan;",
+    "a) Quyền của người nộp thuế trong kiểm tra thuế được thực hiện theo quy định tại điểm e và điểm r khoản 1 Điều 37 của Luật này và quy định của pháp luật về kiểm tra chuyên ngành;",
+    "b) Nghĩa vụ của người nộp thuế trong kiểm tra thuế được thực hiện theo quy định tại điểm p khoản 2 Điều 37 của Luật này và quy định của pháp luật về kiểm tra chuyên ngành."
+   ],
+   "tc3": [
+    "cơ quan hải quan kiểm tra thực tế hàng hóa xuất khẩu, hàng hóa nhập khẩu trong trường hợp cần thiết và còn đủ điều kiện;",
+    "c) Trường hợp kiểm tra sau thông quan thực hiện theo quy định của pháp luật về hải quan.",
+    "b) Cơ quan hải quan kiểm tra thuế tại trụ sở người nộp thuế trong các trường hợp quy định tại điểm a khoản này;",
+    "kiểm tra sau thông quan thực hiện theo quy định của pháp luật về hải quan;"
+   ],
+   "nghia_vu": [
+    "trường hợp hồ sơ thuộc diện kiểm tra sau hoàn thuế đối với hồ sơ thuộc diện hoàn thuế trước theo nguyên tắc quản lý rủi ro trong quản lý thuế và trong thời hạn 05 năm kể từ ngày ban hành quyết định hoàn thuế;"
+   ]
+  },
+  {
+   "dieu": 23,
+   "ten": "Biện pháp áp dụng trong kiểm tra thuế đối với trường hợp có dấu hiệu trốn thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 1326,
+   "so_khoan": 2,
+   "entity_uoc": 8,
+   "co_san": false,
+   "tc1": [
+    "Thu thập thông tin liên quan đến trường hợp có dấu hiệu trốn thuế:",
+    "a) Thủ trưởng cơ quan quản lý thuế có quyền yêu cầu cơ quan, tổ chức, cá nhân liên quan đến trường hợp có dấu hiệu trốn thuế cung cấp thông tin bằng văn bản hoặc trả lời trực tiếp.",
+    "Tạm giữ tài liệu liên quan đến trường hợp có dấu hiệu trốn thuế:",
+    "a) Thủ trưởng cơ quan quản lý thuế, trưởng đoàn kiểm tra thuế quyết định tạm giữ tài liệu liên quan đến trường hợp có dấu hiệu trốn thuế;"
+   ],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": [
+    "c) Khi tạm giữ tài liệu liên quan đến trường hợp có dấu hiệu trốn thuế, trưởng đoàn kiểm tra thuế phải lập biên bản tạm giữ và có trách nhiệm bảo quản tài liệu tạm giữ;"
+   ]
+  },
+  {
+   "dieu": 24,
+   "ten": "Ấn định thuế",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2146,
+   "so_khoan": 3,
+   "entity_uoc": 13,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp ấn định thuế của cơ quan thuế:",
+    "g) Mua, trao đổi hàng hóa sử dụng hóa đơn, chứng từ không hợp pháp, sử dụng không hợp pháp hóa đơn, chứng từ mà hàng hóa, dịch vụ là có thật theo xác định của cơ quan có thẩm quyền và đã được kê khai doanh thu tính thuế;",
+    "i) Không tuân thủ quy định về nghĩa vụ kê khai, xác định giá giao dịch liên kết hoặc không cung cấp thông tin theo quy định của pháp luật về quản lý thuế đối với doanh nghiệp có phát sinh giao dịch liên kết."
+   ],
+   "tc2": [
+    "a) Ấn định thuế phải dựa trên các nguyên tắc quản lý thuế, căn cứ tính, phương pháp tính thuế theo quy định của pháp luật về thuế, pháp luật về hải quan;",
+    "i) Không tuân thủ quy định về nghĩa vụ kê khai, xác định giá giao dịch liên kết hoặc không cung cấp thông tin theo quy định của pháp luật về quản lý thuế đối với doanh nghiệp có phát sinh giao dịch liên kết.",
+    "Chính phủ quy định các nội dung sau:"
+   ],
+   "tc3": [
+    "a) Ấn định thuế phải dựa trên các nguyên tắc quản lý thuế, căn cứ tính, phương pháp tính thuế theo quy định của pháp luật về thuế, pháp luật về hải quan;",
+    "d) Không xuất trình sổ kế toán, hóa đơn, chứng từ và các tài liệu cần thiết liên quan đến việc xác định số tiền thuế phải nộp trong thời hạn quy định;",
+    "g) Mua, trao đổi hàng hóa sử dụng hóa đơn, chứng từ không hợp pháp, sử dụng không hợp pháp hóa đơn, chứng từ mà hàng hóa, dịch vụ là có thật theo xác định của cơ quan có thẩm quyền và đã được kê khai doanh thu tính thuế;",
+    "h) Sử dụng chứng từ, tài liệu không phản ánh đúng bản chất giao dịch hoặc giá trị giao dịch thực tế để làm giảm nghĩa vụ thuế."
+   ],
+   "nghia_vu": [
+    "b) Cơ quan quản lý thuế ấn định số tiền thuế phải nộp hoặc ấn định từng yếu tố, căn cứ tính thuế để xác định số tiền thuế phải nộp.",
+    "b) Hồ sơ khai thuế đã nộp nhưng không xác định được các yếu tố làm cơ sở xác định căn cứ tính thuế hoặc có xác định được các yếu tố làm cơ sở xác định căn cứ tính thuế nhưng không tự tính được số tiền thuế phải nộp;",
+    "d) Không xuất trình sổ kế toán, hóa đơn, chứng từ và các tài liệu cần thiết liên quan đến việc xác định số tiền thuế phải nộp trong thời hạn quy định;"
+   ]
+  },
+  {
+   "dieu": 25,
+   "ten": "Ấn định thuế đối với hàng hóa xuất khẩu, nhập khẩu",
+   "chuong": "II. CÁC CHỨC NĂNG QUẢN LÝ THUẾ",
+   "ky_tu": 2421,
+   "so_khoan": 3,
+   "entity_uoc": 15,
+   "co_san": false,
+   "tc1": [
+    "Các trường hợp ấn định thuế của cơ quan hải quan đối với hàng hóa xuất khẩu, nhập khẩu:",
+    "i) Trường hợp khác do cơ quan hải quan hoặc cơ quan khác phát hiện việc kê khai, tính thuế không đúng với quy định của pháp luật.",
+    "hàng hóa thực tế xuất khẩu, nhập khẩu;",
+    "tài liệu, sổ sách, chứng từ, dữ liệu kế toán, kết quả thanh tra, kiểm tra, kết luận của cơ quan có thẩm quyền hoặc bản án, quyết định của Toà án đã có hiệu lực pháp luật và các thông tin khác có liên quan đến hàng hóa xu"
+   ],
+   "tc2": [
+    "b) Quá thời hạn theo quy định của pháp luật về hải quan, quy định khác của pháp luật có liên quan hoặc yêu cầu bằng văn bản của cơ quan hải quan mà người nộp thuế không cung cấp, từ chối hoặc trì hoãn, kéo dài việc cung ",
+    "Chính phủ quy định chi tiết khoản 1, khoản 2 Điều này và các nội dung sau:"
+   ],
+   "tc3": [
+    "Các trường hợp ấn định thuế của cơ quan hải quan đối với hàng hóa xuất khẩu, nhập khẩu:",
+    "a) Người nộp thuế dựa vào các chứng từ, tài liệu, dữ liệu không hợp pháp để khai thuế, tính thuế;",
+    "b) Quá thời hạn theo quy định của pháp luật về hải quan, quy định khác của pháp luật có liên quan hoặc yêu cầu bằng văn bản của cơ quan hải quan mà người nộp thuế không cung cấp, từ chối hoặc trì hoãn, kéo dài việc cung ",
+    "d) Người nộp thuế không ghi nhận hoặc ghi nhận không đầy đủ, không trung thực, không chính xác số liệu trên sổ kế toán, hồ sơ, chứng từ, dữ liệu, tài liệu kế toán để xác định nghĩa vụ thuế;"
+   ],
+   "nghia_vu": [
+    "b) Quá thời hạn theo quy định của pháp luật về hải quan, quy định khác của pháp luật có liên quan hoặc yêu cầu bằng văn bản của cơ quan hải quan mà người nộp thuế không cung cấp, từ chối hoặc trì hoãn, kéo dài việc cung ",
+    "đ) Cơ quan hải quan có đủ bằng chứng, căn cứ xác định về việc khai báo trị giá, mã số, xuất xứ hàng hóa không đúng với thực tế, ảnh hưởng đến số thuế phải nộp, ưu đãi;",
+    "e) Giao dịch được thực hiện không đúng với bản chất kinh tế, không đúng thực tế phát sinh, ảnh hưởng đến số tiền thuế phải nộp, miễn, giảm, hoàn, không thu, không chịu thuế;",
+    "g) Người nộp thuế không tự tính được số tiền thuế phải nộp;"
+   ]
+  },
+  {
+   "dieu": 26,
+   "ten": "Hóa đơn điện tử",
+   "chuong": "III. HÓA ĐƠN ĐIỆN TỬ, CHỨNG TỪ ĐIỆN TỬ",
+   "ky_tu": 4364,
+   "so_khoan": 7,
+   "entity_uoc": 27,
+   "co_san": false,
+   "tc1": [
+    "Hóa đơn điện tử là hóa đơn ở dạng dữ liệu điện tử do tổ chức, hộ kinh doanh, cá nhân kinh doanh bán hàng hóa, cung cấp dịch vụ lập để ghi nhận thông tin bán hàng hóa, cung cấp dịch vụ theo quy định của pháp luật về thuế ",
+    "b) Hộ kinh doanh, cá nhân kinh doanh không thuộc trường hợp sử dụng hóa đơn điện tử theo quy định của Chính phủ và doanh nghiệp, tổ chức kinh tế, tổ chức có nhu cầu sử dụng hóa đơn điện tử phải khai và nộp thuế trước khi",
+    "a) Tổ chức, hộ kinh doanh, cá nhân kinh doanh phải lập hóa đơn điện tử khi bán hàng hóa, cung cấp dịch vụ để giao cho người mua theo định dạng chuẩn dữ liệu và phải ghi đầy đủ nội dung theo quy định của pháp luật về thuế",
+    "Căn cứ kết quả phân tích rủi ro, cơ quan thuế áp dụng các biện pháp quản lý phù hợp, bao gồm cả việc ngừng, tạm ngừng sử dụng hóa đơn điện tử đối với các trường hợp có rủi ro cao về thuế và hóa đơn;"
+   ],
+   "tc2": [
+    "Hóa đơn điện tử là hóa đơn ở dạng dữ liệu điện tử do tổ chức, hộ kinh doanh, cá nhân kinh doanh bán hàng hóa, cung cấp dịch vụ lập để ghi nhận thông tin bán hàng hóa, cung cấp dịch vụ theo quy định của pháp luật về thuế ",
+    "a) Tổ chức, hộ kinh doanh, cá nhân kinh doanh phải lập hóa đơn điện tử khi bán hàng hóa, cung cấp dịch vụ để giao cho người mua theo định dạng chuẩn dữ liệu và phải ghi đầy đủ nội dung theo quy định của pháp luật về thuế",
+    "Chính phủ quy định các nội dung sau:",
+    "Bộ trưởng Bộ Tài chính quy định các nội dung sau:"
+   ],
+   "tc3": [
+    "Hóa đơn điện tử là hóa đơn ở dạng dữ liệu điện tử do tổ chức, hộ kinh doanh, cá nhân kinh doanh bán hàng hóa, cung cấp dịch vụ lập để ghi nhận thông tin bán hàng hóa, cung cấp dịch vụ theo quy định của pháp luật về thuế ",
+    "Hóa đơn điện tử gồm hóa đơn điện tử có mã của cơ quan thuế, hóa đơn điện tử không có mã của cơ quan thuế, hóa đơn điện tử khởi tạo từ máy tính tiền có kết nối dữ liệu với cơ quan thuế.",
+    "Đối tượng sử dụng hóa đơn điện tử:",
+    "a) Người nộp thuế sử dụng hóa đơn điện tử có mã của cơ quan thuế, hóa đơn điện tử không có mã của cơ quan thuế, hóa đơn điện tử khởi tạo từ máy tính tiền có kết nối dữ liệu với cơ quan thuế theo quy định của Chính phủ;"
+   ],
+   "nghia_vu": [
+    "b) Hộ kinh doanh, cá nhân kinh doanh không thuộc trường hợp sử dụng hóa đơn điện tử theo quy định của Chính phủ và doanh nghiệp, tổ chức kinh tế, tổ chức có nhu cầu sử dụng hóa đơn điện tử phải khai và nộp thuế trước khi",
+    "a) Tổ chức, hộ kinh doanh, cá nhân kinh doanh phải lập hóa đơn điện tử khi bán hàng hóa, cung cấp dịch vụ để giao cho người mua theo định dạng chuẩn dữ liệu và phải ghi đầy đủ nội dung theo quy định của pháp luật về thuế",
+    "trường hợp không phải sử dụng hóa đơn điện tử;"
+   ]
+  },
+  {
+   "dieu": 27,
+   "ten": "Chứng từ điện tử",
+   "chuong": "III. HÓA ĐƠN ĐIỆN TỬ, CHỨNG TỪ ĐIỆN TỬ",
+   "ky_tu": 1469,
+   "so_khoan": 5,
+   "entity_uoc": 9,
+   "co_san": true,
+   "tc1": [
+    "trường hợp sử dụng được miễn phí dịch vụ;"
+   ],
+   "tc2": [
+    "Chính phủ quy định chi tiết các nội dung sau:",
+    "Bộ trưởng Bộ Tài chính quy định chi tiết các nội dung sau:"
+   ],
+   "tc3": [
+    "Chứng từ điện tử là chứng từ thu thuế, phí, lệ phí hoặc chứng từ khấu trừ thuế ở dạng dữ liệu điện tử do cơ quan quản lý thuế hoặc tổ chức có trách nhiệm khấu trừ thuế cấp cho người nộp thuế bằng phương tiện điện tử.",
+    "Nguyên tắc lập, quản lý, sử dụng chứng từ điện tử:",
+    "a) Việc đăng ký, quản lý, sử dụng chứng từ điện tử phải tuân thủ quy định của pháp luật về giao dịch điện tử, pháp luật về kế toán và pháp luật về thuế;",
+    "b) Tổ chức lập chứng từ điện tử phải phản ánh đầy đủ, trung thực giao dịch phát sinh và chịu trách nhiệm trước pháp luật về tính chính xác của chứng từ đã lập."
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 28,
+   "ten": "Phạm vi hợp tác quốc tế về thuế, quản lý thuế quốc tế",
+   "chuong": "IV. HỢP TÁC QUỐC TẾ VỀ THUẾ, QUẢN LÝ THUẾ QUỐC TẾ",
+   "ky_tu": 495,
+   "so_khoan": 3,
+   "entity_uoc": 3,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 29,
+   "ten": "Nguyên tắc hợp tác quốc tế về thuế, quản lý thuế quốc tế",
+   "chuong": "IV. HỢP TÁC QUỐC TẾ VỀ THUẾ, QUẢN LÝ THUẾ QUỐC TẾ",
+   "ky_tu": 465,
+   "so_khoan": 3,
+   "entity_uoc": 3,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 30,
+   "ten": "Nội dung quản lý thuế quốc tế của cơ quan quản lý thuế",
+   "chuong": "IV. HỢP TÁC QUỐC TẾ VỀ THUẾ, QUẢN LÝ THUẾ QUỐC TẾ",
+   "ky_tu": 3038,
+   "so_khoan": 4,
+   "entity_uoc": 19,
+   "co_san": false,
+   "tc1": [
+    "Thỏa thuận này nhằm xác định trước phương pháp xác định giá trong các giao dịch liên kết, phù hợp với nguyên tắc giao dịch độc lập để làm căn cứ xác định nghĩa vụ thuế thu nhập doanh nghiệp của doanh nghiệp có giao dịch ",
+    "c) Đàm phán, ký và thực hiện các cam kết quốc tế về thuế đối với hàng hóa xuất khẩu, nhập khẩu;",
+    "g) Triển khai thực hiện các quy định về Thuế tối thiểu toàn cầu, quản lý thuế đối với các doanh nghiệp có giao dịch liên kết và các nghĩa vụ thành viên khác mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên hoặc l"
+   ],
+   "tc2": [
+    "Bộ trưởng Bộ Tài chính quy định nội dung, quy trình, thủ tục ký và thực hiện các cam kết quốc tế quy định tại điểm b khoản 2 Điều này.",
+    "Chính phủ quy định chi tiết các điểm e, g và h khoản 2 Điều này."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 31,
+   "ten": "Nguyên tắc thực hiện MAP, APA",
+   "chuong": "IV. HỢP TÁC QUỐC TẾ VỀ THUẾ, QUẢN LÝ THUẾ QUỐC TẾ",
+   "ky_tu": 1666,
+   "so_khoan": 4,
+   "entity_uoc": 10,
+   "co_san": false,
+   "tc1": [
+    "Việc áp dụng cơ chế APA phải dựa trên thông tin của người nộp thuế, cơ sở dữ liệu sử dụng trong quản lý thuế đối với doanh nghiệp có giao dịch liên kết bao gồm:"
+   ],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 32,
+   "ten": "Nguyên tắc áp dụng quản lý rủi ro, tuân thủ và chuyển đổi số trong quản lý thuế",
+   "chuong": "V. QUẢN LÝ RỦI RO, QUẢN LÝ TUÂN THỦ, ỨNG DỤNG CÔNG NGHỆ, DỮ LIỆU VÀ CHUYỂN ĐỔI SỐ TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 1570,
+   "so_khoan": 6,
+   "entity_uoc": 10,
+   "co_san": false,
+   "tc1": [
+    "c) Áp dụng các biện pháp quản lý phù hợp với đặc thù, mức độ tuân thủ và mức độ rủi ro của từng nhóm, từng đối tượng người nộp thuế;",
+    "Giao dịch giữa người nộp thuế và cơ quan quản lý thuế được thực hiện bằng phương thức điện tử thông qua Hệ thống thông tin quản lý thuế, trừ một số trường hợp đặc biệt do Chính phủ quy định.",
+    "Cơ quan, tổ chức sử dụng chứng từ điện tử do cơ quan quản lý thuế cung cấp và không được yêu cầu người nộp thuế xuất trình chứng từ bằng giấy trong trường hợp dữ liệu đã có trong cơ sở dữ liệu dùng chung của cơ quan nhà "
+   ],
+   "tc2": [
+    "Giao dịch giữa người nộp thuế và cơ quan quản lý thuế được thực hiện bằng phương thức điện tử thông qua Hệ thống thông tin quản lý thuế, trừ một số trường hợp đặc biệt do Chính phủ quy định.",
+    "Chính phủ quy định chi tiết khoản 4 Điều này."
+   ],
+   "tc3": [
+    "Cơ quan, tổ chức sử dụng chứng từ điện tử do cơ quan quản lý thuế cung cấp và không được yêu cầu người nộp thuế xuất trình chứng từ bằng giấy trong trường hợp dữ liệu đã có trong cơ sở dữ liệu dùng chung của cơ quan nhà "
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 33,
+   "ten": "Quản lý rủi ro trong quản lý thuế",
+   "chuong": "V. QUẢN LÝ RỦI RO, QUẢN LÝ TUÂN THỦ, ỨNG DỤNG CÔNG NGHỆ, DỮ LIỆU VÀ CHUYỂN ĐỔI SỐ TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 1087,
+   "so_khoan": 5,
+   "entity_uoc": 7,
+   "co_san": false,
+   "tc1": [
+    "Cơ quan hải quan áp dụng quản lý rủi ro để quyết định kiểm tra thuế trong thực hiện thủ tục hải quan và các hoạt động nghiệp vụ khác đối với hàng hóa xuất khẩu, nhập khẩu, quá cảnh theo quy định của pháp luật về hải quan"
+   ],
+   "tc2": [
+    "Cơ quan hải quan áp dụng quản lý rủi ro để quyết định kiểm tra thuế trong thực hiện thủ tục hải quan và các hoạt động nghiệp vụ khác đối với hàng hóa xuất khẩu, nhập khẩu, quá cảnh theo quy định của pháp luật về hải quan",
+    "Bộ trưởng Bộ Tài chính quy định các nội dung sau:"
+   ],
+   "tc3": [
+    "Cơ quan thuế áp dụng quản lý rủi ro trong quản lý về đăng ký thuế, khai thuế, khoản thu khác, nộp thuế, khoản thu khác, nợ thuế, khoản thu khác, hoàn thuế, khoản thu khác, kiểm tra thuế, quản lý và sử dụng hóa đơn, chứng",
+    "Cơ quan hải quan áp dụng quản lý rủi ro để quyết định kiểm tra thuế trong thực hiện thủ tục hải quan và các hoạt động nghiệp vụ khác đối với hàng hóa xuất khẩu, nhập khẩu, quá cảnh theo quy định của pháp luật về hải quan"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 34,
+   "ten": "Quản lý tuân thủ trong quản lý thuế",
+   "chuong": "V. QUẢN LÝ RỦI RO, QUẢN LÝ TUÂN THỦ, ỨNG DỤNG CÔNG NGHỆ, DỮ LIỆU VÀ CHUYỂN ĐỔI SỐ TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 1885,
+   "so_khoan": 3,
+   "entity_uoc": 12,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [
+    "Chính phủ quy định chi tiết về điều kiện, phạm vi và hình thức áp dụng chế độ ưu tiên đối với người nộp thuế tuân thủ pháp luật.",
+    "Bộ trưởng Bộ Tài chính quy định tiêu chí đánh giá việc tuân thủ pháp luật của người nộp thuế và các hoạt động quản lý tuân thủ trong quản lý thuế."
+   ],
+   "tc3": [
+    "c) Áp dụng chế độ ưu tiên đối với người nộp thuế tuân thủ tốt pháp luật về thuế, sẵn sàng kết nối, chia sẻ dữ liệu điện tử với cơ quan quản lý thuế, bao gồm dữ liệu về sổ kế toán, hóa đơn, chứng từ và các tài liệu liên q",
+    "Cơ quan hải quan tổ chức áp dụng thống nhất quản lý tuân thủ pháp luật đối với người nộp thuế bao gồm:"
+   ],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 35,
+   "ten": "Hệ thống thông tin quản lý thuế",
+   "chuong": "V. QUẢN LÝ RỦI RO, QUẢN LÝ TUÂN THỦ, ỨNG DỤNG CÔNG NGHỆ, DỮ LIỆU VÀ CHUYỂN ĐỔI SỐ TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 1783,
+   "so_khoan": 4,
+   "entity_uoc": 11,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [
+    "Bộ trưởng Bộ Tài chính quy định tiêu chuẩn kỹ thuật, xây dựng hạ tầng công nghệ thông tin phục vụ kết nối, trao đổi thông tin, chia sẻ dữ liệu với các bên liên quan theo quy định của pháp luật."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 36,
+   "ten": "Bảo đảm an toàn thông tin và quản lý rủi ro công nghệ thông tin",
+   "chuong": "V. QUẢN LÝ RỦI RO, QUẢN LÝ TUÂN THỦ, ỨNG DỤNG CÔNG NGHỆ, DỮ LIỆU VÀ CHUYỂN ĐỔI SỐ TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 1181,
+   "so_khoan": 4,
+   "entity_uoc": 7,
+   "co_san": false,
+   "tc1": [
+    "c) Bảo đảm đầy đủ quyền lợi, nghĩa vụ của người nộp thuế trong trường hợp xảy ra sự cố công nghệ, không làm gián đoạn việc thực hiện nghĩa vụ thuế của người nộp thuế.",
+    "Trường hợp phát sinh sự cố kỹ thuật của Hệ thống thông tin quản lý thuế khi người nộp thuế thực hiện giao dịch điện tử dẫn đến người nộp thuế không thể thực hiện được nghĩa vụ thuế theo đúng thời hạn quy định thì người n"
+   ],
+   "tc2": [
+    "Chính phủ quy định chi tiết Điều này."
+   ],
+   "tc3": [],
+   "nghia_vu": [
+    "Trường hợp phát sinh sự cố kỹ thuật của Hệ thống thông tin quản lý thuế khi người nộp thuế thực hiện giao dịch điện tử dẫn đến người nộp thuế không thể thực hiện được nghĩa vụ thuế theo đúng thời hạn quy định thì người n"
+   ]
+  },
+  {
+   "dieu": 37,
+   "ten": "Quyền và nghĩa vụ của người nộp thuế",
+   "chuong": "VI. QUYỀN, NGHĨA VỤ; NHIỆM VỤ, QUYỀN HẠN CỦA BÊN LIÊN QUAN TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 7352,
+   "so_khoan": 3,
+   "entity_uoc": 46,
+   "co_san": false,
+   "tc1": [
+    "d) Được áp dụng chế độ ưu tiên theo quy định của pháp luật về quản lý thuế, hải quan nếu đáp ứng đủ các điều kiện về chế độ ưu tiên theo quy định của pháp luật;",
+    "e) Được nhận thông báo, quyết định, biên bản, kết luận liên quan đến xác định nghĩa vụ thuế từ các cơ quan chức năng khi tiến hành thanh tra, kiểm tra, kiểm toán;",
+    "h) Không phải nộp các chứng từ, tài liệu, không phải gửi các thông tin đã có sẵn trong hồ sơ thuế mà cơ quan quản lý thuế đã có, trừ trường hợp có thay đổi nội dung hoặc theo yêu cầu của cơ quan quản lý thuế để phục vụ k",
+    "n) Được bồi thường thiệt hại theo quy định của pháp luật về trách nhiệm bồi thường của Nhà nước nếu bị cơ quan quản lý thuế, công chức quản lý thuế gây thiệt hại trái pháp luật;"
+   ],
+   "tc2": [
+    "b) Được tra cứu, xem, in ​​và sử dụng chứng từ điện tử mà người nộp thuế đã gửi đến Hệ thống thông tin quản lý thuế theo quy định của Luật này và pháp luật về giao dịch điện tử;",
+    "được ủy quyền khai thay, nộp thuế thay theo quy định của pháp luật về thuế, quản lý thuế, hải quan;",
+    "d) Được áp dụng chế độ ưu tiên theo quy định của pháp luật về quản lý thuế, hải quan nếu đáp ứng đủ các điều kiện về chế độ ưu tiên theo quy định của pháp luật;",
+    "k) Được bảo mật thông tin theo quy định tại Điều 7 của Luật này;"
+   ],
+   "tc3": [
+    "b) Được tra cứu, xem, in ​​và sử dụng chứng từ điện tử mà người nộp thuế đã gửi đến Hệ thống thông tin quản lý thuế theo quy định của Luật này và pháp luật về giao dịch điện tử;",
+    "được yêu cầu tổ chức khấu trừ cấp chứng từ khấu trừ điện tử;",
+    "c) Ký hợp đồng với đại lý thuế, đại lý làm thủ tục hải quan để thực hiện dịch vụ đại lý thuế, đại lý làm thủ tục hải quan;",
+    "được ủy quyền khai thay, nộp thuế thay theo quy định của pháp luật về thuế, quản lý thuế, hải quan;"
+   ],
+   "nghia_vu": [
+    "h) Không phải nộp các chứng từ, tài liệu, không phải gửi các thông tin đã có sẵn trong hồ sơ thuế mà cơ quan quản lý thuế đã có, trừ trường hợp có thay đổi nội dung hoặc theo yêu cầu của cơ quan quản lý thuế để phục vụ k",
+    "o) Không bị xử phạt vi phạm hành chính về quản lý thuế, hóa đơn, không tính tiền chậm nộp đối với trường hợp do người nộp thuế thực hiện nghĩa vụ thuế, hóa đơn theo văn bản hành chính hoặc quyết định xử lý của cơ quan ",
+    "Trường hợp số tiền phải nộp đã được cơ quan quản lý thuế cung cấp mã định danh khoản phải nộp thì người nộp thuế nộp theo mã định danh khoản phải nộp;",
+    "i) Chịu trách nhiệm thực hiện nghĩa vụ thuế, khoản thu khác theo quy định của pháp luật bao gồm cả trong trường hợp người đại diện theo pháp luật hoặc đại diện theo ủy quyền thay mặt người nộp thuế thực hiện thủ tục về t"
+   ]
+  },
+  {
+   "dieu": 38,
+   "ten": "Nhiệm vụ và quyền hạn của cơ quan quản lý thuế, công chức quản lý thuế",
+   "chuong": "VI. QUYỀN, NGHĨA VỤ; NHIỆM VỤ, QUYỀN HẠN CỦA BÊN LIÊN QUAN TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 6168,
+   "so_khoan": 3,
+   "entity_uoc": 39,
+   "co_san": false,
+   "tc1": [
+    "lợi nhuận sau thuế còn lại sau khi trích lập các quỹ theo quy định của doanh nghiệp do Nhà nước nắm giữ 100% vốn điều lệ, cổ tức và lợi nhuận được chia cho phần vốn nhà nước tại doanh nghiệp theo quy định;",
+    "Trường hợp có sự thay đổi các thông tin liên quan đến xác định nghĩa vụ tài chính, nghĩa vụ nộp ngân sách nhà nước đã chuyển cho cơ quan quản lý thuế thì cơ quan, tổ chức quản lý khoản thu có trách nhiệm thông báo cho cơ",
+    "Xác nhận hoàn thành giao dịch trong trường hợp người nộp thuế hoàn thành giao dịch theo phương thức điện tử;",
+    "g) Bồi thường thiệt hại cho người nộp thuế theo quy định của pháp luật về trách nhiệm bồi thường của Nhà nước trong trường hợp gây thiệt hại trái pháp luật;"
+   ],
+   "tc2": [
+    "a) Tổ chức thực hiện quản lý thu đối với các loại thuế theo quy định của của pháp luật về thuế, tiền chậm nộp, tiền thu từ xử phạt vi phạm hành chính do cơ quan quản lý thuế thực hiện theo quy định của pháp luật về xử lý",
+    "phí và lệ phí theo quy định của Luật Phí và lệ phí;",
+    "Đối với các khoản phí, lệ phí không do cơ quan quản lý thuế trực tiếp thu thì cơ quan, tổ chức được giao thu phí, lệ phí theo quy định của Luật Phí và lệ phí thực hiện các nội dung quản lý thu theo quy định tại khoản 7 Đ",
+    "g) Bồi thường thiệt hại cho người nộp thuế theo quy định của pháp luật về trách nhiệm bồi thường của Nhà nước trong trường hợp gây thiệt hại trái pháp luật;"
+   ],
+   "tc3": [
+    "e) Cung cấp thông tin về tình hình thực hiện nghĩa vụ thuế của người nộp thuế (bao gồm số tiền thuế, khoản thu khác nộp thừa), thông báo số tiền thuế nợ qua tài khoản giao dịch điện tử của người nộp thuế;",
+    "a) Yêu cầu người nộp thuế cung cấp thông tin, tài liệu liên quan đến nghĩa vụ thuế, bao gồm cả thông tin đầu tư, chủ sở hữu, tài khoản ngân hàng, tài chính và giải trình liên quan đến khai, tính, nộp thuế, khoản thu khác",
+    "áp dụng biện pháp ngăn chặn và bảo đảm xử phạt vi phạm theo quy định của pháp luật, bao gồm cả yêu cầu tạm ngừng kinh doanh, yêu cầu cơ quan đăng ký kinh doanh tạm dừng thực hiện thay đổi nội dung đăng ký doanh nghiệp, h"
+   ],
+   "nghia_vu": [
+    "Đối với các khoản thu thuộc lĩnh vực quản lý nhà nước của cơ quan, tổ chức khác nhưng giao cho cơ quan quản lý thuế tổ chức thu thì cơ quan, tổ chức quản lý khoản thu có trách nhiệm chuyển thông tin về việc xác định nghĩ",
+    "Trường hợp có sự thay đổi các thông tin liên quan đến xác định nghĩa vụ tài chính, nghĩa vụ nộp ngân sách nhà nước đã chuyển cho cơ quan quản lý thuế thì cơ quan, tổ chức quản lý khoản thu có trách nhiệm thông báo cho cơ",
+    "h) Thực hiện giám định thuế theo yêu cầu của cơ quan nhà nước có thẩm quyền nhằm xác định nghĩa vụ thuế phải nộp;"
+   ]
+  },
+  {
+   "dieu": 39,
+   "ten": "Nhiệm vụ, trách nhiệm và quyền hạn của các cơ quan nhà nước, các cơ quan kiểm tra, giám sát, Mặt trận Tổ quốc Việt Nam, các tổ chức chính trị xã hội - nghề nghiệp, tổ chức xã hội, tổ chức xã hội - nghề nghiệp trong quản lý thuế",
+   "chuong": "VI. QUYỀN, NGHĨA VỤ; NHIỆM VỤ, QUYỀN HẠN CỦA BÊN LIÊN QUAN TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 12129,
+   "so_khoan": 15,
+   "entity_uoc": 76,
+   "co_san": false,
+   "tc1": [
+    "b) Gia hạn nộp thuế, khoản thu khác, tiền chậm nộp, tiền phạt cho các đối tượng, ngành, nghề sản xuất, kinh doanh trong trường hợp khó khăn đặc biệt trong từng thời kỳ nhất định;",
+    "a) Phối hợp với Bộ Tài chính trong việc triển khai chính sách thuế, quản lý thuế, thực hiện chuyển đổi số, chia sẻ thông tin, dữ liệu để phòng ngừa các hành vi trốn thuế, gian lận thuế, thất thu ngân sách trong các hoạt ",
+    "b) Tiền nộp ngân sách nhà nước theo quy định của pháp luật về quản lý, sử dụng tài sản công từ việc quản lý, sử dụng, khai thác tài sản công vào mục đích kinh doanh, cho thuê, liên doanh, liên kết, xử lý tài sản công",
+    "a) Cơ quan cấp các loại giấy chứng nhận, giấy phép có nhiệm vụ cung cấp thông tin về nội dung giấy chứng nhận đăng ký đầu tư, giấy chứng nhận đăng ký doanh nghiệp, giấy chứng nhận đăng ký hợp tác xã, giấy chứng nhận đăng"
+   ],
+   "tc2": [
+    "Cơ quan nhà nước, tổ chức được giao quản lý thu đối với các khoản thu khác thuộc ngân sách nhà nước thực hiện tổ chức thu vào ngân sách nhà nước theo quy định của pháp luật chuyên ngành và được áp dụng quy định về t",
+    "a) Tiền thu từ xử phạt vi phạm hành chính do cơ quan nhà nước, tổ chức được giao quản lý thu thực hiện theo quy định của pháp luật về xử lý vi phạm hành chính;",
+    "Cơ quan nhà nước, tổ chức được giao thu phí, lệ phí thực hiện tổ chức thu vào ngân sách nhà nước theo quy định của Luật Phí và lệ phí;",
+    "được áp dụng quy định về tính tiền chậm nộp, xử lý số tiền nộp thừa theo quy định của Luật này, kiến nghị cơ quan nhà nước có thẩm quyền thực hiện các biện pháp cưỡng chế quy định tại các điểm c, d"
+   ],
+   "tc3": [
+    "a) Cơ quan cấp các loại giấy chứng nhận, giấy phép có nhiệm vụ cung cấp thông tin về nội dung giấy chứng nhận đăng ký đầu tư, giấy chứng nhận đăng ký doanh nghiệp, giấy chứng nhận đăng ký hợp tác xã, giấy chứng nhận đăng",
+    "cung cấp thông tin về xuất cảnh, nhập cảnh và thông tin về đăng ký, quản lý phương tiện giao thông của người nộp thuế;"
+   ],
+   "nghia_vu": [
+    "b) Trường hợp Kiểm toán nhà nước trực tiếp kiểm toán người nộp thuế theo quy định của Luật Kiểm toán nhà nước có nội dung kiến nghị về nghĩa vụ thuế và khoản thu khác phải nộp ngân sách nhà nước của người nộp thuế thì Ki",
+    "c) Trường hợp Kiểm toán nhà nước không trực tiếp kiểm toán đối với người nộp thuế mà thực hiện kiểm toán tại cơ quan quản lý thuế có nội dung kiến nghị nêu trong báo cáo kiểm toán liên quan đến nghĩa vụ thuế và khoản thu",
+    "Trường hợp người nộp thuế không đồng ý với nghĩa vụ thuế và khoản thu khác phải nộp thì người nộp thuế có văn bản đề nghị cơ quan quản lý thuế, Kiểm toán nhà nước xem xét lại nghĩa vụ thuế và khoản thu khác phải nộp.",
+    "b) Trường hợp cơ quan thanh tra trực tiếp thanh tra người nộp thuế theo quy định của Luật Thanh tra có nội dung kết luận về nghĩa vụ thuế và khoản thu khác phải nộp ngân sách nhà nước của người nộp thuế thì cơ quan thanh"
+   ]
+  },
+  {
+   "dieu": 40,
+   "ten": "Nhiệm vụ, trách nhiệm và quyền hạn của tổ chức, cá nhân khác trong quản lý thuế",
+   "chuong": "VI. QUYỀN, NGHĨA VỤ; NHIỆM VỤ, QUYỀN HẠN CỦA BÊN LIÊN QUAN TRONG QUẢN LÝ THUẾ",
+   "ky_tu": 9826,
+   "so_khoan": 8,
+   "entity_uoc": 61,
+   "co_san": false,
+   "tc1": [
+    "không được hủy lệnh chuyển tiền sau khi thông tin nộp thuế đã được chuyển đến cơ quan quản lý thuế;",
+    "b) Định kỳ cung cấp thông tin về số hiệu tài khoản thanh toán theo mã số thuế của người nộp thuế khi mở, đóng tài khoản thanh toán tại tổ chức cung ứng dịch vụ thanh toán được mở tài khoản thanh toán;",
+    "đ) Trường hợp người nộp thuế có bảo lãnh về tiền thuế phải nộp, tiền chậm nộp, tiền phạt và các khoản thu khác thuộc ngân sách nhà nước theo quy định của Luật này nhưng người nộp thuế không nộp đúng thời hạn thì tổ chức ",
+    "e) Tổ chức cung ứng dịch vụ thanh toán (không bao gồm Ngân hàng Nhà nước) cung cấp thông tin về hàng hóa nhập khẩu được thế chấp làm tài sản bảo đảm các khoản vay theo yêu cầu của cơ quan hải quan;"
+   ],
+   "tc2": [
+    "đ) Trường hợp người nộp thuế có bảo lãnh về tiền thuế phải nộp, tiền chậm nộp, tiền phạt và các khoản thu khác thuộc ngân sách nhà nước theo quy định của Luật này nhưng người nộp thuế không nộp đúng thời hạn thì tổ chức ",
+    "g) Trường hợp bên nhận bảo đảm (không bao gồm Ngân hàng Nhà nước) bán tài sản bảo đảm để xử lý nợ theo quy định của pháp luật về xử lý tài sản bảo đảm và pháp luật về các tổ chức tín dụng thì bên nhận bảo đảm hoặc người ",
+    "h) Đối với số tiền thuế, khoản thu khác chậm nộp hoặc nộp không đầy đủ vào ngân sách nhà nước do lỗi của tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán dẫn đến người nộp thuế bị tính ",
+    "đ) Người được uỷ quyền, bảo lãnh hoặc nộp thuế thay cho người nộp thuế có trách nhiệm cung cấp thông tin về hàng hoá xuất khẩu, nhập khẩu cho cơ quan quản lý thuế để làm căn cứ ấn định thuế theo quy định tại Điều 25 của "
+   ],
+   "tc3": [
+    "Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán có nhiệm vụ, quyền hạn sau:",
+    "truyền, nhận chứng từ nộp thuế điện tử, chuyển tiền vào ngân sách và gửi thông tin cho cơ quan quản lý thuế đầy đủ, chính xác, kịp thời theo quy định của pháp luật;",
+    "bảo mật thông tin của người nộp thuế, người khai hải quan theo quy định của pháp luật;",
+    "b) Định kỳ cung cấp thông tin về số hiệu tài khoản thanh toán theo mã số thuế của người nộp thuế khi mở, đóng tài khoản thanh toán tại tổ chức cung ứng dịch vụ thanh toán được mở tài khoản thanh toán;"
+   ],
+   "nghia_vu": [
+    "đ) Trường hợp người nộp thuế có bảo lãnh về tiền thuế phải nộp, tiền chậm nộp, tiền phạt và các khoản thu khác thuộc ngân sách nhà nước theo quy định của Luật này nhưng người nộp thuế không nộp đúng thời hạn thì tổ chức ",
+    "đ) Người được uỷ quyền, bảo lãnh hoặc nộp thuế thay cho người nộp thuế có trách nhiệm cung cấp thông tin về hàng hoá xuất khẩu, nhập khẩu cho cơ quan quản lý thuế để làm căn cứ ấn định thuế theo quy định tại Điều 25 của ",
+    "e) Các cơ quan, tổ chức, cá nhân khác có liên quan đến người nộp thuế có trách nhiệm phối hợp cung cấp thông tin phục vụ công tác quản lý thuế bằng văn bản giấy hoặc văn bản điện tử theo yêu cầu của cơ quan quản lý thuế;",
+    "k) Cơ quan, tổ chức thu tiền bán đấu giá có trách nhiệm cung cấp thông tin về tên hàng, số lượng, trị giá đã được kê biên, bán đấu giá cho cơ quan hải quan để thực hiện ấn định thuế đối với hàng hóa nhập khẩu chưa hoàn t"
+   ]
+  },
+  {
+   "dieu": 41,
+   "ten": "Khiếu nại, tố cáo, giải quyết tranh chấp về thuế",
+   "chuong": "VII. KHIẾU NẠI, TỐ CÁO, GIẢI QUYẾT TRANH CHẤP",
+   "ky_tu": 1361,
+   "so_khoan": 4,
+   "entity_uoc": 9,
+   "co_san": false,
+   "tc1": [
+    "Người nộp thuế, tổ chức, cá nhân có quyền khiếu nại với cơ quan có thẩm quyền đối với quyết định hành chính, hành vi hành chính của cơ quan quản lý thuế, người có thẩm quyền của cơ quan quản lý thuế khi có căn cứ cho rằn",
+    "c) Cơ chế giải quyết tranh chấp được quy định tại hợp đồng, thỏa thuận và cam kết bảo lãnh của Chính phủ và điều ước quốc tế về thuế, điều ước quốc tế khác mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên hoặc là"
+   ],
+   "tc2": [
+    "Thẩm quyền, trình tự, thủ tục giải quyết khiếu nại, tố cáo được thực hiện theo quy định của pháp luật về khiếu nại, tố cáo.",
+    "a) Trình tự, thủ tục khiếu nại theo quy định của pháp luật về khiếu nại;",
+    "b) Trình tự, thủ tục tố tụng theo quy định của pháp luật về tố tụng hành chính;"
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 42,
+   "ten": "Trách nhiệm và quyền hạn của cơ quan quản lý thuế trong việc giải quyết khiếu nại về thuế",
+   "chuong": "VII. KHIẾU NẠI, TỐ CÁO, GIẢI QUYẾT TRANH CHẤP",
+   "ky_tu": 1089,
+   "so_khoan": 3,
+   "entity_uoc": 7,
+   "co_san": false,
+   "tc1": [
+    "nếu người khiếu nại từ chối cung cấp hồ sơ, tài liệu thì có quyền từ chối xem xét giải quyết khiếu nại.",
+    "Khi thực hiện việc tham vấn, thủ trưởng cơ quan quản lý thuế phải ban hành quyết định thành lập Hội đồng tham vấn.",
+    "Kết quả biểu quyết là cơ sở để thủ trưởng cơ quan quản lý thuế tham khảo khi ra quyết định xử lý khiếu nại."
+   ],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": [
+    "Cơ quan quản lý thuế phải hoàn trả số tiền thuế, khoản thu khác, tiền chậm nộp, tiền phạt thu không đúng cho người nộp thuế, bên thứ ba trong thời hạn 15 ngày kể từ ngày nhận được quyết định xử lý của cơ quan có thẩm quy"
+   ]
+  },
+  {
+   "dieu": 43,
+   "ten": "Khởi kiện",
+   "chuong": "VII. KHIẾU NẠI, TỐ CÁO, GIẢI QUYẾT TRANH CHẤP",
+   "ky_tu": 370,
+   "so_khoan": 0,
+   "entity_uoc": 2,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [
+    "Việc khởi kiện đối với quyết định hành chính, hành vi hành chính của cơ quan quản lý thuế, người có thẩm quyền của cơ quan quản lý thuế, cơ quan nhà nước được thực hiện theo quy định của pháp luật về tố tụng hành chính."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 44,
+   "ten": "Nguyên tắc xử phạt vi phạm hành chính về quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 4289,
+   "so_khoan": 10,
+   "entity_uoc": 27,
+   "co_san": false,
+   "tc1": [
+    "Trường hợp không xử phạt vi phạm hành chính về quản lý thuế:",
+    "a) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 2 Điều 45 của Luật này nhưng đã khai bổ sung hồ sơ khai thuế và đã tự giác nộp đủ số tiền thuế phải nộp trước thời điểm cơ quan thuế công bố quyết định ",
+    "cá nhân trực tiếp quyết toán thuế thu nhập cá nhân chậm nộp hồ sơ quyết toán thuế thu nhập cá nhân mà có phát sinh số tiền thuế được hoàn và các trường hợp không bị xử phạt vi phạm hành chính khác quy định tại Luật này, ",
+    "b) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 3 Điều 45 của Luật này nhưng đã khai bổ sung trước thời điểm cơ quan hải quan thông báo việc kiểm tra trực tiếp hồ sơ hải quan đối với hàng hóa đang làm"
+   ],
+   "tc2": [
+    "Việc xử phạt vi phạm hành chính về quản lý thuế được thực hiện theo quy định của pháp luật về quản lý thuế và pháp luật về xử lý vi phạm hành chính.",
+    "a) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 2 Điều 45 của Luật này nhưng đã khai bổ sung hồ sơ khai thuế và đã tự giác nộp đủ số tiền thuế phải nộp trước thời điểm cơ quan thuế công bố quyết định ",
+    "b) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 3 Điều 45 của Luật này nhưng đã khai bổ sung trước thời điểm cơ quan hải quan thông báo việc kiểm tra trực tiếp hồ sơ hải quan đối với hàng hóa đang làm",
+    "a) Phạt 10% tính trên số tiền thuế khai thiếu số tiền thuế phải nộp hoặc số tiền thuế khai tăng trong trường hợp được miễn, giảm, hoàn, không thu thuế đối với hành vi quy định tại điểm a khoản 3 Điều 45 của Luật này;"
+   ],
+   "tc3": [
+    "cá nhân trực tiếp quyết toán thuế thu nhập cá nhân chậm nộp hồ sơ quyết toán thuế thu nhập cá nhân mà có phát sinh số tiền thuế được hoàn và các trường hợp không bị xử phạt vi phạm hành chính khác quy định tại Luật này, ",
+    "b) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 3 Điều 45 của Luật này nhưng đã khai bổ sung trước thời điểm cơ quan hải quan thông báo việc kiểm tra trực tiếp hồ sơ hải quan đối với hàng hóa đang làm"
+   ],
+   "nghia_vu": [
+    "a) Trường hợp người nộp thuế có hành vi khai sai quy định tại khoản 2 Điều 45 của Luật này nhưng đã khai bổ sung hồ sơ khai thuế và đã tự giác nộp đủ số tiền thuế phải nộp trước thời điểm cơ quan thuế công bố quyết định ",
+    "người nộp thuế khai bổ sung trong thời hạn 60 ngày kể từ ngày thông quan và trước thời điểm quyết định thanh tra, kiểm tra đối với hàng hóa đã thông quan, kiểm tra sau thông quan và các trường hợp khác theo quy định của ",
+    "a) Phạt 10% tính trên số tiền thuế khai thiếu số tiền thuế phải nộp hoặc số tiền thuế khai tăng trong trường hợp được miễn, giảm, hoàn, không thu thuế đối với hành vi quy định tại điểm a khoản 3 Điều 45 của Luật này;",
+    "b) Phạt 20% tính trên số tiền thuế khai thiếu số tiền thuế phải nộp hoặc số tiền thuế khai tăng trong trường hợp được miễn, giảm, hoàn, không thu thuế đối với hành vi quy định tại khoản 2 và điểm b, điểm c khoản 3 Điều 4"
+   ]
+  },
+  {
+   "dieu": 45,
+   "ten": "Hành vi vi phạm trong lĩnh vực quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 4204,
+   "so_khoan": 5,
+   "entity_uoc": 26,
+   "co_san": false,
+   "tc1": [
+    "Hành vi khai sai căn cứ tính thuế hoặc xác định sai trường hợp được miễn, giảm, hoàn thuế hoặc sử dụng hóa đơn, chứng từ không hợp pháp không thuộc lỗi của người mua dẫn đến thiếu số tiền thuế phải nộp hoặc làm tăng số t",
+    "Người nộp thuế khai sai dẫn đến thiếu số tiền thuế phải nộp hoặc tăng số tiền thuế được miễn, giảm, hoàn, không thu đối với hàng hóa xuất khẩu, nhập khẩu nhưng không thuộc các trường hợp quy định tại điểm e, điểm g khoản",
+    "phát hiện khi kiểm tra sau thông quan, thanh tra, kiểm tra đối với hàng hóa đã thông quan và cá nhân, tổ chức vi phạm đã tự nguyện khắc phục hậu quả bằng cách nộp đủ số tiền thuế phải nộp theo quy định;",
+    "c) Trường hợp không thuộc điểm a và điểm b khoản này mà người nộp thuế tự nguyện nộp đủ số tiền thuế phải nộp theo quy định."
+   ],
+   "tc2": [
+    "Người nộp thuế khai sai dẫn đến thiếu số tiền thuế phải nộp hoặc tăng số tiền thuế được miễn, giảm, hoàn, không thu đối với hàng hóa xuất khẩu, nhập khẩu nhưng không thuộc các trường hợp quy định tại điểm e, điểm g khoản",
+    "nộp hồ sơ khai thuế sau 90 ngày kể từ ngày hết thời hạn nộp hồ sơ khai thuế hoặc ngày hết thời hạn gia hạn nộp hồ sơ khai thuế theo quy định của Luật này dẫn đến thiếu số tiền thuế phải nộp hoặc tăng số tiền thuế được mi",
+    "Chính phủ quy định chi tiết Điều này."
+   ],
+   "tc3": [
+    "Hành vi vi phạm thủ tục thuế, hóa đơn, chứng từ điện tử.",
+    "Hành vi khai sai căn cứ tính thuế hoặc xác định sai trường hợp được miễn, giảm, hoàn thuế hoặc sử dụng hóa đơn, chứng từ không hợp pháp không thuộc lỗi của người mua dẫn đến thiếu số tiền thuế phải nộp hoặc làm tăng số t",
+    "a) Người nộp thuế tự phát hiện và khai bổ sung sau thời điểm cơ quan hải quan thông báo việc kiểm tra trực tiếp hồ sơ hải quan đối với hàng hóa đang làm thủ tục hải quan hoặc sau thời hạn 60 ngày kể từ ngày thông quan và",
+    "b) Cơ quan hải quan phát hiện trong quá trình làm thủ tục hải quan;"
+   ],
+   "nghia_vu": [
+    "Hành vi khai sai căn cứ tính thuế hoặc xác định sai trường hợp được miễn, giảm, hoàn thuế hoặc sử dụng hóa đơn, chứng từ không hợp pháp không thuộc lỗi của người mua dẫn đến thiếu số tiền thuế phải nộp hoặc làm tăng số t",
+    "Người nộp thuế khai sai dẫn đến thiếu số tiền thuế phải nộp hoặc tăng số tiền thuế được miễn, giảm, hoàn, không thu đối với hàng hóa xuất khẩu, nhập khẩu nhưng không thuộc các trường hợp quy định tại điểm e, điểm g khoản",
+    "phát hiện khi kiểm tra sau thông quan, thanh tra, kiểm tra đối với hàng hóa đã thông quan và cá nhân, tổ chức vi phạm đã tự nguyện khắc phục hậu quả bằng cách nộp đủ số tiền thuế phải nộp theo quy định;",
+    "c) Trường hợp không thuộc điểm a và điểm b khoản này mà người nộp thuế tự nguyện nộp đủ số tiền thuế phải nộp theo quy định."
+   ]
+  },
+  {
+   "dieu": 46,
+   "ten": "Xử lý hành vi vi phạm của tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán, người bảo lãnh nộp tiền thuế, tổ chức, cá nhân có liên quan trong lĩnh vực quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 1616,
+   "so_khoan": 5,
+   "entity_uoc": 10,
+   "co_san": false,
+   "tc1": [
+    "Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán không thực hiện trách nhiệm trích chuyển tiền từ tài khoản của người nộp thuế vào tài ",
+    "Người bảo lãnh không thực hiện nghĩa vụ bảo lãnh cho người nộp thuế trong trường hợp người nộp thuế không nộp thuế thì người bảo lãnh phải thực hiện nghĩa vụ của người nộp thuế trong phạm vi bảo lãnh."
+   ],
+   "tc2": [
+    "Tổ chức, cá nhân có liên quan đến việc thực hiện pháp luật về thuế quy định tại khoản 4 Điều 2 của Luật này có hành vi thông đồng, bao che người nộp thuế trốn thuế, không thực hiện quyết định cưỡng chế thi hành quyết địn",
+    "Tổ chức, cá nhân khác có liên quan đến việc thực hiện pháp luật về thuế quy định tại khoản 4 Điều 2 của Luật này không thực hiện trách nhiệm của mình theo quy định của Luật này thì tùy theo tính chất, mức độ vi phạm mà b",
+    "Chính phủ quy định chi tiết Điều này."
+   ],
+   "tc3": [
+    "Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán không thực hiện trách nhiệm trích chuyển tiền từ tài khoản của người nộp thuế vào tài "
+   ],
+   "nghia_vu": [
+    "Tổ chức tín dụng, chi nhánh ngân hàng nước ngoài, tổ chức cung ứng dịch vụ thanh toán, tổ chức cung ứng dịch vụ trung gian thanh toán không thực hiện trách nhiệm trích chuyển tiền từ tài khoản của người nộp thuế vào tài "
+   ]
+  },
+  {
+   "dieu": 47,
+   "ten": "Thẩm quyền xử phạt vi phạm hành chính về quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 366,
+   "so_khoan": 2,
+   "entity_uoc": 2,
+   "co_san": false,
+   "tc1": [],
+   "tc2": [
+    "Thẩm quyền xử phạt vi phạm hành chính đối với hành vi vi phạm thủ tục thuế được thực hiện theo quy định của pháp luật về xử lý vi phạm hành chính.",
+    "Thủ trưởng cơ quan quản lý thuế có thẩm quyền ra quyết định xử phạt vi phạm hành chính đối với hành vi quy định tại Điều 45 và Điều 46 của Luật này."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 48,
+   "ten": "Trường hợp bị cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 1638,
+   "so_khoan": 10,
+   "entity_uoc": 10,
+   "co_san": true,
+   "tc1": [
+    "Người nộp thuế có tiền thuế nợ khi hết thời hạn gia hạn nộp tiền thuế.",
+    "Người nộp thuế không chấp hành quyết định xử phạt vi phạm hành chính về quản lý thuế theo thời hạn ghi trên quyết định xử phạt vi phạm hành chính về quản lý thuế, trừ trường hợp được hoãn hoặc tạm đình chỉ thi hành quyết",
+    "Thủ trưởng cơ quan quản lý thuế căn cứ tình hình thực tế để quyết định trường hợp thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế."
+   ],
+   "tc2": [
+    "Chính phủ quy định chi tiết Điều này."
+   ],
+   "tc3": [
+    "Việc nộp dần tiền thuế nợ được thủ trưởng cơ quan quản lý thuế xem xét trên cơ sở đề nghị của người nộp thuế và phải có bảo lãnh của tổ chức tín dụng.",
+    "Không thực hiện biện pháp cưỡng chế đối với người nộp thuế có nợ phí hải quan và lệ phí hàng hóa, phương tiện vận tải quá cảnh."
+   ],
+   "nghia_vu": [
+    "Người nộp thuế có tiền thuế nợ quá 90 ngày kể từ ngày hết thời hạn nộp theo quy định.",
+    "được nộp dần tiền thuế nợ trong thời hạn không quá 12 tháng kể từ ngày cơ quan có thẩm quyền ban hành văn bản chấp nhận nộp dần tiền thuế nợ và trong thời gian thư bảo lãnh có hiệu lực."
+   ]
+  },
+  {
+   "dieu": 49,
+   "ten": "Biện pháp cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 2351,
+   "so_khoan": 5,
+   "entity_uoc": 15,
+   "co_san": false,
+   "tc1": [
+    "c) Dừng làm thủ tục hải quan đối với hàng hóa xuất khẩu, nhập khẩu;",
+    "g) Nộp đơn yêu cầu áp dụng thủ tục phá sản;",
+    "h) Thu hồi giấy chứng nhận đăng ký kinh doanh, giấy chứng nhận đăng ký doanh nghiệp, giấy chứng nhận đăng ký hợp tác xã, giấy chứng nhận đăng ký tổ hợp tác, giấy chứng nhận đăng ký hộ kinh doanh, giấy phép thành lập và h",
+    "Các biện pháp cưỡng chế thi hành quyết định hành chính về quản lý thuế quy định tại khoản 1 Điều này chấm dứt hiệu lực kể từ khi:"
+   ],
+   "tc2": [
+    "d) Người nộp thuế đã chấp hành quyết định kiểm tra thuế đối với trường hợp quy định tại khoản 5 Điều 48 của Luật này.",
+    "Chính phủ quy định chi tiết Điều này và trình tự thực hiện các biện pháp cưỡng chế."
+   ],
+   "tc3": [
+    "a) Trích tiền từ tài khoản của đối tượng bị cưỡng chế thi hành quyết định hành chính về quản lý thuế tại tổ chức tín dụng, chi nhánh ngân hàng nước ngoài;",
+    "phong tỏa tài khoản;",
+    "b) Khấu trừ một phần tiền lương hoặc thu nhập;",
+    "c) Dừng làm thủ tục hải quan đối với hàng hóa xuất khẩu, nhập khẩu;"
+   ],
+   "nghia_vu": [
+    "Cơ quan quản lý thuế khi nộp đơn yêu cầu áp dụng thủ tục phá sản đối với người nộp thuế thuộc trường hợp bị cưỡng chế theo quy định không phải nộp lệ phí phá sản, tạm ứng chi phí phá sản."
+   ]
+  },
+  {
+   "dieu": 50,
+   "ten": "Thẩm quyền quyết định cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+   "chuong": "VIII. XỬ LÝ VI PHẠM HÀNH CHÍNH VỀ QUẢN LÝ THUẾ VÀ CƯỠNG CHẾ THI HÀNH QUYẾT ĐỊNH HÀNH CHÍNH VỀ QUẢN LÝ THUẾ",
+   "ky_tu": 763,
+   "so_khoan": 3,
+   "entity_uoc": 5,
+   "co_san": false,
+   "tc1": [
+    "b) Nộp đơn yêu cầu áp dụng thủ tục phá sản quy định tại điểm g khoản 1 Điều 49 của Luật này thực hiện theo quy định pháp luật về phục hồi, phá sản;"
+   ],
+   "tc2": [
+    "a) Ban hành quyết định cưỡng chế thi hành quyết định hành chính về quản lý thuế đối với biện pháp cưỡng chế quy định tại các điểm a, b, c, d và đ khoản 1 Điều 49 của Luật này;",
+    "b) Nộp đơn yêu cầu áp dụng thủ tục phá sản quy định tại điểm g khoản 1 Điều 49 của Luật này thực hiện theo quy định pháp luật về phục hồi, phá sản;",
+    "c) Đề nghị cơ quan có thẩm quyền thực hiện biện pháp quy định tại điểm h khoản 1 Điều 49 của Luật này.",
+    "Chính phủ quy định chi tiết Điều này."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 51,
+   "ten": "Bổ sung Điều 70a vào sau Điều 70 của Luật Kế toán số 88/2015/QH13 đã được sửa đổi, bổ sung một số điều theo Luật số 38/2019/QH14 và Luật số 56/2024/QH15",
+   "chuong": "IX. ĐIỀU KHOẢN THI HÀNH",
+   "ky_tu": 321,
+   "so_khoan": 0,
+   "entity_uoc": 2,
+   "co_san": false,
+   "tc1": [
+    "Tổ chức kinh doanh dịch vụ làm thủ tục về thuế được cung cấp dịch vụ kế toán cho doanh nghiệp siêu nhỏ, hộ kinh doanh, cá nhân kinh doanh khi có ít nhất một người có chứng chỉ kế toán viên.”."
+   ],
+   "tc2": [],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 52,
+   "ten": "Điều khoản thi hành",
+   "chuong": "IX. ĐIỀU KHOẢN THI HÀNH",
+   "ky_tu": 1377,
+   "so_khoan": 5,
+   "entity_uoc": 9,
+   "co_san": true,
+   "tc1": [
+    "quy định về quản lý thuế đối với các giao dịch liên kết của những doanh nghiệp có quan hệ liên kết;"
+   ],
+   "tc2": [
+    "Quy định tại Điều 13 và việc sử dụng hóa đơn điện tử của hộ kinh doanh, cá nhân kinh doanh quy định tại Điều 26 của Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2026.",
+    "Luật Quản lý thuế số 38/2019/QH14 đã được sửa đổi, bổ sung một số điều theo Luật số 56/2024/QH15 (sau đây gọi là Luật Quản lý thuế số 38/2019/QH14) hết hiệu lực thi hành kể từ ngày Luật này có hiệu lực thi hành, trừ quy ",
+    "riêng quy định tại Điều 51 của Luật Quản lý thuế số 38/2019/QH14 hết hiệu lực thi hành kể từ ngày 01 tháng 01 năm 2026.",
+    "Việc áp dụng toàn bộ các hình thức giao dịch điện tử trong lĩnh vực quản lý thuế được thực hiện theo lộ trình do Bộ trưởng Bộ Tài chính quy định, bảo đảm hoàn thành trước ngày 01 tháng 01 năm 2027."
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  },
+  {
+   "dieu": 53,
+   "ten": "Điều khoản chuyển tiếp",
+   "chuong": "IX. ĐIỀU KHOẢN THI HÀNH",
+   "ky_tu": 694,
+   "so_khoan": 3,
+   "entity_uoc": 4,
+   "co_san": true,
+   "tc1": [],
+   "tc2": [
+    "Các khoản thuế được miễn, giảm, không thu theo quy định của pháp luật tương ứng từng thời kỳ, phát sinh trước ngày 01 tháng 7 năm 2026 thì tiếp tục xử lý theo quy định của Luật Quản lý thuế số 38/2019/QH14.",
+    "Các khoản tiền thuế nợ đến hết ngày 30 tháng 6 năm 2026 thì được xử lý theo quy định của Luật này.",
+    "Các cuộc kiểm tra có quyết định kiểm tra được ban hành trước ngày Luật này có hiệu lực thi hành nhưng chưa ban hành kết luận hoặc quyết định xử lý thì tiếp tục thực hiện theo quy định của Luật Quản lý thuế số 38/2019/QH1"
+   ],
+   "tc3": [],
+   "nghia_vu": []
+  }
+ ]
+}
