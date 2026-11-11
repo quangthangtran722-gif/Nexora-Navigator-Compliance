@@ -2,18 +2,24 @@
 
 import { fromPostgrest, ok, type Result } from "@/lib/data/errors";
 import { getSupabase } from "@/lib/supabase/client";
-import type { Diagnostic, Entity } from "@/lib/types";
+import type { Diagnostic, Entity, EntityRelationship } from "@/lib/types";
 
 /*
- * 3 RPC duyệt — CONTRACT §5, cửa DUY NHẤT đổi trang_thai_duyet.
+ * 4 RPC duyệt — CONTRACT §5 (+ approve_relationship, 008), cửa DUY NHẤT đổi trang_thai_duyet.
  * Gọi supabase.rpc với session người dùng (không service role). Chữ ký giữ nguyên như bản mock.
  */
 
 export type RpcFunctions = {
   approve_entity: {
-    // p_ap_dung_moi_doanh_nghiep: bắt buộc true khi duyệt chu_the chưa có dieu_kien_may_doc (migration 005)
-    args: { p_entity_id: string; p_quyet_dinh: "da_duyet" | "tu_choi"; p_ghi_chu?: string; p_ap_dung_moi_doanh_nghiep?: boolean };
+    // 007: bỏ p_ap_dung_moi_doanh_nghiep. Hàm KIỂM pham_vi / mã / cờ (entity_du_dieu_kien_duyet), không tự suy.
+    // 008: cạnh LLM chưa bị sửa có nguồn là entity chuyển trạng thái theo.
+    args: { p_entity_id: string; p_quyet_dinh: "da_duyet" | "tu_choi"; p_ghi_chu?: string };
     returns: Entity;
+  };
+  approve_relationship: {
+    // 008: cạnh do người thêm / đã sửa. Người duyệt ≠ người tạo, ≠ người sửa cuối (DB trả PT403).
+    args: { p_relationship_id: string; p_quyet_dinh: "da_duyet" | "tu_choi"; p_ghi_chu?: string };
+    returns: EntityRelationship;
   };
   approve_chunk: {
     args: { p_chunk_id: string; p_ghi_chu?: string };

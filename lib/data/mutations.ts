@@ -28,6 +28,11 @@ export type EntityPatch = Partial<
     | "ngay_co_hieu_luc"
     | "dieu_kien_may_doc"
     | "ghi_chu_curator"
+    | "pham_vi"
+    | "ma_dieu_kien"
+    | "khong_hinh_thuc_hoa"
+    | "van_ban_dan_chieu"
+    | "ngay_het_hieu_luc"
   >
 >;
 

@@ -3,6 +3,7 @@
 import { fail, fromPostgrest, ok, type Result } from "@/lib/data/errors";
 import { getSupabase } from "@/lib/supabase/client";
 import type {
+  BoMaDieuKien,
   Customer,
   Department,
   Diagnostic,
@@ -48,6 +49,7 @@ export const getVanBanList = () => rows<VanBan>(db().from("van_ban").select("*")
 export const getChunks = () => rows<VanBanChunk>(db().from("van_ban_chunks").select("*").order("thu_tu"));
 export const getEntities = () => rows<Entity>(db().from("entities").select("*"));
 export const getRelationships = () => rows<EntityRelationship>(db().from("entity_relationships").select("*"));
+export const getBoMaDieuKien = () => rows<BoMaDieuKien>(db().from("bo_ma_dieu_kien").select("*").order("ma"));
 export const getThuocTinhHoSo = () => rows<ThuocTinhHoSo>(db().from("thuoc_tinh_ho_so").select("*").order("ma"));
 // §3.10: chỉ cần mã + tên để tra nhãn ngành
 export const getNganh = () => rows<Pick<Nganh, "ma" | "ten_hien_thi">>(db().from("nganh").select("ma, ten_hien_thi"));

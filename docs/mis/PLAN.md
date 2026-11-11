@@ -155,8 +155,10 @@ chênh lệch tên đề xuất gốc ↔ prod) — được commit. Script in t
 - **Kiểm trước khi nạp — 10/11, đạt cả 4 bước** (`scripts/mis/kiem-toan-van.ts`, kết quả `research/van-ban/KIEM_TRA.json`):
   file `research/van-ban/luat-108-2025-QH15.txt` (chuyển từ `.docx` chủ repo cung cấp, chép nguyên chữ từng đoạn) có số hiệu
   108/2025/QH15, ban hành 10/12/2025; Điều 1–53 liên tục, 9 chương; Điều 52 k3 bãi bỏ Luật 38/2019 từ 01/7/2026; 9 điều cũ
-  khớp chunk đã nạp — 8 điều khớp tuyệt đối, Điều 53 khác chỉ ở ký hiệu markdown (chữ nghiêng, dòng `* *` của file cũ). Parser
-  ra 62 chunk (điều dài > 6.000 ký tự tách "(tiếp theo)"). Dòng nguồn + ngày tải ở đầu file: chủ repo điền.
+  khớp chunk đã nạp — 8 điều khớp tuyệt đối. Điều 53: tiêu đề và cả ba khoản (k1, k3 dẫn chiếu Luật 38/2019) **giống từng chữ**;
+  chỗ khác chỉ ở khối chữ ký sau điều — file cũ có `*…thông qua ngày 10 tháng 12 năm 2025.*` (chữ nghiêng markdown), hai dòng
+  `* *`, và "CHỦ TỊCH QUỐC HỘI Trần Thanh Mẫn" trên một dòng; file mới không có ký hiệu, chức danh và tên trên hai dòng. Parser
+  ra 62 chunk (điều dài > 6.000 ký tự tách "(tiếp theo)"). Nguồn: thuvienphapluat.vn, tải 10/11/2026 (chủ repo ghi).
 
 ### 1.5 X1 — trích xuất hàng loạt: `scripts/mis/trich-xuat-hang-loat.mjs`
 
@@ -420,6 +422,15 @@ nếu không, X3 × C ra `ho_so_thieu` vì câu nhóm thu nhập không được
   loại, cờ một phần, trích dẫn `can_cu`, người tạo), nút Duyệt / Từ chối gọi `approve_relationship` bằng phiên của người đang
   đăng nhập; cạnh do chính người đó tạo vẫn hiện nhưng khóa nút (DB vẫn là nơi chặn thật).
   Cạnh LLM duyệt cùng entity nguồn (M8), không hiện ở khối này.
+- **U1a — xong 11/11** (tách khỏi U1 để người duyệt bắt đầu được sau khi có sổ tay mã v2): `components/nexora/phan-loai-dieu-kien.tsx`
+  (phạm vi của nghĩa vụ; mã C0–C7 + đúng một thao tác theo nhóm mã; ngày có hiệu lực riêng — cần cho Luật 108 Điều 13 / 26,
+  01/01/2026), `draft-review.tsx` (bỏ ô "chủ thể chung" cũ, nút Duyệt khóa theo `lyDoChuaDuDuyet`, số mục "Duyệt tất cả" bỏ qua
+  tính bằng cùng quy tắc), `lib/entity-rules.ts` (bản sao hàm SQL `entity_du_dieu_kien_duyet`, `tests/entityRules.test.ts` 7
+  ca), `lib/data/rpc.ts` (chữ ký mới + `approve_relationship`). Đổi mã: không tự xác nhận phạm vi chung; mã nhóm khác ghi
+  `pham_vi = co_dieu_kien` và bỏ điều kiện máy đọc nếu mã không thuộc nhóm máy đọc (CHECK của DB). `tsc`, eslint, `next build`
+  sạch; `npm test` 50/50. **Chưa chạy thử trên trình duyệt** (cần tài khoản chuyên viên MIS có vai trò + bản preview).
+  Còn lại cho U1b: khối "Cạnh chờ duyệt" + `them-canh-ngoai-le.mjs`; U1a không có ô sửa cạnh, nên quy tắc "cạnh LLM bị sửa
+  phải duyệt riêng" (M8 (b)) không phát sinh từ màn duyệt.
 
 ### G1 — `generateDiagnostic.prompt.ts` → `generate-v2` (ranh giới)
 

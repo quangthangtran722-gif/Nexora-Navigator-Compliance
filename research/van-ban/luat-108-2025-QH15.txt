@@ -1,5 +1,5 @@
-[Nguồn] (chủ repo điền: cổng / URL nơi tải bản .docx)
-[Ngày tải] (chủ repo điền; tệp .docx gốc ghi thời điểm tạo 2026-11-09)
+[Nguồn] thuvienphapluat.vn
+[Ngày tải] 10/11/2026
 [Bản gốc] research/van-ban/luat-108-2025-QH15.docx — chuyển sang .txt ngày 2026-11-10 bằng cách chép nguyên chữ từng đoạn (word/document.xml), bỏ dòng trống, không sửa chữ
 
 QUỐC HỘI

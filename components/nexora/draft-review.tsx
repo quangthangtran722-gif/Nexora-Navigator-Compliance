@@ -5,10 +5,10 @@ import Link from "next/link";
 import { CheckCheck, Pencil, TriangleAlert } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ErrorBlock, LoadingBlock } from "@/components/nexora/data-state";
 import { DieuKienEditor } from "@/components/nexora/dieu-kien-editor";
+import { PhanLoaiDieuKien } from "@/components/nexora/phan-loai-dieu-kien";
 import { EdgeLine } from "@/components/nexora/edge-line";
 import { GroupHeader } from "@/components/nexora/group-header";
 import { InsetBlock } from "@/components/nexora/inset-block";
@@ -19,24 +19,23 @@ import { TabBar } from "@/components/nexora/tab-bar";
 import { deptLabel, domainLabel, formatDate } from "@/lib/labels";
 import { COPY } from "@/lib/copy";
 import { combine, useErrorHandler } from "@/lib/data/errors";
-import { updateEntity } from "@/lib/data/mutations";
-import { getChunks, getEntities, getEntityGraph, getNerExtractionSummary, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
+import { updateEntity, type EntityPatch } from "@/lib/data/mutations";
+import { getBoMaDieuKien, getChunks, getEntities, getEntityGraph, getNerExtractionSummary, getThuocTinhHoSo, getVanBanList } from "@/lib/data/queries";
 import { rpc } from "@/lib/data/rpc";
 import { useQuery } from "@/lib/data/use-query";
-import { chuTheChuaDieuKien, thieuDieuKienMayDoc } from "@/lib/entity-rules";
+import { lyDoChuaDuDuyet } from "@/lib/entity-rules";
 import { formatDieuKien } from "@/lib/thuoc-tinh-format";
-import type { DieuKienMayDoc, Entity, EntityGraphRow, NerExtractionSummary, ThuocTinhHoSo } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import type { BoMaDieuKien, DieuKienMayDoc, Entity, EntityGraphRow, NerExtractionSummary, ThuocTinhHoSo } from "@/lib/types";
 
 /*
  * Curator duyệt bản nháp theo chunk (view ner_extraction_summary).
  * Duyệt dùng đúng 2 RPC của CONTRACT §5: approve_entity (từng entity), approve_chunk (cả chunk).
- * dieu_kien / nguong phải có dieu_kien_may_doc trước khi duyệt — curator điền bằng DieuKienEditor.
+ * U1a (007/008): trước khi duyệt, chuyên viên phân loại điều kiện (PhanLoaiDieuKien): phạm vi của nghĩa vụ; mã C0–C7 của
+ * chủ thể / điều kiện / ngưỡng + đúng một thao tác theo nhóm mã. Nút Duyệt khóa khi lyDoChuaDuDuyet ≠ null (bản sao hàm SQL
+ * entity_du_dieu_kien_duyet) — DB vẫn là nơi chặn thật. Duyệt entity kéo theo cạnh LLM chưa bị sửa (008).
  * Bố cục (palette v3 mục 9.10): TabBar chọn chunk · trái: GroupHeader văn bản + chunk, văn bản gốc (InsetBlock tô đoạn
  * được trích) · phải: ProgressBar + ItemRow entity thu gọn, chỉ mở 1 entity; mở entity nào thì tô đoạn trích của nó.
  */
-
-const CO_DIEU_KIEN = ["dieu_kien", "nguong", "chu_the"];
 
 // So khớp đoạn trích với đoạn văn gốc: bỏ khoảng trắng thừa, lấy 40 ký tự đầu của câu trích
 const norm = (s: string) => s.replace(/\s+/g, " ").trim();
@@ -51,6 +50,7 @@ export function DraftReview() {
         entities: getEntities(),
         graph: getEntityGraph(),
         dict: getThuocTinhHoSo(),
+        boMa: getBoMaDieuKien(),
       }),
     [],
   );
@@ -66,7 +66,7 @@ export function DraftReview() {
 
   if (q.loading) return <LoadingBlock />;
   if (q.error) return <ErrorBlock error={q.error} onRetry={refresh} />;
-  const { chunks, vanBan, entities, graph, dict } = q.data!;
+  const { chunks, vanBan, entities, graph, dict, boMa } = q.data!;
   const summaries = q.data!.summaries.filter((s) => s.trang_thai_chunk === "da_trich_xuat" || touchedChunkIds.includes(s.chunk_id));
 
   if (summaries.length === 0) {
@@ -116,7 +116,11 @@ export function DraftReview() {
 
           {/* Phải: entity của chunk */}
           <section className="space-y-4" aria-label="Mục trích xuất">
-            <ChunkActions summary={current} onApproved={() => touch(current.chunk_id)} />
+            <ChunkActions
+              summary={current}
+              boQua={items.filter((e) => e.trang_thai_duyet === "cho_duyet" && lyDoChuaDuDuyet(e, boMa) !== null).length}
+              onApproved={() => touch(current.chunk_id)}
+            />
             {/* Duyệt hết entity của cả văn bản mà văn bản còn Bản nháp → nhắc kích hoạt (rule engine chỉ đọc văn bản active) */}
             {vb.trang_thai === "draft" && conChoDuyetCuaVanBan === 0 && (
               <p className="flex flex-wrap items-center gap-x-2 border-l-[3px] border-gold-edge bg-accent px-3 py-2.5 text-sm" role="status">
@@ -133,6 +137,7 @@ export function DraftReview() {
                   entity={e}
                   edges={graph.filter((g) => g.source_id === e.id || g.target_id === e.id)}
                   dict={dict}
+                  boMa={boMa}
                   ngayHieuLucVanBan={vb.ngay_hieu_luc}
                   open={openId === e.id}
                   onToggle={() => setOpenId((cur) => (cur === e.id ? null : e.id))}
@@ -179,20 +184,19 @@ function ChunkText({ noiDung, highlight }: { noiDung: string; highlight?: string
 
 /* ---------- Tiến độ duyệt + approve_chunk ---------- */
 
-function ChunkActions({ summary: s, onApproved }: { summary: NerExtractionSummary; onApproved: () => void }) {
+function ChunkActions({ summary: s, boQua, onApproved }: { summary: NerExtractionSummary; boQua: number; onApproved: () => void }) {
   const [busy, setBusy] = useState(false);
   const handleError = useErrorHandler();
   const [forbidden, setForbidden] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const daXuLy = s.so_da_duyet + s.so_tu_choi;
-  // Duyệt tất cả bỏ qua entity cần điều kiện mà chưa có (dieu_kien/nguong/chu_the) — curator xử lý riêng từng cái
-  const boQua = s.so_can_dieu_kien;
+  // approve_chunk bỏ qua entity chưa đủ trường (chưa phân loại điều kiện) — boQua tính ở client bằng cùng quy tắc với DB
 
   async function approveChunk() {
     setBusy(true);
     const { data, error } = await rpc("approve_chunk", { p_chunk_id: s.chunk_id });
     setBusy(false);
-    setMsg(error ? { ok: false, text: handleError(error, { onReload: onApproved, onForbidden: () => setForbidden(true) })! } : { ok: true, text: `Đã duyệt ${data} mục.${boQua ? ` Bỏ qua ${boQua} mục cần điều kiện áp dụng — duyệt riêng từng mục.` : ""}` });
+    setMsg(error ? { ok: false, text: handleError(error, { onReload: onApproved, onForbidden: () => setForbidden(true) })! } : { ok: true, text: `Đã duyệt ${data} mục.${boQua ? ` Bỏ qua ${boQua} mục chưa phân loại điều kiện — phân loại rồi duyệt riêng từng mục.` : ""}` });
     onApproved();
   }
 
@@ -213,7 +217,7 @@ function ChunkActions({ summary: s, onApproved }: { summary: NerExtractionSummar
       </div>
       {boQua > 0 && (
         <p className="flex items-center gap-1.5 text-xs text-attention">
-          <TriangleAlert className="size-3.5" aria-hidden /> {boQua} mục chủ thể/điều kiện/ngưỡng chưa có điều kiện áp dụng — &quot;Duyệt tất cả&quot; sẽ bỏ qua; điền điều kiện (hoặc xác nhận chủ thể chung) rồi duyệt riêng.
+          <TriangleAlert className="size-3.5" aria-hidden /> {boQua} mục chưa phân loại điều kiện (phạm vi, mã C0–C7) — &quot;Duyệt tất cả&quot; sẽ bỏ qua; phân loại rồi duyệt riêng.
         </p>
       )}
       {msg && (
@@ -231,6 +235,7 @@ function EntityRow({
   entity: e,
   edges,
   dict,
+  boMa,
   ngayHieuLucVanBan,
   open,
   onToggle,
@@ -239,6 +244,7 @@ function EntityRow({
   entity: Entity;
   edges: EntityGraphRow[];
   dict: ThuocTinhHoSo[];
+  boMa: BoMaDieuKien[];
   ngayHieuLucVanBan: string;
   open: boolean;
   onToggle: () => void;
@@ -253,9 +259,9 @@ function EntityRow({
   const handleError = useErrorHandler();
 
   const locked = e.trang_thai_duyet !== "cho_duyet";
-  const missingDk = thieuDieuKienMayDoc(e);
-  const chuTheChung = chuTheChuaDieuKien(e);
-  const [xacNhanChung, setXacNhanChung] = useState(false);
+  const lyDo = lyDoChuaDuDuyet(e, boMa);
+  // Ô điều kiện máy đọc chỉ hiện khi mã đã chọn thuộc nhóm máy đọc (C1–C3)
+  const coDieuKienMayDoc = boMa.find((m) => m.ma === e.ma_dieu_kien)?.nhom === "may_doc";
 
   async function decide(quyet_dinh: "da_duyet" | "tu_choi") {
     setBusy(true);
@@ -263,7 +269,6 @@ function EntityRow({
       p_entity_id: e.id,
       p_quyet_dinh: quyet_dinh,
       p_ghi_chu: ghiChu.trim() || undefined,
-      p_ap_dung_moi_doanh_nghiep: quyet_dinh === "da_duyet" && chuTheChung ? true : undefined,
     });
     setBusy(false);
     setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
@@ -271,19 +276,23 @@ function EntityRow({
     onChanged();
   }
 
-  async function saveDk(dk: DieuKienMayDoc) {
+  async function patch(p: EntityPatch) {
     setBusy(true);
-    const { error } = await updateEntity(e.id, { dieu_kien_may_doc: dk });
+    const { error } = await updateEntity(e.id, p);
     setBusy(false);
     setError(handleError(error, { onReload: onChanged, onForbidden: () => setForbidden(true) }));
-    if (!error) setEditingDk(false);
     onChanged();
+    return !error;
+  }
+
+  async function saveDk(dk: DieuKienMayDoc) {
+    if (await patch({ dieu_kien_may_doc: dk, pham_vi: "co_dieu_kien" })) setEditingDk(false);
   }
 
   return (
     <ItemRow
       title={e.ten_entity}
-      hint={!locked ? (missingDk ? "Cần điền điều kiện áp dụng trước khi duyệt." : chuTheChung ? "Chưa có điều kiện áp dụng — cần xác nhận áp dụng cho mọi doanh nghiệp." : undefined) : undefined}
+      hint={!locked && lyDo ? lyDo : undefined}
       open={open}
       onToggle={onToggle}
       // Thu gọn: chỉ 1 badge (trạng thái duyệt); loại entity nằm ở dòng meta khi mở
@@ -324,12 +333,37 @@ function EntityRow({
         </p>
       )}
 
-      {/* Điều kiện máy đọc — chỉ dieu_kien / nguong / chu_the */}
-      {CO_DIEU_KIEN.includes(e.loai_entity) && (
+      {!locked && !forbidden && (
+        <PhanLoaiDieuKien
+          entity={e}
+          boMa={boMa}
+          ngayHieuLucVanBan={ngayHieuLucVanBan}
+          busy={busy}
+          onPatch={async (p) => {
+            await patch(p);
+          }}
+        />
+      )}
+      {locked && (e.ma_dieu_kien || e.pham_vi) && (
+        <p className="text-sm">
+          <span className="text-muted-foreground">Phân loại: </span>
+          {[
+            e.ma_dieu_kien,
+            e.pham_vi === "chung" ? "phạm vi chung" : e.pham_vi === "co_dieu_kien" ? "có điều kiện" : null,
+            e.khong_hinh_thuc_hoa ? "không hình thức hóa" : null,
+            e.van_ban_dan_chieu ? `dẫn chiếu ${e.van_ban_dan_chieu}` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      )}
+
+      {/* Điều kiện máy đọc — chỉ khi mã thuộc nhóm máy đọc (C1–C3) */}
+      {(coDieuKienMayDoc || e.dieu_kien_may_doc) && (
         <div className="space-y-2 border p-3">
           <div>
             <p className="text-xs font-medium text-muted-foreground">
-              {COPY.term.dieuKien} {e.loai_entity === "chu_the" ? "(điền, hoặc xác nhận áp dụng chung)" : "(bắt buộc khi duyệt)"}
+              {COPY.term.dieuKien} (bắt buộc với mã {e.ma_dieu_kien})
             </p>
             <p className="text-xs text-muted-foreground">Dùng để xác định khách hàng nào phải tuân thủ mục này.</p>
           </div>
@@ -338,13 +372,7 @@ function EntityRow({
           ) : e.dieu_kien_may_doc ? (
             <p className="text-sm">{formatDieuKien(e.dieu_kien_may_doc, dict)}</p>
           ) : (
-            <p className={cn("text-sm", missingDk ? "text-destructive" : chuTheChung ? "text-attention" : "text-muted-foreground")}>
-              {missingDk
-                ? "Cần điền điều kiện áp dụng trước khi duyệt."
-                : chuTheChung
-                  ? "Chưa có. Nếu duyệt, mọi nghĩa vụ gắn với chủ thể này sẽ áp dụng cho tất cả doanh nghiệp."
-                  : "Chưa có."}
-            </p>
+            <p className="text-sm text-destructive">Cần điền điều kiện áp dụng trước khi duyệt.</p>
           )}
         </div>
       )}
@@ -382,7 +410,7 @@ function EntityRow({
             </>
           ) : (
             <>
-              {CO_DIEU_KIEN.includes(e.loai_entity) && (
+              {coDieuKienMayDoc && (
                 <Button size="sm" variant="outline" className="mr-auto" onClick={() => setEditingDk(true)}>
                   <Pencil /> {e.dieu_kien_may_doc ? "Sửa điều kiện" : "Điền điều kiện"}
                 </Button>
@@ -390,13 +418,7 @@ function EntityRow({
               <Button size="sm" variant="outline" disabled={busy} onClick={() => setRejecting(true)}>
                 Từ chối
               </Button>
-              {chuTheChung && (
-                <label className="flex w-full items-center gap-2 text-sm">
-                  <Checkbox checked={xacNhanChung} onCheckedChange={(v) => setXacNhanChung(v === true)} />
-                  Chủ thể chung — áp dụng cho mọi doanh nghiệp (không cần điều kiện)
-                </label>
-              )}
-              <Button size="sm" disabled={busy || missingDk || (chuTheChung && !xacNhanChung)} onClick={() => decide("da_duyet")}>
+              <Button size="sm" disabled={busy || lyDo !== null} title={lyDo ?? undefined} onClick={() => decide("da_duyet")}>
                 Duyệt
               </Button>
             </>

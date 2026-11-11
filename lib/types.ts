@@ -112,12 +112,28 @@ export type Entity = {
   secondary_departments: SlugPhongBan[];
   ngay_co_hieu_luc: string | null; // null = theo van_ban.ngay_hieu_luc
   ngay_het_hieu_luc: string | null; // null = còn hiệu lực (008, S2 thủ công)
-  dieu_kien_may_doc: DieuKienMayDoc | null; // chỉ dieu_kien/nguong/chu_the; bắt buộc khi duyệt dieu_kien/nguong
+  dieu_kien_may_doc: DieuKienMayDoc | null; // chỉ dieu_kien/nguong/chu_the; nhóm mã may_doc (C1–C3) bắt buộc khi duyệt
+  pham_vi: PhamVi | null; // null = CHƯA XÁC NHẬN (không phải áp dụng mọi DN) — 007
+  ma_dieu_kien: string | null; // mã C0–C7 trong bo_ma_dieu_kien — 007
+  khong_hinh_thuc_hoa: boolean; // C4–C7: không viết được điều kiện máy đọc — 007
+  van_ban_dan_chieu: string | null; // số hiệu văn bản đích (C4 / C5) — 007
   trang_thai_duyet: TrangThaiDuyet;
   curator_id: string | null;
   ghi_chu_curator: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type PhamVi = "chung" | "co_dieu_kien";
+
+// Bộ mã điều kiện C0–C7 (bảng bo_ma_dieu_kien, 007). S9 rẽ nhánh theo nhom, không theo tên mã.
+export type BoMaDieuKien = {
+  ma: string;
+  ten: string;
+  nhom: "chung" | "may_doc" | "khong_hinh_thuc_hoa";
+  ly_do_mac_dinh: "thu_vien_chua_du" | "can_chuyen_mon" | null;
+  can_van_ban_dan_chieu: boolean;
+  mo_ta: string;
 };
 
 // Điều kiện máy đọc — rule engine (code thuần, KHÔNG AI) so với customers.thuoc_tinh. Curator điền trên màn duyệt.
