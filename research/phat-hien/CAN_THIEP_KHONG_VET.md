@@ -15,9 +15,16 @@ duyệt không phản ánh — khâu human-in-the-loop dựng ra để giữ đ�
   nghiêm cấm được đổi thành nghĩa vụ (vd "Cố tình không kê khai…" → "Kê khai thuế đầy đủ, trung thực"). Đây là diễn giải, không
   phải trích nguyên văn.
 - Hệ cũ không chặn, cũng không ghi đó là diễn giải: `approvals` chỉ có quyết định cuối, không có bản trước / sau khi sửa tên.
-- Chờ số đo (16/11): phân loại toàn bộ 70 entity (duyệt y nguyên / sửa nhỏ / viết lại làm đổi nghĩa); đối chiếu thời gian duyệt
-  nhóm bị sửa với nhóm không sửa bằng cách đo đã hiệu chỉnh (bỏ lần duyệt cả chunk, bỏ khoảng > 10 phút). Không có khác biệt thì
-  ghi là không có khác biệt; không suy diễn nhân quả.
+- **Đường sửa nằm ngoài màn duyệt (kiểm 16/11):** màn duyệt chạy ngày 20/10 không có ô sửa tên entity, `approve_entity` cũ không
+  nhận tên mới, và không lượt trích xuất nào trong 17 lượt `pipeline_runs` sinh ra các tên đã sửa. Các tên được sửa trực tiếp
+  trong bảng `entities` (vai đăng nhập có quyền UPDATE cột `ten_entity`) trước khi bấm Duyệt; `updated_at` bị ghi đè lúc duyệt
+  nên không biết sửa lúc nào, bởi ai. Phát hiện này vì vậy là về **khâu duyệt nói chung** (người có quyền ghi thư viện), không
+  riêng về màn hình duyệt.
+- Số đo trước can thiệp (16/11, `research/sau/so-sanh-de-xuat-truoc.md`, script `scripts/research/so-sanh-de-xuat.mjs`): 70
+  entity → 25 từ chối, 45 đã duyệt: 36 y nguyên, 7 viết lại đổi nghĩa (cả 7 ở Điều 8, máy quyết theo quy tắc đảo phủ định), 2
+  chưa có nhãn người (Đ10, Đ27). Thời gian duyệt nhóm bị sửa (n = 8, trung vị 5,5 giây) và không sửa (n = 22, trung vị 6,4
+  giây): Mann–Whitney p = 0,41 → **không có khác biệt**. Không suy diễn nhân quả.
+- Số đo sau: cùng script trên lượt duyệt màn mới (`npm run do:sau`); khung so sánh ở `research/bao-cao/KHUNG_TRUOC_SAU.md`.
 
 ## 3. Cạnh LLM sai được duyệt theo entity nguồn; xóa cạnh không để lại vết (hệ mới, sau M8)
 

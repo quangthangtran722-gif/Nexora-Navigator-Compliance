@@ -1,0 +1,637 @@
+{
+ "nguon": "MIS pipeline_runs.output (extract_entities, 20/10/2026, chép từ prod ở H2) — bất biến",
+ "chup_luc": "2026-11-16T06:09:05.348Z",
+ "so_entity": 70,
+ "entities": [
+  {
+   "id": "1d1329f5-9f03-4ac9-80ea-e2f7f1719766",
+   "so_dieu": 2,
+   "pipeline_run_id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+   "ma_tam": "e1",
+   "ten_entity": "Người nộp thuế",
+   "mo_ta": "Người nộp thuế bao gồm: Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh là người nộp thuế theo quy định của pháp luật về thuế; Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh tại Việt Nam hoặc có thu nhập phát sinh tại Việt Nam là người nộp thuế theo quy định của pháp luật về thuế; Tổ chức nước ngoài, cá nhân nước ngoài có hoạt động kinh doanh trên nền tảng thương mại điện tử, nền tảng số khác là người nộp thuế theo quy định của pháp luật về thuế; Tổ chức, hộ gia đình, hộ kinh doanh, cá nhân, cá nhân kinh doanh nộp các khoản thu khác thuộc ngân sách nhà nước theo quy định của pháp luật; Tổ chức, cá nhân thực hiện khấu trừ, nộp thay số thuế đã khấu trừ theo quy định của pháp luật về thuế, pháp luật về quản lý thuế và quy định khác của pháp luật có liên quan.",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "e392bc09-a22c-4f69-b31b-bf8b212fedfb",
+   "so_dieu": 2,
+   "pipeline_run_id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+   "ma_tam": "e2",
+   "ten_entity": "Cơ quan quản lý thuế",
+   "mo_ta": "Cơ quan quản lý thuế bao gồm cơ quan thuế và cơ quan hải quan.",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "ae6eb161-553e-45d1-b447-bedd186bcb2b",
+   "so_dieu": 2,
+   "pipeline_run_id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+   "ma_tam": "e3",
+   "ten_entity": "Công chức quản lý thuế",
+   "mo_ta": "Công chức quản lý thuế bao gồm công chức thuế và công chức hải quan.",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "817612d2-ff96-4b28-ae0d-8aa6f6bf6918",
+   "so_dieu": 2,
+   "pipeline_run_id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+   "ma_tam": "e4",
+   "ten_entity": "Cơ quan nhà nước, tổ chức, cá nhân khác",
+   "mo_ta": "Cơ quan nhà nước, tổ chức, cá nhân khác có liên quan.",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "f025e6ab-1efc-4e0d-b765-c1076e25930a",
+   "so_dieu": 2,
+   "pipeline_run_id": "20fc1ad9-d958-4515-b87a-6eac633cc398",
+   "ma_tam": "e5",
+   "ten_entity": "Chính phủ",
+   "mo_ta": "Chính phủ quy định chi tiết khoản 1 và khoản 2 Điều này.",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "392bc16c-53e2-4717-a13e-377787dff71f",
+   "so_dieu": 3,
+   "pipeline_run_id": "eab0f990-a95e-4e9c-8da3-6f8608d52c64",
+   "ma_tam": "e1",
+   "ten_entity": "Cơ quan thuế",
+   "mo_ta": "Cơ quan thuế là đơn vị thực hiện phân nhóm người nộp thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+   "so_dieu": 3,
+   "pipeline_run_id": "eab0f990-a95e-4e9c-8da3-6f8608d52c64",
+   "ma_tam": "e2",
+   "ten_entity": "Thực hiện phân nhóm người nộp thuế",
+   "mo_ta": "Thực hiện phân nhóm người nộp thuế theo các tiêu chí quy định tại khoản 2 Điều này",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "308a7c3f-e5e4-4b1a-81f4-d7702e3e2a06",
+   "so_dieu": 3,
+   "pipeline_run_id": "eab0f990-a95e-4e9c-8da3-6f8608d52c64",
+   "ma_tam": "e3",
+   "ten_entity": "Người nộp thuế trong quản lý thuế",
+   "mo_ta": "Người nộp thuế trong quản lý thuế là đối tượng được phân nhóm",
+   "loai_entity": "doi_tuong"
+  },
+  {
+   "id": "2d5976cd-c368-4e1d-9a39-07eb72f32aff",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e1",
+   "ten_entity": "người nộp thuế",
+   "mo_ta": "Cá nhân hoặc tổ chức nộp thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "5d2e4dc8-40aa-40ad-aa1f-cd171563c52d",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e10",
+   "ten_entity": "Chống đối, trì hoãn, không cung cấp thông tin",
+   "mo_ta": "Chống đối, trì hoãn, không cung cấp thông tin, tài liệu phục vụ kiểm tra, giám sát thuế, khoản thu khác",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "55b0e904-9925-407e-96d2-cb40745a3cd3",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e11",
+   "ten_entity": "Sử dụng mã số thuế của người khác trái quy định",
+   "mo_ta": "Sử dụng mã số thuế của người nộp thuế khác để thực hiện hành vi vi phạm pháp luật hoặc cho người khác sử dụng mã số thuế của mình không đúng quy định của pháp luật",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "38a099b6-92fa-4427-917a-3bc686aa1d75",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e12",
+   "ten_entity": "Bán hàng không lập hóa đơn và sử dụng hóa đơn giả",
+   "mo_ta": "Bán hàng hóa, cung cấp dịch vụ không lập hóa đơn theo quy định của pháp luật; sử dụng hóa đơn, chứng từ không hợp pháp, làm giả hóa đơn, chứng từ; tạo lập hóa đơn, chứng từ điện tử trái phép hoặc phục vụ hành vi vi phạm trong lĩnh vực quản lý thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "0c867d31-c0d5-40e3-86fd-0092b03b47c9",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e13",
+   "ten_entity": "Truy cập trái phép và phá hủy hệ thống thông tin",
+   "mo_ta": "Làm sai lệch, sử dụng sai mục đích, truy cập trái phép, phá hủy hệ thống thông tin người nộp thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "df775a14-b1c6-4424-93e0-3968f3241c77",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e14",
+   "ten_entity": "Phát tán thông tin sai lệch",
+   "mo_ta": "Cung cấp, phát tán thông tin sai lệch gây ảnh hưởng đến uy tín, hoạt động của cơ quan quản lý thuế, người nộp thuế, Hệ thống thông tin quản lý thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e2",
+   "ten_entity": "công chức quản lý thuế",
+   "mo_ta": "Cán bộ, viên chức thuộc cơ quan quản lý thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e4",
+   "ten_entity": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin",
+   "mo_ta": "Lợi dụng chức vụ, quyền hạn để tiết lộ hoặc làm rò rỉ thông tin người nộp thuế trái quy định",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "56731b82-19d3-4164-896a-63fd49acbb54",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e5",
+   "ten_entity": "Làm sai lệch kết quả kiểm tra",
+   "mo_ta": "Làm sai lệch kết quả kiểm tra, xử lý vi phạm pháp luật về thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "0f725e21-4bda-47f1-9d62-282177334149",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e6",
+   "ten_entity": "Gây phiền hà, sách nhiễu",
+   "mo_ta": "Gây phiền hà, sách nhiễu đối với người nộp thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "3b44c7ed-430d-44a2-91a8-514e04522212",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e7",
+   "ten_entity": "Chiếm đoạt hoặc sử dụng trái phép tiền thuế",
+   "mo_ta": "Lợi dụng để chiếm đoạt hoặc sử dụng trái phép tiền thuế, khoản thu khác",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "8b1ac774-f500-4677-bfa1-61fb02c4b311",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e8",
+   "ten_entity": "Cố tình không kê khai hoặc kê khai không đầy đủ",
+   "mo_ta": "Cố tình không kê khai hoặc kê khai thuế, khoản thu khác không đầy đủ, kịp thời, chính xác về số tiền thuế, khoản thu khác phải nộp, số tiền thuế, khoản thu khác được miễn, giảm, hoàn, không thu",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "29350e85-fd62-4fdb-9506-eca512402028",
+   "so_dieu": 8,
+   "pipeline_run_id": "8833663d-9c24-4f34-929f-b136ec42842f",
+   "ma_tam": "e9",
+   "ten_entity": "Cản trở công chức quản lý thuế thi hành công vụ",
+   "mo_ta": "Cản trở công chức quản lý thuế thi hành công vụ",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "a391d688-9a28-4e66-ad56-ecba60ca91ef",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e1",
+   "ten_entity": "Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh",
+   "mo_ta": "Các đối tượng thực hiện đăng ký thuế theo khoản 2 Điều 10",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "761fc5d5-8ba4-43c1-b92b-43d43eaca148",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e10",
+   "ten_entity": "Thời hạn đăng ký thuế",
+   "mo_ta": "Thời hạn thực hiện đăng ký thuế",
+   "loai_entity": "thoi_han"
+  },
+  {
+   "id": "ef98e4ad-6dec-4c90-bc39-e4a90171654c",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e11",
+   "ten_entity": "Quy định chi tiết khoản 1 và khoản 3 Điều này",
+   "mo_ta": "Bộ trưởng Bộ Tài chính quy định chi tiết khoản 1 và khoản 3 Điều 10",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "0e90fdaf-e8d2-435b-95be-0269e6b24105",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e12",
+   "ten_entity": "Bộ trưởng Bộ Tài chính",
+   "mo_ta": "Bộ trưởng Bộ Tài chính là người quy định chi tiết khoản 1 và khoản 3",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "c2d950ca-2b50-4a0a-936a-fe9158e971f7",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e2",
+   "ten_entity": "Đăng ký thuế lần đầu",
+   "mo_ta": "Thực hiện đăng ký thuế lần đầu",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "b488cfb2-2a7d-4cd5-8c00-ccca57df9a39",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e3",
+   "ten_entity": "Thông báo thay đổi thông tin đăng ký thuế",
+   "mo_ta": "Thực hiện thông báo thay đổi thông tin đăng ký thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "60ff1802-3397-47e8-aac5-7dd896cdd025",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e4",
+   "ten_entity": "Thông báo khi tạm ngừng hoạt động, kinh doanh",
+   "mo_ta": "Thực hiện thông báo khi tạm ngừng hoạt động, kinh doanh",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "0e40a01d-e34f-402e-9304-d4e96f625216",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e5",
+   "ten_entity": "Chấm dứt hiệu lực mã số thuế",
+   "mo_ta": "Thực hiện chấm dứt hiệu lực mã số thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "511a8e1a-07a6-4c74-a8f8-b231aa8bdd55",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e6",
+   "ten_entity": "Khôi phục mã số thuế",
+   "mo_ta": "Thực hiện khôi phục mã số thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "4a230816-b27c-423a-8047-d7cad9b211b8",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e7",
+   "ten_entity": "Thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hiệp hợp tác xã, đăng ký tổ hợp tác, đăng ký hộ kinh doanh, đăng ký hoạt động, kinh doanh theo cơ chế một cửa liên thông",
+   "mo_ta": "Thực hiện đăng ký thuế đồng thời với các loại đăng ký doanh nghiệp, hợp tác xã, ...",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "dee721ac-4e2e-4958-82c7-4b51f768bbf9",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e8",
+   "ten_entity": "Thực hiện đăng ký thuế trực tiếp với cơ quan thuế",
+   "mo_ta": "Thực hiện đăng ký thuế trực tiếp với cơ quan thuế trong các trường hợp không thuộc khoản 2",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "aebeef77-102b-45b9-9059-7f56330709b8",
+   "so_dieu": 10,
+   "pipeline_run_id": "63705261-c948-4254-8389-7eee8170387b",
+   "ma_tam": "e9",
+   "ten_entity": "Cơ quan thuế",
+   "mo_ta": "Cơ quan thuế là đối tượng nhận đăng ký thuế trực tiếp",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "fc043117-1511-4e7a-a556-d87e23a13f20",
+   "so_dieu": 11,
+   "pipeline_run_id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+   "ma_tam": "e1",
+   "ten_entity": "cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh",
+   "mo_ta": "Các đối tượng cá nhân được cấp mã số thuế theo quy định của pháp luật về căn cước",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "e9558d9c-8777-4d94-9b89-ab9f7aa1575e",
+   "so_dieu": 11,
+   "pipeline_run_id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+   "ma_tam": "e2",
+   "ten_entity": "doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác",
+   "mo_ta": "Các tổ chức doanh nghiệp được cấp mã số thuế theo quy định tại khoản 2 Điều 10 của Luật này",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "ecfaaea8-20ba-4457-a91a-15a2c0b92d77",
+   "so_dieu": 11,
+   "pipeline_run_id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+   "ma_tam": "e3",
+   "ten_entity": "cơ quan thuế",
+   "mo_ta": "Cơ quan thuế cấp mã số thuế cho người nộp thuế không thuộc các khoản 1 và 2",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "2087c632-8767-407b-ac7a-8dabba45e7e7",
+   "so_dieu": 11,
+   "pipeline_run_id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+   "ma_tam": "e4",
+   "ten_entity": "Bộ trưởng Bộ Tài chính",
+   "mo_ta": "Bộ trưởng Bộ Tài chính quy định chi tiết các khoản 1, 2, 3 và 4 Điều này",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "41428799-9deb-4725-8e2d-334a1d5db980",
+   "so_dieu": 11,
+   "pipeline_run_id": "2ef11a26-dd07-48da-9e29-15367c3e6f4d",
+   "ma_tam": "e5",
+   "ten_entity": "Chính phủ",
+   "mo_ta": "Chính phủ quy định chi tiết khoản 5 Điều này",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "45443aaf-1611-4963-a649-c2f66941926d",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e1",
+   "ten_entity": "Chứng từ điện tử",
+   "mo_ta": "Chứng từ điện tử là chứng từ thu thuế, phí, lệ phí hoặc chứng từ khấu trừ thuế ở dạng dữ liệu điện tử",
+   "loai_entity": "doi_tuong"
+  },
+  {
+   "id": "36b86dae-49b3-486c-b4d2-56259e207e95",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e10",
+   "ten_entity": "Bộ trưởng Bộ Tài chính",
+   "mo_ta": "Bộ trưởng Bộ Tài chính quy định chi tiết các nội dung liên quan đến chứng từ điện tử",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "db6d658c-b6f3-40eb-9807-39ac9e8d65b6",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e11",
+   "ten_entity": "Đăng ký sử dụng chứng từ điện tử",
+   "mo_ta": "Việc đăng ký sử dụng chứng từ điện tử được quy định chi tiết bởi Bộ trưởng Bộ Tài chính",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e2",
+   "ten_entity": "Cơ quan quản lý thuế",
+   "mo_ta": "Cơ quan quản lý thuế cấp chứng từ điện tử cho người nộp thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "802b75f9-6ee0-4d10-8843-d45f998461b2",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e3",
+   "ten_entity": "Tổ chức có trách nhiệm khấu trừ thuế",
+   "mo_ta": "Tổ chức có trách nhiệm khấu trừ thuế cấp chứng từ điện tử cho người nộp thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "38988017-62e2-498e-869b-4f272a74cb10",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e4",
+   "ten_entity": "Đăng ký, quản lý, sử dụng chứng từ điện tử",
+   "mo_ta": "Việc đăng ký, quản lý, sử dụng chứng từ điện tử phải tuân thủ quy định của pháp luật về giao dịch điện tử, pháp luật về kế toán và pháp luật về thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "e194aae5-3b5b-4341-be68-36e63911e1f1",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e5",
+   "ten_entity": "Phản ánh đầy đủ, trung thực giao dịch phát sinh",
+   "mo_ta": "Tổ chức lập chứng từ điện tử phải phản ánh đầy đủ, trung thực giao dịch phát sinh và chịu trách nhiệm trước pháp luật về tính chính xác của chứng từ đã lập",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "ae2dd348-de3f-4289-8363-04a5d40baa3a",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e6",
+   "ten_entity": "Tổ chức lập chứng từ điện tử",
+   "mo_ta": "Tổ chức chịu trách nhiệm lập chứng từ điện tử",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "86c76a72-ffd2-44c6-b51a-c31ae4d25ff7",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e7",
+   "ten_entity": "Đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu",
+   "mo_ta": "Tổ chức cung cấp dịch vụ phải đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu theo quy định của Bộ trưởng Bộ Tài chính",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "16c517f2-5004-496c-95ab-b7c4b3410351",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e8",
+   "ten_entity": "Tổ chức cung cấp dịch vụ",
+   "mo_ta": "Tổ chức cung cấp dịch vụ về chứng từ điện tử",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
+   "so_dieu": 27,
+   "pipeline_run_id": "077e6eb9-aa7b-48ed-b6a8-e5c3909b8e61",
+   "ma_tam": "e9",
+   "ten_entity": "Chính phủ",
+   "mo_ta": "Chính phủ quy định chi tiết các nội dung liên quan đến chứng từ điện tử",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e1",
+   "ten_entity": "Tiền thuế nợ quá 90 ngày kể từ ngày hết thời hạn nộp",
+   "mo_ta": "Trường hợp người nộp thuế có tiền thuế nợ quá 90 ngày kể từ ngày hết thời hạn nộp theo quy định",
+   "loai_entity": "dieu_kien"
+  },
+  {
+   "id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e10",
+   "ten_entity": "Quyết định thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+   "mo_ta": "Thủ trưởng cơ quan quản lý thuế căn cứ tình hình thực tế để quyết định trường hợp thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "49ea7b8f-c668-43e6-937b-67b391681183",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e2",
+   "ten_entity": "Tiền thuế nợ khi hết thời hạn gia hạn nộp tiền thuế",
+   "mo_ta": "Trường hợp người nộp thuế có tiền thuế nợ khi hết thời hạn gia hạn nộp tiền thuế",
+   "loai_entity": "dieu_kien"
+  },
+  {
+   "id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e3",
+   "ten_entity": "Tiền thuế nợ nhưng không hoạt động tại địa chỉ đã đăng ký hoặc có hành vi phát tán tài sản",
+   "mo_ta": "Trường hợp người nộp thuế có tiền thuế nợ nhưng không hoạt động tại địa chỉ đã đăng ký hoặc có hành vi phát tán tài sản",
+   "loai_entity": "dieu_kien"
+  },
+  {
+   "id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e4",
+   "ten_entity": "Không chấp hành quyết định xử phạt vi phạm hành chính về quản lý thuế",
+   "mo_ta": "Trường hợp người nộp thuế không chấp hành quyết định xử phạt vi phạm hành chính về quản lý thuế theo thời hạn ghi trên quyết định, trừ trường hợp được hoãn hoặc tạm đình chỉ thi hành quyết định xử phạt",
+   "loai_entity": "dieu_kien"
+  },
+  {
+   "id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e5",
+   "ten_entity": "Không chấp hành quyết định kiểm tra thuế sau khi đã bị xử phạt hành chính",
+   "mo_ta": "Trường hợp người nộp thuế đã bị xử phạt hành chính về hành vi không chấp hành quyết định kiểm tra thuế nhưng tiếp tục không chấp hành quyết định kiểm tra thuế",
+   "loai_entity": "dieu_kien"
+  },
+  {
+   "id": "232fb499-2927-478f-86d5-8054185fa184",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e6",
+   "ten_entity": "Nộp dần tiền thuế nợ",
+   "mo_ta": "Cho phép người nộp thuế nộp dần tiền thuế nợ trong thời hạn không quá 12 tháng kể từ ngày cơ quan có thẩm quyền ban hành văn bản chấp nhận nộp dần tiền thuế nợ và trong thời gian thư bảo lãnh có hiệu lực",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e7",
+   "ten_entity": "Không thực hiện biện pháp cưỡng chế thuế",
+   "mo_ta": "Cơ quan thuế không thực hiện biện pháp cưỡng chế thuế đối với khoản nợ của người nộp thuế khi không tính tiền chậm nộp theo quy định",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e8",
+   "ten_entity": "Không thực hiện biện pháp cưỡng chế đối với nợ phí hải quan và lệ phí hàng hóa",
+   "mo_ta": "Cơ quan thuế không thực hiện biện pháp cưỡng chế đối với người nộp thuế có nợ phí hải quan và lệ phí hàng hóa, phương tiện vận tải quá cảnh",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "e9",
+   "ten_entity": "Không thực hiện biện pháp cưỡng chế đối với số tiền thuế nợ được bù trừ qua hoàn thuế",
+   "mo_ta": "Cơ quan thuế không thực hiện biện pháp cưỡng chế đối với số tiền thuế nợ được bù trừ qua hoàn thuế mà cơ quan thuế đang làm thủ tục bù trừ cho người nộp thuế",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "52417810-98a2-4055-baa0-f54fc826f922",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "eC1",
+   "ten_entity": "Người nộp thuế",
+   "mo_ta": "Cá nhân hoặc tổ chức nộp thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "dcd35215-b74d-4819-9b6a-ed0a9502944a",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "eC2",
+   "ten_entity": "Cơ quan thuế",
+   "mo_ta": "Cơ quan quản lý thuế thực hiện biện pháp cưỡng chế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "6f513a28-5f12-4365-9cb3-3b99e33bf612",
+   "so_dieu": 48,
+   "pipeline_run_id": "6f638608-fc79-469b-9ebc-880f08f97d2a",
+   "ma_tam": "eC3",
+   "ten_entity": "Thủ trưởng cơ quan quản lý thuế",
+   "mo_ta": "Người đứng đầu cơ quan quản lý thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "9ebbe638-073f-4054-8851-b54cf29b88ae",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e1",
+   "ten_entity": "Luật này",
+   "mo_ta": "Luật này",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "36ac84e0-3c6e-4a9d-8e07-a1d7696027d9",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e2",
+   "ten_entity": "từ ngày 01 tháng 7 năm 2026",
+   "mo_ta": "Ngày bắt đầu hiệu lực thi hành của Luật này",
+   "loai_entity": "thoi_han"
+  },
+  {
+   "id": "affdc331-0aec-41d3-bb73-a69472ec52eb",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e3",
+   "ten_entity": "từ ngày 01 tháng 01 năm 2026",
+   "mo_ta": "Ngày bắt đầu hiệu lực thi hành của quy định về hóa đơn điện tử",
+   "loai_entity": "thoi_han"
+  },
+  {
+   "id": "a00ea57c-5094-4047-ab53-545be4ec94ee",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e4",
+   "ten_entity": "Cơ quan thuế",
+   "mo_ta": "Cơ quan thuế",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "a4291c5e-1181-44a0-bf06-49327415f68b",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e5",
+   "ten_entity": "tổ chức xây dựng, nâng cấp và hoàn thiện hệ thống thông tin",
+   "mo_ta": "Cơ quan thuế có trách nhiệm tổ chức xây dựng, nâng cấp và hoàn thiện hệ thống thông tin phục vụ việc thực hiện đầy đủ các giao dịch điện tử trong quản lý thuế.",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e6",
+   "ten_entity": "Bộ trưởng Bộ Tài chính",
+   "mo_ta": "Bộ trưởng Bộ Tài chính",
+   "loai_entity": "chu_the"
+  },
+  {
+   "id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e7",
+   "ten_entity": "áp dụng toàn bộ các hình thức giao dịch điện tử",
+   "mo_ta": "Việc áp dụng toàn bộ các hình thức giao dịch điện tử trong lĩnh vực quản lý thuế được thực hiện theo lộ trình do Bộ trưởng Bộ Tài chính quy định",
+   "loai_entity": "hanh_vi"
+  },
+  {
+   "id": "7d2bdd28-ca71-4abe-a87a-f7ab254a4e6e",
+   "so_dieu": 52,
+   "pipeline_run_id": "6c8d44a8-5e63-4df5-bece-9a173a8eedfe",
+   "ma_tam": "e8",
+   "ten_entity": "trước ngày 01 tháng 01 năm 2027",
+   "mo_ta": "Thời hạn hoàn thành việc áp dụng các hình thức giao dịch điện tử",
+   "loai_entity": "thoi_han"
+  }
+ ]
+}

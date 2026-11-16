@@ -1,0 +1,492 @@
+{
+ "nguon": "truoc",
+ "chay_luc": "2026-11-16T06:19:05.306Z",
+ "van_ban": "108/2025/QH15",
+ "quy_tac": "khoảng giữa hai dòng approvals entity liên tiếp của cùng người; bỏ khoảng = 0 (duyệt cả chunk), bỏ khoảng > 600 giây; hạng gần nhất",
+ "so_entity": 70,
+ "con_cho_duyet": 0,
+ "so_dong_approvals_entity": 70,
+ "bo_cung_thoi_diem": 14,
+ "bo_qua_10_phut": 0,
+ "tong": {
+  "n": 55,
+  "trung_vi": 8.613,
+  "p90": 50.563
+ },
+ "theo_nguoi": {
+  "nguoi_1": {
+   "n": 55,
+   "trung_vi": 8.613,
+   "p90": 50.563
+  }
+ },
+ "theo_quyet_dinh": {
+  "da_duyet": {
+   "n": 32,
+   "trung_vi": 6.602,
+   "p90": 37.07
+  },
+  "tu_choi": {
+   "n": 23,
+   "trung_vi": 9.386,
+   "p90": 66.88
+  }
+ },
+ "theo_loai_entity": {
+  "chu_the": {
+   "n": 17,
+   "trung_vi": 15.752,
+   "p90": 84.823
+  },
+  "dieu_kien": {
+   "n": 5,
+   "trung_vi": 6.942,
+   "p90": 96.187
+  },
+  "doi_tuong": {
+   "n": 1,
+   "trung_vi": 9.386,
+   "p90": 9.386
+  },
+  "hanh_vi": {
+   "n": 28,
+   "trung_vi": 7.77,
+   "p90": 48.3
+  },
+  "thoi_han": {
+   "n": 4,
+   "trung_vi": 4.67,
+   "p90": 5.264
+  }
+ },
+ "theo_ma_dieu_kien": "không có (màn cũ chưa có mã C0–C7)",
+ "theo_dieu": {
+  "2": {
+   "n": 4,
+   "trung_vi": 11.7,
+   "p90": 46.274
+  },
+  "3": {
+   "n": 3,
+   "trung_vi": 16.522,
+   "p90": 50.894
+  },
+  "8": {
+   "n": 13,
+   "trung_vi": 10.217,
+   "p90": 66.88
+  },
+  "10": {
+   "n": 12,
+   "trung_vi": 5.243,
+   "p90": 11.172
+  },
+  "11": {
+   "n": 1,
+   "trung_vi": 29.552,
+   "p90": 29.552
+  },
+  "27": {
+   "n": 1,
+   "trung_vi": 48.3,
+   "p90": 48.3
+  },
+  "48": {
+   "n": 13,
+   "trung_vi": 10.167,
+   "p90": 96.187
+  },
+  "52": {
+   "n": 8,
+   "trung_vi": 5.264,
+   "p90": 41.271
+  }
+ },
+ "khoang": [
+  {
+   "entity_id": "e392bc09-a22c-4f69-b31b-bf8b212fedfb",
+   "nguoi": "nguoi_1",
+   "giay": 15.011,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:25:54.224215+00:00"
+  },
+  {
+   "entity_id": "ae6eb161-553e-45d1-b447-bedd186bcb2b",
+   "nguoi": "nguoi_1",
+   "giay": 46.274,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:26:40.498835+00:00"
+  },
+  {
+   "entity_id": "817612d2-ff96-4b28-ae0d-8aa6f6bf6918",
+   "nguoi": "nguoi_1",
+   "giay": 11.7,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:26:52.198585+00:00"
+  },
+  {
+   "entity_id": "f025e6ab-1efc-4e0d-b765-c1076e25930a",
+   "nguoi": "nguoi_1",
+   "giay": 6.364,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:26:58.562024+00:00"
+  },
+  {
+   "entity_id": "392bc16c-53e2-4717-a13e-377787dff71f",
+   "nguoi": "nguoi_1",
+   "giay": 50.894,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:27:49.456105+00:00"
+  },
+  {
+   "entity_id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+   "nguoi": "nguoi_1",
+   "giay": 16.522,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:28:05.978508+00:00"
+  },
+  {
+   "entity_id": "308a7c3f-e5e4-4b1a-81f4-d7702e3e2a06",
+   "nguoi": "nguoi_1",
+   "giay": 9.386,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:28:15.364113+00:00"
+  },
+  {
+   "entity_id": "2d5976cd-c368-4e1d-9a39-07eb72f32aff",
+   "nguoi": "nguoi_1",
+   "giay": 84.823,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:29:40.187951+00:00"
+  },
+  {
+   "entity_id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+   "nguoi": "nguoi_1",
+   "giay": 33.815,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:30:14.002927+00:00"
+  },
+  {
+   "entity_id": "56731b82-19d3-4164-896a-63fd49acbb54",
+   "nguoi": "nguoi_1",
+   "giay": 66.88,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:31:20.882811+00:00"
+  },
+  {
+   "entity_id": "0f725e21-4bda-47f1-9d62-282177334149",
+   "nguoi": "nguoi_1",
+   "giay": 17.055,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:31:37.937619+00:00"
+  },
+  {
+   "entity_id": "0c867d31-c0d5-40e3-86fd-0092b03b47c9",
+   "nguoi": "nguoi_1",
+   "giay": 34.397,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:12.33443+00:00"
+  },
+  {
+   "entity_id": "38a099b6-92fa-4427-917a-3bc686aa1d75",
+   "nguoi": "nguoi_1",
+   "giay": 7.97,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:20.304592+00:00"
+  },
+  {
+   "entity_id": "55b0e904-9925-407e-96d2-cb40745a3cd3",
+   "nguoi": "nguoi_1",
+   "giay": 10.217,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:30.521953+00:00"
+  },
+  {
+   "entity_id": "5d2e4dc8-40aa-40ad-aa1f-cd171563c52d",
+   "nguoi": "nguoi_1",
+   "giay": 4.197,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:34.718659+00:00"
+  },
+  {
+   "entity_id": "29350e85-fd62-4fdb-9506-eca512402028",
+   "nguoi": "nguoi_1",
+   "giay": 5.472,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:40.190358+00:00"
+  },
+  {
+   "entity_id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+   "nguoi": "nguoi_1",
+   "giay": 5.343,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:32:45.533997+00:00"
+  },
+  {
+   "entity_id": "3b44c7ed-430d-44a2-91a8-514e04522212",
+   "nguoi": "nguoi_1",
+   "giay": 7.77,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:32:53.303486+00:00"
+  },
+  {
+   "entity_id": "8b1ac774-f500-4677-bfa1-61fb02c4b311",
+   "nguoi": "nguoi_1",
+   "giay": 4.664,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:32:57.967554+00:00"
+  },
+  {
+   "entity_id": "df775a14-b1c6-4424-93e0-3968f3241c77",
+   "nguoi": "nguoi_1",
+   "giay": 12.532,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:10.49935+00:00"
+  },
+  {
+   "entity_id": "ef98e4ad-6dec-4c90-bc39-e4a90171654c",
+   "nguoi": "nguoi_1",
+   "giay": 14.326,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:24.825846+00:00"
+  },
+  {
+   "entity_id": "a391d688-9a28-4e66-ad56-ecba60ca91ef",
+   "nguoi": "nguoi_1",
+   "giay": 11.172,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:35.997163+00:00"
+  },
+  {
+   "entity_id": "c2d950ca-2b50-4a0a-936a-fe9158e971f7",
+   "nguoi": "nguoi_1",
+   "giay": 6.602,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:42.599233+00:00"
+  },
+  {
+   "entity_id": "b488cfb2-2a7d-4cd5-8c00-ccca57df9a39",
+   "nguoi": "nguoi_1",
+   "giay": 5.399,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:47.99896+00:00"
+  },
+  {
+   "entity_id": "60ff1802-3397-47e8-aac5-7dd896cdd025",
+   "nguoi": "nguoi_1",
+   "giay": 5.716,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:53.714128+00:00"
+  },
+  {
+   "entity_id": "0e40a01d-e34f-402e-9304-d4e96f625216",
+   "nguoi": "nguoi_1",
+   "giay": 4.312,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:33:58.026738+00:00"
+  },
+  {
+   "entity_id": "511a8e1a-07a6-4c74-a8f8-b231aa8bdd55",
+   "nguoi": "nguoi_1",
+   "giay": 5.527,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:03.553261+00:00"
+  },
+  {
+   "entity_id": "4a230816-b27c-423a-8047-d7cad9b211b8",
+   "nguoi": "nguoi_1",
+   "giay": 4.371,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:07.924078+00:00"
+  },
+  {
+   "entity_id": "dee721ac-4e2e-4958-82c7-4b51f768bbf9",
+   "nguoi": "nguoi_1",
+   "giay": 5.243,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:13.167923+00:00"
+  },
+  {
+   "entity_id": "aebeef77-102b-45b9-9059-7f56330709b8",
+   "nguoi": "nguoi_1",
+   "giay": 5.031,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:18.198184+00:00"
+  },
+  {
+   "entity_id": "0e90fdaf-e8d2-435b-95be-0269e6b24105",
+   "nguoi": "nguoi_1",
+   "giay": 4.912,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:23.110221+00:00"
+  },
+  {
+   "entity_id": "761fc5d5-8ba4-43c1-b92b-43d43eaca148",
+   "nguoi": "nguoi_1",
+   "giay": 4.687,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:27.79735+00:00"
+  },
+  {
+   "entity_id": "41428799-9deb-4725-8e2d-334a1d5db980",
+   "nguoi": "nguoi_1",
+   "giay": 29.552,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:34:57.349243+00:00"
+  },
+  {
+   "entity_id": "38988017-62e2-498e-869b-4f272a74cb10",
+   "nguoi": "nguoi_1",
+   "giay": 48.3,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:35:45.649468+00:00"
+  },
+  {
+   "entity_id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+   "nguoi": "nguoi_1",
+   "giay": 50.563,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:36:36.212498+00:00"
+  },
+  {
+   "entity_id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+   "nguoi": "nguoi_1",
+   "giay": 5.236,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:36:41.448916+00:00"
+  },
+  {
+   "entity_id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+   "nguoi": "nguoi_1",
+   "giay": 7.427,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:36:48.875112+00:00"
+  },
+  {
+   "entity_id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+   "nguoi": "nguoi_1",
+   "giay": 10.167,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:36:59.042868+00:00"
+  },
+  {
+   "entity_id": "232fb499-2927-478f-86d5-8054185fa184",
+   "nguoi": "nguoi_1",
+   "giay": 26.869,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:37:25.911273+00:00"
+  },
+  {
+   "entity_id": "52417810-98a2-4055-baa0-f54fc826f922",
+   "nguoi": "nguoi_1",
+   "giay": 15.752,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:37:41.663767+00:00"
+  },
+  {
+   "entity_id": "dcd35215-b74d-4819-9b6a-ed0a9502944a",
+   "nguoi": "nguoi_1",
+   "giay": 37.07,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:38:18.733355+00:00"
+  },
+  {
+   "entity_id": "6f513a28-5f12-4365-9cb3-3b99e33bf612",
+   "nguoi": "nguoi_1",
+   "giay": 120.553,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:40:19.286323+00:00"
+  },
+  {
+   "entity_id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
+   "nguoi": "nguoi_1",
+   "giay": 96.187,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:41:55.473361+00:00"
+  },
+  {
+   "entity_id": "49ea7b8f-c668-43e6-937b-67b391681183",
+   "nguoi": "nguoi_1",
+   "giay": 6.942,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:42:02.415703+00:00"
+  },
+  {
+   "entity_id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
+   "nguoi": "nguoi_1",
+   "giay": 5.203,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:42:07.618815+00:00"
+  },
+  {
+   "entity_id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
+   "nguoi": "nguoi_1",
+   "giay": 4.274,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:42:11.89235+00:00"
+  },
+  {
+   "entity_id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
+   "nguoi": "nguoi_1",
+   "giay": 7.062,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:42:18.954257+00:00"
+  },
+  {
+   "entity_id": "a00ea57c-5094-4047-ab53-545be4ec94ee",
+   "nguoi": "nguoi_1",
+   "giay": 41.271,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:43:00.225988+00:00"
+  },
+  {
+   "entity_id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+   "nguoi": "nguoi_1",
+   "giay": 12.105,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:43:12.330976+00:00"
+  },
+  {
+   "entity_id": "7d2bdd28-ca71-4abe-a87a-f7ab254a4e6e",
+   "nguoi": "nguoi_1",
+   "giay": 5.264,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:43:17.59463+00:00"
+  },
+  {
+   "entity_id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+   "nguoi": "nguoi_1",
+   "giay": 5.138,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:43:22.732483+00:00"
+  },
+  {
+   "entity_id": "9ebbe638-073f-4054-8851-b54cf29b88ae",
+   "nguoi": "nguoi_1",
+   "giay": 11.349,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:43:34.081934+00:00"
+  },
+  {
+   "entity_id": "36ac84e0-3c6e-4a9d-8e07-a1d7696027d9",
+   "nguoi": "nguoi_1",
+   "giay": 4.67,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:43:38.751427+00:00"
+  },
+  {
+   "entity_id": "affdc331-0aec-41d3-bb73-a69472ec52eb",
+   "nguoi": "nguoi_1",
+   "giay": 3.386,
+   "quyet_dinh": "da_duyet",
+   "luc": "2026-10-20T11:43:42.137728+00:00"
+  },
+  {
+   "entity_id": "a4291c5e-1181-44a0-bf06-49327415f68b",
+   "nguoi": "nguoi_1",
+   "giay": 8.613,
+   "quyet_dinh": "tu_choi",
+   "luc": "2026-10-20T11:43:50.750635+00:00"
+  }
+ ]
+}
