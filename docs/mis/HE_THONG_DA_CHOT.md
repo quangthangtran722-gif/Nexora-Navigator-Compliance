@@ -1054,3 +1054,9 @@ Từ 09/11/2026, `docs/mis/HE_THONG_DA_CHOT.md` trong repo là bản chuẩn duy
 | # | Thay đổi | Mục sửa | Lý do |
 |---|---|---|---|
 | 16 | **Đính chính dữ liệu trước can thiệp:** Nexora Technology là doanh nghiệp ảo chủ repo tạo để trình diễn, không phải người dùng thật. Trước can thiệp hệ chưa có người dùng thật | §13.4 #6 | Chủ repo đính chính 10/11 |
+
+### 16/11/2026
+
+| # | Thay đổi | Mục sửa | Lý do |
+|---|---|---|---|
+| 17 | **Tiêu chí phụ trong bậc của thứ tự ưu tiên Luật 108 (phương án B):** trong cùng bậc, điều có ít nhất một câu đặt "phải / có trách nhiệm / có nghĩa vụ" lên người nộp thuế không giới hạn là cá nhân / hộ, hoặc lên tổ chức là người nộp thuế theo Luật 108 Đ2 k1 (nhóm 1), xếp trước các điều còn lại (nhóm 2); trong nhóm, số điều tăng dần. Viết thành câu trước khi xếp lại, áp máy móc, khóa từ 16/11 — không chỉnh tiêu chí sau khi thấy kết quả. Kết quả lệch 4 điều so với danh sách xếp bằng mắt 11/11 (Đ13, Đ21 lên; Đ25, Đ45 xuống) — giữ kết quả theo câu chữ | §2.2; `UU_TIEN_LUAT_108.md` §3, §5.2, §5.4, §8 | Chủ repo quyết 16/11. Quy tắc khóa ở `UU_TIEN_LUAT_108.md` §4 cấm xếp theo độ **dễ duyệt / dễ trích xuất**; tiêu chí B là **ai mang nghĩa vụ** — thuộc tính của văn bản, khớp cơ sở đã tuyên bố của danh sách (mức độ quan trọng với SME). Số điều là thứ tự nội bộ của văn bản, không liên quan mức quan trọng với SME. Cùng ngày, đường cắt MVP chốt ở bậc 0 (điểm cắt §14.1 áp dụng): thứ tự bậc 1–2 chỉ còn là thứ tự công bố cho phần ngoài MVP |
