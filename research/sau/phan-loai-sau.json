@@ -1,0 +1,456 @@
+{
+ "chay_luc": "2026-11-17T08:35:09.113Z",
+ "so_entity": 70,
+ "con_cho_duyet": 0,
+ "dem": {
+  "da_duyet": 34,
+  "tu_choi": 36
+ },
+ "rong_nghia": {
+  "can_gan_ma": 33,
+  "da_duyet_co_dieu_kien_may_doc": 5,
+  "rong_nghia": 5,
+  "danh_sach": [
+   {
+    "so_dieu": 8,
+    "dieu_khoan": "Điều 8, khoản 1",
+    "ten_entity": "người nộp thuế",
+    "ma": "C2",
+    "dieu_kien": {
+     "gia_tri": [
+      "doanh_nghiep",
+      "ho_kinh_doanh",
+      "ca_nhan_kinh_doanh"
+     ],
+     "toan_tu": "in",
+     "thuoc_tinh": "loai_hinh_kinh_doanh"
+    },
+    "rong_nghia": true
+   },
+   {
+    "so_dieu": 10,
+    "dieu_khoan": "Điều 10, khoản 2",
+    "ten_entity": "Doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh",
+    "ma": "C2",
+    "dieu_kien": {
+     "gia_tri": [
+      "doanh_nghiep",
+      "ho_kinh_doanh",
+      "ca_nhan_kinh_doanh"
+     ],
+     "toan_tu": "in",
+     "thuoc_tinh": "loai_hinh_kinh_doanh"
+    },
+    "rong_nghia": true
+   },
+   {
+    "so_dieu": 11,
+    "dieu_khoan": "Điều 11, khoản 1",
+    "ten_entity": "cá nhân, hộ gia đình, hộ kinh doanh, cá nhân kinh doanh",
+    "ma": "C2",
+    "dieu_kien": {
+     "gia_tri": [
+      "doanh_nghiep",
+      "ho_kinh_doanh",
+      "ca_nhan_kinh_doanh"
+     ],
+     "toan_tu": "in",
+     "thuoc_tinh": "loai_hinh_kinh_doanh"
+    },
+    "rong_nghia": true
+   },
+   {
+    "so_dieu": 11,
+    "dieu_khoan": "Điều 11, khoản 2",
+    "ten_entity": "doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác, đơn vị phụ thuộc, tổ chức khác",
+    "ma": "C2",
+    "dieu_kien": {
+     "gia_tri": [
+      "doanh_nghiep",
+      "ca_nhan_kinh_doanh",
+      "ho_kinh_doanh"
+     ],
+     "toan_tu": "in",
+     "thuoc_tinh": "loai_hinh_kinh_doanh"
+    },
+    "rong_nghia": true
+   },
+   {
+    "so_dieu": 48,
+    "dieu_khoan": "Điều 48, khoản 1",
+    "ten_entity": "Người nộp thuế",
+    "ma": "C2",
+    "dieu_kien": {
+     "gia_tri": [
+      "doanh_nghiep",
+      "ho_kinh_doanh",
+      "ca_nhan_kinh_doanh"
+     ],
+     "toan_tu": "in",
+     "thuoc_tinh": "loai_hinh_kinh_doanh"
+    },
+    "rong_nghia": true
+   }
+  ]
+ },
+ "tu_choi_theo_nhom": {
+  "NN-CT": 16,
+  "NN-NV": 9,
+  "GQ": 4,
+  "DV": 5,
+  "TX": 2,
+  "(không theo mã)": 0,
+  "(không ghi)": 0
+ },
+ "tu_choi_theo_nhom_loai": {
+  "NN-CT": {
+   "chu_the": 16
+  },
+  "NN-NV": {
+   "hanh_vi": 9
+  },
+  "GQ": {
+   "hanh_vi": 4
+  },
+  "DV": {
+   "dieu_kien": 5
+  },
+  "TX": {
+   "chu_the": 2
+  },
+  "(không theo mã)": {},
+  "(không ghi)": {}
+ },
+ "do_tin_cay_ma": {
+  "tu_choi": 36,
+  "co_tien_to_ma": 0,
+  "sai_nhom": 2,
+  "khong_ghi": 2
+ },
+ "tu_choi_ds": [
+  {
+   "id": "e392bc09-a22c-4f69-b31b-bf8b212fedfb",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "ae6eb161-553e-45d1-b447-bedd186bcb2b",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "f025e6ab-1efc-4e0d-b765-c1076e25930a",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "392bc16c-53e2-4717-a13e-377787dff71f",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "56731b82-19d3-4164-896a-63fd49acbb54",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "0f725e21-4bda-47f1-9d62-282177334149",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "aebeef77-102b-45b9-9059-7f56330709b8",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "0e90fdaf-e8d2-435b-95be-0269e6b24105",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "ef98e4ad-6dec-4c90-bc39-e4a90171654c",
+   "nhom": "GQ",
+   "nhom_ghi": "GQ"
+  },
+  {
+   "id": "ecfaaea8-20ba-4457-a91a-15a2c0b92d77",
+   "nhom": "TX",
+   "nhom_ghi": "TX"
+  },
+  {
+   "id": "41428799-9deb-4725-8e2d-334a1d5db980",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "2087c632-8767-407b-ac7a-8dabba45e7e7",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "38988017-62e2-498e-869b-4f272a74cb10",
+   "nhom": "GQ",
+   "nhom_ghi": "GQ"
+  },
+  {
+   "id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "36b86dae-49b3-486c-b4d2-56259e207e95",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "db6d658c-b6f3-40eb-9807-39ac9e8d65b6",
+   "nhom": "GQ",
+   "nhom_ghi": "GQ"
+  },
+  {
+   "id": "dcd35215-b74d-4819-9b6a-ed0a9502944a",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
+   "nhom": "DV",
+   "nhom_ghi": "DV"
+  },
+  {
+   "id": "6f513a28-5f12-4365-9cb3-3b99e33bf612",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "49ea7b8f-c668-43e6-937b-67b391681183",
+   "nhom": "DV",
+   "nhom_ghi": "DV"
+  },
+  {
+   "id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
+   "nhom": "DV",
+   "nhom_ghi": "DV"
+  },
+  {
+   "id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
+   "nhom": "DV",
+   "nhom_ghi": "DV"
+  },
+  {
+   "id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
+   "nhom": "DV",
+   "nhom_ghi": "DV"
+  },
+  {
+   "id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  },
+  {
+   "id": "9ebbe638-073f-4054-8851-b54cf29b88ae",
+   "nhom": "TX",
+   "nhom_ghi": "(không ghi)"
+  },
+  {
+   "id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "a00ea57c-5094-4047-ab53-545be4ec94ee",
+   "nhom": "NN-CT",
+   "nhom_ghi": "NN-CT"
+  },
+  {
+   "id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+   "nhom": "GQ",
+   "nhom_ghi": "(không ghi)"
+  },
+  {
+   "id": "a4291c5e-1181-44a0-bf06-49327415f68b",
+   "nhom": "NN-NV",
+   "nhom_ghi": "NN-NV"
+  }
+ ],
+ "ngoai_le_ma": [
+  {
+   "dieu_khoan": "Điều 3, khoản 1",
+   "ten_entity": "Thực hiện phân nhóm người nộp thuế",
+   "nhom_ghi": "NN-CT",
+   "nhom_dung": "NN-NV",
+   "nhom": "NN-NV",
+   "loai_sai": "sai_nhom",
+   "nguon": "người duyệt tự báo 17/11 (Đ3 Thực hiện phân nhóm người nộp thuế)"
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "ten_entity": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin",
+   "nhom_ghi": "NN-CT",
+   "nhom_dung": "NN-NV",
+   "nhom": "NN-NV",
+   "loai_sai": "sai_nhom",
+   "nguon": "người duyệt tự báo 17/11 (Đ8 k1 Lợi dụng chức vụ…)"
+  },
+  {
+   "dieu_khoan": "Điều 52, khoản 1",
+   "ten_entity": "Luật này",
+   "nhom_ghi": "(không ghi)",
+   "nhom_dung": "TX",
+   "nhom": "TX",
+   "loai_sai": "khong_ghi",
+   "nguon": "kế hoạch người duyệt chốt 17/11 (Đ52 k1 Luật này)"
+  },
+  {
+   "dieu_khoan": "Điều 52, khoản 4",
+   "ten_entity": "áp dụng toàn bộ các hình thức giao dịch điện tử",
+   "nhom_ghi": "(không ghi)",
+   "nhom_dung": "GQ",
+   "nhom": "GQ",
+   "loai_sai": "khong_ghi",
+   "nguon": "kế hoạch người duyệt chốt 17/11 (Đ52 k4 áp dụng toàn bộ…)"
+  }
+ ],
+ "dieu_8": [
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "chu_the",
+   "ten_entity": "người nộp thuế",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Chiếm đoạt hoặc sử dụng trái phép tiền thuế",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "chu_the",
+   "ten_entity": "công chức quản lý thuế",
+   "trang_thai_duyet": "tu_choi",
+   "nhom": "NN-CT",
+   "ghi_chu": "Chủ thể là cơ quan nhà nước hoặc công chức, không thuộc nhóm đối tượng hệ thống phục vụ. Không trường hồ sơ nào biểu đạt được chủ thể này."
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin",
+   "trang_thai_duyet": "tu_choi",
+   "nhom": "NN-NV",
+   "ghi_chu": "Chủ thể là cơ quan nhà nước hoặc công chức, không thuộc nhóm đối tượng hệ thống phục vụ. Không trường hồ sơ nào biểu đạt được chủ thể này."
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Làm sai lệch kết quả kiểm tra",
+   "trang_thai_duyet": "tu_choi",
+   "nhom": "NN-NV",
+   "ghi_chu": "Nghĩa vụ do cơ quan nhà nước hoặc công chức mang, không phải nghĩa vụ của doanh nghiệp. Nếu duyệt, với bước đối chiếu hiện tại nghĩa vụ này sẽ áp dụng cho mọi doanh nghiệp."
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 1",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Gây phiền hà, sách nhiễu",
+   "trang_thai_duyet": "tu_choi",
+   "nhom": "NN-NV",
+   "ghi_chu": "Nghĩa vụ do cơ quan nhà nước hoặc công chức mang, không phải nghĩa vụ của doanh nghiệp. Nếu duyệt, với bước đối chiếu hiện tại nghĩa vụ này sẽ áp dụng cho mọi doanh nghiệp."
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 2",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Cố tình không kê khai hoặc kê khai không đầy đủ",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 2",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Cản trở công chức quản lý thuế thi hành công vụ",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 2",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Chống đối, trì hoãn, không cung cấp thông tin",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 3",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Sử dụng mã số thuế của người khác trái quy định",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 4",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Bán hàng không lập hóa đơn và sử dụng hóa đơn giả",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 5",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Phát tán thông tin sai lệch",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  },
+  {
+   "dieu_khoan": "Điều 8, khoản 5",
+   "loai_entity": "hanh_vi",
+   "ten_entity": "Truy cập trái phép và phá hủy hệ thống thông tin",
+   "trang_thai_duyet": "da_duyet",
+   "nhom": null,
+   "ghi_chu": null
+  }
+ ]
+}

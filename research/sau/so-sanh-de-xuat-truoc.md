@@ -1,6 +1,6 @@
 # So đề xuất gốc LLM ↔ bản đã duyệt — màn duyệt cũ (prod, lượt 20/10/2026)
 
-Chạy: 2026-11-17T03:39:33.907Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
+Chạy: 2026-11-17T08:33:37.124Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
 
 | Lớp | Số entity |
 |---|---|

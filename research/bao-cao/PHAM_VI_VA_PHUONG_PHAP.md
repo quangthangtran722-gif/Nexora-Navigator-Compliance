@@ -44,7 +44,13 @@ Không viết "hệ thống xác định nghĩa vụ theo 3 bộ luật" ở b�
 - 70 entity: một người duyệt.
 - ~8 cạnh ngoại lệ (Đ10 k1–k3, TNDN Đ18 k3/k4…): CSDL ép người duyệt cạnh **khác** người tạo cạnh (migration 008,
   `approve_relationship`). Có người thứ hai (30–40 phút) thì làm; không có thì **bỏ nhánh cạnh ngoại lệ** và ghi: nhánh "ngoại lệ
-  đã duyệt" của S9 chưa được thử trên dữ liệu thật. (Chủ repo báo kết quả trong 16/11 — điền vào đây.)
+  đã duyệt" của S9 chưa được thử trên dữ liệu thật.
+- **Kết quả (17/11): không tạo được cạnh ngoại lệ nào — bất khả thi trên bản dựng hiện tại, không phải do thiếu người thứ
+  hai.** Màn duyệt U1a chỉ sửa trường của entity đang chờ (`updateEntity`); không thêm, không sửa cạnh. Công cụ tạo cạnh
+  ngoại lệ (U1b: danh sách cạnh chờ duyệt + script tạo cạnh) nằm trong nhóm việc đã hủy 16/11 (§3). Phần CSDL
+  (`approve_relationship`, người duyệt ≠ người tạo) có và đã kiểm thử ở 008, nhưng không có đường nào trong ứng dụng dẫn tới
+  nó; một phần cạnh dự kiến (TNDN Đ18) còn trỏ vào văn bản chưa nạp. Hệ quả: nhánh "ngoại lệ đã duyệt" của S9 chưa được thử
+  trên dữ liệu thật.
 - Vai trò chuyên viên do người cấp tay trong Supabase Dashboard, không qua pipeline (`research/quyen/RA_SOAT_QUYEN.md` §6).
 
 ### 2.4 Đo
@@ -56,6 +62,20 @@ Thời gian duyệt mỗi entity, so đề xuất gốc ↔ bản đã duyệt, 
 Form hồ sơ T0–T3 theo thiết kế (HE_THONG_DA_CHOT §9.2) nằm trong nhóm việc đã hủy (phương án 1, 16/11). Vì vậy bảng
 `thuoc_tinh_ho_so` trên MIS vẫn là bộ 20 trường tạo ngày 18–20/10/2026. **Mọi điều kiện máy đọc viết trong lượt duyệt
 17/11 đều gắn với lược đồ cũ này.** Khi có lược đồ T0–T3, các điều kiện phải được viết lại; chúng không tự chuyển sang.
+
+**Hạn chế đo được của lược đồ (sau lượt duyệt 17/11).** 10 chủ thể được duyệt: 1 C0, 5 C2, 4 C6. Cả 5 điều kiện C2 rỗng
+nghĩa (§2.6). Vậy **0/10 chủ thể đã duyệt phân biệt được hai hồ sơ hợp lệ**: 6 đúng với mọi hồ sơ (C0 hoặc C2 rỗng nghĩa),
+4 trả "cần chuyên môn" (C6).
+
+**Điều 27 — 3/3 chủ thể phải gán C6** ("Tổ chức có trách nhiệm khấu trừ thuế", "Tổ chức lập chứng từ điện tử", "Tổ chức cung
+cấp dịch vụ"), tức S9 trả `can_chuyen_mon` cho cả ba. Người duyệt không dùng hai trường gần giống, lý do ghi lại nguyên ý:
+
+- `co_tra_luong` không bao hết nghĩa vụ khấu trừ: nghĩa vụ khấu trừ còn phát sinh từ khoản chi khác ngoài lương. Dùng trường
+  này thì doanh nghiệp không trả lương nhưng vẫn có nghĩa vụ khấu trừ bị báo "không áp dụng" — hướng sai nguy hiểm nhất với
+  một sản phẩm tuân thủ (bỏ sót nghĩa vụ, thay vì báo thừa).
+- `su_dung_hoa_don_dien_tu` lệch cả hai vế: chứng từ điện tử khác hóa đơn điện tử trong luật, và "lập" khác "sử dụng".
+
+Điều 27 là vùng lược đồ hồ sơ hiện có gần như không phủ được gì.
 
 ### 2.6 Quan sát phương pháp: điều kiện đúng về pháp lý nhưng không mang thông tin
 
@@ -76,8 +96,10 @@ mọi giá trị trong tập. Tập đóng gồm boolean `{true, false}` và tr�
 `lua_chon` (vd `nganh`) và trường chọn nhiều không được xét, nên con số là **cận dưới**. Báo ba số: điều kiện rỗng nghĩa /
 entity đã duyệt có điều kiện máy đọc (C1–C3) / 33 entity phải gán mã.
 
-Số đo: _điền sau lượt duyệt_ (`research/sau/phan-loai-sau.md`). Ca đã biết đến 17/11 trưa: chủ thể Điều 10 khoản 2, đang
-được duyệt.
+Số đo (lượt duyệt xong 17/11, `research/sau/phan-loai-sau.md`): **5 điều kiện rỗng nghĩa / 5 entity đã duyệt có điều kiện
+máy đọc / 33 entity phải gán mã.** Cả 5 là C2 `loai_hinh_kinh_doanh in [doanh_nghiep, ho_kinh_doanh, ca_nhan_kinh_doanh]`,
+ở chủ thể Đ8 k1 "người nộp thuế", Đ10 k2, Đ11 k1, Đ11 k2, Đ48 k1 "Người nộp thuế". Không có điều kiện máy đọc nào được duyệt
+mà phân biệt được hồ sơ.
 
 ## 3. Ngoài phạm vi MVP — đã thiết kế, chưa triển khai
 

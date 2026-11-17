@@ -65,6 +65,7 @@ const dieu8 = ents.filter((e) => e.so_dieu === 8).map((e) => ({ dieu_khoan: e.di
 const out = { chay_luc: new Date().toISOString(), so_entity: ents.length, con_cho_duyet: conCho,
   dem: { da_duyet: ents.filter((e) => e.trang_thai_duyet === "da_duyet").length, tu_choi: tuChoi.length },
   rong_nghia: rong, tu_choi_theo_nhom: theoNhom, tu_choi_theo_nhom_loai: theoNhomLoai, do_tin_cay_ma: doTinCay,
+  tu_choi_ds: tuChoi.map((x) => ({ id: x.id, nhom: x.nhom, nhom_ghi: x.nhom_ghi })),
   ngoai_le_ma: ngoaiLe.map((x) => ({ dieu_khoan: x.dieu_khoan, ten_entity: x.ten_entity, nhom_ghi: x.nhom_ghi, nhom_dung: x.nhom, ...x.ngoai_le })),
   dieu_8: dieu8 };
 mkdirSync("research/sau", { recursive: true });

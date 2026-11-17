@@ -2,8 +2,8 @@
 // so-sanh-de-xuat.mjs; không đọc DB. Khung phân tích: research/bao-cao/KHUNG_TRUOC_SAU.md. Kiểm định và tiêu chí cố định
 // TRƯỚC khi có số liệu sau; kết quả chỉ mô tả có / không có khác biệt, không suy diễn nhân quả.
 // Dùng: npm run do:sau && node scripts/research/so-truoc-sau.mjs   → research/sau/TRUOC_SAU.md
-import { readFileSync, writeFileSync } from "node:fs";
-import { mannWhitney, thongKe, fisher } from "./do-duyet-lib.mjs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { mannWhitney, thongKe, fisher, docTruoc } from "./do-duyet-lib.mjs";
 
 const doc = (p) => JSON.parse(readFileSync(`research/sau/${p}.json`, "utf8"));
 const nd = { truoc: doc("nhip-duyet-truoc"), sau: doc("nhip-duyet-sau") };
@@ -51,6 +51,36 @@ const A = theoId("truoc"), B = theoId("sau");
 dong.push("## M3 — 13 entity Điều 8 (hành vi bị nghiêm cấm)", "", "| Đề xuất LLM | Trước | Sau | Sau duyệt (nếu sửa) |", "|---|---|---|---|");
 for (const [id, d] of A) if (d.so_dieu === 8) dong.push(`| ${d.goc.ten_entity} | ${d.lop} | ${B.get(id)?.lop ?? "—"} | ${B.get(id)?.hien?.ten_entity ?? ""} |`);
 dong.push("");
+
+// Từ chối từng entity giữa hai lượt — chỉ mô tả, KHÔNG kiểm định (không có trong §3 khung; quy tắc từ chối lượt sau chốt
+// giữa lượt, KHUNG §8). Chỉ chạy sau khi lượt sau duyệt xong (điều kiện làm mù).
+if (!ss.sau.tong.chua_duyet) {
+  const tc = (d) => d?.lop === "tu_choi";
+  const nhomSau = existsSync("research/sau/phan-loai-sau.json")
+    ? new Map(doc("phan-loai-sau").tu_choi_ds.map((x) => [x.id, x.nhom])) : new Map();
+  const o = { TT: [], TD: [], DT: [], DD: [] };
+  for (const [id, d] of A) o[(tc(d) ? "T" : "D") + (tc(B.get(id)) ? "T" : "D")].push(d);
+  // Ghi chú từ chối lượt trước (bản chụp prod; không có thì bỏ qua)
+  let ghiTruoc = "—";
+  if (existsSync("research/baseline/raw/approvals.json")) {
+    const { entities, approvals } = docTruoc(new Set(A.keys()));
+    const tcTruoc = approvals.filter((a) => a.quyet_dinh === "tu_choi" && A.has(a.entity_id));
+    // Entity ở trạng thái từ chối mà không có dòng approvals 'tu_choi' nào: trạng thái đổi ngoài hàm duyệt, không vết
+    const khongVet = entities.filter((e) => e.trang_thai_duyet === "tu_choi"
+      && !approvals.some((a) => a.entity_id === e.id && a.quyet_dinh === "tu_choi"));
+    ghiTruoc = `${tcTruoc.filter((a) => a.ghi_chu && a.ghi_chu.trim()).length}/${tcTruoc.length} dòng từ chối` +
+      (khongVet.length ? ` (thêm ${khongVet.length} entity ở trạng thái từ chối mà không có dòng từ chối nào: ${khongVet.map((e) => `Đ${e.so_dieu} "${e.ten_entity}"`).join(", ")})` : "");
+  }
+  const ghiSau = existsSync("research/sau/phan-loai-sau.json") ? doc("phan-loai-sau").tu_choi_ds : [];
+  const dongDs = (ds) => ds.map((d) => `| Đ${d.so_dieu} | ${d.loai_goc} | ${d.goc.ten_entity} | ${nhomSau.get(d.id) ?? ""} |`);
+  dong.push("## Từ chối — từng entity giữa hai lượt (mô tả, không kiểm định)", "",
+    "| | Sau: duyệt | Sau: từ chối |", "|---|---|---|",
+    `| **Trước: duyệt** | ${o.DD.length} | ${o.DT.length} |`, `| **Trước: từ chối** | ${o.TD.length} | ${o.TT.length} |`, "",
+    `- Từ chối có ghi chú: trước ${ghiTruoc}; sau ${ghiSau.filter((x) => x.nhom_ghi !== "(không ghi)").length}/${ghiSau.length}.`,
+    "- Quy tắc từ chối lượt sau (nhóm mã) chốt giữa lượt, không có ở lượt trước (KHUNG §8).", "",
+    `### Trước duyệt → sau từ chối (${o.DT.length})`, "", "| Điều | Loại | Đề xuất LLM | Mã nhóm sau |", "|---|---|---|---|", ...dongDs(o.DT), "",
+    `### Trước từ chối → sau duyệt (${o.TD.length})`, "", "| Điều | Loại | Đề xuất LLM | |", "|---|---|---|---|", ...dongDs(o.TD), "");
+}
 
 // M4 — trong mỗi lượt: thời gian nhóm bị sửa vs không sửa (đã tính ở so-sanh-de-xuat)
 dong.push("## M4 — Trong từng lượt: thời gian nhóm bị sửa vs không sửa", "");

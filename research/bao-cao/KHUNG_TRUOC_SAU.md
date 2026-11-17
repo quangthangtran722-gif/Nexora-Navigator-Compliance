@@ -132,3 +132,63 @@ quy nguyên nhân".
 - **17/11 — thêm hai phép đếm mô tả, không kiểm định:** điều kiện rỗng nghĩa (`PHAM_VI_VA_PHUONG_PHAP.md` §2.6) và từ chối
   theo mã nhóm, cả hai chỉ ở lượt sau (`scripts/research/phan-loai-sau.mjs`, trong `do:sau`). Khung đối xứng Điều 8:
   `research/bao-cao/DOI_XUNG_DIEU_8.md`.
+- **17/11, sau lượt duyệt — thêm bảng so từ chối từng entity giữa hai lượt** (mô tả, không kiểm định) vào
+  `so-truoc-sau.mjs`, chỉ chạy khi lượt sau duyệt xong. Kết quả ở §9.
+
+## 9. Kết quả (lượt sau duyệt xong 17/11/2026, `npm run do:sau`, `research/sau/TRUOC_SAU.md`)
+
+Lượt sau: 70/70 entity đã xử lý (34 duyệt, 36 từ chối, 0 chờ), 70 dòng duyệt entity, 66 khoảng đo (bỏ 0 khoảng cùng thời
+điểm, 3 khoảng > 10 phút).
+
+### 9.1 Đối chiếu dự đoán §5 — giữ nguyên dự đoán, ghi đúng sai
+
+| Chỉ số | Dự đoán | Thực tế | Đúng / sai |
+|---|---|---|---|
+| M1 trung vị lượt sau | 60 giây | **19,8 giây** (p90 117,9 giây) | **SAI** — thấp hơn dự đoán 40 giây, khoảng 1/3 mức dự đoán |
+| M2 tỉ lệ đổi nghĩa lượt sau | 0% | 0/34 (0%) | Đúng |
+| M3 7 hành vi Điều 8 | Giữ nguyên cả 7 | 7/7 duyệt y nguyên | Đúng |
+| M5 tỉ lệ duyệt cả chunk | 0% | 0/70 (0%) | Đúng — cam kết quy trình được giữ |
+
+M2 và M3 đúng **không** được đọc thành "can thiệp làm giảm việc viết lại" (ghi chú của người điền, §5): màn nào cũng không có
+ô sửa tên, và người duyệt lượt sau biết giả thuyết.
+
+### 9.2 Chỉ số
+
+| # | Lượt trước | Lượt sau | Kiểm định đặt trước |
+|---|---|---|---|
+| M1 | n = 55; trung vị 8,6 giây; p90 50,6 giây | n = 66; trung vị 19,8 giây; p90 117,9 giây | Mann–Whitney U = 1032, p < 0,001 → **có khác biệt**, trung vị lượt sau cao hơn |
+| M1 theo loại | hành vi 7,8 giây (n = 28); chủ thể 15,8 giây (n = 17) | hành vi 21,3 giây (n = 29); chủ thể 19,8 giây (n = 26) | — |
+| M2 bị sửa (mọi mức) | 9/45 (20,0%) | 0/34 (0%) | Fisher p = 0,009 → **có khác biệt** |
+| M2 đổi nghĩa | 8/45 (17,8%) | 0/34 (0%) | Fisher p = 0,009 → **có khác biệt** |
+| Từ chối (trên 70) | 25/70 (35,7%) | 36/70 (51,4%) | Không kiểm định (không có trong §3) |
+| M3 Điều 8 | 7 đổi nghĩa, 6 từ chối, 0 y nguyên | 0 đổi nghĩa, 4 từ chối, 9 y nguyên | Mô tả |
+| M4 trong lượt | Không sửa n = 22, 6,4 giây; bị sửa n = 8, 5,5 giây; p = 0,41 → **không có khác biệt** | Bị sửa n = 0 → **không kiểm định được** | Chỉ chạy khi mỗi nhóm ≥ 5 |
+| M5 | 14/70 (20,0%) | 0/70 (0%) | Mô tả |
+| M6 | — | Chủ thể đã duyệt: C0 1, C2 5, C6 4; 1 chủ thể xác nhận chung. Nghĩa vụ: phạm vi chung 10, có điều kiện 8 | Mô tả |
+
+### 9.3 Từ chối từng entity giữa hai lượt (mô tả, sau khi bỏ điều kiện làm mù)
+
+| | Sau: duyệt | Sau: từ chối |
+|---|---|---|
+| **Trước: duyệt** | 29 | 16 |
+| **Trước: từ chối** | 5 | 20 |
+
+- 16 entity trước duyệt → sau từ chối: 12 chủ thể là cơ quan nhà nước / công chức (`NN-CT`), Đ11 k3 và Đ52 k1 "Luật này"
+  (`TX`), 2 nghĩa vụ Đ27 (`GQ`: k5 đúng kế hoạch, k2a nhầm).
+- 5 entity trước từ chối → sau duyệt: Đ3 "Người nộp thuế trong quản lý thuế", Đ8 "người nộp thuế", Đ8 "Chiếm đoạt hoặc sử
+  dụng trái phép tiền thuế", Đ48 "Nộp dần tiền thuế nợ", Đ52 "trước ngày 01 tháng 01 năm 2027".
+- Từ chối có ghi chú: trước 0/23 dòng từ chối (thêm 2 entity ở trạng thái từ chối không có dòng từ chối nào,
+  `CAN_THIEP_KHONG_VET.md` §2); sau 34/36.
+- Tỉ lệ từ chối lượt sau phụ thuộc quy tắc từ chối chốt giữa lượt (§8), quy tắc mà lượt trước không có. Không so hai tỉ lệ từ
+  chối như so cùng một phép đo.
+
+### 9.4 Giới hạn riêng của số lượt sau (thêm vào §7)
+
+- **M1 lượt sau gồm cả thời gian hỏi trợ lý giữa lượt** (cách gán mã, điều kiện máy đọc, đọc ngược DB) khi khoảng nghỉ dưới
+  10 phút. 3 khoảng trên 10 phút đã bị bỏ. M1 vì vậy không phải thời gian đọc một entity.
+- Quy tắc từ chối và mã nhóm chốt giữa lượt (§8); người duyệt đã được báo về 21/44 cạnh không nguyên văn trước entity đầu tiên.
+- 5 lần từ chối có sai sót (4 sai / thiếu mã, 1 nhầm entity), không hoàn tác được (`CAN_THIEP_KHONG_VET.md` §6).
+
+Câu được phép viết: "Lượt duyệt trên màn mới có trung vị 19,8 giây mỗi entity so với 8,6 giây ở lượt trước; khác biệt có ý
+nghĩa thống kê theo tiêu chí đặt trước (p < 0,001). Lượt sau không viết lại tên entity nào (0/34) so với 9/45 ở lượt trước (p =
+0,009). Thiết kế không cho phép quy nguyên nhân; dự đoán M1 (60 giây) sai."
