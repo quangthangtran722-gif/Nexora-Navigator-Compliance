@@ -63,7 +63,39 @@ không có câu nào như vậy.
 - Giới hạn: phép kiểm là so khớp chuỗi sau chuẩn hóa. Một `can_cu` khớp nguyên văn vẫn có thể chọn sai đoạn; một `can_cu`
   không khớp có thể chỉ khác vài chữ. Tính đúng / sai của từng cạnh do người duyệt quyết, không do phép kiểm này.
 
-## 5. Chung một họ vấn đề
+## 5. Cạnh sai phát hiện sau khi duyệt: không có đường hợp lệ nào để sửa (ca thật 17/11, Điều 10 khoản 3)
+
+**Ca:** nghĩa vụ "Thực hiện đăng ký thuế trực tiếp với cơ quan thuế" (Luật 108 Điều 10 khoản 3) được duyệt lúc 11:10:04
+ngày 17/11. Cạnh "áp dụng cho" của nó trỏ tới chủ thể "Cơ quan thuế" và được duyệt cùng lúc. Nguyên văn khoản 3: "Các
+trường hợp khác không thuộc quy định tại khoản 2 Điều này thực hiện đăng ký thuế trực tiếp với cơ quan thuế". Người mang
+nghĩa vụ là "các trường hợp khác"; cơ quan thuế là bên **nhận**. Cạnh đảo vai. Người duyệt nhận ra sau khi đã bấm.
+
+**Ba sự thật ghép lại (đã kiểm trong code và migration):**
+
+1. **Duyệt nghĩa vụ là duyệt luôn cạnh của nó, không hỏi riêng.** `approve_entity` chuyển mọi cạnh LLM chưa bị sửa có nguồn
+   là entity đó theo cùng quyết định, mỗi cạnh một dòng `approvals` (migration 008, mục 6). Màn duyệt có hiện cạnh, nhưng
+   không có nút nào cho riêng cạnh.
+2. **U1a không tạo được entity, không thêm và không sửa được cạnh.** Lớp ghi dữ liệu của màn duyệt chỉ có `updateEntity`
+   cho các trường của entity đang chờ (`lib/data/mutations.ts`). Chủ thể đúng ("các trường hợp khác không thuộc khoản 2")
+   không có trong 70 entity, nên cũng không có gì để nối lại.
+3. **Không có hàm hoàn tác.** Entity đã xử lý bị khóa (`approve_entity` trả PT409 "Entity không còn ở trạng thái
+   cho_duyet"; migration 007). Cạnh đã xử lý bị khóa theo trạng thái của chính nó: không sửa (PT409 "Cạnh đã xử lý, không
+   sửa nội dung"), không xóa (PT409 "Cạnh đã xử lý, không xóa được"; migration 008, `khoa_relationship`).
+
+**Hệ quả:** khi chuyên viên phát hiện cạnh sai **sau** khi duyệt, không còn đường hợp lệ nào để sửa. Lựa chọn duy nhất còn
+lại là sửa thẳng CSDL bằng quyền quản trị, bỏ qua RLS, trigger và hàm duyệt. Đó đúng là kiểu can thiệp không để vết mà §2
+phê phán ở lượt trước. Các khóa được dựng để bảo vệ vết duyệt cũng chặn luôn việc sửa sai có vết.
+
+**Tác động lên kết luận:** bước đối chiếu đang chạy (bản tháng 10, S9 chưa sửa) bỏ qua cạnh trỏ tới entity chưa duyệt hoặc
+bị từ chối. Nghĩa vụ không còn điều kiện nào thì ra **áp dụng cho mọi doanh nghiệp** theo dõi lĩnh vực đó. Nghĩa vụ khoản 3
+vì vậy sẽ áp dụng cho mọi doanh nghiệp, kể cả doanh nghiệp đã đăng ký theo cơ chế một cửa liên thông ở khoản 2. Theo S9
+thiết kế, nó ra "cần bổ sung" (`thu_vien_chua_du`, vì phạm vi "có điều kiện" mà không có điều kiện nào).
+
+**Chưa làm và không làm trong MVP:** không sửa ca này bằng quyền quản trị. Ca được giữ nguyên làm bằng chứng. Hướng xử lý
+(chỉ nêu): "mở lại" một quyết định duyệt bằng một hàm riêng, có lý do, ghi dòng `approvals` mới, và cần người thứ hai
+duyệt lại; hoặc tách quyết định cạnh khỏi quyết định entity trên màn duyệt.
+
+## 6. Chung một họ vấn đề
 
 §2 và §3 là thao tác của người làm đổi nội dung thư viện mà vết duyệt chỉ ghi kết quả, không ghi phép biến đổi: sửa tên entity
 (diễn giải) và bỏ / giữ cạnh (cấu trúc). §4 là phía máy: câu suy luận được trình bày như trích dẫn, và cảnh báo hệ đã có không

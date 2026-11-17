@@ -107,6 +107,36 @@ export function phanLoai(goc, hien) {
   return { lop: "can_nguoi", khac, ly_do: null };
 }
 
+// ---------------------------------------------------------------- Điều kiện rỗng nghĩa (PHAM_VI_VA_PHUONG_PHAP §2.6)
+// Điều kiện máy đọc "rỗng nghĩa": trường có tập giá trị ĐÓNG và điều kiện đúng với MỌI giá trị trong tập → không phân biệt
+// được hồ sơ nào với hồ sơ nào. Tập đóng: boolean {true,false}; text có lua_chon. Trường số, text không có lua_chon (vd nganh),
+// text_array (có thể chọn rỗng) → không xét, trả false. tt = dòng thuoc_tinh_ho_so {kieu, lua_chon}.
+export function rongNghia(dk, tt) {
+  if (!dk || !tt) return false;
+  const tap = tt.kieu === "boolean" ? [true, false]
+    : tt.kieu === "text" && Array.isArray(tt.lua_chon) && tt.lua_chon.length ? tt.lua_chon : null;
+  if (!tap) return false;
+  const g = dk.gia_tri;
+  const dung = (v) => {
+    switch (dk.toan_tu) {
+      case "eq": return v === g;
+      case "neq": return v !== g;
+      case "in": return Array.isArray(g) && g.includes(v);
+      case "not_in": return Array.isArray(g) && !g.includes(v);
+      default: return false;
+    }
+  };
+  return tap.every(dung);
+}
+
+// Mã nhóm đầu ghi chú từ chối (quy ước người duyệt chốt 17/11 — quy ước gõ tay, hệ không ép)
+export const MA_NHOM_TU_CHOI = ["NN-CT", "NN-NV", "GQ", "DV", "TX"];
+export function maNhom(ghiChu) {
+  if (!ghiChu || !ghiChu.trim()) return "(không ghi)";
+  const m = ghiChu.trim().match(/^\[([A-Z-]+)\]/);
+  return m && MA_NHOM_TU_CHOI.includes(m[1]) ? m[1] : "(không theo mã)";
+}
+
 // ---------------------------------------------------------------- Đọc dữ liệu
 const docJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 

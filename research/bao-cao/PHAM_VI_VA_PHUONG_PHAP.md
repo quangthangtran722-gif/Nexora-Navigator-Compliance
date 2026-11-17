@@ -70,12 +70,14 @@ nào**. Đây không phải lỗi của người duyệt. Nó là khoảng cách
 liệu (3 giá trị). Người duyệt giữ C2 thay vì C0 vì C0 nghĩa là "mọi đối tượng của văn bản", mà đối tượng của Luật 108
 rộng hơn danh sách ở khoản 2.
 
-Cách đếm (máy, sau lượt duyệt): một điều kiện máy đọc là **rỗng nghĩa** khi trường có tập giá trị đóng (`lua_chon`) và
-điều kiện đúng với mọi giá trị trong tập — `in` chứa đủ mọi giá trị, `not_in` không chứa giá trị nào, hoặc `eq` / `neq`
-trên trường boolean mà cả hai giá trị đều thỏa (không xảy ra với một điều kiện đơn). Báo: số điều kiện rỗng nghĩa / số
-entity đã gán C1–C3 / 33 entity phải gán mã.
+Cách đếm (máy, `scripts/research/phan-loai-sau.mjs`, chạy trong `npm run do:sau`; quy tắc `rongNghia` ở
+`do-duyet-lib.mjs`, có test): một điều kiện máy đọc là **rỗng nghĩa** khi trường có tập giá trị đóng và điều kiện đúng với
+mọi giá trị trong tập. Tập đóng gồm boolean `{true, false}` và trường text có `lua_chon`. Trường số, trường text không có
+`lua_chon` (vd `nganh`) và trường chọn nhiều không được xét, nên con số là **cận dưới**. Báo ba số: điều kiện rỗng nghĩa /
+entity đã duyệt có điều kiện máy đọc (C1–C3) / 33 entity phải gán mã.
 
-Số đo: _điền sau lượt duyệt_. Ca đã biết đến 17/11 trưa: chủ thể Điều 10 khoản 2, đang được duyệt.
+Số đo: _điền sau lượt duyệt_ (`research/sau/phan-loai-sau.md`). Ca đã biết đến 17/11 trưa: chủ thể Điều 10 khoản 2, đang
+được duyệt.
 
 ## 3. Ngoài phạm vi MVP — đã thiết kế, chưa triển khai
 

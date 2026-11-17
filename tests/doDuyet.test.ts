@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 
-import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, docTruoc, docDeXuat } from "../scripts/research/do-duyet-lib.mjs";
+import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, docTruoc, docDeXuat, rongNghia, maNhom } from "../scripts/research/do-duyet-lib.mjs";
 
 // Bản chụp prod (research/baseline/raw) không commit (.gitignore) — máy không có bản chụp thì bỏ qua các ca cần nó
 const coBanChup = existsSync("research/baseline/raw/approvals.json");
@@ -64,4 +64,26 @@ test("Mann–Whitney: không chạy khi nhóm < 5; hai nhóm tách hẳn → p n
 test("Fisher chính xác hai phía: ví dụ nếm trà của Fisher [[3,1],[1,3]] → p ≈ 0,486", () => {
   assert.equal(fisher(3, 1, 1, 3).toFixed(3), "0.486");
   assert.equal(fisher(5, 0, 0, 5).toFixed(4), "0.0079");
+});
+
+test("rongNghia: điều kiện đúng với mọi giá trị của tập đóng (PHAM_VI_VA_PHUONG_PHAP §2.6)", () => {
+  const loaiHinh = { kieu: "text", lua_chon: ["doanh_nghiep", "ho_kinh_doanh", "ca_nhan_kinh_doanh"] };
+  const ca3 = { thuoc_tinh: "loai_hinh_kinh_doanh", toan_tu: "in", gia_tri: ["doanh_nghiep", "ho_kinh_doanh", "ca_nhan_kinh_doanh"] };
+  assert.equal(rongNghia(ca3, loaiHinh), true); // chủ thể Đ10 k2 (17/11)
+  assert.equal(rongNghia({ ...ca3, gia_tri: ["doanh_nghiep"] }, loaiHinh), false);
+  assert.equal(rongNghia({ ...ca3, toan_tu: "not_in", gia_tri: [] }, loaiHinh), true);
+  assert.equal(rongNghia({ thuoc_tinh: "co_tra_luong", toan_tu: "eq", gia_tri: true }, { kieu: "boolean", lua_chon: null }), false);
+  // tập mở: số, text không lua_chon, text_array → không xét
+  assert.equal(rongNghia({ thuoc_tinh: "doanh_thu_nam", toan_tu: "gte", gia_tri: 0 }, { kieu: "number", lua_chon: null }), false);
+  assert.equal(rongNghia({ thuoc_tinh: "nganh", toan_tu: "neq", gia_tri: "x" }, { kieu: "text", lua_chon: null }), false);
+  assert.equal(rongNghia(ca3, undefined), false);
+});
+
+test("maNhom: mã nhóm đầu ghi chú từ chối", () => {
+  assert.equal(maNhom("[NN-CT] Chủ thể là cơ quan nhà nước"), "NN-CT");
+  assert.equal(maNhom("  [DV] Cạnh đảo vai"), "DV");
+  assert.equal(maNhom("[XYZ] khác"), "(không theo mã)");
+  assert.equal(maNhom("Chủ thể là cơ quan nhà nước"), "(không theo mã)");
+  assert.equal(maNhom(null), "(không ghi)");
+  assert.equal(maNhom("   "), "(không ghi)");
 });

@@ -123,3 +123,12 @@ quy nguyên nhân".
   21/44 cạnh có câu "căn cứ" không có trong văn bản, gồm cả 5 cạnh điều kiện ở Điều 48 đảo nghĩa
   (`research/phat-hien/CAN_THIEP_KHONG_VET.md` §4). Không đổi chỉ số, tiêu chí hay màn hình. Hệ quả: người duyệt đọc cạnh
   khác với cách màn hình mời đọc; thời gian (M1) của các entity có cạnh có thể dài hơn vì phải đối chiếu tay. Ghi vào giới hạn.
+- **17/11, giữa lượt (sau 6 entity Điều 10) — quy tắc từ chối và mã nhóm.** Người duyệt chốt từ chối 33 entity theo nhóm:
+  17 chủ thể là cơ quan nhà nước / công chức, 2 điều khoản giao quyền, 9 nghĩa vụ do nhà nước mang, 5 entity điều kiện Điều
+  48; thêm Đ52 k1 "Luật này" và Đ52 k4 "áp dụng toàn bộ các hình thức giao dịch điện tử"; Đ2 k4 duyệt với C6. Lý do từ chối
+  mở đầu bằng mã `[NN-CT]` `[NN-NV]` `[GQ]` `[DV]` `[TX]`. Đây là quyết định của người duyệt, không đổi chỉ số hay kiểm
+  định ở §3. Nhưng nó làm tỉ lệ từ chối và mẫu số của M2 (entity đã duyệt) phụ thuộc vào một quy tắc chốt giữa lượt, và
+  quy tắc này không có ở lượt trước. Báo cáo phải nêu điều đó khi so tỉ lệ từ chối.
+- **17/11 — thêm hai phép đếm mô tả, không kiểm định:** điều kiện rỗng nghĩa (`PHAM_VI_VA_PHUONG_PHAP.md` §2.6) và từ chối
+  theo mã nhóm, cả hai chỉ ở lượt sau (`scripts/research/phan-loai-sau.mjs`, trong `do:sau`). Khung đối xứng Điều 8:
+  `research/bao-cao/DOI_XUNG_DIEU_8.md`.
