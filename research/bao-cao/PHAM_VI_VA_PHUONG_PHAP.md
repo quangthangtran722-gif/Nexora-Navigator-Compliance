@@ -51,6 +51,32 @@ Không viết "hệ thống xác định nghĩa vụ theo 3 bộ luật" ở b�
 
 Thời gian duyệt mỗi entity, so đề xuất gốc ↔ bản đã duyệt, so hai lượt: `research/bao-cao/KHUNG_TRUOC_SAU.md`.
 
+### 2.5 Lược đồ hồ sơ dùng trong lượt duyệt: bộ cũ 18–20/10, không phải T0–T3
+
+Form hồ sơ T0–T3 theo thiết kế (HE_THONG_DA_CHOT §9.2) nằm trong nhóm việc đã hủy (phương án 1, 16/11). Vì vậy bảng
+`thuoc_tinh_ho_so` trên MIS vẫn là bộ 20 trường tạo ngày 18–20/10/2026. **Mọi điều kiện máy đọc viết trong lượt duyệt
+17/11 đều gắn với lược đồ cũ này.** Khi có lược đồ T0–T3, các điều kiện phải được viết lại; chúng không tự chuyển sang.
+
+### 2.6 Quan sát phương pháp: điều kiện đúng về pháp lý nhưng không mang thông tin
+
+Trường loại hình (`loai_hinh_kinh_doanh`) chỉ có 3 giá trị: `doanh_nghiep`, `ho_kinh_doanh`, `ca_nhan_kinh_doanh`. Danh sách
+chủ thể của luật mịn hơn: Luật 108 Điều 10 khoản 2 kể 8 loại (doanh nghiệp, hợp tác xã, liên hiệp hợp tác xã, tổ hợp tác,
+đơn vị phụ thuộc, tổ chức khác, hộ kinh doanh, cá nhân kinh doanh). Năm loại không có giá trị tương ứng nên bị bỏ ra khỏi
+điều kiện. Ba loại còn lại phủ **toàn bộ** tập giá trị của trường.
+
+Hệ quả, với chủ thể Điều 10 khoản 2 (người duyệt chốt 17/11: C2, `loai_hinh_kinh_doanh` thuộc cả 3 giá trị): điều kiện
+đúng về mặt pháp lý, nhưng đúng với **mọi** hồ sơ hợp lệ, nên **không phân biệt được doanh nghiệp nào với doanh nghiệp
+nào**. Đây không phải lỗi của người duyệt. Nó là khoảng cách giữa vốn từ của luật (8 loại hình) và vốn từ của mô hình dữ
+liệu (3 giá trị). Người duyệt giữ C2 thay vì C0 vì C0 nghĩa là "mọi đối tượng của văn bản", mà đối tượng của Luật 108
+rộng hơn danh sách ở khoản 2.
+
+Cách đếm (máy, sau lượt duyệt): một điều kiện máy đọc là **rỗng nghĩa** khi trường có tập giá trị đóng (`lua_chon`) và
+điều kiện đúng với mọi giá trị trong tập — `in` chứa đủ mọi giá trị, `not_in` không chứa giá trị nào, hoặc `eq` / `neq`
+trên trường boolean mà cả hai giá trị đều thỏa (không xảy ra với một điều kiện đơn). Báo: số điều kiện rỗng nghĩa / số
+entity đã gán C1–C3 / 33 entity phải gán mã.
+
+Số đo: _điền sau lượt duyệt_. Ca đã biết đến 17/11 trưa: chủ thể Điều 10 khoản 2, đang được duyệt.
+
 ## 3. Ngoài phạm vi MVP — đã thiết kế, chưa triển khai
 
 Phần thiết kế vẫn là kết quả của đồ án; mỗi dòng ghi tài liệu thiết kế còn giữ. Lý do chung: điểm cắt §14.1 (15/11) đến hạn khi
