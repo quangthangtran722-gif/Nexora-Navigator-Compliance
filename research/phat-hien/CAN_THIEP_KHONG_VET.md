@@ -37,8 +37,36 @@ duyệt không phản ánh — khâu human-in-the-loop dựng ra để giữ đ�
 - Cạnh do người THÊM thì có vết đủ (người tạo ép ở DB, người duyệt khác người tạo, chỉ người tạo được rút, người khác phải Từ
   chối) — giới hạn ở đây chỉ thuộc về cạnh do LLM đề xuất.
 
-## 4. Chung một họ vấn đề
+## 4. Màn duyệt trình bày câu do LLM ghép như trích dẫn nguyên văn (kiểm 17/11, trước lượt duyệt mới)
 
-Cả hai là thao tác của người làm đổi nội dung thư viện mà vết duyệt chỉ ghi kết quả, không ghi phép biến đổi: sửa tên entity
-(diễn giải) và bỏ / giữ cạnh (cấu trúc). Hướng xử lý (ngoài MVP, chỉ nêu): ghi bản chụp trước / sau mỗi lần sửa nội dung khi còn
+Người duyệt phát hiện khi mở màn U1a: mỗi cạnh ở phần "Liên kết" có một dòng in nghiêng **trong ngoặc kép**
+(`components/nexora/edge-line.tsx`, trường `can_cu`), dạng "[tên entity A] áp dụng cho [tên entity B]"; khoản 2 Điều 10
+không có câu nào như vậy.
+
+- **Nguồn của dòng đó:** `can_cu` do LLM sinh; prompt và schema yêu cầu "đoạn chép nguyên văn thể hiện quan hệ"
+  (`extractEntities.prompt.ts`, `.schema.ts`). Màn hình hiện nó như trích dẫn: ngoặc kép, in nghiêng, gạch lề trái.
+- **Đo trên MIS (17/11, chỉ đọc, chuẩn hóa như `grounding.ts` `normalizeForMatch`):** 44 cạnh của 9 điều; **21/44 có
+  `can_cu` không nằm trong văn bản của chunk**. Phần lớn là câu ghép theo khuôn "[nguồn] áp dụng cho [đích]" hoặc
+  "[nguồn] là điều kiện để [đích]". Cả 9 cạnh có nguồn ở Điều 10 thuộc nhóm này.
+- **Hệ đã biết mà không cho người duyệt thấy:** lúc trích xuất, `grounding.ts` gắn cảnh báo `can_cu_khong_nguyen_van` cho
+  đúng 21 cạnh này (9 + 11 + 1 trong `pipeline_runs.output.warnings` của ba lượt). Chỉ là cảnh báo, không chặn; không màn
+  nào đọc `warnings`.
+- **Trường hợp nặng nhất — Điều 48 đảo nghĩa:** Điều 48 khoản 1–5 liệt kê các trường hợp **bị** cưỡng chế. Năm cạnh
+  `dieu_kien` nối các trường hợp đó vào nghĩa vụ "Không thực hiện biện pháp cưỡng chế thuế", với câu ghép "… là điều kiện để
+  không thực hiện biện pháp cưỡng chế thuế". Câu đặt trong ngoặc kép nói ngược nguyên văn.
+- **Vì sao chạm tới thư viện:** từ 008, cạnh LLM chưa bị sửa được duyệt / từ chối **cùng entity nguồn**. Duyệt entity điều
+  kiện ở Điều 48 là duyệt luôn cạnh đảo nghĩa. Không có thao tác "từ chối riêng cạnh này" cho cạnh LLM: chỉ có từ chối cả
+  entity nguồn, xóa cạnh (không vết, §3), hoặc sửa cạnh (có vết `nguoi_sua_cuoi_id`, sau đó cần người thứ hai duyệt qua
+  `approve_relationship`).
+- **Cùng họ với Điều 8:** nội dung phái sinh (suy luận của LLM) được trình bày như nội dung trích. Ở Điều 8 người sửa tên mà
+  không để vết; ở đây máy dựng câu và màn hình gắn cho nó hình thức của trích dẫn.
+- Giới hạn: phép kiểm là so khớp chuỗi sau chuẩn hóa. Một `can_cu` khớp nguyên văn vẫn có thể chọn sai đoạn; một `can_cu`
+  không khớp có thể chỉ khác vài chữ. Tính đúng / sai của từng cạnh do người duyệt quyết, không do phép kiểm này.
+
+## 5. Chung một họ vấn đề
+
+§2 và §3 là thao tác của người làm đổi nội dung thư viện mà vết duyệt chỉ ghi kết quả, không ghi phép biến đổi: sửa tên entity
+(diễn giải) và bỏ / giữ cạnh (cấu trúc). §4 là phía máy: câu suy luận được trình bày như trích dẫn, và cảnh báo hệ đã có không
+đến tay người duyệt. Hướng xử lý cho §4 (ngoài MVP trừ khi chủ repo chốt khác): hiện dòng căn cứ là trích dẫn chỉ khi khớp
+nguyên văn; không khớp thì bỏ ngoặc kép, ghi nhãn "câu do AI ghép, không có trong văn bản". Hướng xử lý (ngoài MVP, chỉ nêu): ghi bản chụp trước / sau mỗi lần sửa nội dung khi còn
 chờ duyệt; xóa cạnh LLM thành "từ chối cạnh" có vết; gắn cờ "diễn giải" khi tên entity không còn là trích nguyên văn.

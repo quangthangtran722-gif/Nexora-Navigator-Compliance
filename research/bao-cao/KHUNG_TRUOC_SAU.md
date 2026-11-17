@@ -75,10 +75,20 @@ Cần làm trước khi so: hai entity chưa có nhãn của lượt trước ph
 
 | Chỉ số | Dự đoán (điền trước 16/11, trước entity đầu tiên) | Người điền |
 |---|---|---|
-| M1 trung vị lượt sau | | |
-| M2 tỉ lệ đổi nghĩa lượt sau | | |
-| M3 7 hành vi Điều 8 | | |
-| M5 tỉ lệ duyệt cả chunk | | |
+| M1 trung vị lượt sau | 60 giây | Trần Quang Thắng, 17/11 |
+| M2 tỉ lệ đổi nghĩa lượt sau | 0% | Trần Quang Thắng, 17/11 |
+| M3 7 hành vi Điều 8 | Giữ nguyên cả 7 tên gốc ở dạng hành vi bị cấm, không có cái nào bị viết thành nghĩa vụ | Trần Quang Thắng, 17/11 |
+| M5 tỉ lệ duyệt cả chunk | 0% | Trần Quang Thắng, 17/11 |
+
+Ngày điền thật: 17/11/2026 (không phải "trước 16/11" như tiêu đề cột). Lúc ghi (17/11, 10:51 giờ VN) bảng `approvals` trên MIS
+có 0 dòng — dự đoán có trước entity đầu tiên của lượt sau.
+
+Ghi chú của người điền — quyết định cách đọc kết quả:
+
+- **M2 và M3 dự đoán bằng 0 KHÔNG phải vì kỳ vọng người duyệt cẩn thận hơn**, mà vì màn U1a không có ô sửa tên — muốn sửa
+  phải đi vòng qua API. Khi phân tích, **không được** diễn giải kết quả 0 thành "can thiệp làm giảm việc viết lại".
+- **M5 bằng 0 là cam kết quy trình** (không bấm "Duyệt tất cả"), không phải dự đoán hành vi. Khác 0 nghĩa là quy trình bị
+  phá, phải ghi rõ trong báo cáo.
 
 ## 6. Điều kiện để số lượt sau dùng được
 
@@ -108,4 +118,8 @@ quy nguyên nhân".
 
 ## 8. Nhật ký sửa khung sau khi bắt đầu duyệt
 
-(trống)
+- **17/11, trước entity đầu tiên — người duyệt được báo về dòng "căn cứ" của cạnh.** Khi mở màn duyệt, người duyệt hỏi dòng
+  in nghiêng trong ngoặc kép ở phần "Liên kết" là trích nguyên văn hay câu ghép máy. Trợ lý trả lời bằng số kiểm trên DB:
+  21/44 cạnh có câu "căn cứ" không có trong văn bản, gồm cả 5 cạnh điều kiện ở Điều 48 đảo nghĩa
+  (`research/phat-hien/CAN_THIEP_KHONG_VET.md` §4). Không đổi chỉ số, tiêu chí hay màn hình. Hệ quả: người duyệt đọc cạnh
+  khác với cách màn hình mời đọc; thời gian (M1) của các entity có cạnh có thể dài hơn vì phải đối chiếu tay. Ghi vào giới hạn.
