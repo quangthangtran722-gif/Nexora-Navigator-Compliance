@@ -1,0 +1,17 @@
+{
+ "_ghi_chu": "Nhãn người cho entity lượt trước (20/10/2026) mà quy tắc máy không quyết được (can_nguoi). Gán 17/11/2026, trước khi duyệt entity đầu tiên của lượt mới (U1a, MIS) và trước khi thấy bất kỳ số đo nào của lượt mới. Người gán ghi: nhãn do người gán chốt sau khi tham khảo phân tích của trợ lý AI; thời điểm gán là trước khi duyệt entity đầu tiên của lượt mới, nên điều kiện làm mù vẫn giữ. Lúc gán, người gán chỉ được hiện hai cặp tên gốc / tên sau sửa (kèm mô tả không đổi), không kèm thống kê.",
+ "4a230816-b27c-423a-8047-d7cad9b211b8": {
+  "so_dieu": 10,
+  "nhan": "sua_nho",
+  "nguoi_gan": "Trần Quang Thắng",
+  "ngay": "2026-11-17",
+  "ly_do": "Phần bị bỏ là danh sách liệt kê các loại đăng ký đi kèm, không phải một hành động khác; mô tả giữ nguyên vẫn chứa đủ danh sách; vẫn phân biệt rõ với entity \"đăng ký thuế trực tiếp\" ở khoản 3."
+ },
+ "86c76a72-ffd2-44c6-b51a-c31ae4d25ff7": {
+  "so_dieu": 27,
+  "nhan": "doi_nghia",
+  "nguoi_gan": "Trần Quang Thắng",
+  "ngay": "2026-11-17",
+  "ly_do": "Bỏ hẳn nghĩa vụ \"đáp ứng điều kiện kỹ thuật\" khỏi tên (không phải bỏ chi tiết mà là bỏ một việc phải làm), và thêm chữ \"điện tử\" không có trong văn bản, làm thu hẹp phạm vi dữ liệu phải bảo mật."
+ }
+}

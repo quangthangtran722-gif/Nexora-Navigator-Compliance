@@ -1,17 +1,16 @@
 # So đề xuất gốc LLM ↔ bản đã duyệt — màn duyệt cũ (prod, lượt 20/10/2026)
 
-Chạy: 2026-11-16T06:19:05.449Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
+Chạy: 2026-11-17T03:39:33.907Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
 
 | Lớp | Số entity |
 |---|---|
 | y_nguyen | 36 |
-| sua_nho | 0 |
-| doi_nghia | 7 |
-| chua_gan_nhan | 2 |
+| sua_nho | 1 |
+| doi_nghia | 8 |
+| chua_gan_nhan | 0 |
 | tu_choi | 25 |
 | chua_duyet | 0 |
 
-**Còn 2 entity bị sửa chưa có nhãn người** (máy không tự phân biệt sửa nhỏ / đổi nghĩa) — ghi vào `research/sau/nhan-nguoi-truoc.json` rồi chạy lại.
 
 
 ## Theo điều
@@ -21,9 +20,9 @@ Chạy: 2026-11-16T06:19:05.449Z. 70 entity Luật 108, 9 điều cũ. Quy tắc
 | 2 | 5 | 0 | 0 | 0 | 0 | 0 |
 | 3 | 0 | 0 | 0 | 0 | 3 | 0 |
 | 8 | 0 | 0 | 7 | 0 | 6 | 0 |
-| 10 | 10 | 0 | 0 | 1 | 1 | 0 |
+| 10 | 10 | 1 | 0 | 0 | 1 | 0 |
 | 11 | 5 | 0 | 0 | 0 | 0 | 0 |
-| 27 | 10 | 0 | 0 | 1 | 0 | 0 |
+| 27 | 10 | 0 | 1 | 0 | 0 | 0 |
 | 48 | 3 | 0 | 0 | 0 | 10 | 0 |
 | 52 | 3 | 0 | 0 | 0 | 5 | 0 |
 
@@ -38,8 +37,8 @@ Chạy: 2026-11-16T06:19:05.449Z. 70 entity Luật 108, 9 điều cũ. Quy tắc
 | 8 | doi_nghia | dao_phu_dinh_ten_entity | ten_entity: Phát tán thông tin sai lệch | ten_entity: Không phát tán thông tin thuế sai lệch |
 | 8 | doi_nghia | dao_phu_dinh_ten_entity | ten_entity: Cố tình không kê khai hoặc kê khai không đầy đủ | ten_entity: Kê khai thuế đầy đủ, trung thực |
 | 8 | doi_nghia | dao_phu_dinh_ten_entity | ten_entity: Cản trở công chức quản lý thuế thi hành công vụ | ten_entity: Không cản trở công chức thuế thi hành công vụ |
-| 10 | chua_gan_nhan | — | ten_entity: Thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hiệp hợp tác xã, đăng ký tổ hợp tác, đăng ký hộ kinh doanh, đăng ký hoạt động, kinh doanh theo cơ chế một cửa liên thông | ten_entity: Đăng ký thuế theo cơ chế một cửa liên thông |
-| 27 | chua_gan_nhan | — | ten_entity: Đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu | ten_entity: Bảo đảm an toàn, bảo mật dữ liệu điện tử |
+| 10 | sua_nho | — | ten_entity: Thực hiện đăng ký thuế cùng với việc đăng ký doanh nghiệp, đăng ký hợp tác xã, đăng ký liên hiệp hợp tác xã, đăng ký tổ hợp tác, đăng ký hộ kinh doanh, đăng ký hoạt động, kinh doanh theo cơ chế một cửa liên thông | ten_entity: Đăng ký thuế theo cơ chế một cửa liên thông |
+| 27 | doi_nghia | — | ten_entity: Đáp ứng điều kiện kỹ thuật, bảo đảm an toàn, bảo mật dữ liệu | ten_entity: Bảo đảm an toàn, bảo mật dữ liệu điện tử |
 
 ## Thời gian duyệt (giây / entity, khoảng của lần quyết định cuối)
 

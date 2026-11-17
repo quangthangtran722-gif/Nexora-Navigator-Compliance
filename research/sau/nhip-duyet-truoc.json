@@ -1,6 +1,6 @@
 {
  "nguon": "truoc",
- "chay_luc": "2026-11-16T06:19:05.306Z",
+ "chay_luc": "2026-11-17T03:39:33.811Z",
  "van_ban": "108/2025/QH15",
  "quy_tac": "khoảng giữa hai dòng approvals entity liên tiếp của cùng người; bỏ khoảng = 0 (duyệt cả chunk), bỏ khoảng > 600 giây; hạng gần nhất",
  "so_entity": 70,
