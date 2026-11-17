@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 
-import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, docTruoc, docDeXuat, rongNghia, maNhom } from "../scripts/research/do-duyet-lib.mjs";
+import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, docTruoc, docDeXuat, rongNghia, maNhom, coTienToMa } from "../scripts/research/do-duyet-lib.mjs";
 
 // Bản chụp prod (research/baseline/raw) không commit (.gitignore) — máy không có bản chụp thì bỏ qua các ca cần nó
 const coBanChup = existsSync("research/baseline/raw/approvals.json");
@@ -83,7 +83,15 @@ test("maNhom: mã nhóm đầu ghi chú từ chối", () => {
   assert.equal(maNhom("[NN-CT] Chủ thể là cơ quan nhà nước"), "NN-CT");
   assert.equal(maNhom("  [DV] Cạnh đảo vai"), "DV");
   assert.equal(maNhom("[XYZ] khác"), "(không theo mã)");
+  // câu chuẩn gõ không tiền tố (dạng thật trong DB 17/11) → nhận theo đầu câu
+  assert.equal(maNhom("Chủ thể là cơ quan nhà nước hoặc công chức, không thuộc nhóm đối tượng hệ thống phục vụ."), "NN-CT");
+  assert.equal(maNhom("Nghĩa vụ do cơ quan nhà nước hoặc công chức mang, không phải nghĩa vụ của doanh nghiệp."), "NN-NV");
+  assert.equal(maNhom("Entity điều kiện không còn nghĩa vụ nguồn hợp lệ"), "DV");
+  assert.equal(maNhom("Điều khoản giao Chính phủ hoặc Bộ trưởng ban hành văn bản hướng dẫn"), "GQ");
+  assert.equal(maNhom("Lỗi trích xuất: đối tượng được trích không phải chủ thể"), "TX");
   assert.equal(maNhom("Chủ thể là cơ quan nhà nước"), "(không theo mã)");
+  assert.equal(coTienToMa("[GQ] x"), true);
+  assert.equal(coTienToMa("Lỗi trích xuất: x"), false);
   assert.equal(maNhom(null), "(không ghi)");
   assert.equal(maNhom("   "), "(không ghi)");
 });

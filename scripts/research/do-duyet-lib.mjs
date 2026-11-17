@@ -131,10 +131,22 @@ export function rongNghia(dk, tt) {
 
 // Mã nhóm đầu ghi chú từ chối (quy ước người duyệt chốt 17/11 — quy ước gõ tay, hệ không ép)
 export const MA_NHOM_TU_CHOI = ["NN-CT", "NN-NV", "GQ", "DV", "TX"];
+// Đọc ngược DB 17/11: người duyệt gõ câu chuẩn KHÔNG kèm tiền tố [mã]. Nhận nhóm theo đầu câu chuẩn đã gõ thật.
+export const DAU_CAU_CHUAN = [
+  ["Chủ thể là cơ quan nhà nước hoặc công chức", "NN-CT"],
+  ["Nghĩa vụ do cơ quan nhà nước hoặc công chức mang", "NN-NV"],
+  ["Điều khoản giao Chính phủ hoặc Bộ trưởng", "GQ"],
+  ["Entity điều kiện không còn nghĩa vụ nguồn", "DV"],
+  ["Lỗi trích xuất", "TX"],
+];
+export const coTienToMa = (ghiChu) => /^\[[A-Z-]+\]/.test((ghiChu ?? "").trim());
 export function maNhom(ghiChu) {
   if (!ghiChu || !ghiChu.trim()) return "(không ghi)";
-  const m = ghiChu.trim().match(/^\[([A-Z-]+)\]/);
-  return m && MA_NHOM_TU_CHOI.includes(m[1]) ? m[1] : "(không theo mã)";
+  const s = ghiChu.trim();
+  const m = s.match(/^\[([A-Z-]+)\]/);
+  if (m) return MA_NHOM_TU_CHOI.includes(m[1]) ? m[1] : "(không theo mã)";
+  const c = DAU_CAU_CHUAN.find(([dau]) => s.startsWith(dau));
+  return c ? c[1] : "(không theo mã)";
 }
 
 // ---------------------------------------------------------------- Đọc dữ liệu

@@ -95,10 +95,43 @@ thiết kế, nó ra "cần bổ sung" (`thu_vien_chua_du`, vì phạm vi "có �
 (chỉ nêu): "mở lại" một quyết định duyệt bằng một hàm riêng, có lý do, ghi dòng `approvals` mới, và cần người thứ hai
 duyệt lại; hoặc tách quyết định cạnh khỏi quyết định entity trên màn duyệt.
 
-## 6. Chung một họ vấn đề
+## 6. Lý do từ chối theo quy ước gõ tay: sai sót đo được (lượt duyệt 17/11, đọc ngược DB giữa lượt)
+
+**Bối cảnh.** Giữa lượt duyệt, người duyệt chốt kế hoạch 35 lần từ chối, mỗi lần một mã nhóm lý do (`[NN-CT]` `[NN-NV]`
+`[GQ]` `[DV]` `[TX]`, `research/bao-cao/KHUNG_TRUOC_SAU.md` §8). Mã là **quy ước gõ tay vào ô ghi chú tự do**: hệ không có
+trường mã, không kiểm, không bắt buộc ghi chú. Ngược lại, hệ **ép cứng** một điều: entity đã xử lý bị khóa, ghi chú không sửa
+được, quyết định không hoàn tác (`approve_entity` báo PT409 "Entity không còn ở trạng thái cho_duyet").
+
+**Đọc ngược DB** (chỉ đọc, 17/11, khi đã bấm 33/35 lần từ chối theo kế hoạch; `approvals` dòng mới nhất mỗi entity):
+
+| Sai sót | Số | Ca |
+|---|---|---|
+| Ghi sai nhóm | 2 | Đ3 "Thực hiện phân nhóm người nộp thuế", Đ8 k1 "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin": ghi câu của `NN-CT`, đúng là `NN-NV` (người duyệt tự phát hiện) |
+| Từ chối không ghi chú | 2 | Đ52 k1 "Luật này" (kế hoạch `TX`), Đ52 k4 "áp dụng toàn bộ các hình thức giao dịch điện tử" (kế hoạch `GQ`) |
+| Từ chối nhầm entity | 1 | Đ27 k2a "Đăng ký, quản lý, sử dụng chứng từ điện tử" bị từ chối với câu `GQ`; entity trong kế hoạch là Đ27 k5 "Đăng ký sử dụng chứng từ điện tử" (vẫn chờ duyệt). Nguyên văn k2a là câu tuân thủ ("…phải tuân thủ quy định của pháp luật về giao dịch điện tử…"), không phải điều khoản giao quyền. Hai cạnh của k2a đi theo entity nguồn, cùng bị từ chối và khóa |
+| Ghi đúng dạng quy ước (tiền tố `[mã]` đầu ghi chú) | **0/33** | Người duyệt gõ phần câu, bỏ tiền tố. Câu gõ nhất quán (5 câu cố định), nên nhóm vẫn đọc lại được theo đầu câu — quy tắc đọc này do trợ lý thêm **sau khi** thấy dữ liệu (`do-duyet-lib.mjs` `DAU_CAU_CHUAN`) |
+
+**Tỉ lệ sai mã nhóm: 4/33** lần từ chối đã bấm (2 sai nhóm + 2 không ghi), chưa tính ca nhầm entity (mã không bắt được loại
+sai đó). Mẫu số cập nhật khi bấm đủ kế hoạch (còn Đ48 k7, Đ48 k8, Đ27 k5). Đếm theo nhóm đúng nhờ bảng ngoại lệ
+`NGOAI_LE_MA` trong `scripts/research/phan-loai-sau.mjs`; nhóm ghi thật vẫn giữ ở cột riêng. Bảng chỉ nhận nhóm đúng do người
+duyệt nêu (tự báo hoặc kế hoạch đã chốt), không suy thay.
+
+**Vì sao đây là phát hiện, không phải chuyện vặt.** Cùng một lượt có hai loại ràng buộc: cái hệ ép (khóa sau xử lý) giữ
+nguyên được mọi sai sót; cái người tự giữ (mã lý do) để lọt 4/33 và không có lần nào đúng dạng đã quy ước. Kết hợp lại: sai
+sót vào được nhưng không sửa được, chỉ còn cách ghi ngoài hệ (bảng ngoại lệ trong script). Đây là cùng họ với §2–§5: thông tin
+người duyệt cần ghi lại nằm ngoài cái hệ ghi vết.
+
+**Giới hạn.** n nhỏ, một người duyệt, một buổi. Người duyệt biết giả thuyết. Không suy ra tỉ lệ sai cho người khác hay lượt
+khác. Hệ không ghi lúc nào người duyệt nhận được bộ câu chuẩn, nên không tách được ca "không ghi" là quên hay bấm trước khi có
+quy ước.
+
+**Hướng xử lý (ngoài MVP, chỉ nêu).** Lý do từ chối thành trường bắt buộc chọn từ một bảng mã mở rộng được (không phải enum
+cứng), ghi chú tự do đi kèm; màn duyệt hiện lại tên + nguyên văn entity trong hộp xác nhận từ chối.
+
+## 7. Chung một họ vấn đề
 
 §2 và §3 là thao tác của người làm đổi nội dung thư viện mà vết duyệt chỉ ghi kết quả, không ghi phép biến đổi: sửa tên entity
 (diễn giải) và bỏ / giữ cạnh (cấu trúc). §4 là phía máy: câu suy luận được trình bày như trích dẫn, và cảnh báo hệ đã có không
-đến tay người duyệt. Hướng xử lý cho §4 (ngoài MVP trừ khi chủ repo chốt khác): hiện dòng căn cứ là trích dẫn chỉ khi khớp
+đến tay người duyệt. §6 là phía quy ước người làm tự giữ: hệ không ép lý do, nhưng khóa luôn lý do sai. Hướng xử lý cho §4 (ngoài MVP trừ khi chủ repo chốt khác): hiện dòng căn cứ là trích dẫn chỉ khi khớp
 nguyên văn; không khớp thì bỏ ngoặc kép, ghi nhãn "câu do AI ghép, không có trong văn bản". Hướng xử lý (ngoài MVP, chỉ nêu): ghi bản chụp trước / sau mỗi lần sửa nội dung khi còn
 chờ duyệt; xóa cạnh LLM thành "từ chối cạnh" có vết; gắn cờ "diễn giải" khi tên entity không còn là trích nguyên văn.
