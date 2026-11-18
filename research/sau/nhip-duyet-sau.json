@@ -1,6 +1,6 @@
 {
  "nguon": "sau",
- "chay_luc": "2026-11-17T08:35:02.865Z",
+ "chay_luc": "2026-11-18T02:43:30.337Z",
  "van_ban": "108/2025/QH15",
  "quy_tac": "khoảng giữa hai dòng approvals entity liên tiếp của cùng người; bỏ khoảng = 0 (duyệt cả chunk), bỏ khoảng > 600 giây; hạng gần nhất",
  "so_entity": 70,
@@ -25,6 +25,28 @@
    "n": 32,
    "trung_vi": 20.354,
    "p90": 262.619
+  },
+  "tu_choi": {
+   "n": 34,
+   "trung_vi": 19.401,
+   "p90": 49.953
+  }
+ },
+ "theo_thao_tac": {
+  "duyet_chon_pham_vi": {
+   "n": 17,
+   "trung_vi": 20.354,
+   "p90": 310.633
+  },
+  "duyet_gan_ma": {
+   "n": 9,
+   "trung_vi": 41.96,
+   "p90": 528.082
+  },
+  "duyet_khong_truong": {
+   "n": 6,
+   "trung_vi": 17.521,
+   "p90": 92.787
   },
   "tu_choi": {
    "n": 34,
@@ -129,462 +151,528 @@
    "nguoi": "nguoi_1",
    "giay": 29.23,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T04:08:31.674625+00:00"
+   "luc": "2026-11-17T04:08:31.674625+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "0e40a01d-e34f-402e-9304-d4e96f625216",
    "nguoi": "nguoi_1",
    "giay": 19.295,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T04:08:50.969547+00:00"
+   "luc": "2026-11-17T04:08:50.969547+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "4a230816-b27c-423a-8047-d7cad9b211b8",
    "nguoi": "nguoi_1",
    "giay": 46.523,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T04:09:37.492927+00:00"
+   "luc": "2026-11-17T04:09:37.492927+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "dee721ac-4e2e-4958-82c7-4b51f768bbf9",
    "nguoi": "nguoi_1",
    "giay": 26.591,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T04:10:04.083002+00:00"
+   "luc": "2026-11-17T04:10:04.083002+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "761fc5d5-8ba4-43c1-b92b-43d43eaca148",
    "nguoi": "nguoi_1",
    "giay": 20.653,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T04:10:24.736543+00:00"
+   "luc": "2026-11-17T04:10:24.736543+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "9ebbe638-073f-4054-8851-b54cf29b88ae",
    "nguoi": "nguoi_1",
    "giay": 17.509,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T04:47:32.648378+00:00"
+   "luc": "2026-11-17T04:47:32.648378+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
    "nguoi": "nguoi_1",
    "giay": 15.518,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T04:47:48.166698+00:00"
+   "luc": "2026-11-17T04:47:48.166698+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "ae6eb161-553e-45d1-b447-bedd186bcb2b",
    "nguoi": "nguoi_1",
    "giay": 17.516,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:19:35.175624+00:00"
+   "luc": "2026-11-17T07:19:35.175624+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "f025e6ab-1efc-4e0d-b765-c1076e25930a",
    "nguoi": "nguoi_1",
    "giay": 9.04,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:19:44.215156+00:00"
+   "luc": "2026-11-17T07:19:44.215156+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "392bc16c-53e2-4717-a13e-377787dff71f",
    "nguoi": "nguoi_1",
    "giay": 17.102,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:20:01.31723+00:00"
+   "luc": "2026-11-17T07:20:01.31723+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
    "nguoi": "nguoi_1",
    "giay": 10.607,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:20:11.92415+00:00"
+   "luc": "2026-11-17T07:20:11.92415+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
    "nguoi": "nguoi_1",
    "giay": 19.792,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:20:31.716334+00:00"
+   "luc": "2026-11-17T07:20:31.716334+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
    "nguoi": "nguoi_1",
    "giay": 12.509,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:20:44.225378+00:00"
+   "luc": "2026-11-17T07:20:44.225378+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "56731b82-19d3-4164-896a-63fd49acbb54",
    "nguoi": "nguoi_1",
    "giay": 36.054,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:21:20.279854+00:00"
+   "luc": "2026-11-17T07:21:20.279854+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "0f725e21-4bda-47f1-9d62-282177334149",
    "nguoi": "nguoi_1",
    "giay": 142.898,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:23:43.177061+00:00"
+   "luc": "2026-11-17T07:23:43.177061+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "aebeef77-102b-45b9-9059-7f56330709b8",
    "nguoi": "nguoi_1",
    "giay": 29.864,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:24:13.041385+00:00"
+   "luc": "2026-11-17T07:24:13.041385+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "0e90fdaf-e8d2-435b-95be-0269e6b24105",
    "nguoi": "nguoi_1",
    "giay": 19.483,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:24:32.524781+00:00"
+   "luc": "2026-11-17T07:24:32.524781+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "ef98e4ad-6dec-4c90-bc39-e4a90171654c",
    "nguoi": "nguoi_1",
    "giay": 21.272,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:24:53.796638+00:00"
+   "luc": "2026-11-17T07:24:53.796638+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "ecfaaea8-20ba-4457-a91a-15a2c0b92d77",
    "nguoi": "nguoi_1",
    "giay": 55.967,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:25:49.763383+00:00"
+   "luc": "2026-11-17T07:25:49.763383+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "41428799-9deb-4725-8e2d-334a1d5db980",
    "nguoi": "nguoi_1",
    "giay": 16.483,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:26:06.246036+00:00"
+   "luc": "2026-11-17T07:26:06.246036+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "2087c632-8767-407b-ac7a-8dabba45e7e7",
    "nguoi": "nguoi_1",
    "giay": 19.827,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:26:26.07315+00:00"
+   "luc": "2026-11-17T07:26:26.07315+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
    "nguoi": "nguoi_1",
    "giay": 25.261,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:26:51.334443+00:00"
+   "luc": "2026-11-17T07:26:51.334443+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
    "nguoi": "nguoi_1",
    "giay": 11.413,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:27:02.747363+00:00"
+   "luc": "2026-11-17T07:27:02.747363+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "36b86dae-49b3-486c-b4d2-56259e207e95",
    "nguoi": "nguoi_1",
    "giay": 7.62,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:27:10.367963+00:00"
+   "luc": "2026-11-17T07:27:10.367963+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "38988017-62e2-498e-869b-4f272a74cb10",
    "nguoi": "nguoi_1",
    "giay": 24.43,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:27:34.797396+00:00"
+   "luc": "2026-11-17T07:27:34.797396+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "dcd35215-b74d-4819-9b6a-ed0a9502944a",
    "nguoi": "nguoi_1",
    "giay": 28.032,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:28:02.829454+00:00"
+   "luc": "2026-11-17T07:28:02.829454+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "6f513a28-5f12-4365-9cb3-3b99e33bf612",
    "nguoi": "nguoi_1",
    "giay": 15.556,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:28:18.385073+00:00"
+   "luc": "2026-11-17T07:28:18.385073+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
    "nguoi": "nguoi_1",
    "giay": 47.563,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:29:05.948244+00:00"
+   "luc": "2026-11-17T07:29:05.948244+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
    "nguoi": "nguoi_1",
    "giay": 34.394,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:29:40.342726+00:00"
+   "luc": "2026-11-17T07:29:40.342726+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
    "nguoi": "nguoi_1",
    "giay": 176.12,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:32:36.462827+00:00"
+   "luc": "2026-11-17T07:32:36.462827+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "49ea7b8f-c668-43e6-937b-67b391681183",
    "nguoi": "nguoi_1",
    "giay": 6.702,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:32:43.16457+00:00"
+   "luc": "2026-11-17T07:32:43.16457+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
    "nguoi": "nguoi_1",
    "giay": 8.627,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:32:51.791185+00:00"
+   "luc": "2026-11-17T07:32:51.791185+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
    "nguoi": "nguoi_1",
    "giay": 12.976,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:33:04.76773+00:00"
+   "luc": "2026-11-17T07:33:04.76773+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
    "nguoi": "nguoi_1",
    "giay": 6.572,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:33:11.339349+00:00"
+   "luc": "2026-11-17T07:33:11.339349+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
    "nguoi": "nguoi_1",
    "giay": 49.953,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:34:01.292473+00:00"
+   "luc": "2026-11-17T07:34:01.292473+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "a00ea57c-5094-4047-ab53-545be4ec94ee",
    "nguoi": "nguoi_1",
    "giay": 14.993,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:34:16.28543+00:00"
+   "luc": "2026-11-17T07:34:16.28543+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "a4291c5e-1181-44a0-bf06-49327415f68b",
    "nguoi": "nguoi_1",
    "giay": 20.647,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:34:36.93284+00:00"
+   "luc": "2026-11-17T07:34:36.93284+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
    "nguoi": "nguoi_1",
    "giay": 26.483,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:51:16.545325+00:00"
+   "luc": "2026-11-17T07:51:16.545325+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "ac84051b-8780-4574-860b-8a16ed3ef552",
    "nguoi": "nguoi_1",
    "giay": 19.401,
    "quyet_dinh": "tu_choi",
-   "luc": "2026-11-17T07:51:35.946546+00:00"
+   "luc": "2026-11-17T07:51:35.946546+00:00",
+   "thao_tac": "tu_choi"
   },
   {
    "entity_id": "1d1329f5-9f03-4ac9-80ea-e2f7f1719766",
    "nguoi": "nguoi_1",
    "giay": 77.326,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T07:52:53.272954+00:00"
+   "luc": "2026-11-17T07:52:53.272954+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "16c517f2-5004-496c-95ab-b7c4b3410351",
    "nguoi": "nguoi_1",
    "giay": 262.619,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T07:57:15.891291+00:00"
+   "luc": "2026-11-17T07:57:15.891291+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "308a7c3f-e5e4-4b1a-81f4-d7702e3e2a06",
    "nguoi": "nguoi_1",
    "giay": 92.787,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T07:58:48.678935+00:00"
+   "luc": "2026-11-17T07:58:48.678935+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "60ff1802-3397-47e8-aac5-7dd896cdd025",
    "nguoi": "nguoi_1",
    "giay": 31.156,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T07:59:19.83491+00:00"
+   "luc": "2026-11-17T07:59:19.83491+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "511a8e1a-07a6-4c74-a8f8-b231aa8bdd55",
    "nguoi": "nguoi_1",
    "giay": 6.657,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T07:59:26.491242+00:00"
+   "luc": "2026-11-17T07:59:26.491242+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "232fb499-2927-478f-86d5-8054185fa184",
    "nguoi": "nguoi_1",
    "giay": 117.948,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:01:24.439679+00:00"
+   "luc": "2026-11-17T08:01:24.439679+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "36ac84e0-3c6e-4a9d-8e07-a1d7696027d9",
    "nguoi": "nguoi_1",
    "giay": 18.748,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:01:43.187997+00:00"
+   "luc": "2026-11-17T08:01:43.187997+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "affdc331-0aec-41d3-bb73-a69472ec52eb",
    "nguoi": "nguoi_1",
    "giay": 3.109,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:01:46.296934+00:00"
+   "luc": "2026-11-17T08:01:46.296934+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "7d2bdd28-ca71-4abe-a87a-f7ab254a4e6e",
    "nguoi": "nguoi_1",
    "giay": 5.985,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:01:52.28119+00:00"
+   "luc": "2026-11-17T08:01:52.28119+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "2d5976cd-c368-4e1d-9a39-07eb72f32aff",
    "nguoi": "nguoi_1",
    "giay": 528.082,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:10:40.363673+00:00"
+   "luc": "2026-11-17T08:10:40.363673+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "a391d688-9a28-4e66-ad56-ecba60ca91ef",
    "nguoi": "nguoi_1",
    "giay": 41.96,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:11:22.323781+00:00"
+   "luc": "2026-11-17T08:11:22.323781+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "52417810-98a2-4055-baa0-f54fc826f922",
    "nguoi": "nguoi_1",
    "giay": 57.929,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:12:20.252592+00:00"
+   "luc": "2026-11-17T08:12:20.252592+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "fc043117-1511-4e7a-a556-d87e23a13f20",
    "nguoi": "nguoi_1",
    "giay": 36.25,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:12:56.502455+00:00"
+   "luc": "2026-11-17T08:12:56.502455+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "e9558d9c-8777-4d94-9b89-ab9f7aa1575e",
    "nguoi": "nguoi_1",
    "giay": 19.283,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:13:15.785523+00:00"
+   "luc": "2026-11-17T08:13:15.785523+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "45443aaf-1611-4963-a649-c2f66941926d",
    "nguoi": "nguoi_1",
    "giay": 17.521,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:13:33.306843+00:00"
+   "luc": "2026-11-17T08:13:33.306843+00:00",
+   "thao_tac": "duyet_khong_truong"
   },
   {
    "entity_id": "3b44c7ed-430d-44a2-91a8-514e04522212",
    "nguoi": "nguoi_1",
    "giay": 313.319,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:18:46.625956+00:00"
+   "luc": "2026-11-17T08:18:46.625956+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "8b1ac774-f500-4677-bfa1-61fb02c4b311",
    "nguoi": "nguoi_1",
    "giay": 11.739,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:18:58.364547+00:00"
+   "luc": "2026-11-17T08:18:58.364547+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "29350e85-fd62-4fdb-9506-eca512402028",
    "nguoi": "nguoi_1",
    "giay": 6.408,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:19:04.772039+00:00"
+   "luc": "2026-11-17T08:19:04.772039+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "5d2e4dc8-40aa-40ad-aa1f-cd171563c52d",
    "nguoi": "nguoi_1",
    "giay": 5.401,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:19:10.173005+00:00"
+   "luc": "2026-11-17T08:19:10.173005+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "38a099b6-92fa-4427-917a-3bc686aa1d75",
    "nguoi": "nguoi_1",
    "giay": 70.986,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:20:21.159666+00:00"
+   "luc": "2026-11-17T08:20:21.159666+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "0c867d31-c0d5-40e3-86fd-0092b03b47c9",
    "nguoi": "nguoi_1",
    "giay": 6.063,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:20:27.222275+00:00"
+   "luc": "2026-11-17T08:20:27.222275+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "df775a14-b1c6-4424-93e0-3968f3241c77",
    "nguoi": "nguoi_1",
    "giay": 10.432,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:20:37.654143+00:00"
+   "luc": "2026-11-17T08:20:37.654143+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "55b0e904-9925-407e-96d2-cb40745a3cd3",
    "nguoi": "nguoi_1",
    "giay": 20.354,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:20:58.008837+00:00"
+   "luc": "2026-11-17T08:20:58.008837+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "86c76a72-ffd2-44c6-b51a-c31ae4d25ff7",
    "nguoi": "nguoi_1",
    "giay": 310.633,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:26:08.641472+00:00"
+   "luc": "2026-11-17T08:26:08.641472+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "e194aae5-3b5b-4341-be68-36e63911e1f1",
    "nguoi": "nguoi_1",
    "giay": 11.304,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:26:19.945638+00:00"
+   "luc": "2026-11-17T08:26:19.945638+00:00",
+   "thao_tac": "duyet_chon_pham_vi"
   },
   {
    "entity_id": "802b75f9-6ee0-4d10-8843-d45f998461b2",
    "nguoi": "nguoi_1",
    "giay": 19.802,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:26:39.747516+00:00"
+   "luc": "2026-11-17T08:26:39.747516+00:00",
+   "thao_tac": "duyet_gan_ma"
   },
   {
    "entity_id": "ae2dd348-de3f-4289-8363-04a5d40baa3a",
    "nguoi": "nguoi_1",
    "giay": 10.757,
    "quyet_dinh": "da_duyet",
-   "luc": "2026-11-17T08:26:50.504082+00:00"
+   "luc": "2026-11-17T08:26:50.504082+00:00",
+   "thao_tac": "duyet_gan_ma"
   }
  ]
 }

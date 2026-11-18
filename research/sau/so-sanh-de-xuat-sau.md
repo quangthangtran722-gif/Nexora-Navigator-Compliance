@@ -1,6 +1,6 @@
 # So đề xuất gốc LLM ↔ bản đã duyệt — màn duyệt mới U1a (MIS)
 
-Chạy: 2026-11-17T08:35:07.054Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
+Chạy: 2026-11-18T02:43:33.616Z. 70 entity Luật 108, 9 điều cũ. Quy tắc phân loại: `scripts/research/do-duyet-lib.mjs` (phanLoai).
 
 | Lớp | Số entity |
 |---|---|

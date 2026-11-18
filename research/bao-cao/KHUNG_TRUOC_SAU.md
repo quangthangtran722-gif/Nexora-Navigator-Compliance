@@ -134,13 +134,51 @@ quy nguyên nhân".
   `research/bao-cao/DOI_XUNG_DIEU_8.md`.
 - **17/11, sau lượt duyệt — thêm bảng so từ chối từng entity giữa hai lượt** (mô tả, không kiểm định) vào
   `so-truoc-sau.mjs`, chỉ chạy khi lượt sau duyệt xong. Kết quả ở §9.
+- **18/11, sau khi có số — thêm ba phép tính, đều không phải tiêu chí đặt trước:** (1) Cohen's kappa kèm khoảng tin cậy cho
+  bảng chéo, đưa lên đầu kết quả (§9.1); (2) độ nhạy bỏ nhóm `NN-CT`; (3) M1 tách theo thao tác trước khi bấm (§9.3). Không
+  thêm kiểm định nào. Kết luận M1 đặt trước giữ nguyên.
 
 ## 9. Kết quả (lượt sau duyệt xong 17/11/2026, `npm run do:sau`, `research/sau/TRUOC_SAU.md`)
 
 Lượt sau: 70/70 entity đã xử lý (34 duyệt, 36 từ chối, 0 chờ), 70 dòng duyệt entity, 66 khoảng đo (bỏ 0 khoảng cùng thời
 điểm, 3 khoảng > 10 phút).
 
-### 9.1 Đối chiếu dự đoán §5 — giữ nguyên dự đoán, ghi đúng sai
+### 9.1 Kết quả trung tâm — hai lượt duyệt cùng 70 đề xuất không ra cùng một thư viện
+
+Cùng đề xuất máy, cùng văn bản, cùng 70 entity. Hai lượt duyệt của người:
+
+| | Sau: duyệt | Sau: từ chối | Cộng |
+|---|---|---|---|
+| **Trước: duyệt** | 29 | 16 | 45 |
+| **Trước: từ chối** | 5 | 20 | 25 |
+| **Cộng** | 34 | 36 | 70 |
+
+- **21/70 entity (30,0%) bị đảo quyết định** giữa hai lượt: 16 trước duyệt → sau từ chối, 5 trước từ chối → sau duyệt.
+- **Cohen's kappa = 0,40** (0,405; sai số chuẩn 0,10; **khoảng tin cậy 95% 0,20–0,61**, sai số chuẩn tiệm cận Fleiss, Cohen &
+  Everitt 1969; kiểm lại bằng bootstrap 20.000 lần: 0,20–0,60). Khớp quan sát 0,70, khớp do ngẫu nhiên 0,50. Cận dưới 0,20 là
+  khớp kém; cận trên 0,61 vẫn chưa tới mức khớp cao. Tính trong `scripts/research/so-truoc-sau.mjs`, hàm `cohenKappa`
+  (`do-duyet-lib.mjs`, có test).
+- Tính theo thư viện: **16/45 (35,6%) entity của thư viện lượt trước bị lượt sau loại**; 5/34 (14,7%) entity của thư viện lượt
+  sau là thứ lượt trước đã loại.
+
+**Diễn giải.** Khâu người duyệt là cơ chế được thiết kế để bảo đảm AI không tự quyết. Trên cùng đề xuất, chính khâu đó không
+tái lập được kết quả của nó: đổi lượt duyệt thì khoảng một phần ba thư viện lượt trước bị loại. Đây là điểm yếu của **khâu
+người**, không phải của LLM, vì đầu vào máy giống hệt ở hai lượt.
+
+**Độ nhạy (thêm sau khi thấy số, không phải tiêu chí đặt trước).** 12/21 ca đảo dồn vào một nhóm: chủ thể là cơ quan nhà nước
+hoặc công chức (`NN-CT`), nhóm mà lượt sau có câu từ chối viết sẵn. Bỏ cả 16 entity lượt sau từ chối theo nhóm này → n = 54,
+**kappa = 0,65** (95% 0,44–0,86). Tức phần lớn bất ổn không rải đều mà tập trung ở chỗ hai lượt dùng quy tắc khác nhau. Điều
+này không làm nhẹ kết quả. Nó cho thấy thư viện phụ thuộc vào một quy tắc do người duyệt tự đặt, và quy tắc đó không nằm trong
+hệ thống: lượt trước không có quy tắc viết nào, lượt sau gõ tay theo quy ước (`CAN_THIEP_KHONG_VET.md` §6).
+
+**Giới hạn — ghi nguyên văn.** Hai lượt không cùng điều kiện: người duyệt có thể khác; màn hình khác (màn cũ và U1a); lượt sau
+có quy tắc từ chối theo mã nhóm, chốt giữa lượt (§8), lượt trước không có; người duyệt lượt sau biết giả thuyết (§7). Kappa ở
+đây đo độ tái lập của **cả quy trình duyệt** (người + màn hình + quy tắc), không phải độ tin cậy giữa hai người duyệt độc lập
+trong cùng điều kiện. **Đây là chỉ báo, không phải thí nghiệm có đối chứng.** Không quy 21 ca đảo cho riêng yếu tố nào.
+
+Chi tiết từng entity ở §9.4.
+
+### 9.2 Đối chiếu dự đoán §5 — giữ nguyên dự đoán, ghi đúng sai
 
 | Chỉ số | Dự đoán | Thực tế | Đúng / sai |
 |---|---|---|---|
@@ -152,7 +190,7 @@ Lượt sau: 70/70 entity đã xử lý (34 duyệt, 36 từ chối, 0 chờ), 7
 M2 và M3 đúng **không** được đọc thành "can thiệp làm giảm việc viết lại" (ghi chú của người điền, §5): màn nào cũng không có
 ô sửa tên, và người duyệt lượt sau biết giả thuyết.
 
-### 9.2 Chỉ số
+### 9.3 Chỉ số
 
 | # | Lượt trước | Lượt sau | Kiểm định đặt trước |
 |---|---|---|---|
@@ -166,29 +204,51 @@ M2 và M3 đúng **không** được đọc thành "can thiệp làm giảm vi�
 | M5 | 14/70 (20,0%) | 0/70 (0%) | Mô tả |
 | M6 | — | Chủ thể đã duyệt: C0 1, C2 5, C6 4; 1 chủ thể xác nhận chung. Nghĩa vụ: phạm vi chung 10, có điều kiện 8 | Mô tả |
 
-### 9.3 Từ chối từng entity giữa hai lượt (mô tả, sau khi bỏ điều kiện làm mù)
+**M1 tách theo thao tác trước khi bấm** (thêm 18/11, sau khi có số; mô tả, không kiểm định; tiêu chí đặt trước chỉ có M1
+gộp). Thao tác suy từ cột entity đã duyệt: có mã C0–C7 → gán mã (chủ thể); chỉ có phạm vi → chọn phạm vi (nghĩa vụ); còn lại
+không trường bắt buộc (đối tượng, thời hạn). Màn cũ không có trường nào.
 
-| | Sau: duyệt | Sau: từ chối |
+| Thao tác | Lượt trước | Lượt sau |
 |---|---|---|
-| **Trước: duyệt** | 29 | 16 |
-| **Trước: từ chối** | 5 | 20 |
+| Từ chối | n = 23; trung vị 9,4 giây; p90 66,9 giây | n = 34; trung vị 19,4 giây; p90 50,0 giây |
+| Duyệt, gộp | n = 32; trung vị 6,6 giây; p90 37,1 giây | n = 32; trung vị 20,4 giây; **p90 262,6 giây** |
+| — gán mã điều kiện (chủ thể) | — | n = 9; trung vị 42,0 giây; p90 528,1 giây |
+| — chỉ chọn phạm vi (nghĩa vụ) | — | n = 17; trung vị 20,4 giây; p90 310,6 giây |
+| — không trường bắt buộc | — | n = 6; trung vị 17,5 giây; p90 92,8 giây |
+
+- Kết luận M1 giữ nguyên: dự đoán 60 giây **sai** (thực tế 19,8 giây). **Đuôi tăng mạnh hơn trung vị: p90 50,6 → 117,9 giây**
+  (gấp 2,3 lần).
+- **Số ngược với lý do tách:** trung vị từ chối lượt sau (19,4 giây) **gần bằng** trung vị duyệt (20,4 giây). Từ chối không
+  nhanh hơn duyệt ở trung vị, và tự nó chậm gấp đôi so với từ chối lượt trước (9,4 → 19,4). Trung vị chậm lên ở **mọi** loại
+  thao tác, kể cả loại không có trường bắt buộc nào. Tách theo thao tác không chỉ ra được một chỗ duy nhất làm chậm trung vị.
+- Chỗ khác thật là **đuôi**: p90 của từ chối giảm (66,9 → 50,0), p90 của duyệt tăng (37,1 → 262,6). Đuôi dài nằm ở duyệt có
+  trường bắt buộc: gán mã p90 528,1 giây, chọn phạm vi p90 310,6 giây.
+- Giới hạn: n nhỏ (gán mã n = 9, nên p90 theo hạng gần nhất gần như là giá trị lớn nhất). Khoảng gồm cả thời gian hỏi trợ lý
+  giữa lượt (§9.5), nên đuôi dài không đọc được là thời gian thao tác trên màn hình.
+
+### 9.4 Từ chối từng entity giữa hai lượt — chi tiết của §9.1
 
 - 16 entity trước duyệt → sau từ chối: 12 chủ thể là cơ quan nhà nước / công chức (`NN-CT`), Đ11 k3 và Đ52 k1 "Luật này"
   (`TX`), 2 nghĩa vụ Đ27 (`GQ`: k5 đúng kế hoạch, k2a nhầm).
 - 5 entity trước từ chối → sau duyệt: Đ3 "Người nộp thuế trong quản lý thuế", Đ8 "người nộp thuế", Đ8 "Chiếm đoạt hoặc sử
   dụng trái phép tiền thuế", Đ48 "Nộp dần tiền thuế nợ", Đ52 "trước ngày 01 tháng 01 năm 2027".
-- Từ chối có ghi chú: trước 0/23 dòng từ chối (thêm 2 entity ở trạng thái từ chối không có dòng từ chối nào,
-  `CAN_THIEP_KHONG_VET.md` §2); sau 34/36.
+- Từ chối có ghi chú: trước 0/23 dòng từ chối (thêm 2 entity mà nhật ký ghi `da_duyet` nhưng trạng thái là
+  `tu_choi`, `CAN_THIEP_KHONG_VET.md` §0); sau 34/36.
 - Tỉ lệ từ chối lượt sau phụ thuộc quy tắc từ chối chốt giữa lượt (§8), quy tắc mà lượt trước không có. Không so hai tỉ lệ từ
   chối như so cùng một phép đo.
 
-### 9.4 Giới hạn riêng của số lượt sau (thêm vào §7)
+### 9.5 Giới hạn riêng của số lượt sau (thêm vào §7)
 
 - **M1 lượt sau gồm cả thời gian hỏi trợ lý giữa lượt** (cách gán mã, điều kiện máy đọc, đọc ngược DB) khi khoảng nghỉ dưới
   10 phút. 3 khoảng trên 10 phút đã bị bỏ. M1 vì vậy không phải thời gian đọc một entity.
 - Quy tắc từ chối và mã nhóm chốt giữa lượt (§8); người duyệt đã được báo về 21/44 cạnh không nguyên văn trước entity đầu tiên.
 - 5 lần từ chối có sai sót (4 sai / thiếu mã, 1 nhầm entity), không hoàn tác được (`CAN_THIEP_KHONG_VET.md` §6).
 
-Câu được phép viết: "Lượt duyệt trên màn mới có trung vị 19,8 giây mỗi entity so với 8,6 giây ở lượt trước; khác biệt có ý
+Câu được phép viết (kết quả trung tâm, đặt đầu phần kết quả): "Trên cùng 70 đề xuất của LLM, hai lượt duyệt của người đảo
+quyết định ở 21 entity (30%); Cohen's kappa = 0,40 (khoảng tin cậy 95% 0,20–0,61). 16/45 entity lượt trước đưa vào thư viện bị
+lượt sau loại. Hai lượt khác nhau về màn hình, quy tắc từ chối và có thể về người duyệt, nên đây là chỉ báo về độ tái lập của khâu
+người duyệt, không phải thí nghiệm có đối chứng."
+
+Câu được phép viết (M1, M2): "Lượt duyệt trên màn mới có trung vị 19,8 giây mỗi entity so với 8,6 giây ở lượt trước; khác biệt có ý
 nghĩa thống kê theo tiêu chí đặt trước (p < 0,001). Lượt sau không viết lại tên entity nào (0/34) so với 9/45 ở lượt trước (p =
-0,009). Thiết kế không cho phép quy nguyên nhân; dự đoán M1 (60 giây) sai."
+0,009). Thiết kế không cho phép quy nguyên nhân; dự đoán M1 (60 giây) sai. p90 tăng từ 50,6 lên 117,9 giây."

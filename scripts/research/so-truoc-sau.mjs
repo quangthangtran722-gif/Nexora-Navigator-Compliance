@@ -3,7 +3,7 @@
 // TRƯỚC khi có số liệu sau; kết quả chỉ mô tả có / không có khác biệt, không suy diễn nhân quả.
 // Dùng: npm run do:sau && node scripts/research/so-truoc-sau.mjs   → research/sau/TRUOC_SAU.md
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { mannWhitney, thongKe, fisher, docTruoc } from "./do-duyet-lib.mjs";
+import { mannWhitney, thongKe, fisher, cohenKappa, docTruoc } from "./do-duyet-lib.mjs";
 
 const doc = (p) => JSON.parse(readFileSync(`research/sau/${p}.json`, "utf8"));
 const nd = { truoc: doc("nhip-duyet-truoc"), sau: doc("nhip-duyet-sau") };
@@ -13,6 +13,7 @@ const KQ = (p) => (p < 0.05 ? "có khác biệt (p < 0,05)" : "không có khác 
 const pc = (x, n) => (n ? `${x}/${n} (${((100 * x) / n).toFixed(1)}%)` : "—");
 const s1 = (s) => (s.n ? `n=${s.n}, trung vị ${s.trung_vi.toFixed(1)} giây, p90 ${s.p90.toFixed(1)} giây` : "n=0");
 
+const dau = []; // kết quả trung tâm (bảng chéo + kappa), in trước M1
 const dong = [];
 const chan = [];
 if (ss.sau.tong.chua_duyet) chan.push(`lượt sau còn ${ss.sau.tong.chua_duyet} entity chưa duyệt`);
@@ -23,6 +24,18 @@ const g = { truoc: nd.truoc.khoang.map((k) => k.giay), sau: nd.sau.khoang.map((k
 const mw = mannWhitney(g.truoc, g.sau);
 dong.push("## M1 — Thời gian duyệt mỗi entity", "", `- Trước: ${s1(thongKe(g.truoc))}`, `- Sau: ${s1(thongKe(g.sau))}`,
   mw ? `- Mann–Whitney U hai phía: U = ${mw.U}, p = ${mw.p.toFixed(3)} → **${KQ(mw.p)}**${mw.p < 0.05 ? ` — trung vị lượt sau ${thongKe(g.sau).trung_vi > thongKe(g.truoc).trung_vi ? "cao" : "thấp"} hơn` : ""}` : "- Không kiểm định: lượt sau chưa đủ 5 khoảng đo", "");
+// M1 tách theo thao tác (thêm 18/11, sau khi có số): chỉ mô tả, không kiểm định — tiêu chí đặt trước chỉ có M1 gộp
+const TEN_TT = { tu_choi: "Từ chối", duyet: "Duyệt (màn cũ: không trường bắt buộc)", duyet_gan_ma: "Duyệt, gán mã điều kiện (chủ thể)",
+  duyet_chon_pham_vi: "Duyệt, chỉ chọn phạm vi (nghĩa vụ)", duyet_khong_truong: "Duyệt, không trường bắt buộc (đối tượng, thời hạn)" };
+const theoTT = (k) => { const m = {}; for (const x of nd[k].khoang) (m[x.thao_tac ?? "(chưa gắn)"] ??= []).push(x.giay); return m; };
+const tt = { truoc: theoTT("truoc"), sau: theoTT("sau") };
+dong.push("### M1 tách theo thao tác trước khi bấm (mô tả, thêm sau khi có số, không kiểm định)", "",
+  "| Thao tác | Trước | Sau |", "|---|---|---|");
+for (const k of Object.keys(TEN_TT)) if (tt.truoc[k] || tt.sau[k])
+  dong.push(`| ${TEN_TT[k]} | ${tt.truoc[k] ? s1(thongKe(tt.truoc[k])) : "—"} | ${tt.sau[k] ? s1(thongKe(tt.sau[k])) : "—"} |`);
+const duyetSau = Object.entries(tt.sau).filter(([k]) => k.startsWith("duyet")).flatMap(([, v]) => v);
+if (duyetSau.length) dong.push(`| Duyệt (gộp) | ${tt.truoc.duyet ? s1(thongKe(tt.truoc.duyet)) : "—"} | ${s1(thongKe(duyetSau))} |`);
+dong.push("", "Khoảng gán cho entity của dòng duyệt kết thúc khoảng; gồm cả thời gian đọc entity đó và mọi việc làm giữa hai lần bấm.", "");
 
 // M2 — tỉ lệ viết lại trên entity đã duyệt
 const daDuyet = (t) => t.y_nguyen + t.sua_nho + t.doi_nghia + t.chua_gan_nhan;
@@ -69,11 +82,27 @@ if (!ss.sau.tong.chua_duyet) {
     const khongVet = entities.filter((e) => e.trang_thai_duyet === "tu_choi"
       && !approvals.some((a) => a.entity_id === e.id && a.quyet_dinh === "tu_choi"));
     ghiTruoc = `${tcTruoc.filter((a) => a.ghi_chu && a.ghi_chu.trim()).length}/${tcTruoc.length} dòng từ chối` +
-      (khongVet.length ? ` (thêm ${khongVet.length} entity ở trạng thái từ chối mà không có dòng từ chối nào: ${khongVet.map((e) => `Đ${e.so_dieu} "${e.ten_entity}"`).join(", ")})` : "");
+      (khongVet.length ? ` (thêm ${khongVet.length} entity trạng thái từ chối mà nhật ký chỉ có dòng duyệt — nhật ký ghi sai, CAN_THIEP_KHONG_VET §0: ${khongVet.map((e) => `Đ${e.so_dieu} "${e.ten_entity}"`).join(", ")})` : "");
   }
   const ghiSau = existsSync("research/sau/phan-loai-sau.json") ? doc("phan-loai-sau").tu_choi_ds : [];
   const dongDs = (ds) => ds.map((d) => `| Đ${d.so_dieu} | ${d.loai_goc} | ${d.goc.ten_entity} | ${nhomSau.get(d.id) ?? ""} |`);
-  dong.push("## Từ chối — từng entity giữa hai lượt (mô tả, không kiểm định)", "",
+  const kp = cohenKappa(o.DD.length, o.DT.length, o.TD.length, o.TT.length);
+  const f2 = (x) => x.toFixed(2).replace(".", ",");
+  // Độ nhạy (thêm sau khi thấy số): bỏ entity lượt sau từ chối theo nhóm NN-CT — nhóm có quy tắc viết sẵn ở lượt sau
+  const boNNCT = (ds) => ds.filter((d) => nhomSau.get(d.id) !== "NN-CT");
+  const kp2 = cohenKappa(boNNCT(o.DD).length, boNNCT(o.DT).length, boNNCT(o.TD).length, boNNCT(o.TT).length);
+  const dao = o.DT.length + o.TD.length;
+  dau.push("## Kết quả trung tâm — hai lượt duyệt cùng 70 đề xuất có ra cùng quyết định không", "",
+    "| | Sau: duyệt | Sau: từ chối | Cộng |", "|---|---|---|---|",
+    `| **Trước: duyệt** | ${o.DD.length} | ${o.DT.length} | ${o.DD.length + o.DT.length} |`,
+    `| **Trước: từ chối** | ${o.TD.length} | ${o.TT.length} | ${o.TD.length + o.TT.length} |`,
+    `| **Cộng** | ${o.DD.length + o.TD.length} | ${o.DT.length + o.TT.length} | ${kp.n} |`, "",
+    `- Đảo quyết định: ${pc(dao, kp.n)}. Khớp quan sát p_o = ${f2(kp.po)}; khớp do ngẫu nhiên p_e = ${f2(kp.pe)}.`,
+    `- **Cohen's kappa = ${f2(kp.kappa)}**, sai số chuẩn ${f2(kp.se)}, khoảng tin cậy 95% ${f2(kp.ci95[0])}–${f2(kp.ci95[1])} (sai số chuẩn tiệm cận Fleiss–Cohen–Everitt 1969).`,
+    `- Thư viện lượt trước có ${o.DD.length + o.DT.length} entity đã duyệt; ${o.DT.length} (${((100 * o.DT.length) / (o.DD.length + o.DT.length)).toFixed(1)}%) bị lượt sau từ chối. Thư viện lượt sau có ${o.DD.length + o.TD.length}; ${o.TD.length} (${((100 * o.TD.length) / (o.DD.length + o.TD.length)).toFixed(1)}%) lượt trước đã từ chối.`,
+    `- Độ nhạy (thêm sau khi thấy số, không phải tiêu chí đặt trước): bỏ ${kp.n - kp2.n} entity lượt sau từ chối theo nhóm NN-CT → n = ${kp2.n}, kappa = ${f2(kp2.kappa)} (95% ${f2(kp2.ci95[0])}–${f2(kp2.ci95[1])}).`,
+    "- Hai lượt không cùng điều kiện (người duyệt có thể khác, màn hình khác, lượt sau có quy tắc từ chối viết sẵn). Chỉ báo, không phải thí nghiệm có đối chứng.", "");
+  dong.push("## Từ chối — từng entity giữa hai lượt (chi tiết)", "",
     "| | Sau: duyệt | Sau: từ chối |", "|---|---|---|",
     `| **Trước: duyệt** | ${o.DD.length} | ${o.DT.length} |`, `| **Trước: từ chối** | ${o.TD.length} | ${o.TT.length} |`, "",
     `- Từ chối có ghi chú: trước ${ghiTruoc}; sau ${ghiSau.filter((x) => x.nhom_ghi !== "(không ghi)").length}/${ghiSau.length}.`,
@@ -96,6 +125,6 @@ dong.push("## M6 — Phân bố mã C0–C7 (lượt sau; màn cũ không có m�
 for (const [m, s] of Object.entries(nd.sau.theo_ma_dieu_kien ?? {})) dong.push(`- ${m}: ${s1(s)}`);
 
 const md = ["# Trước / sau — cùng 70 đề xuất LLM, hai màn duyệt", "", `Chạy: ${new Date().toISOString()}. Khung: \`research/bao-cao/KHUNG_TRUOC_SAU.md\`.`,
-  chan.length ? `\n**CHƯA ĐỦ ĐỂ KẾT LUẬN:** ${chan.join("; ")}.\n` : "", "Mọi kết luận dưới đây chỉ mô tả có / không có khác biệt giữa hai lượt; không suy ra nguyên nhân (xem giới hạn trong khung).", "", ...dong].join("\n");
+  chan.length ? `\n**CHƯA ĐỦ ĐỂ KẾT LUẬN:** ${chan.join("; ")}.\n` : "", "Mọi kết luận dưới đây chỉ mô tả có / không có khác biệt giữa hai lượt; không suy ra nguyên nhân (xem giới hạn trong khung).", "", ...dau, ...dong].join("\n");
 writeFileSync("research/sau/TRUOC_SAU.md", md);
 console.log(md);

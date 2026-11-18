@@ -4,7 +4,7 @@
 //   sau  : DB MIS (MIS_DB_URL hoặc .env.mis.local) — lượt duyệt màn mới (U1a)
 // Ghi research/sau/nhip-duyet-<nguon>.json, in tóm tắt. Quy tắc đo: do-duyet-lib.mjs khoangDuyet.
 import { mkdirSync, writeFileSync } from "node:fs";
-import { khoangDuyet, thongKe, docTruoc, docSau, docDeXuat, NGHI_GIAY } from "./do-duyet-lib.mjs";
+import { khoangDuyet, thongKe, thaoTac, docTruoc, docSau, docDeXuat, NGHI_GIAY } from "./do-duyet-lib.mjs";
 
 const nguon = process.argv[process.argv.indexOf("--nguon") + 1];
 if (!["truoc", "sau"].includes(nguon)) { console.error("Dùng: --nguon truoc|sau"); process.exit(1); }
@@ -18,6 +18,8 @@ const { khoang, boCungLuc, boNghi, soDong } = khoangDuyet(approvals);
 const biDanh = new Map();
 for (const k of khoang) if (!biDanh.has(k.nguoi)) biDanh.set(k.nguoi, `nguoi_${biDanh.size + 1}`);
 for (const k of khoang) k.nguoi = biDanh.get(k.nguoi);
+// Thao tác trước khi bấm (thêm 18/11, sau khi có số — tách mô tả, không kiểm định): xem do-duyet-lib.mjs thaoTac
+for (const k of khoang) k.thao_tac = thaoTac(k.quyet_dinh, ent.get(k.entity_id), nguon === "sau");
 
 const nhom = (khoa) => {
   const m = {};
@@ -33,6 +35,7 @@ const out = {
   tong: thongKe(khoang.map((k) => k.giay)),
   theo_nguoi: nhom((k) => k.nguoi),
   theo_quyet_dinh: nhom((k) => k.quyet_dinh),
+  theo_thao_tac: nhom((k) => k.thao_tac),
   theo_loai_entity: nhom((k) => ent.get(k.entity_id)?.loai_entity),
   theo_ma_dieu_kien: nguon === "sau" ? nhom((k) => ent.get(k.entity_id)?.ma_dieu_kien) : "không có (màn cũ chưa có mã C0–C7)",
   theo_dieu: nhom((k) => String(ent.get(k.entity_id)?.so_dieu)),

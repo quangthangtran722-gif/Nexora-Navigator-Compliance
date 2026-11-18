@@ -77,6 +77,33 @@ export function fisher(a, b, c, d) {
   for (let x = Math.max(0, c1 - r2); x <= Math.min(r1, c1); x++) { const px = p(x); if (px <= p0 * (1 + 1e-9)) s += px; }
   return Math.min(1, s);
 }
+// Cohen's kappa cho bảng 2×2 [[a, b], [c, d]] (hàng = lượt 1, cột = lượt 2), khoảng tin cậy 95% theo sai số chuẩn tiệm cận
+// Fleiss, Cohen & Everitt (1969). Dùng để đo độ khớp quyết định duyệt / từ chối giữa hai lượt trên cùng đề xuất.
+export function cohenKappa(a, b, c, d) {
+  const n = a + b + c + d;
+  const p = [[a / n, b / n], [c / n, d / n]];
+  const r = [p[0][0] + p[0][1], p[1][0] + p[1][1]], q = [p[0][0] + p[1][0], p[0][1] + p[1][1]];
+  const po = p[0][0] + p[1][1], pe = r[0] * q[0] + r[1] * q[1];
+  const kappa = (po - pe) / (1 - pe);
+  let s = 0;
+  for (let i = 0; i < 2; i++) s += p[i][i] * (1 - (r[i] + q[i]) * (1 - kappa)) ** 2;
+  for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) if (i !== j) s += (1 - kappa) ** 2 * p[i][j] * (q[i] + r[j]) ** 2;
+  s -= (kappa - pe * (1 - kappa)) ** 2;
+  const se = Math.sqrt(s / (n * (1 - pe) ** 2));
+  return { n, po, pe, kappa, se, ci95: [kappa - 1.96 * se, kappa + 1.96 * se] };
+}
+
+// Thao tác người duyệt phải làm trên màn mới trước khi bấm, suy từ entity đã duyệt (cột DB, không đoán):
+// có mã điều kiện C0–C7 → gan_ma (chọn mã, phạm vi, có thể viết điều kiện máy đọc); chỉ có phạm vi → chon_pham_vi; còn lại không
+// trường bắt buộc. Màn cũ không có các trường này → "duyet".
+export function thaoTac(quyetDinh, e, coTruong) {
+  if (quyetDinh !== "da_duyet") return "tu_choi";
+  if (!coTruong) return "duyet";
+  if (e?.ma_dieu_kien) return "duyet_gan_ma";
+  if (e?.pham_vi) return "duyet_chon_pham_vi";
+  return "duyet_khong_truong";
+}
+
 function phi(z) {
   // Abramowitz–Stegun 7.1.26
   const t = 1 / (1 + 0.3275911 * (z / Math.SQRT2));

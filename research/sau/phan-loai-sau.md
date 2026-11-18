@@ -1,6 +1,6 @@
 # Lượt sau — điều kiện rỗng nghĩa, từ chối theo mã nhóm, Điều 8
 
-Chạy: 2026-11-17T08:35:09.113Z. 70 entity; đã duyệt 34; từ chối 36; còn chờ 0.
+Chạy: 2026-11-18T02:43:35.233Z. 70 entity; đã duyệt 34; từ chối 36; còn chờ 0.
 
 
 ## Điều kiện rỗng nghĩa (PHAM_VI_VA_PHUONG_PHAP §2.6)

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 
-import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, docTruoc, docDeXuat, rongNghia, maNhom, coTienToMa } from "../scripts/research/do-duyet-lib.mjs";
+import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, cohenKappa, thaoTac, docTruoc, docDeXuat, rongNghia, maNhom, coTienToMa } from "../scripts/research/do-duyet-lib.mjs";
 
 // Bản chụp prod (research/baseline/raw) không commit (.gitignore) — máy không có bản chụp thì bỏ qua các ca cần nó
 const coBanChup = existsSync("research/baseline/raw/approvals.json");
@@ -94,4 +94,23 @@ test("maNhom: mã nhóm đầu ghi chú từ chối", () => {
   assert.equal(coTienToMa("Lỗi trích xuất: x"), false);
   assert.equal(maNhom(null), "(không ghi)");
   assert.equal(maNhom("   "), "(không ghi)");
+});
+
+test("Cohen's kappa 2×2: ví dụ tính tay và bảng chéo hai lượt duyệt", () => {
+  // [[20,5],[10,15]]: p_o = 0,7; p_e = 0,5 → kappa = 0,4
+  assert.equal(cohenKappa(20, 5, 10, 15).kappa.toFixed(3), "0.400");
+  // Hai lượt duyệt 70 đề xuất (17/11): 29 / 16 / 5 / 20 → kappa 0,405; CI 95% 0,20–0,61
+  const k = cohenKappa(29, 16, 5, 20);
+  assert.equal(k.kappa.toFixed(3), "0.405");
+  assert.equal(k.ci95.map((x: number) => x.toFixed(2)).join("–"), "0.20–0.61");
+  // Khớp hoàn toàn → kappa = 1
+  assert.equal(cohenKappa(10, 0, 0, 10).kappa, 1);
+});
+
+test("thaoTac: phân thao tác duyệt từ cột entity, màn cũ không có trường", () => {
+  assert.equal(thaoTac("tu_choi", { ma_dieu_kien: "C2" }, true), "tu_choi");
+  assert.equal(thaoTac("da_duyet", { ma_dieu_kien: "C6", pham_vi: "co_dieu_kien" }, true), "duyet_gan_ma");
+  assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: "chung" }, true), "duyet_chon_pham_vi");
+  assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: null }, true), "duyet_khong_truong");
+  assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: null }, false), "duyet");
 });

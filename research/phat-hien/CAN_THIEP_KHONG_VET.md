@@ -3,6 +3,41 @@
 > Một mục duy nhất trong báo cáo (chủ repo chốt 11/11) — gộp phát hiện Điều 8 và giới hạn của cạnh LLM. Số đo Điều 8 do
 > script so sánh 70 entity (lịch 16/11) điền vào §2; đến lúc đó §2 chỉ ghi những gì đã kiểm.
 
+## 0. Bằng chứng mạnh nhất: nhật ký ghi A, dữ liệu là B (lượt duyệt trước, bản chụp prod 09/11)
+
+**Phân biệt với các mục sau.** Các mục §2–§6 là loại "nhật ký **không ghi lại** cái gì đã đổi": người đọc `approvals` thiếu
+thông tin, nên kết luận thiếu. Mục này là loại khác: **nhật ký ghi một quyết định, dữ liệu mang quyết định ngược lại.** Người
+kiểm toán chỉ đọc `approvals` sẽ kết luận hai entity này **đã được duyệt vào thư viện**, tức kết luận **sai**, không phải thiếu.
+
+| | Đ8 k1 "Gây phiền hà, sách nhiễu" | Đ10 k5 "Quy định chi tiết khoản 1 và khoản 3 Điều này" |
+|---|---|---|
+| `entities.id` | `0f725e21-4bda-47f1-9d62-282177334149` | `ef98e4ad-6dec-4c90-bc39-e4a90171654c` |
+| `approvals` của entity | **1 dòng, `da_duyet`** | **1 dòng, `da_duyet`** |
+| `entities.trang_thai_duyet` | **`tu_choi`** | **`tu_choi`** |
+| `entities.updated_at` | `2026-10-20T11:31:37.937619+00:00`, **bằng đúng** thời điểm dòng duyệt | `2026-10-20T11:33:24.825846+00:00`, **bằng đúng** thời điểm dòng duyệt |
+| `entities.ghi_chu_curator` | "Không phải nghĩa vụ của doanh nghiệp — loại khi rà soát 21/10" | như bên trái, nguyên văn |
+
+Nguyên văn hai dòng `approvals` (`research/baseline/raw/approvals.json`; uuid tài khoản người duyệt được lược, cùng một tài
+khoản ở cả hai dòng và trùng `curator_id` của hai entity):
+
+```json
+{"id":"18e999e3-7d4a-4614-9735-786d4df9daad","entity_id":"0f725e21-4bda-47f1-9d62-282177334149","diagnostic_id":null,"customer_id":null,"nguoi_duyet_id":"[lược]","quyet_dinh":"da_duyet","ghi_chu":null,"created_at":"2026-10-20T11:31:37.937619+00:00"}
+{"id":"d7cac5eb-e93a-4113-989f-11c5baf582e8","entity_id":"ef98e4ad-6dec-4c90-bc39-e4a90171654c","diagnostic_id":null,"customer_id":null,"nguoi_duyet_id":"[lược]","quyet_dinh":"da_duyet","ghi_chu":null,"created_at":"2026-10-20T11:33:24.825846+00:00"}
+```
+
+**Điều đọc được, và điều không đọc được.**
+- Trạng thái đổi từ `da_duyet` sang `tu_choi` **sau** dòng duyệt và **ngoài** hàm duyệt: hàm duyệt luôn ghi một dòng
+  `approvals`, và không có dòng `tu_choi` nào. Nhật ký vẫn chạy bình thường sau đó (dòng `approvals` cuối trong bản chụp là
+  31/10), nên không phải do nhật ký ngừng ghi.
+- Lần đổi đó **không chạm `updated_at`**: cột vẫn giữ đúng thời điểm dòng duyệt 20/10. Theo các cột có dấu thời gian, không có
+  gì xảy ra với hai entity sau 20/10.
+- **Dấu vết duy nhất là một câu tự do** trong `ghi_chu_curator`: không có cột người làm, không có thời điểm do máy ghi. Ngày
+  trong câu (21/10) không khớp `updated_at` (20/10). Câu này chỉ có ở đúng 2 entity này trên toàn bản chụp prod.
+- Không biết ai đổi, đổi lúc nào, bằng đường nào (SQL trực tiếp, bảng điều khiển Supabase hay script). Không suy đoán.
+
+Hệ quả cho luận điểm §1: một người đối chiếu **nhật ký duyệt** với thư viện sẽ thấy 2 entity "đã duyệt" mà không nằm trong thư
+viện. Họ không có cách nào biết từ nhật ký rằng đã có một quyết định từ chối.
+
 ## 1. Luận điểm bị thử
 
 Nguyên tắc lõi: "AI không tự diễn giải luật" — LLM chỉ đề xuất, người duyệt bảo đảm trung thực với văn bản, và mọi lần duyệt
@@ -26,10 +61,8 @@ duyệt không phản ánh — khâu human-in-the-loop dựng ra để giữ đ�
   giây): Mann–Whitney p = 0,41 → **không có khác biệt**. Không suy diễn nhân quả.
 - Số đo sau (17/11, `research/sau/TRUOC_SAU.md`): cùng 70 đề xuất, lượt sau 34 duyệt (0 bị sửa), 36 từ chối. Khung và đối
   chiếu dự đoán: `research/bao-cao/KHUNG_TRUOC_SAU.md` §9; Điều 8 từng entity: `research/bao-cao/DOI_XUNG_DIEU_8.md`.
-- **Bổ sung 17/11 — trạng thái từ chối không có vết từ chối (lượt trước).** 2 entity ở trạng thái `tu_choi` trên prod mà
-  dòng `approvals` duy nhất của chúng là `da_duyet`: Đ8 "Gây phiền hà, sách nhiễu" và Đ10 "Quy định chi tiết khoản 1 và
-  khoản 3 Điều này". Trạng thái đã đổi sau khi duyệt, ngoài hàm duyệt, không để dòng nào. Cùng lượt: 0/23 dòng từ chối có
-  ghi chú.
+- 2 entity của lượt trước có nhật ký ghi `da_duyet` nhưng trạng thái là `tu_choi`: xem §0 (tách riêng vì đây là nhật ký ghi
+  sai, không phải ghi thiếu). Cùng lượt: 0/23 dòng từ chối có ghi chú.
 
 ## 3. Cạnh LLM sai được duyệt theo entity nguồn; xóa cạnh không để lại vết (hệ mới, sau M8)
 
