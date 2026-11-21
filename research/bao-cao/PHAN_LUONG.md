@@ -64,7 +64,7 @@ Danh sách cơ quan nhà nước ở `NHA_NUOC` trong code.
 
 ## 5. Kết quả trên Luật 108 (trong mẫu)
 
-Chạy 21/11/2026 (, chi tiết từng mục nhầm sang B). Đáp án "phải ở A": 34/70.
+Chạy 21/11/2026 (`research/sau/phan-luong-108.md`, chi tiết từng mục nhầm sang B). Đáp án "phải ở A": 34/70.
 
 | | Đáp án A | Đáp án B | Cộng |
 |---|---|---|---|
@@ -81,7 +81,7 @@ Chạy 21/11/2026 (, chi tiết từng mục nhầm sang B). Đáp án "phải �
   bộ lọc bắt được 20 trong số đó. **Đây không phải tỉ lệ "quyết định không đòi hỏi phán đoán pháp lý"** (§4: chỉ đo được sau
   một lượt duyệt thật có van).
 - Thêm một giới hạn: khi viết bộ lọc, trợ lý đã đọc lại nguyên văn các entity Điều 11 (để kiểm ví dụ Đ11 k3 chủ repo nêu). Bộ
-  lọc vì vậy không chỉ dựng sau khi biết đáp án mà còn sau khi xem một phần dữ liệu. Không chỉnh  sau lần chạy
+  lọc vì vậy không chỉ dựng sau khi biết đáp án mà còn sau khi xem một phần dữ liệu. Không chỉnh `phan-luong-v1` sau lần chạy
   này; phiên bản này là bản đóng băng dùng cho TNDN.
 
 Câu được phép viết: "Trên 70 entity Luật 108 (đo trong mẫu, đáp án là quyết định của một người duyệt), bộ lọc định tuyến đưa
