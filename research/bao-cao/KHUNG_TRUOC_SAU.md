@@ -171,6 +171,12 @@ hoặc công chức (`NN-CT`), nhóm mà lượt sau có câu từ chối viết
 này không làm nhẹ kết quả. Nó cho thấy thư viện phụ thuộc vào một quy tắc do người duyệt tự đặt, và quy tắc đó không nằm trong
 hệ thống: lượt trước không có quy tắc viết nào, lượt sau gõ tay theo quy ước (`CAN_THIEP_KHONG_VET.md` §6).
 
+**Nhóm "cơ học" chính là nhóm lệch nhiều nhất (chủ repo chốt đưa vào báo cáo, 21/11).** 12/21 lần đảo nằm ở chủ thể là cơ quan
+nhà nước (`NN-CT`), và lượt trước đã **duyệt** chính các chủ thể đó. Ở lượt sau, việc từ chối chúng trở thành nhận dạng theo mẫu
+(luồng cơ học, `PHAN_LUONG.md`) — nhưng chỉ **sau khi** có quy tắc #18 do người có chuyên môn viết. Kết luận: phần không cần
+chuyên môn tồn tại vì người có chuyên môn đã viết quy tắc trước. Điều này củng cố, không làm yếu, phát hiện về giới hạn năng
+lực của khâu người duyệt.
+
 **Giới hạn — ghi nguyên văn.** Hai lượt không cùng điều kiện: người duyệt có thể khác; màn hình khác (màn cũ và U1a); lượt sau
 có quy tắc từ chối theo mã nhóm, chốt giữa lượt (§8), lượt trước không có; người duyệt lượt sau biết giả thuyết (§7). Kappa ở
 đây đo độ tái lập của **cả quy trình duyệt** (người + màn hình + quy tắc), không phải độ tin cậy giữa hai người duyệt độc lập
@@ -252,3 +258,17 @@ người duyệt, không phải thí nghiệm có đối chứng."
 Câu được phép viết (M1, M2): "Lượt duyệt trên màn mới có trung vị 19,8 giây mỗi entity so với 8,6 giây ở lượt trước; khác biệt có ý
 nghĩa thống kê theo tiêu chí đặt trước (p < 0,001). Lượt sau không viết lại tên entity nào (0/34) so với 9/45 ở lượt trước (p =
 0,009). Thiết kế không cho phép quy nguyên nhân; dự đoán M1 (60 giây) sai. p90 tăng từ 50,6 lên 117,9 giây."
+
+## 10. Khung đo cho các lượt duyệt TNDN, LDN — quy ước tự giữ và hệ ép (chốt 21/11, trước lượt duyệt TNDN)
+
+Ba lần đo cùng một luận điểm: cái người tự giữ bằng quy ước thì trôi; cái hệ ép thì không. Lần 1, 2 đã có (cạnh không nguyên
+văn 21/44; mã nhóm gõ tay sai / thiếu 4/35). Mục này cố định cách đo trước khi có số.
+
+| # | Đo | Lượt 108 (quy ước) | Lượt TNDN, LDN (hệ ép) | Ghi chú phải nêu |
+|---|---|---|---|---|
+| E1 | Nhóm từ chối: thiếu hoặc sai định dạng | 2/35 không ghi; 0/36 có tiền tố đúng | Đếm từ DB | **Bằng 0 theo cấu tạo** (DB bắt buộc chọn 1 trong 5): không phải bằng chứng, chỉ xác nhận ràng buộc chạy |
+| E2 | Nhóm từ chối: **chọn nhầm nhóm** | 2/35 sai nhóm | Người có chuyên môn đọc lại **toàn bộ** lần từ chối ở luồng A và một mẫu 20 lần ở luồng B, ghi nhóm đúng | Đây mới là số so sánh được: danh sách chọn loại bỏ được "không ghi", không tự loại bỏ "chọn nhầm" |
+| E3 | Thao tác sai luồng bị DB chặn | — (chưa có luồng) | Số dòng ghi khi `approve_entity` / hàm chuyển luồng từ chối thao tác sai luồng | Số lần quy ước tự giữ **sẽ** thất bại nếu không ép. Chỉ đếm được thao tác đi qua hàm (ghi trực tiếp bảng đã bị thu quyền ở 008a) |
+| E4 | Phân luồng: nhầm sang A, van chuyển A → B | Trong mẫu: `PHAN_LUONG.md` §5 | Ngoài mẫu: `phan-luong-v1` đóng băng trước X1 TNDN | Đáp án là quyết định của người, không phải "đúng luật" |
+| E5 | Tỉ lệ quyết định không đòi hỏi phán đoán pháp lý | — | Mục quyết ở A không bị van chuyển, trên tổng số | Chỉ có sau khi duyệt; trước đó tỉ lệ luồng A chỉ là dự báo |
+| E6 | C6 vì cần trường ngoài từ điển | — | `do:sau`, theo văn bản (nhật ký #19) | Độ phủ của mô hình dữ liệu cố định |

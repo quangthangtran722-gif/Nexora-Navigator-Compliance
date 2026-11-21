@@ -166,13 +166,16 @@ Trường "ứng viên" chỉ chốt sau khi nạp toàn văn Luật 108 và gá
 
 | Mốc | Ngày |
 |---|---|
-| S9 viết lại + hồi quy A/B/C xanh → **mới được** bật Luật 108 sang `active` | 27/11 |
+| S9 viết lại + hồi quy A/B/C xanh → Claude Code báo "đủ ba điều kiện, sẵn sàng bật"; **chủ repo** bật Luật 108 sang `active` (AI không tự bật, nhật ký #23) | 27/11 |
 | TNDN duyệt xong; cạnh ngoại lệ TNDN Đ18 duyệt bởi người duyệt thứ hai | 30/11 |
 | Form sinh từ thư viện (HS1, HS2) chạy trên từ điển 9 trường | 4/12 |
 | LDN phần chung duyệt xong | 7/12 |
 | LDN chương III duyệt xong (nếu giữ) · chạy thử end-to-end, fixture A–I xanh | 12/12 |
 | Đóng băng phiên bản thư viện cho đợt doanh nghiệp thử | 15/12 |
 | **Hệ thống chạy end-to-end với 2 luật mới và form chốt** | **19/12** |
+
+Phân luồng duyệt (nhật ký #22): luồng A cơ học chỉ chứa mục nhiều khả năng bị từ chối; mọi thao tác ghi vào thư viện do
+người có chuyên môn bấm; luồng là quyền ở DB.
 
 Cách làm: câu hỏi gom theo lô cuối mỗi phiên; việc không bị chặn thì làm tiếp; bị chặn thật thì ghi rõ "đang chặn, không
 làm được gì khác".

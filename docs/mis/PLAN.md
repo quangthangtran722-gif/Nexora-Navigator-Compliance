@@ -95,22 +95,23 @@ entity / 1.000 ký tự); tính lại khi có file VBHN. Khoảng một nửa en
 U1b 3–5 · nạp văn bản 3–5 · X1 2–3 (+ 2–4 giờ chạy) · fixture D–I 6–9 · chạy thử end-to-end + sửa lỗi 6–10 → **58–85 giờ**.
 Sức chứa 22/11–6/12 ở ~6 giờ / ngày ≈ 90 giờ; đệm riêng 10–12/12 và 16–18/12. Giả định: làm mọi ngày kể cả cuối tuần.
 
-**Bước có điều kiện — bật Luật 108 sang `active` (nhật ký #21):** chỉ khi (1) S9 viết lại đã merge, (2) bộ hồi quy A/B/C xanh,
+**Bước có điều kiện — bật Luật 108 sang `active` (nhật ký #21, #23):** Claude Code **không** tự bật; khi đủ ba điều kiện thì
+báo "đủ ba điều kiện, sẵn sàng bật", chủ repo bật. Ba điều kiện: (1) S9 viết lại đã merge, (2) bộ hồi quy A/B/C xanh,
 (3) `tests/doiXung.test.ts` xanh. Chưa đủ ba điều kiện thì 108 giữ `draft`, kể cả khi lịch trễ. Văn bản TNDN, LDN nạp ở
 `draft` và bật theo cùng điều kiện.
 
 | Ngày | Claude Code làm | Chủ repo + người duyệt 2 (Trần Đăng Khoa) | Cần trả lời / cung cấp |
 |---|---|---|---|
 | T7 21/11 | Nhật ký #18–#21, CLAUDE.md, PLAN §0.4; phép đếm C6 ngoài từ điển trong `do:sau` | — | Lô câu hỏi 21/11 |
-| CN 22/11 | Script nạp văn bản tổng quát (đọc VBHN, tách chương / điều, đếm lại, so với bản gốc); X1 trích xuất theo danh sách điều cố định, giãn nhịp quota, chỉ `cho_duyet` | Tải VBHN 113 (TNDN), 67 (LDN) | File VBHN TNDN |
-| T2 23/11 | Migration 009 (M9), 010 (HS0: từ điển 9 trường, `truong_ngoai_tu_dien`); U1a: ô "trường cần" khi gán C6. Nạp + X1 TNDN lên MIS | **Phiên đặt quy tắc TNDN** (2–3 giờ): trường nào cho Đ10, Đ18 k3, ưu đãi; nhóm từ chối | Xác nhận kết quả kiểm VBHN TNDN |
+| CN 22/11 | **Phân luồng `phan-luong-v1` + đối chiếu trên 70 entity Luật 108 (bảng 2×2 gửi chủ repo trước khi dùng cho TNDN)**; script nạp văn bản tổng quát (đọc VBHN, tách chương / điều, đếm lại, so với bản gốc); X1 trích xuất theo danh sách điều cố định, giãn nhịp quota, chỉ `cho_duyet` | Tải VBHN 113 (TNDN), 67 (LDN) | File VBHN TNDN |
+| T2 23/11 | Migration 009 (M9), 010 (HS0: từ điển 9 trường, `truong_ngoai_tu_dien`; **luồng duyệt + quyền ở DB + vết chuyển luồng + đếm thao tác bị chặn; nhóm từ chối dạng danh sách**) — áp lên MIS, báo kết quả test cùng ngày; U1a: ô "trường cần" khi gán C6. Nạp + X1 TNDN lên MIS; **đóng băng `phan-luong-v1`, chạy phân luồng TNDN** | **Phiên đặt quy tắc TNDN** (2–3 giờ): trường nào cho Đ10, Đ18 k3, ưu đãi; nhóm từ chối | Xác nhận kết quả kiểm VBHN TNDN |
 | T3 24/11 | S9 viết lại (bắt đầu) | Duyệt TNDN: **15–35 entity / người** | — |
 | T4 25/11 | S9 + fixture A/B/C | Duyệt TNDN: 15–35 / người | — |
 | T5 26/11 | S9 + A/B/C xanh, `doiXung` xanh | Duyệt TNDN: 15–35 / người | — |
-| T6 27/11 | Cổng bật 108 `active` (đủ 3 điều kiện); M9 → R1 | Duyệt TNDN (hết): 15–35 / người | Danh sách loại hình SME thử nghiệm (để chốt chương III) |
+| T6 27/11 | Báo "đủ ba điều kiện, sẵn sàng bật" cho 108 (chủ repo bật); R1 | Duyệt TNDN (hết): 15–35 / người | Danh sách loại hình SME thử nghiệm (để chốt chương III) |
 | T7 28/11 | R1 + L10 | Đệm duyệt TNDN | — |
 | CN 29/11 | U1b (danh sách cạnh chờ duyệt, script tạo cạnh ngoại lệ ở `cho_duyet`) + G1 | Khoa đăng nhập MIS lần đầu | File VBHN LDN |
-| T2 30/11 | Tạo cạnh ngoại lệ TNDN Đ18 k3, K4; nạp + X1 LDN phần chung | **Khoa duyệt cạnh ngoại lệ**; **phiên đặt quy tắc LDN** (2–3 giờ) | Xác nhận kết quả kiểm VBHN LDN |
+| T2 30/11 | Tạo cạnh ngoại lệ TNDN Đ18 k3, K4; nạp + X1 LDN phần chung | **Người duyệt thứ hai duyệt cạnh ngoại lệ**; **phiên đặt quy tắc LDN** (2–3 giờ) — nghị trình có **CHỐT CHẶN: nhóm "quyền của thành viên / cổ đông" (quyền, không phải nghĩa vụ)** — không chốt thì hàng trăm entity chương III dồn sang B | Xác nhận kết quả kiểm VBHN LDN |
 | T3 1/12 | HS1 (form phần 1 sinh từ thư viện) | Duyệt LDN chung: **22–32 / người** | — |
 | T4 2/12 | HS1 | Duyệt LDN chung: 22–32 / người | — |
 | T5 3/12 | HS2 (hỏi bổ sung phần 2) | Duyệt LDN chung: 22–32 / người | — |
@@ -126,6 +127,10 @@ Sức chứa 22/11–6/12 ở ~6 giờ / ngày ≈ 90 giờ; đệm riêng 10–
 | T3 15/12 | **Đóng băng phiên bản thư viện**; deploy bản thử | — | — |
 | T4–T6 16–18/12 | **Đệm** (lỗi phát hiện khi chạy thử, hướng dẫn cho doanh nghiệp thử) | — | — |
 | T7 19/12 | **Mốc: chạy end-to-end với 2 luật mới và form chốt** | | |
+
+**Người duyệt (chốt 21/11):** 4 người. Luồng B (chuyên môn): chủ repo, Huyền Anh. Luồng A (cơ học): 2 người còn lại. Số
+entity / người / ngày ở bảng trên tính cho luồng B (2 người); luồng A thêm vào mà không giảm giờ luồng B cho tới khi có số
+đo TNDN (tỉ lệ luồng A ở TNDN dự báo thấp hơn Luật 108). Push lên `origin/mis/rebuild` cuối mỗi ngày (chủ repo cho phép 21/11).
 
 Nếu chương III bị bỏ: 8–12/12 thành đệm duyệt. Nếu SME thử nghiệm có CTCP: tính lại (chương V: 66 điều, 400–660 entity, 25–41
 giờ duyệt ở 16 / giờ) — không vừa lịch nếu không bỏ phần khác.
