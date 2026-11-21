@@ -5,7 +5,7 @@
 // KHÔNG đọc dữ liệu lượt trước (điều kiện làm mù: không so từ chối từng entity giữa hai lượt cho tới khi duyệt xong).
 // Dùng: node scripts/research/phan-loai-sau.mjs → research/sau/phan-loai-sau.{json,md}
 import { mkdirSync, writeFileSync } from "node:fs";
-import { truyVanMis, docDeXuat, rongNghia, maNhom, coTienToMa, MA_NHOM_TU_CHOI } from "./do-duyet-lib.mjs";
+import { truyVanMis, docDeXuat, rongNghia, maNhom, coTienToMa, MA_NHOM_TU_CHOI, demC6NgoaiTuDien } from "./do-duyet-lib.mjs";
 
 // Ngoại lệ mã nhóm: ghi chú trong approvals không sửa được (entity đã xử lý bị khóa). Đếm theo nhóm ĐÚNG ở đây, giữ nhóm
 // đã ghi ở cột nhom_ghi. Chỉ thêm dòng khi người duyệt nêu nhóm đúng; không suy ra nhóm thay người duyệt.
@@ -62,12 +62,20 @@ const dieu8 = ents.filter((e) => e.so_dieu === 8).map((e) => ({ dieu_khoan: e.di
   trang_thai_duyet: e.trang_thai_duyet, nhom: e.trang_thai_duyet === "tu_choi" ? (NGOAI_LE_MA[e.id]?.nhom ?? maNhom(cuoi.get(e.id)?.ghi_chu)) : null,
   ghi_chu: cuoi.get(e.id)?.ghi_chu ?? null }));
 
+// 4. C6 vì cần trường ngoài từ điển 9 trường (nhật ký #19) — mọi văn bản, không chỉ 70 đề xuất Luật 108
+const coCot = truyVanMis(`select json_build_object('c', exists(select 1 from information_schema.columns where table_schema = 'public'
+  and table_name = 'entities' and column_name = 'truong_ngoai_tu_dien'))`).c;
+const entsVb = truyVanMis(`select coalesce(json_agg(json_build_object('trang_thai_duyet', e.trang_thai_duyet, 'ma_dieu_kien', e.ma_dieu_kien,
+  'van_ban', v.so_hieu${coCot ? ", 'truong_ngoai_tu_dien', e.truong_ngoai_tu_dien" : ""})), '[]')
+  from entities e left join van_ban_chunks c on c.id = e.chunk_id left join van_ban v on v.id = c.van_ban_id`);
+const c6 = demC6NgoaiTuDien(entsVb, coCot);
+
 const out = { chay_luc: new Date().toISOString(), so_entity: ents.length, con_cho_duyet: conCho,
   dem: { da_duyet: ents.filter((e) => e.trang_thai_duyet === "da_duyet").length, tu_choi: tuChoi.length },
   rong_nghia: rong, tu_choi_theo_nhom: theoNhom, tu_choi_theo_nhom_loai: theoNhomLoai, do_tin_cay_ma: doTinCay,
   tu_choi_ds: tuChoi.map((x) => ({ id: x.id, nhom: x.nhom, nhom_ghi: x.nhom_ghi })),
   ngoai_le_ma: ngoaiLe.map((x) => ({ dieu_khoan: x.dieu_khoan, ten_entity: x.ten_entity, nhom_ghi: x.nhom_ghi, nhom_dung: x.nhom, ...x.ngoai_le })),
-  dieu_8: dieu8 };
+  dieu_8: dieu8, c6_ngoai_tu_dien: c6 };
 mkdirSync("research/sau", { recursive: true });
 writeFileSync("research/sau/phan-loai-sau.json", JSON.stringify(out, null, 1));
 
@@ -88,6 +96,11 @@ const md = [
   `Độ tin cậy quy ước gõ tay: ${doTinCay.tu_choi} từ chối; có tiền tố [mã] ${doTinCay.co_tien_to_ma}; sai nhóm ${doTinCay.sai_nhom}; không ghi chú ${doTinCay.khong_ghi}.`, "",
   "| Điều khoản | Entity | Nhóm ghi | Nhóm đúng | Loại sai | Nguồn |", "|---|---|---|---|---|---|",
   ...out.ngoai_le_ma.map((x) => `| ${x.dieu_khoan} | ${x.ten_entity} | ${x.nhom_ghi} | ${x.nhom_dung} | ${x.loai_sai} | ${x.nguon} |`), "",
+  "## C6 vì cần trường ngoài từ điển hồ sơ (nhật ký thiết kế #19)", "",
+  ...(c6 === null ? ["- Chưa đo: cột `entities.truong_ngoai_tu_dien` có từ migration 010 (HS0). Không suy từ ghi chú tự do."]
+    : Object.keys(c6).length ? ["| Văn bản | C6 đã duyệt | Trong đó cần trường ngoài từ điển | Trường cần |", "|---|---|---|---|",
+      ...Object.entries(c6).map(([v, x]) => `| ${v} | ${x.c6} | ${x.ngoai_tu_dien} | ${Object.entries(x.truong).map(([t, n]) => `${t} ${n}`).join(", ")} |`)]
+    : ["- Chưa có entity C6 đã duyệt."]), "",
   "## Điều 8 — lượt sau (13 entity)", "",
   "| Điều khoản | Loại | Entity | Quyết định | Mã nhóm | Ghi chú |", "|---|---|---|---|---|---|",
   ...dieu8.map((x) => `| ${x.dieu_khoan} | ${x.loai_entity} | ${x.ten_entity} | ${x.trang_thai_duyet} | ${x.nhom ?? ""} | ${(x.ghi_chu ?? "").replace(/\|/g, "/")} |`), "",

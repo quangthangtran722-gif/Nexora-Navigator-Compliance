@@ -22,14 +22,17 @@ Không viết chữ nào trong giao diện, prompt hay nội dung việc mang t�
 
 | Văn bản | Vai trò |
 |---|---|
-| Luật Doanh nghiệp 59/2020/QH14, sửa đổi 03/2022/QH15, 76/2025/QH15 | Điều kiện theo loại hình; nghĩa vụ đăng ký, thông báo thay đổi có thời hạn |
-| Luật Thuế TNDN 67/2025/QH15 + các luật sửa đổi (có 09/2026/QH16) | Ngưỡng doanh thu, loại trừ, ưu đãi |
+| Luật Doanh nghiệp — **VBHN 67/VBHN-VPQH** (59/2020/QH14, sửa đổi 03/2022/QH15, 76/2025/QH15) | Điều kiện theo loại hình; nghĩa vụ đăng ký, thông báo thay đổi có thời hạn |
+| Luật Thuế TNDN — **VBHN 113/VBHN-VPQH** (67/2025/QH15 + các luật sửa đổi, có 09/2026/QH16) | Ngưỡng doanh thu, loại trừ, ưu đãi |
 | Luật Quản lý thuế 108/2025/QH15 (hiệu lực 01/7/2026) | Thủ tục khai, nộp, thời hạn. **Nạp toàn văn** |
 | NĐ 252/2026/NĐ-CP, TT 90/2026/TT-BTC | **Không nạp trong MVP.** Nghĩa vụ 108 dẫn chiếu sang đó là C5, `thu_vien_chua_du` |
 | TT 77/2025/TT-BTC, Luật 109/2025/QH15 | **Chỉ là dữ liệu trước can thiệp.** Không nạp sang CSDL mới, không viết logic riêng |
 
-- Văn bản nạp **phải là bản hợp nhất** (§2.3). S2 làm thủ công: ghi khoản nào bị sửa, bởi văn bản nào, từ ngày nào.
-- LDN, TNDN: không nạp toàn văn, 25–40 quy định chọn theo §2.2. Quy định C0 chỉ giữ vài mục làm đối chứng.
+- Văn bản nạp **phải là bản hợp nhất** (§2.3). LDN, TNDN dùng **văn bản hợp nhất chính thức** của Văn phòng Quốc hội, không
+  hợp nhất tay (nhật ký #20). Cảnh báo trùng số: 67/VBHN-VPQH là LDN, **không phải** Luật 67/2025/QH15 (TNDN).
+- Phạm vi theo khả năng phân biệt doanh nghiệp (nhật ký #20): TNDN 16 điều (bỏ Đ1, Đ6, Đ19, Đ20); LDN phần áp dụng mọi
+  loại hình 51 điều; LDN chương III (TNHH, 42 điều) chờ danh sách loại hình SME thử nghiệm; **bỏ chương V (CTCP)**.
+  Thứ tự: TNDN → LDN phần chung → chương III. Từ điển hồ sơ 9 trường, form sinh lúc chạy (nhật ký #19).
 - Luật 108 trên CSDL mới: 9 điều cũ nạp lại **đúng đề xuất cũ của LLM** ở `cho_duyet` (không chạy lại extract); các điều còn
   lại trích xuất mới **theo thứ tự cố định** `docs/mis/UU_TIEN_LUAT_108.md` — không đổi thứ tự, không thêm tham số đổi thứ tự.
 
@@ -159,16 +162,20 @@ Trường "ứng viên" chỉ chốt sau khi nạp toàn văn Luật 108 và gá
 - **Phân quyền ở tầng DB bằng RLS** (+ GRANT theo cột, trigger). Không kiểm quyền ở tầng ứng dụng thay cho RLS.
 - Mọi lượt chạy (extract, filter, generate) ghi `pipeline_runs`.
 
-## 8. Lịch (§2.4, §14.1)
+## 8. Lịch (nhật ký #21; lịch theo ngày ở PLAN.md §0.4)
 
 | Mốc | Ngày |
 |---|---|
-| Migration thay đổi 1–5 (§12) | 12/11 |
-| Sửa định tuyến "cần bổ sung"; form T0–T3 | 13/11 |
-| Sửa S9 (chưa xác nhận ≠ áp dụng, ngoại lệ, ngày đánh giá, hết hiệu lực) | 14/11 |
-| **Điểm cắt**: chưa có số đo sau can thiệp → dừng code, viết báo cáo bằng số trước can thiệp | **15/11** |
-| Nháp chữ 18/11 · **code freeze** | **19/11** |
-| Turnitin 20/11 · **nộp LMS** | **21/11** |
+| S9 viết lại + hồi quy A/B/C xanh → **mới được** bật Luật 108 sang `active` | 27/11 |
+| TNDN duyệt xong; cạnh ngoại lệ TNDN Đ18 duyệt bởi người duyệt thứ hai | 30/11 |
+| Form sinh từ thư viện (HS1, HS2) chạy trên từ điển 9 trường | 4/12 |
+| LDN phần chung duyệt xong | 7/12 |
+| LDN chương III duyệt xong (nếu giữ) · chạy thử end-to-end, fixture A–I xanh | 12/12 |
+| Đóng băng phiên bản thư viện cho đợt doanh nghiệp thử | 15/12 |
+| **Hệ thống chạy end-to-end với 2 luật mới và form chốt** | **19/12** |
+
+Cách làm: câu hỏi gom theo lô cuối mỗi phiên; việc không bị chặn thì làm tiếp; bị chặn thật thì ghi rõ "đang chặn, không
+làm được gì khác".
 
 ## 9. Quy ước code
 

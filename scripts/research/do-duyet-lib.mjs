@@ -176,6 +176,22 @@ export function maNhom(ghiChu) {
   return c ? c[1] : "(không theo mã)";
 }
 
+// ---------------------------------------------------------------- Độ phủ của từ điển hồ sơ cố định (nhật ký thiết kế #19)
+// Đếm entity đã gán C6 vì "cần trường không có trong từ điển" — cột entities.truong_ngoai_tu_dien (migration 010, người duyệt
+// ghi tên trường cần). Cột chưa có → trả null (chưa đo), không đoán từ ghi chú tự do. Đếm theo văn bản.
+export function demC6NgoaiTuDien(ents, coCot) {
+  if (!coCot) return null;
+  const theoVb = {};
+  for (const e of ents) {
+    if (e.trang_thai_duyet !== "da_duyet" || e.ma_dieu_kien !== "C6") continue;
+    const v = (theoVb[e.van_ban ?? "(không rõ)"] ??= { c6: 0, ngoai_tu_dien: 0, truong: {} });
+    v.c6++;
+    const t = (e.truong_ngoai_tu_dien ?? "").trim();
+    if (t) { v.ngoai_tu_dien++; v.truong[t] = (v.truong[t] ?? 0) + 1; }
+  }
+  return theoVb;
+}
+
 // ---------------------------------------------------------------- Đọc dữ liệu
 const docJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 

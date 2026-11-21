@@ -1,6 +1,6 @@
 # Lượt sau — điều kiện rỗng nghĩa, từ chối theo mã nhóm, Điều 8
 
-Chạy: 2026-11-18T02:43:35.233Z. 70 entity; đã duyệt 34; từ chối 36; còn chờ 0.
+Chạy: 2026-11-21T09:39:59.418Z. 70 entity; đã duyệt 34; từ chối 36; còn chờ 0.
 
 
 ## Điều kiện rỗng nghĩa (PHAM_VI_VA_PHUONG_PHAP §2.6)
@@ -39,6 +39,10 @@ Nhóm đếm theo bảng ngoại lệ `NGOAI_LE_MA` khi có (ghi chú đã khóa
 | Điều 8, khoản 1 | Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin | NN-CT | NN-NV | sai_nhom | người duyệt tự báo 17/11 (Đ8 k1 Lợi dụng chức vụ…) |
 | Điều 52, khoản 1 | Luật này | (không ghi) | TX | khong_ghi | kế hoạch người duyệt chốt 17/11 (Đ52 k1 Luật này) |
 | Điều 52, khoản 4 | áp dụng toàn bộ các hình thức giao dịch điện tử | (không ghi) | GQ | khong_ghi | kế hoạch người duyệt chốt 17/11 (Đ52 k4 áp dụng toàn bộ…) |
+
+## C6 vì cần trường ngoài từ điển hồ sơ (nhật ký thiết kế #19)
+
+- Chưa đo: cột `entities.truong_ngoai_tu_dien` có từ migration 010 (HS0). Không suy từ ghi chú tự do.
 
 ## Điều 8 — lượt sau (13 entity)
 

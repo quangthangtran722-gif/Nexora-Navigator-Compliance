@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 import { test } from "node:test";
 
-import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, cohenKappa, thaoTac, docTruoc, docDeXuat, rongNghia, maNhom, coTienToMa } from "../scripts/research/do-duyet-lib.mjs";
+import { khoangDuyet, thongKe, phanLoai, mannWhitney, fisher, cohenKappa, thaoTac, demC6NgoaiTuDien, docTruoc, docDeXuat, rongNghia, maNhom, coTienToMa } from "../scripts/research/do-duyet-lib.mjs";
 
 // Bản chụp prod (research/baseline/raw) không commit (.gitignore) — máy không có bản chụp thì bỏ qua các ca cần nó
 const coBanChup = existsSync("research/baseline/raw/approvals.json");
@@ -113,4 +113,19 @@ test("thaoTac: phân thao tác duyệt từ cột entity, màn cũ không có tr
   assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: "chung" }, true), "duyet_chon_pham_vi");
   assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: null }, true), "duyet_khong_truong");
   assert.equal(thaoTac("da_duyet", { ma_dieu_kien: null, pham_vi: null }, false), "duyet");
+});
+
+test("demC6NgoaiTuDien: chỉ đếm C6 đã duyệt, tách theo văn bản; chưa có cột → null", () => {
+  assert.equal(demC6NgoaiTuDien([], false), null);
+  const r = demC6NgoaiTuDien([
+    { trang_thai_duyet: "da_duyet", ma_dieu_kien: "C6", van_ban: "67/2025/QH15", truong_ngoai_tu_dien: "so_lao_dong" },
+    { trang_thai_duyet: "da_duyet", ma_dieu_kien: "C6", van_ban: "67/2025/QH15", truong_ngoai_tu_dien: " " },
+    { trang_thai_duyet: "tu_choi", ma_dieu_kien: "C6", van_ban: "67/2025/QH15", truong_ngoai_tu_dien: "x" },
+    { trang_thai_duyet: "da_duyet", ma_dieu_kien: "C2", van_ban: "67/2025/QH15", truong_ngoai_tu_dien: null },
+    { trang_thai_duyet: "da_duyet", ma_dieu_kien: "C6", van_ban: "108/2025/QH15", truong_ngoai_tu_dien: null },
+  ], true);
+  assert.deepEqual(r, {
+    "67/2025/QH15": { c6: 2, ngoai_tu_dien: 1, truong: { so_lao_dong: 1 } },
+    "108/2025/QH15": { c6: 1, ngoai_tu_dien: 0, truong: {} },
+  });
 });
