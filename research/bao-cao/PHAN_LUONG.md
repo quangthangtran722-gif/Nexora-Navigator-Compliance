@@ -64,4 +64,26 @@ Danh sách cơ quan nhà nước ở `NHA_NUOC` trong code.
 
 ## 5. Kết quả trên Luật 108 (trong mẫu)
 
-_Điền sau khi chạy `node scripts/research/kiem-phan-luong.mjs`._
+Chạy 21/11/2026 (, chi tiết từng mục nhầm sang B). Đáp án "phải ở A": 34/70.
+
+| | Đáp án A | Đáp án B | Cộng |
+|---|---|---|---|
+| **Bộ lọc A** — lượt một / sau lượt hai | 15 / 20 | **0 / 0** | 15 / 20 |
+| **Bộ lọc B** — lượt một / sau lượt hai | 19 / 14 | 36 / 36 | 55 / 50 |
+
+- **Nhầm sang A: 0** ở cả hai lượt. Đ11 k3 (TX cần đọc) và Đ27 k2a (từ chối nhầm) đều ở B.
+- Luồng A: 15/70 (21,4%) lượt một; **20/70 (28,6%)** sau lượt hai (thêm 5 điều kiện mất nguồn, nhóm DV). Cả 20 đều bị từ
+  chối ngày 17/11 theo nhóm cơ học. Khớp chung 56/70 (80,0%).
+- Nhầm sang B: 14/34 mục "phải ở A". Nguyên nhân là B cứng xét trước A, đúng thiết kế an toàn: câu Điều 8 khoản 1 có "cấm"
+  (B5), câu có "trường hợp / khi" (B2), câu dẫn chiếu Điều khác (B3), "do Bộ trưởng…" (B4), tên LLM không nằm nguyên chữ
+  trong câu (B8). Giá của 0 mục nhầm sang A là bỏ sót 41% (14/34) phần cơ học.
+- **Trần của cách định tuyến theo mẫu trên Luật 108:** 34/70 (48,6%) quyết định thuộc nhóm cơ học xét sau khi đã có đáp án;
+  bộ lọc bắt được 20 trong số đó. **Đây không phải tỉ lệ "quyết định không đòi hỏi phán đoán pháp lý"** (§4: chỉ đo được sau
+  một lượt duyệt thật có van).
+- Thêm một giới hạn: khi viết bộ lọc, trợ lý đã đọc lại nguyên văn các entity Điều 11 (để kiểm ví dụ Đ11 k3 chủ repo nêu). Bộ
+  lọc vì vậy không chỉ dựng sau khi biết đáp án mà còn sau khi xem một phần dữ liệu. Không chỉnh  sau lần chạy
+  này; phiên bản này là bản đóng băng dùng cho TNDN.
+
+Câu được phép viết: "Trên 70 entity Luật 108 (đo trong mẫu, đáp án là quyết định của một người duyệt), bộ lọc định tuyến đưa
+20 mục (28,6%) sang luồng cơ học, không mục nào lẽ ra cần chuyên môn; nó bỏ sót 14/34 mục mà nhóm từ chối xét sau là cơ học. Độ
+chính xác ngoài mẫu đo trên TNDN."

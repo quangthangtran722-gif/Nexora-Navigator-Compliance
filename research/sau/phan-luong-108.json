@@ -1,0 +1,358 @@
+{
+ "chay_luc": "2026-11-21T14:55:44.613Z",
+ "phien_ban": "phan-luong-v1",
+ "n": 70,
+ "dap_an_A": 34,
+ "luot_mot": {
+  "bo_loc_A_dap_an_A": 15,
+  "bo_loc_A_dap_an_B": 0,
+  "bo_loc_B_dap_an_A": 19,
+  "bo_loc_B_dap_an_B": 36,
+  "luong_A": 15,
+  "khop": 51,
+  "nham_sang_A": [],
+  "nham_sang_B": [
+   {
+    "id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+    "dieu_khoan": "Điều 3, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Thực hiện phân nhóm người nộp thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "chu_the",
+    "ten": "công chức quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "56731b82-19d3-4164-896a-63fd49acbb54",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Làm sai lệch kết quả kiểm tra",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "0f725e21-4bda-47f1-9d62-282177334149",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Gây phiền hà, sách nhiễu",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "f25e5203-1dfa-41f4-a9d5-3af761a3957d",
+    "dieu_khoan": "Điều 48, khoản 1",
+    "loai": "dieu_kien",
+    "ten": "Tiền thuế nợ quá 90 ngày kể từ ngày hết thời hạn nộp",
+    "quyet_dinh": "tu_choi",
+    "nhom": "DV",
+    "quy_tac": "B9-loai"
+   },
+   {
+    "id": "49ea7b8f-c668-43e6-937b-67b391681183",
+    "dieu_khoan": "Điều 48, khoản 2",
+    "loai": "dieu_kien",
+    "ten": "Tiền thuế nợ khi hết thời hạn gia hạn nộp tiền thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "DV",
+    "quy_tac": "B9-loai"
+   },
+   {
+    "id": "41c8832c-fcb1-4510-82fb-894fd2852f3d",
+    "dieu_khoan": "Điều 48, khoản 3",
+    "loai": "dieu_kien",
+    "ten": "Tiền thuế nợ nhưng không hoạt động tại địa chỉ đã đăng ký hoặc có hành vi phát tán tài sản",
+    "quyet_dinh": "tu_choi",
+    "nhom": "DV",
+    "quy_tac": "B9-loai"
+   },
+   {
+    "id": "72f19809-78bb-4569-9e20-b6ae76a02a40",
+    "dieu_khoan": "Điều 48, khoản 5",
+    "loai": "dieu_kien",
+    "ten": "Không chấp hành quyết định kiểm tra thuế sau khi đã bị xử phạt hành chính",
+    "quyet_dinh": "tu_choi",
+    "nhom": "DV",
+    "quy_tac": "B9-loai"
+   },
+   {
+    "id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
+    "dieu_khoan": "Điều 27, khoản 1",
+    "loai": "chu_the",
+    "ten": "Cơ quan quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+    "dieu_khoan": "Điều 52, khoản 4",
+    "loai": "chu_the",
+    "ten": "Bộ trưởng Bộ Tài chính",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B4-c5"
+   },
+   {
+    "id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+    "dieu_khoan": "Điều 48, khoản 7",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế đối với nợ phí hải quan và lệ phí hàng hóa",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B8-khong-nguyen-van"
+   },
+   {
+    "id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+    "dieu_khoan": "Điều 48, khoản 8",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế đối với số tiền thuế nợ được bù trừ qua hoàn thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
+    "dieu_khoan": "Điều 27, khoản 4",
+    "loai": "chu_the",
+    "ten": "Chính phủ",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+    "dieu_khoan": "Điều 52, khoản 4",
+    "loai": "hanh_vi",
+    "ten": "áp dụng toàn bộ các hình thức giao dịch điện tử",
+    "quyet_dinh": "tu_choi",
+    "nhom": "GQ",
+    "quy_tac": "B4-c5"
+   },
+   {
+    "id": "392bc16c-53e2-4717-a13e-377787dff71f",
+    "dieu_khoan": "Điều 3, khoản 1",
+    "loai": "chu_the",
+    "ten": "Cơ quan thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+    "dieu_khoan": "Điều 48, khoản 6",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B8-khong-nguyen-van"
+   },
+   {
+    "id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+    "dieu_khoan": "Điều 48, khoản 9",
+    "loai": "hanh_vi",
+    "ten": "Quyết định thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "b5eeec3d-ce14-43b1-9f4f-6a70e7d2eb0c",
+    "dieu_khoan": "Điều 48, khoản 4",
+    "loai": "dieu_kien",
+    "ten": "Không chấp hành quyết định xử phạt vi phạm hành chính về quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "DV",
+    "quy_tac": "B9-loai"
+   }
+  ]
+ },
+ "luot_hai": {
+  "bo_loc_A_dap_an_A": 20,
+  "bo_loc_A_dap_an_B": 0,
+  "bo_loc_B_dap_an_A": 14,
+  "bo_loc_B_dap_an_B": 36,
+  "luong_A": 20,
+  "khop": 56,
+  "nham_sang_A": [],
+  "nham_sang_B": [
+   {
+    "id": "0504d6e0-c01b-4363-a940-87cf24e0058c",
+    "dieu_khoan": "Điều 3, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Thực hiện phân nhóm người nộp thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "553429a5-3e4a-4930-bf80-4330af7a8cbd",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "chu_the",
+    "ten": "công chức quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "48a3d876-f2a4-46f5-99bf-6d203ccb1edd",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Lợi dụng chức vụ, quyền hạn để tiết lộ thông tin",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "56731b82-19d3-4164-896a-63fd49acbb54",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Làm sai lệch kết quả kiểm tra",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "0f725e21-4bda-47f1-9d62-282177334149",
+    "dieu_khoan": "Điều 8, khoản 1",
+    "loai": "hanh_vi",
+    "ten": "Gây phiền hà, sách nhiễu",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B5-cam"
+   },
+   {
+    "id": "7620fa85-53d5-47b8-bf16-7c80e72538af",
+    "dieu_khoan": "Điều 27, khoản 1",
+    "loai": "chu_the",
+    "ten": "Cơ quan quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "24c02f2a-dc2d-447a-a0f7-abfa313a52ac",
+    "dieu_khoan": "Điều 52, khoản 4",
+    "loai": "chu_the",
+    "ten": "Bộ trưởng Bộ Tài chính",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B4-c5"
+   },
+   {
+    "id": "66a5ce9e-440c-4ab0-8fa8-b4b206cc06af",
+    "dieu_khoan": "Điều 48, khoản 7",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế đối với nợ phí hải quan và lệ phí hàng hóa",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B8-khong-nguyen-van"
+   },
+   {
+    "id": "ac84051b-8780-4574-860b-8a16ed3ef552",
+    "dieu_khoan": "Điều 48, khoản 8",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế đối với số tiền thuế nợ được bù trừ qua hoàn thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "1a60a81c-f7dc-43df-a3d6-d009573a549e",
+    "dieu_khoan": "Điều 27, khoản 4",
+    "loai": "chu_the",
+    "ten": "Chính phủ",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B2-dieu-kien"
+   },
+   {
+    "id": "36b915f0-f4fc-42d1-ae03-a3ce520465a5",
+    "dieu_khoan": "Điều 52, khoản 4",
+    "loai": "hanh_vi",
+    "ten": "áp dụng toàn bộ các hình thức giao dịch điện tử",
+    "quyet_dinh": "tu_choi",
+    "nhom": "GQ",
+    "quy_tac": "B4-c5"
+   },
+   {
+    "id": "392bc16c-53e2-4717-a13e-377787dff71f",
+    "dieu_khoan": "Điều 3, khoản 1",
+    "loai": "chu_the",
+    "ten": "Cơ quan thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-CT",
+    "quy_tac": "B3-dan-chieu"
+   },
+   {
+    "id": "8b8c8b61-06c6-48d4-9685-da4fba0125bc",
+    "dieu_khoan": "Điều 48, khoản 6",
+    "loai": "hanh_vi",
+    "ten": "Không thực hiện biện pháp cưỡng chế thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B8-khong-nguyen-van"
+   },
+   {
+    "id": "b539cc9d-47fb-4528-8b00-78040cc3a2b8",
+    "dieu_khoan": "Điều 48, khoản 9",
+    "loai": "hanh_vi",
+    "ten": "Quyết định thực hiện cưỡng chế thi hành quyết định hành chính về quản lý thuế",
+    "quyet_dinh": "tu_choi",
+    "nhom": "NN-NV",
+    "quy_tac": "B2-dieu-kien"
+   }
+  ]
+ },
+ "quy_tac_luot_mot": {
+  "B5-cam": 10,
+  "B3-dan-chieu": 10,
+  "A1-chu-the-nn": 11,
+  "B9-loai": 11,
+  "B10-su-kien": 3,
+  "B-mac-dinh-chu-the": 2,
+  "B2-dieu-kien": 9,
+  "B4-c5": 4,
+  "B8-khong-nguyen-van": 2,
+  "A2-giao-quyen": 2,
+  "C-khong-chac": 3,
+  "B6-hon-hop": 1,
+  "A5-ten-chung": 1,
+  "A3-nghia-vu-nn": 1
+ },
+ "quy_tac_luot_hai": {
+  "B5-cam": 10,
+  "B3-dan-chieu": 10,
+  "A1-chu-the-nn": 11,
+  "A6-dieu-kien-mat-nguon": 5,
+  "B10-su-kien": 3,
+  "B-mac-dinh-chu-the": 2,
+  "B2-dieu-kien": 9,
+  "B4-c5": 4,
+  "B8-khong-nguyen-van": 2,
+  "B9-loai": 6,
+  "A2-giao-quyen": 2,
+  "C-khong-chac": 3,
+  "B6-hon-hop": 1,
+  "A5-ten-chung": 1,
+  "A3-nghia-vu-nn": 1
+ }
+}
